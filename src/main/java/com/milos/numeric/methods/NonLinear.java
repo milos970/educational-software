@@ -38,9 +38,9 @@ public enum NonLinear
                     return xk;
 
                 }
-            },
+            };
 
-    PROSTA_ITERACIA("Prostá iterácia")
+    /*PROSTA_ITERACIA("Prostá iterácia")
     {
         @Override
         public double calculate(Parameters parameters)
@@ -64,10 +64,11 @@ public enum NonLinear
 
             return xk;
         }
-    },
+    },*/
 
-    REGULA_FALSI("Regula falsi")
+    /*REGULA_FALSI("Regula falsi")
             {
+                @Override
                 public double calculate(String equation, double xk_1, double E)
                 {
                     Argument x = new Argument("x");
@@ -86,7 +87,7 @@ public enum NonLinear
 
                     return xk;
                 }
-            };
+            };*/
 
     private final String name;
 
