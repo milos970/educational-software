@@ -2,13 +2,14 @@ package com.milos.numeric;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Builder
+@Setter
 @Getter
 public class Parameters {
-    private String function;
+    private String expression;
     private double tolerance;
     private int iterations;
     private double min;

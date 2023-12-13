@@ -15,12 +15,12 @@ public class Bisection extends NonLinear {
 
     public double calculate(Parameters parameters)
     {
-        String function = parameters.getFunction();
+        String function = parameters.getExpression();
         double min = parameters.getMin();
         double max = parameters.getMax();
         int iterations = parameters.getIterations();
         double tolerance = parameters.getTolerance();
-        RegulaFalsiSolver solver = new RegulaFalsiSolver(tolerance);
+        BisectionSolver solver = new BisectionSolver(tolerance);
         UnivariateFunction fun = new Exp4jToUnivariateFunctionAdapter(function);
         return solver.solve(iterations, fun, min, max);
     }

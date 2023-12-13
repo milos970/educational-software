@@ -15,7 +15,7 @@ public class Newton extends NonLinear
     @Override
     public double calculate(Parameters parameters)
     {
-        String function = parameters.getFunction();
+        String function = parameters.getExpression();
         int iterations = parameters.getIterations();
         double tolerance = parameters.getTolerance();
         double initial = parameters.getX0();

@@ -13,7 +13,6 @@ public class Trapezoid extends Integration
     {
         JexlExpression expression = jexl.createExpression(function);
         UnivariateFunction fun = x -> evaluateExpression(expression, x);
-
         return integrator.integrate(maxEval, fun, lower, upper);
     }
 }

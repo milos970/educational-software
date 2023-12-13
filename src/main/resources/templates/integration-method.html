@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Login V1</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" th:href="@{/images/icons/favicon.ico}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css"  th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css"  th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css"  th:href="@{/vendor/animate/animate.css}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css"  th:href="@{/vendor/css-hamburgers/hamburgers.min.css}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css"  th:href="@{/vendor/select2/select2.min.css}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css"  th:href="@{/css/util.css}">
+	<link rel="stylesheet" type="text/css"  th:href="@{/css/main.css}">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img th:src="@{/images/img-01.png}" alt="IMG" src="">
+				</div>
+
+				<form action="#"  class="login100-form validate-form" th:action="@{${controller}}" th:object="${parameters}" method="post">
+					<span class="login100-form-title" th:text="${methodName}">
+
+					</span>
+
+					<div class="wrap-input100 validate-input" >
+						<input class="input100" type="text" th:field="*{expression}" name="email" placeholder="Rovnica" required>
+						<span class="focus-input100"></span>
+
+					</div>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="number" min="1e-15" max="1e-10" th:field="*{tolerance}" name="email" placeholder="Tolerancia">
+						<span class="focus-input100"></span>
+
+					</div>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="number" min="1" max="1000000000" th:field="*{iterations}" name="pass" placeholder="Iteracie">
+						<span class="focus-input100"></span>
+
+					</div>
+
+					<div class="wrap-input100 validate-input" >
+						<input class="input100" type="number" min="0" max="1000" th:field="*{x0}" name="pass" placeholder="Inicializacna hodnota">
+						<span class="focus-input100"></span>
+
+					</div>
+					
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Vyrieš
+						</button>
+					</div>
+
+
+					<div class="text-center p-t-136">
+						<a class="txt2" href="#">
+
+
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	
+	
+
+	
+<!--===============================================================================================-->	
+	<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<!--===============================================================================================-->
+	<script th:src="@{/vendor/bootstrap/js/popper.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<!--===============================================================================================-->
+	<script th:src="@{/vendor/select2/select2.min.js}"></script>
+<!--===============================================================================================-->
+	<script th:src="@{/vendor/tilt/tilt.jquery.min.js}"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+<!--===============================================================================================-->
+	<script th:src="@{/js/main.js}"></script>
+	<span class="login100-form-title" th:text="${result}"></span>
+
+
+
+</body>
+</html>

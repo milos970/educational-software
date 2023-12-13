@@ -17,10 +17,10 @@ public class SimpleIteration extends NonLinear
         int iterations = parameters.getIterations();
         double tolerance = parameters.getTolerance();
         double currentValue = parameters.getX0();
-        String function = parameters.getFunction();
+        String function = parameters.getExpression();
         UnivariateFunction fun = new Exp4jToUnivariateFunctionAdapter(function);
 
-        for (int i = 0; i < iterations; ++i)
+        for (int i = 0; i < Integer.MAX_VALUE; ++i)
         {
              double nextValue = fun.value(currentValue);
 
