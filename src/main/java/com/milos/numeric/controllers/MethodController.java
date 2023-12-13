@@ -2,6 +2,8 @@ package com.milos.numeric.controllers;
 
 import com.milos.numeric.DTO;
 import com.milos.numeric.Parameters;
+import com.milos.numeric.methods.integration.Simpson;
+import com.milos.numeric.methods.integration.Trapezoid;
 import com.milos.numeric.methods.nonlinear.Bisection;
 import com.milos.numeric.methods.nonlinear.RegulaFalsi;
 import com.milos.numeric.methods.nonlinear.SimpleIteration;
@@ -20,7 +22,7 @@ public class MethodController
         model.addAttribute("methodName", "Newtonova metoda");
         model.addAttribute("controller", "/newtonSolve");
         model.addAttribute("parameters", new Parameters());
-        return "integration-method";
+        return "non-linear";
 
     }
     @PostMapping("/newtonSolve")
@@ -38,7 +40,7 @@ public class MethodController
         model.addAttribute("methodName", "Prostá iterácia");
         model.addAttribute("controller", "/simpleSolve");
         model.addAttribute("parameters", new Parameters());
-        return "integration-method";
+        return "non-linear";
 
     }
     @PostMapping("/simpleSolve")
@@ -60,7 +62,7 @@ public class MethodController
         model.addAttribute("methodName", "Regula falsi");
         model.addAttribute("controller", "/regula-falsi");
         model.addAttribute("parameters", new Parameters());
-        return "integration-method";
+        return "non-linear";
 
     }
     @PostMapping("/regula-falsi-solve")
@@ -81,7 +83,7 @@ public class MethodController
         model.addAttribute("methodName", "Polovičné delenie intervalov");
         model.addAttribute("controller", "/bisection-solve");
         model.addAttribute("parameters", new Parameters());
-        return "integration-method";
+        return "non-linear";
 
     }
     @PostMapping("/bisection-solve")
@@ -95,4 +97,48 @@ public class MethodController
 
 
     //*******************************************************************************************************//
+
+    @GetMapping("/trapezoid")
+    public String trapezoid(Model model)
+    {
+        boolean UserInfo = false;
+        model.addAttribute("methodName", "Lichobežníková metóda");
+        model.addAttribute("controller", "/bisection-solve");
+        model.addAttribute("parameters", new Parameters());
+        model.addAttribute("UserInfo", UserInfo);
+        return "non-linear";
+
+    }
+    @PostMapping("/trapezoid-solve")
+    public String trapezoidSolve(Model model, Parameters parameters)
+    {
+        Trapezoid bi = new Trapezoid();
+        double result = bi.calculate(parameters);
+        model.addAttribute("result", result);
+        return "redirect:/trapezoid";
+    }
+
+    //*******************************************************************************************************//
+
+    @GetMapping("/simpson")
+    public String simpson(Model model)
+    {
+        boolean UserInfo = false;
+        model.addAttribute("methodName", "Simpsonova metóda");
+        model.addAttribute("controller", "/simpson-solve");
+        model.addAttribute("parameters", new Parameters());
+        model.addAttribute("UserInfo", UserInfo);
+        return "non-linear";
+
+    }
+    @PostMapping("/simpson-solve")
+    public String simpsonSolve(Model model, Parameters parameters)
+    {
+        Simpson bi = new Simpson();
+        double result = bi.calculate(parameters);
+        model.addAttribute("result", result);
+        return "redirect:/trapezoid";
+    }
+
+
 }

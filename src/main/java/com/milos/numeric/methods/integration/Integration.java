@@ -1,12 +1,13 @@
 package com.milos.numeric.methods.integration;
 
+import com.milos.numeric.Parameters;
 import org.apache.commons.jexl3.*;
 
 public abstract class Integration
 {
     protected static final JexlEngine jexl = new JexlBuilder().create();
 
-    public abstract double calculate(String function, double lower, double upper, int maxEval);
+    public abstract double calculate(Parameters parameters);
 
     protected static double evaluateExpression(JexlExpression expression, double x)
     {

@@ -50,13 +50,25 @@
 					<div class="wrap-input100 validate-input">
 						<input class="input100" type="number" min="1" max="1000000000" th:field="*{iterations}" name="pass" placeholder="Iteracie">
 						<span class="focus-input100"></span>
-
 					</div>
+
+					<th:block th:if="${UserInfo == true}">
+						<div class="wrap-input100 validate-input">
+							<input class="input100" type="number" min="0.1"  th:field="*{min}" name="pass" placeholder="a">
+							<span class="focus-input100"></span>
+
+						</div>
+
+						<div class="wrap-input100 validate-input">
+							<input class="input100" type="number" max="10000" th:field="*{max}" name="pass" placeholder="b">
+							<span class="focus-input100"></span>
+
+						</div>
+					</th:block>
 
 					<div class="wrap-input100 validate-input" >
 						<input class="input100" type="number" min="0" max="1000" th:field="*{x0}" name="pass" placeholder="Inicializacna hodnota">
 						<span class="focus-input100"></span>
-
 					</div>
 					
 					<div class="container-login100-form-btn">
