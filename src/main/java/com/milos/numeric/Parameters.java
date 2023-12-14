@@ -10,10 +10,10 @@ import java.util.List;
 @Getter
 public class Parameters {
     private String expression;
-    private double tolerance;
-    private int iterations;
-    private double min;
-    private double max;
-    private double x0;
+    private Double tolerance;
+    private Integer iterations;
+    private Double min;
+    private Double max;
+    private Double x0;
 
 }

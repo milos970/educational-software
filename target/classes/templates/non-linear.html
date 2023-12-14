@@ -38,13 +38,11 @@
 					<div class="wrap-input100 validate-input" >
 						<input class="input100" type="text" th:field="*{expression}" name="email" placeholder="Rovnica" required>
 						<span class="focus-input100"></span>
-
 					</div>
 
 					<div class="wrap-input100 validate-input">
 						<input class="input100" type="number" min="1e-15" max="1e-10" th:field="*{tolerance}" name="email" placeholder="Tolerancia">
 						<span class="focus-input100"></span>
-
 					</div>
 
 					<div class="wrap-input100 validate-input">
@@ -52,17 +50,15 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<th:block th:if="${UserInfo == true}">
+					<th:block th:if="${UserInfo}">
 						<div class="wrap-input100 validate-input">
 							<input class="input100" type="number" min="0.1"  th:field="*{min}" name="pass" placeholder="a">
 							<span class="focus-input100"></span>
-
 						</div>
 
 						<div class="wrap-input100 validate-input">
 							<input class="input100" type="number" max="10000" th:field="*{max}" name="pass" placeholder="b">
 							<span class="focus-input100"></span>
-
 						</div>
 					</th:block>
 
@@ -109,7 +105,7 @@
 	</script>
 <!--===============================================================================================-->
 	<script th:src="@{/js/main.js}"></script>
-	<span class="login100-form-title" th:text="${result}"></span>
+	
 
 
 

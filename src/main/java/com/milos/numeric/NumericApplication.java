@@ -13,7 +13,7 @@ public class NumericApplication {
 		Parameters p = new Parameters();
 		p.setTolerance(0.05);
 		p.setMin(1.5);
-		p.setMax(2);
+		p.setMax(2.0);
 		p.setIterations(100);
 		p.setExpression("(x/2)^2 - sin x");
 		System.out.println(si.calculate(p));

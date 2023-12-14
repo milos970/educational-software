@@ -8,9 +8,9 @@ import lombok.Setter;
 public class DTO
 {
     private String expression;
-    private double tolerance;
-    private double  initialValue;
-    private double min;
-    private double max;
-    private int iterations;
+    private Double tolerance;
+    private Double  initialValue;
+    private Double min;
+    private Double max;
+    private Integer iterations;
 }

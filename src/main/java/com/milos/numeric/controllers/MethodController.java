@@ -80,9 +80,11 @@ public class MethodController
     @GetMapping("/bisection")
     public String bisection(Model model)
     {
+        boolean UserInfo = false;
         model.addAttribute("methodName", "Polovičné delenie intervalov");
         model.addAttribute("controller", "/bisection-solve");
         model.addAttribute("parameters", new Parameters());
+        model.addAttribute("UserInfo", UserInfo);
         return "non-linear";
 
     }
@@ -101,7 +103,7 @@ public class MethodController
     @GetMapping("/trapezoid")
     public String trapezoid(Model model)
     {
-        boolean UserInfo = false;
+        boolean UserInfo = true;
         model.addAttribute("methodName", "Lichobežníková metóda");
         model.addAttribute("controller", "/bisection-solve");
         model.addAttribute("parameters", new Parameters());
@@ -123,7 +125,7 @@ public class MethodController
     @GetMapping("/simpson")
     public String simpson(Model model)
     {
-        boolean UserInfo = false;
+        boolean UserInfo = true;
         model.addAttribute("methodName", "Simpsonova metóda");
         model.addAttribute("controller", "/simpson-solve");
         model.addAttribute("parameters", new Parameters());
@@ -137,7 +139,7 @@ public class MethodController
         Simpson bi = new Simpson();
         double result = bi.calculate(parameters);
         model.addAttribute("result", result);
-        return "redirect:/trapezoid";
+        return "redirect:/simpson";
     }
 
 
