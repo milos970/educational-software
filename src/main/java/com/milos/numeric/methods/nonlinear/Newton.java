@@ -1,6 +1,6 @@
 package com.milos.numeric.methods.nonlinear;
 
-import com.milos.numeric.Parameters;
+import com.milos.numeric.parameters.Parameters;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
 import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;

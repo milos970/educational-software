@@ -1,7 +1,6 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.DTO;
-import com.milos.numeric.Parameters;
+import com.milos.numeric.parameters.Parameters;
 import com.milos.numeric.methods.integration.Simpson;
 import com.milos.numeric.methods.integration.Trapezoid;
 import com.milos.numeric.methods.nonlinear.Bisection;

@@ -1,6 +1,6 @@
 package com.milos.numeric.methods.nonlinear;
 
-import com.milos.numeric.Parameters;
+import com.milos.numeric.parameters.Parameters;
 
 public abstract class NonLinear
 {

@@ -1,6 +1,7 @@
 package com.milos.numeric;
 
 import com.milos.numeric.methods.nonlinear.Bisection;
+import com.milos.numeric.parameters.Parameters;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

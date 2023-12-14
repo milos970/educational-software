@@ -1,12 +1,7 @@
 package com.milos.numeric.methods.nonlinear;
 
-import com.milos.numeric.Parameters;
+import com.milos.numeric.parameters.Parameters;
 import org.apache.commons.math3.analysis.UnivariateFunction;
-import org.mariuszgromada.math.mxparser.Expression;
-import org.mariuszgromada.math.mxparser.Function;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 public class SimpleIteration extends NonLinear
 {

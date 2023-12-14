@@ -1,6 +1,6 @@
 package com.milos.numeric.methods.integration;
 
-import com.milos.numeric.Parameters;
+import com.milos.numeric.parameters.Parameters;
 import org.apache.commons.jexl3.JexlExpression;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;

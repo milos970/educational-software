@@ -1,9 +1,8 @@
 package com.milos.numeric.methods.nonlinear;
 
-import com.milos.numeric.Parameters;
+import com.milos.numeric.parameters.Parameters;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.solvers.BisectionSolver;
-import org.apache.commons.math3.analysis.solvers.RegulaFalsiSolver;
 
 public class Bisection extends NonLinear {
 

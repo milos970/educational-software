@@ -1,4 +1,4 @@
-package com.milos.numeric;
+package com.milos.numeric.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,9 +8,9 @@ import lombok.Setter;
 public class DTO
 {
     private String expression;
-    private Double tolerance;
-    private Double  initialValue;
-    private Double min;
-    private Double max;
     private Integer iterations;
+    private Double tolerance;
+    private Double lower;
+    private Double upper;
+    private Double initial;
 }

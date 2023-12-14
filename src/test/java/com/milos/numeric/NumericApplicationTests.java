@@ -1,10 +1,8 @@
 package com.milos.numeric;
 
-import com.milos.numeric.methods.DataValidationTest;
-import com.milos.numeric.methods.nonlinear.Bisection;
 import com.milos.numeric.methods.nonlinear.Newton;
+import com.milos.numeric.parameters.Parameters;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 
 class NumericApplicationTests {
