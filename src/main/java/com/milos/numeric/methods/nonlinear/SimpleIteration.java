@@ -11,16 +11,16 @@ public class SimpleIteration extends NonLinear
     {
         int iterations = parameters.getIterations();
         double tolerance = parameters.getTolerance();
-        double currentValue = parameters.getX0();
+        double currentValue = parameters.getInitialValue();
         String function = parameters.getExpression();
-        UnivariateFunction fun = new Exp4jToUnivariateFunctionAdapter(function);
+        Exp4jToUnivariateFunctionAdapter equationFunction = new Exp4jToUnivariateFunctionAdapter(function);
 
-        for (int i = 0; i < Integer.MAX_VALUE; ++i)
+        for (int i = 0; i < iterations; ++i)
         {
-             double nextValue = fun.value(currentValue);
+             double nextValue = equationFunction.value(currentValue);
 
 
-            if (Math.abs(nextValue - currentValue) < tolerance) {
+            if (Double.compare(Math.abs(nextValue - currentValue), tolerance) <= 0) {
                 return nextValue;
             }
 

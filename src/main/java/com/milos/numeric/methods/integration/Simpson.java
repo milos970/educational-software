@@ -15,8 +15,8 @@ public class Simpson extends Integration
         String function = parameters.getExpression();
         double tolerance = parameters.getTolerance();
         int iterations = parameters.getIterations();
-        double min = parameters.getMin();
-        double max = parameters.getMax();
+        double min = parameters.getLower();
+        double max = parameters.getUpper();
         JexlExpression expression = jexl.createExpression(function);
         UnivariateFunction fun = x -> evaluateExpression(expression, x);
         return integrator.integrate(iterations, fun, min, max);
