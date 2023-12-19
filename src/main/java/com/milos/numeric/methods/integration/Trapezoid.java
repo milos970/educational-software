@@ -1,5 +1,6 @@
 package com.milos.numeric.methods.integration;
 
+import com.milos.numeric.methods.nonlinear.Exp4jToUnivariateFunctionAdapter;
 import com.milos.numeric.parameters.Parameters;
 import org.apache.commons.jexl3.JexlExpression;
 import org.apache.commons.math3.analysis.UnivariateFunction;
@@ -17,8 +18,24 @@ public class Trapezoid extends Integration
         int iterations = parameters.getIterations();
         double min = parameters.getLower();
         double max = parameters.getUpper();
-        JexlExpression expression = jexl.createExpression(function);
-        UnivariateFunction fun = x -> evaluateExpression(expression, x);
-        return integrator.integrate(iterations, fun, min, max);
+
+        int numberOfSubintervals = parameters.getIntervals();
+        Exp4jToUnivariateFunctionAdapter equationFunction = new Exp4jToUnivariateFunctionAdapter(function);
+
+        double h = (max - min) / numberOfSubintervals;
+
+        double sum = 0;
+        sum += equationFunction.value(min) / 2;
+        sum += equationFunction.value(max) / 2;
+
+        for (int i = 1; i < numberOfSubintervals; i++)
+        {
+            double x_i = min + i * h;
+            sum += equationFunction.value(x_i);
+
+        }
+
+        return h * sum;
+
     }
 }

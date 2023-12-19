@@ -26,33 +26,16 @@ public class Bisection extends NonLinear {
 
         for (int k = 0; k < iterations; k++)
         {
-            double xk = (Math.pow(min,2) + Math.pow(max,2)) / 2;
-            double fk = equationFunction.value(xk);
-            double ak = Math.pow(min, 2);
-            if (fk == 0)
-            {
-                return xk;
+            double c = (min + max) / 2;
+
+            if (equationFunction.value(c) == 0 || ((max - min) / 2) < tolerance) {
+                return c;
             }
 
-            double ak1 = 0;
-            double bk1 = 0;
-            if ( (equationFunction.value(ak) * equationFunction.value(xk)) < 0)
-            {
-                ak1 = ak;
-                bk1 = xk;
-            }
-
-            double bk = Math.pow(max, 2);
-
-            if ( (equationFunction.value(bk) * equationFunction.value(xk)) < 0)
-            {
-                ak1 = xk;
-                bk1 = bk;
-            }
-
-            if ((bk1 - ak1) / 2 <= tolerance)
-            {
-                return xk;
+            if (equationFunction.value(c) * equationFunction.value(min) < 0) {
+                max = c;
+            } else {
+                min = c;
             }
 
 

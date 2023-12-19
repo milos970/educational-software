@@ -20,4 +20,6 @@ public class Parameters
     private double upper;
     private double initialValue;
 
+    private int intervals;
+
 }
