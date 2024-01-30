@@ -7,19 +7,20 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Builder
+
 @Getter
+@Setter
 public class Parameters
 {
     private String expression;
 
     private String der;
-    private double tolerance;
-    private int iterations;
-    private double lower;
-    private double upper;
-    private double initialValue;
+    private Double tolerance;
+    private Integer iterations;
+    private Double lower;
+    private Double upper;
+    private Double initialValue;
 
-    private int intervals;
+    private Integer intervals;
 
 }

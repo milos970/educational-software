@@ -24,7 +24,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<script src="/src/main/resources/static/js/newton.js"></script>
+<script src="/src/main/resources/static/js/approximation.js"></script>
 </head>
 <body>
 	
@@ -41,39 +41,13 @@
 					</span>
 
 					<div class="wrap-input100 validate-input" >
-						<input class="input100" id="equation" type="text"  name="email" placeholder="Rovnica" required>
+						<input class="input100" id="equation" type="text"  name="email" placeholder="Pole" required>
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="tolerance" type="number" min="1e-15" max="1e-10"  name="email" placeholder="Tolerancia">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="iterations" type="number" min="1" max="1000000000"  name="pass" placeholder="Iteracie">
-						<span class="focus-input100"></span>
-					</div>
-
-					
-						<div class="wrap-input100 validate-input">
-							<input class="input100" type="number" min="0.1"   name="pass" placeholder="a">
-							<span class="focus-input100"></span>
-						</div>
-
-						<div class="wrap-input100 validate-input">
-							<input class="input100" type="number" max="10000"  name="pass" placeholder="b">
-							<span class="focus-input100"></span>
-						</div>
-					
-
-					<div class="wrap-input100 validate-input" >
-						<input class="input100" id="initial" type="number" min="0" max="1000"  name="pass" placeholder="Inicializacna hodnota">
-						<span class="focus-input100"></span>
-					</div>
 					
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="simpleIterationMethod()">
+						<button class="login100-form-btn" onclick="spline()">
 							Vyrieš
 						</button>
 					</div>

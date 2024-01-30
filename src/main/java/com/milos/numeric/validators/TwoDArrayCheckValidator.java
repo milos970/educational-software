@@ -1,11 +1,11 @@
-package com.milos.numeric.validations;
+package com.milos.numeric.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PrefixValidator implements ConstraintValidator<NonLinear, String> {
+public class TwoDArrayCheckValidator implements ConstraintValidator<NonLinearCheck, String> {
 
-    private String regex = "y\\s*=\\s*\\-?\\d+\\.?\\d*\\s*\\*\\s*x\\s*\\+\\s*\\-?\\d+\\.?\\d*";
+    private String regex = "\\[\\((?!([0-9]+),.*\\1).*?,(?!\\1)([0-9]+)\\)(,(?!\\1)[0-9]+,[0-9]+)+\\]";
 
 
 
@@ -14,4 +14,5 @@ public class PrefixValidator implements ConstraintValidator<NonLinear, String> {
     {
         return value.matches(this.regex);
     }
+
 }

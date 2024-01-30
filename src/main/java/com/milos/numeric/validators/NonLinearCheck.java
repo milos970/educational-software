@@ -1,4 +1,4 @@
-package com.milos.numeric.validations;
+package com.milos.numeric.validators;
 
 
 import jakarta.validation.Constraint;
@@ -8,9 +8,9 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PrefixValidator.class)
+@Constraint(validatedBy = NonLinearFunctionCheckValidator.class)
 @Documented
-public @interface NonLinear {
+public @interface NonLinearCheck {
     String message() default "Expression must be a linear function!";
 
     Class<?>[] groups() default {};

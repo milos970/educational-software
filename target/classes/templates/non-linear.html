@@ -50,7 +50,7 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<th:block th:if="${UserInfo}">
+					<th:block th:if="${user != null && user.loggedIn && user.admin}">
 						<div class="wrap-input100 validate-input">
 							<input class="input100" type="number" min="0.1"  th:field="*{min}" name="pass" placeholder="a">
 							<span class="focus-input100"></span>

@@ -20,9 +20,8 @@ public class MethodController
     {
         model.addAttribute("methodName", "Newtonova metoda");
         model.addAttribute("controller", "/newtonSolve");
-        model.addAttribute("parameters", null);
+        model.addAttribute("parameters", new Parameters());
         return "non-linear";
-
     }
     @PostMapping("/newtonSolve")
     public String newtonSolve(Model model, Parameters parameters)
@@ -38,7 +37,7 @@ public class MethodController
     {
         model.addAttribute("methodName", "Prostá iterácia");
         model.addAttribute("controller", "/simpleSolve");
-        model.addAttribute("parameters", null);
+        model.addAttribute("parameters", new Parameters());
         return "non-linear";
 
     }
@@ -60,7 +59,7 @@ public class MethodController
     {
         model.addAttribute("methodName", "Regula falsi");
         model.addAttribute("controller", "/regula-falsi");
-        model.addAttribute("parameters", null);
+        model.addAttribute("parameters", new Parameters());
         return "non-linear";
 
     }
@@ -82,7 +81,7 @@ public class MethodController
         boolean UserInfo = false;
         model.addAttribute("methodName", "Polovičné delenie intervalov");
         model.addAttribute("controller", "/bisection-solve");
-        model.addAttribute("parameters", null);
+        model.addAttribute("parameters", new Parameters());
         model.addAttribute("UserInfo", UserInfo);
         return "non-linear";
 
@@ -105,7 +104,7 @@ public class MethodController
         boolean UserInfo = true;
         model.addAttribute("methodName", "Lichobežníková metóda");
         model.addAttribute("controller", "/bisection-solve");
-        model.addAttribute("parameters", null);
+        model.addAttribute("parameters", new Parameters());
         model.addAttribute("UserInfo", UserInfo);
         return "non-linear";
 
@@ -127,7 +126,7 @@ public class MethodController
         boolean UserInfo = true;
         model.addAttribute("methodName", "Simpsonova metóda");
         model.addAttribute("controller", "/simpson-solve");
-        model.addAttribute("parameters", null);
+        model.addAttribute("parameters", new Parameters());
         model.addAttribute("UserInfo", UserInfo);
         return "non-linear";
 

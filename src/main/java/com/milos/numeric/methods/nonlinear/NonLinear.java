@@ -13,6 +13,7 @@ public abstract class NonLinear
 
         if (a >= b)
         {
+
             //exception: lower is higher than upper
         }
 
