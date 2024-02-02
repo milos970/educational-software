@@ -21,3 +21,13 @@
         }
 
 
+        function showDeadline()
+        {
+            var reg = document.getElementById('upload');
+            reg.style.display = 'none';
+
+            var upload = document.getElementById('dead');
+            upload.style.display = 'block';
+        }
+
+
