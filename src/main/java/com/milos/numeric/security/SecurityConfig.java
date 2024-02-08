@@ -1,6 +1,7 @@
 package com.milos.numeric.security;
 
-import com.milos.numeric.entities.MyDatabaseUserDetailsService;
+
+import com.milos.numeric.services.MyDatabaseUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,18 +24,23 @@ public class SecurityConfig
     private MyBasicAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        MvcRequestMatcher h2RequestMatcher = new MvcRequestMatcher(introspector, "/**");
-        h2RequestMatcher.setServletPath("/h2-console");
 
+        MvcRequestMatcher.Builder mvcMatcherBuilderA = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderB = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(h2RequestMatcher).permitAll()
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers(mvcMatcherBuilderA.pattern("/css/**")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderB.pattern("/h2-console/**")).permitAll()
+                        .requestMatchers(mvcMatcherAdmin.pattern("/admin/**")).hasAuthority("ADMIN")
+                        .requestMatchers(mvcMatcherStudent.pattern("/student/**")).hasAuthority("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(authenticationEntryPoint))
                 .formLogin(form -> form.successHandler(new CustomAuthenticationSuccessHandler())
                 .loginPage("/login")
-                .permitAll());
+                .permitAll())
+                .logout((logout) -> logout.logoutUrl("/logout").logoutSuccessUrl("/login"));
 
         return http.build();
     }
@@ -43,6 +49,7 @@ public class SecurityConfig
     @Bean
     public UserDetailsService userDetailsService()
     {
+
         return new MyDatabaseUserDetailsService();
     }
 

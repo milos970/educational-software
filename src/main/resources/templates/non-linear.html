@@ -24,7 +24,7 @@
 	<!--===============================================================================================-->
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
 	<script src="/src/main/resources/static/js/non-linear.js"></script>
 </head>
@@ -35,12 +35,12 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
-					<div id="plot"></div>
+
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-
+						
 					</span>
 
 					<div class="wrap-input100 validate-input">
@@ -79,7 +79,7 @@
 					</div>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="bisection()">
+						<button class="login100-form-btn" onclick="newtonMethod()">
 							Vyrieš
 						</button>
 					</div>
@@ -97,14 +97,21 @@
 
 	</div>
 
-	
 
 	
 
+	<canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span>
 
 
 
-	
+ <!-- <table id="table"  class="table table-bordered">
+
+		<tbody>
+
+		</tbody>
+	</table> -->
+
+
 
 
 

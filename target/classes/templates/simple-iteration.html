@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Login V1</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="/src/main/resources/static/images/icons/favicon.ico" />
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/bootstrap/css/bootstrap.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css"
+		href="/src/main/resources/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/animate/animate.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/css-hamburgers/hamburgers.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/select2/select2.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/main.css">
+	<!--===============================================================================================-->
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+	<script src="/src/main/resources/static/js/non-linear.js"></script>
+</head>
+
+<body>
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic" data-tilt>
+
+				</div>
+
+				<div class="login100-form validate-form">
+					<span class="login100-form-title">
+                        <h1>Prostá iterácia</h1>
+					</span>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" id="equation" type="text" name="email" placeholder="Rovnica">
+						<span class="focus-input100"></span>
+					</div>
+
+					<p id="error"></p>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" id="tolerance" type="number" min="1e-15" max="1e-10" name="email"
+							placeholder="Tolerancia">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" id="iterations" type="number" min="1" max="1000000000" name="pass"
+							placeholder="Iteracie">
+						<span class="focus-input100"></span>
+					</div>
+
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" id="a" type="number" min="0.1" name="pass" placeholder="a">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" id="b" type="number" max="10000" name="pass" placeholder="b">
+						<span class="focus-input100"></span>
+					</div>
+
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" id="initial" type="number" min="0" max="1000" name="pass"
+							placeholder="Inicializacna hodnota">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn" onclick="simpleIterationMethod()">
+							Spočítaj
+						</button>
+					</div>
+
+
+					<div class="text-center p-t-136">
+						<a class="txt2" href="#">
+						</a>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+	
+
+	<!-- <canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span> -->
+
+
+
+ <!-- <table id="table"  class="table table-bordered">
+
+		<tbody>
+
+		</tbody>
+	</table> -->
+
+
+
+
+
+
+</body>
+
+</html>

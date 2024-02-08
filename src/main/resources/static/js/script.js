@@ -6,6 +6,9 @@
         var upload = document.getElementById('upload');
         upload.style.display = 'none';
 
+        var dead = document.getElementById('dead');
+        dead.style.display = 'none';
+
         var reg = document.getElementById('reg');
         reg.style.display = 'block';
 
@@ -18,6 +21,9 @@
 
             var upload = document.getElementById('upload');
             upload.style.display = 'block';
+
+            var dead = document.getElementById('dead');
+                    dead.style.display = 'none';
         }
 
 

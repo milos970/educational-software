@@ -1,13 +1,15 @@
 package com.milos.numeric.methods.nonlinear;
 
 import com.milos.numeric.parameters.Parameters;
+
+import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
 import org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver;
 
 public class Newton extends NonLinear
 {
     public Newton()
     {
-
+        
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService
+public class PersonService
 {
     @Autowired
     private PersonRepository personRepository;
@@ -15,5 +15,11 @@ public class UserService
     public Person getByUsername(String username)
     {
         return this.personRepository.findByUsername(username);
+    }
+
+
+    public Person getById(int id)
+    {
+        return this.personRepository.getReferenceById(id);
     }
 }
