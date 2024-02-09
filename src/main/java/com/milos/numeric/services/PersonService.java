@@ -1,6 +1,7 @@
 package com.milos.numeric.services;
 
 import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.PersonDTO;
 import com.milos.numeric.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,5 +22,11 @@ public class PersonService
     public Person getById(int id)
     {
         return this.personRepository.getReferenceById(id);
+    }
+
+
+    public void changePassword(PersonDTO personDTO)
+    {
+
     }
 }

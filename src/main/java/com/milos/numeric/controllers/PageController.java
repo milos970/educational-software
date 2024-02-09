@@ -1,5 +1,6 @@
 package com.milos.numeric.controllers;
 
+import com.milos.numeric.entities.Person;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PageController {
@@ -36,6 +38,14 @@ public class PageController {
         String username = myUserDetails.getUsername();
         model.addAttribute("username", username);
         return "student";
+    }
+
+
+    public String changePassword(@AuthenticationPrincipal MyUserDetails myUserDetails, @RequestParam String password)
+    {
+        String username = myUserDetails.getUsername();
+        Person person = this.personService.getByUsername(username);
+        person.setPassword(password);
     }
 
 
