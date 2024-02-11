@@ -16,8 +16,20 @@
 </form>
 
 
-<form th:action="@{/change-password}" method="POST">
-    <input type="password"/>
+<form th:action="@{/change-password}" th:object="${newPasswordDTO}" method="post">
+    <input type="password" th:field="*{oldPassword}" placeholder="Pôvodné heslo"/>
+    <div th:if="${errorMessage != null}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <br>
+    <br>
+    <input type="password" th:field="*{newPassword}" placeholder="Nové heslo"/>
+    <div th:if="${errorMessage != null}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <br>
+    <br>
+    <input type="password" th:field="*{retypedNewPassword}" placeholder="Znovu zadaj nové heslo" />
     <br>
     <br>
     <input type="submit" value="Zmeniť" placeholder="Heslo"/>

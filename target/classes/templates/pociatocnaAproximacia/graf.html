@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Regula falsi</title>
+	<title>Graf</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -25,64 +25,43 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="/src/main/resources/static/js/non-linear.js"></script>
 </head>
 
 <body>
 
+	
+
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
-					
-					<table id="table"  class="table table-bordered">
-
-						<tbody>
+					<div id="plot"></div>
 				
-						</tbody>
-					</table>
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-                        <h1>Regula falsi</h1>
+                        <h1>Počiatočná aproximácia cez graf</h1>
 					</span>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="equation" type="text" name="email" placeholder="Rovnica">
+						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0">
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error"></p>
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="tolerance" type="number" min="1e-15" max="1e-10" name="email"
-							placeholder="Tolerancia">
+                    <div class="wrap-input100 validate-input">
+						<input class="input100" id="interval" type="number" placeholder="Interval">
 						<span class="focus-input100"></span>
 					</div>
 
+					<p id="equation-error"></p>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="a" type="number"  placeholder="a">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="b" type="number"  placeholder="b">
-						<span class="focus-input100"></span>
-					</div>
-
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="initial" type="number" 
-							placeholder="Inicializacna hodnota">
-						<span class="focus-input100"></span>
-					</div>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="regulaFalsi()">
-							Spočítaj
+						<button class="login100-form-btn" onclick="display()">
+							Vykresli graf
 						</button>
 					</div>
 
@@ -101,12 +80,12 @@
 
 
 	
-
-	<!-- <canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span> -->
-
+	
 
 
- 
+	
+
+
 
 
 

@@ -1,11 +1,14 @@
 package com.milos.numeric.services;
 
 import com.milos.numeric.entities.Person;
-import com.milos.numeric.entities.PersonDTO;
+import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PersonService
@@ -25,8 +28,13 @@ public class PersonService
     }
 
 
-    public void changePassword(PersonDTO personDTO)
+    public void changePassword(Person person, String newPassword)
     {
+        person.setPassword(newPassword);
+        this.personRepository.save(person);
+    }
 
+    public List<Person> getAll() {
+        return personRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
     }
 }

@@ -38,6 +38,12 @@
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
 					<div id="plot"></div>
+					<table id="table"  class="table table-bordered">
+
+						<tbody>
+				
+						</tbody>
+					</table>
 				</div>
 
 				<div class="login100-form validate-form">
@@ -46,29 +52,40 @@
 					</span>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="equation" type="text" placeholder="Rovnica" >
+						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0" on >
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error"></p>
+					<p id="equation-error"></p>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="tolerance" type="number" oninput="increase()" min="0.000001" max="0.001"
-							placeholder="Tolerancia" >
+						<input class="input100" id="tolerance" type="number" oninput="increase()" min="0.000001" max="0.1"
+							placeholder="Tolerancia z intervalu" >
 						<span class="focus-input100"></span>
 					</div>
+
+					<p id="tolerance-error"></p>
 
 
 
 					<div class="wrap-input100 validate-input">
 						<input class="input100" id="initial" type="number" 
-							placeholder="Inicializačná hodnota">
+							placeholder="Počiatočná aproximácia">
 						<span class="focus-input100"></span>
+					</div>
+
+					<p id="initial-error"></p>
+
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn" onclick="newtonMethod()">
+							Spočítaj
+						</button>
 					</div>
 
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" onclick="display()">
-							Spočítaj
+							Vykresli graf
 						</button>
 					</div>
 
@@ -87,8 +104,7 @@
 
 
 	
-
-	<!-- <canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span> -->
+	
 
 
 	

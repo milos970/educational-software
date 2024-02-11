@@ -1,20 +1,26 @@
 package com.milos.numeric.controllers;
 
+import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.entities.Person;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
+import com.milos.numeric.validators.NewPasswordDTOValidator;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PageController {
 
     @Autowired
     private PersonService personService;
+
+    @Autowired
+    private NewPasswordDTOValidator newPasswordDTOValidator;
 
     @GetMapping("/login")
     public String login()
@@ -37,15 +43,34 @@ public class PageController {
     {
         String username = myUserDetails.getUsername();
         model.addAttribute("username", username);
+        model.addAttribute("newPasswordDTO", new NewPasswordDTO());
         return "student";
     }
 
-
-    public String changePassword(@AuthenticationPrincipal MyUserDetails myUserDetails, @RequestParam String password)
+    /**
+     *Not finished!
+     */
+    public String changePassword(@AuthenticationPrincipal MyUserDetails myUserDetails, @Valid NewPasswordDTO newPasswordDTO, Model model)
     {
         String username = myUserDetails.getUsername();
         Person person = this.personService.getByUsername(username);
-        person.setPassword(password);
+
+        String oldPassword = person.getPassword();
+        String newPassword = newPasswordDTO.getNewPassword();
+
+
+
+        return "student";
+
+    }
+
+
+
+
+    @GetMapping("/admin/student")
+    public String allStudents(Model model)
+    {
+
     }
 
 
@@ -57,6 +82,11 @@ public class PageController {
 
 
 
+
+
+
+
+//tu spraviť generovanie metod
     @GetMapping("/newton")
     public String newton() {
         return "newton-nonlinear";
