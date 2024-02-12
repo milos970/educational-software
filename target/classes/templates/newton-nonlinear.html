@@ -52,15 +52,17 @@
 					</span>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0" on >
+						<label class="text-center" for="equation">Rovnica</label>
+						<input class="input100" id="equation" type="text" placeholder="f(x) = 0" on >
 						<span class="focus-input100"></span>
 					</div>
 
 					<p id="equation-error"></p>
 
 					<div class="wrap-input100 validate-input">
+						<label for="tolerance">Tolerancia</label>
 						<input class="input100" id="tolerance" type="number" oninput="increase()" min="0.000001" max="0.1"
-							placeholder="Tolerancia z intervalu" >
+							placeholder="<1*10e-8;1*10e-3>" >
 						<span class="focus-input100"></span>
 					</div>
 
@@ -69,8 +71,9 @@
 
 
 					<div class="wrap-input100 validate-input">
+						<label for="initial">Počiatočná aproximácia</label>
 						<input class="input100" id="initial" type="number" 
-							placeholder="Počiatočná aproximácia">
+							placeholder="">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -83,11 +86,6 @@
 						</button>
 					</div>
 
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="display()">
-							Vykresli graf
-						</button>
-					</div>
 
 
 					<div class="text-center p-t-136">

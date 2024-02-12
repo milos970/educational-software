@@ -50,38 +50,36 @@
 					</span>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="equation" type="text" name="email" placeholder="Rovnica">
+						<label class="text-center" for="equation">Rovnica</label>
+						<input class="input100" id="equation" type="text" placeholder="f(x) = 0">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p id="error"></p>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="tolerance" type="number" min="1e-15" max="1e-10" name="email"
-							placeholder="Tolerancia">
+						<label for="tolerance">Tolerancia</label>
+						<input class="input100" id="tolerance" type="number"
+						placeholder="<1*10e-8;1*10e-3>" >
 						<span class="focus-input100"></span>
 					</div>
 
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="a" type="number"  placeholder="a">
+						<label for="tolerance">Dolná hranica</label>
+						<input class="input100" id="a" type="number" placeholder="DH < HH">
 						<span class="focus-input100"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" id="b" type="number"  placeholder="b">
+						<label for="tolerance">Horná hranica</label>
+						<input class="input100" id="b" type="number" placeholder="HH > DH">
 						<span class="focus-input100"></span>
 					</div>
 
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="initial" type="number" 
-							placeholder="Inicializacna hodnota">
-						<span class="focus-input100"></span>
-					</div>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="regulaFalsi()">
+						<button class="login100-form-btn" onclick="bisection()">
 							Spočítaj
 						</button>
 					</div>

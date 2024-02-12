@@ -1,5 +1,5 @@
 
-let data = [];
+
 
 let start = 0;
 let finish = 0;
@@ -149,7 +149,8 @@ function validate()
     
     if (tolerance.value.length === 0 || tolerance.value < 0.000001 || tolerance.value > 0.001) 
     {
-        document.getElementById("tolerance-error").innerHTML = "Tolerancia musí byť v rozsahu <1*10e-6;1*10e-3>!";
+        document.getElementById("tolerance-error").innerHTML = "Nevalidná hodnota!";
+        document.getElementById("tolerance-error").style.color = "red";
         error = true;
     } else {
         document.getElementById("tolerance-error").innerText = "";
@@ -159,6 +160,7 @@ function validate()
     if (initialValue.value.length === 0) 
     {
         document.getElementById("initial-error").innerHTML = "Nevalidná hodnota!";
+        document.getElementById("initial-error").style.color = "red";
         error = true;
     } else {
         document.getElementById("initial-error").innerText = "";
@@ -167,6 +169,7 @@ function validate()
     if (equation.value.length === 0) 
     {
         document.getElementById("equation-error").innerHTML = "Nevalidný výraz!";
+        document.getElementById("equation-error").style.color = "red";
         error = true;
     } else 
     {
@@ -194,36 +197,84 @@ function validate()
 function tabelation() 
 {
     var equation = document.getElementById("equation").value;
+
+
+    equation = equation.slice(0, -1);
+    equation = equation.replace("=","");
+    equation = equation.trim();
+
+
     var parsedEquation = math.parse(equation).toString();
 
+
+
     var value = 0;
-    data = [];
+    var step = 0.1;
+    var data = [];
+
+    
 
     for (let i = 0; i < 1000; i++) 
     {
         var first = math.evaluate(parsedEquation, { x: value });
 
-        value += 0.1;
+        value += step;
 
         var second = math.evaluate(parsedEquation, { x: value })
 
 
-        if ( (first > 0 && second <= 0) || (second > 0 && first <= 0)) 
+        if (first * second < 0) 
         {   
-            data.push(value - 0.1);
+            data.push(value - step);
             data.push(value);
         }
-        value += 0.1;
+        value += step;
 
     }
 
 
-    for (let i = 0; i < data.length; i+=2) 
-    {
-        console.log(data[i] + " " + data[i + 1]);
-    }
+    let headers = ["Dolná hranica", "Horná hranica"];
+
+    initializTable(headers, data);
 
 }
+
+
+
+
+    function initializTable(headers, data) 
+    {
+        var table = document.getElementById("table");
+        table.style.display = "block";
+    
+        var header = table.createTHead();
+        var row = header.insertRow(0);
+        for (let i = 0; i < headers.length; ++i) {
+            var cell = row.insertCell(i);
+            cell.innerHTML = headers[i];
+        }
+    
+        var till = 0;
+    
+        if (data.length / 2 > 10) 
+        {
+            till = 10;
+        }
+
+        
+    
+    
+        for (let i = 0; i < till; i += 2) 
+        {
+            let row = table.insertRow(-1);
+            row.insertCell(0).innerText = data[i].toFixed(6);
+            row.insertCell(1).innerText = data[i + 1].toFixed(6);
+        }
+    
+    
+    
+    
+    }
 
 
 
@@ -236,6 +287,10 @@ function newtonMethod()
     var equation = document.getElementById("equation").value;
     var tolerance = document.getElementById("tolerance").value;
     var initial = document.getElementById("initial").value;
+
+    equation = equation.slice(0, -1);
+    equation = equation.replace("=","");
+    equation = equation.trim();
 
     iterations = 100;
 
@@ -333,6 +388,9 @@ function initializeTable(headers, data) {
 
 
 }
+
+
+
 
 
 
