@@ -21,10 +21,11 @@
 	<link rel="stylesheet" type="text/css"  href="/src/main/resources/static/css/main.css">
 <!--===============================================================================================-->
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<script src="/src/main/resources/static/js/approximation.js"></script>
+
 </head>
 <body>
 	
@@ -40,8 +41,9 @@
                         <h1>Lagrangeov interpolačný polynom</h1>
 					</span>
 
-					<div class="wrap-input100 validate-input" >
-						<input class="input100" id="equation" type="text"  name="email" placeholder="uzly" required>
+					<div class="wrap-input100 validate-input text-center" >
+						<label class="label" for="tolerance">Data</label>
+						<input class="input100" id="equation" type="text" placeholder="[(x,y),(x,y),...]">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -74,6 +76,6 @@
 	
 
 
-
+<script src="/src/main/resources/static/js/approximation.js"></script>
 </body>
 </html>

@@ -48,7 +48,7 @@
                         <h1>Polovičné delenie intervalov</h1>
 					</span>
 
-					<div class="wrap-input100 validate-input">
+					<div class="wrap-input100 validate-input text-center">
 						<label class="text-center" for="equation">Rovnica</label>
 						<input class="input100" id="equation" type="text" placeholder="f(x) = 0">
 						<span class="focus-input100"></span>
@@ -56,7 +56,7 @@
 
 					<p id="error"></p>
 
-					<div class="wrap-input100 validate-input">
+					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Tolerancia</label>
 						<input class="input100" id="tolerance" type="number"
 						placeholder="<1*10e-8;1*10e-3>" >
@@ -64,17 +64,21 @@
 					</div>
 
 
-					<div class="wrap-input100 validate-input">
+					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Dolná hranica</label>
-						<input class="input100" id="a" type="number" placeholder="DH < HH">
+						<input class="input100" id="dh" type="number" placeholder="DH < HH">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input">
+					<p id="error"></p>
+
+					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Horná hranica</label>
-						<input class="input100" id="b" type="number" placeholder="HH > DH">
+						<input class="input100" id="hh" type="number" placeholder="HH > DH">
 						<span class="focus-input100"></span>
 					</div>
+
+					<p id="error"></p>
 
 
 					<div class="container-login100-form-btn">

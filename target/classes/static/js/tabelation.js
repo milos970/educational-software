@@ -2,38 +2,55 @@ const table = document.getElementById("table");
 const equation = document.getElementById("equation");
 const equationError = document.getElementById("equation-error");
 
-function validate(equation) {
-  let error = false;
+function validate(equation) 
+{
+  let lastChar = equation.charAt(equation.length - 1);
+  equationError.style.color = "red";
 
-  if (equation.length === 0) {
+  if (equation.length === 0) 
+  {
     equationError.innerHTML = "Nevalidný výraz!";
-    equationError.style.color = "red";
-    error = true;
-  } else {
+    return false;
+  }
+  
+  if ("0" !== lastChar) 
+  {
+    equationError.innerHTML = "Nevalidný výraz!";
+    return false;
+  }
+
+  if (equation.indexOf("=") === - 1) 
+  {
+    equationError.innerHTML = "Nevalidný výraz!";
+    return false;
+  }
+
+  equation = equation.slice(0, -1).replace("=", "").trim(); // separate to function
+
     try {
       let expression = math.parse(equation);
       math.evaluate(expression.toString(), { x: 0 });
       equationError.innerText = "";
-      return error;
+      
+      return true;
     } catch (error) {
       equationError.innerText = "Nevalidný výraz!";
       return false;
     }
-  }
-
-  return error;
 }
 
 function tabelation() {
 
 
   let equationString = equation.value;
-  equationString = equationString.slice(0, -1).replace("=", "").trim();
 
   if (validate(equationString)) 
   {
     return;
   }
+
+  
+  
 
   const parsedEquation = math.parse(equationString).toString();
 

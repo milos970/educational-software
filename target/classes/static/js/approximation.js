@@ -1,24 +1,48 @@
 
+let equation = document.getElementById("equation");
 
-function validate() 
+function isValid() 
 {
-    const regex =/^\[(\((\d+),\d+\))(?:,(?!\2)\((\d+),\d+\))*\]$/gm;
+    const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*\]$/;
     
-    var x = document.getElementById("equation").value;
+    
+    let element = document.getElementById("error");
 
-    var element = document.getElementById("error");
+
+    if (equation.value.length === 0) 
+    {
+        element.innerText = "Prázdne pole!";
+        return false;
+    }
 
 
-    if (regex.test(x)) 
+    if (regex.test(equation.value)) 
     {
         element.innerText = "";
     } else {
-        element.innerText = "Nesprávny formát!";
-        return;
+        element.innerText = "Nevalidný výraz!";
+        return false;
     }
 
 
     let data = parse();
+
+    if (data.length === 1) 
+    {
+        element.innerText = "Málo vstupných bodov!";
+        return false;
+    } else {
+        element.innerText = "";
+    }
+
+
+    if (data.length === 100) 
+    {
+        element.innerText = "Veľa vstupných údajov!";
+        return false;
+    } else {
+        element.innerText = "";
+    }
 
 
     const uniques = new Set();
@@ -30,20 +54,19 @@ function validate()
 
     if (data.length !== uniques.size) 
     {
-        element.innerText = "Nájdený duplikát!";
-        return;
+        element.innerText = "Duplikatný vstupný údaj!";
+        return false;
     } else {
         element.innerText = "";
     }
 
-    return data;
+    return true;
 }
 
 
 function parse() 
 {
-    var eq = document.getElementById("equation").value;
-    let matches = eq.match(/-?\d+(\.\d+)?/g);
+    let matches = equation.value.match(/-?\d+(\.\d+)?/g);
 
 
     let data = [];
@@ -64,9 +87,82 @@ function parse()
 }
 
 
+function langrangeInterpolate() 
+{
+    if ( !isValid()) 
+    {
+        return;
+    }
+
+
+    //matches.forEach((element) => console.log(element));
+    arr = matches;
+    let equation = "";
+    let first = true;
+    
+    for (let i = 0; i < arr.length; i+=2) 
+    {
+        let part = "";
+        let menovatel = 1;
+        for (let k = 0; k < arr.length; k+=2) 
+        {
+            
+                if (i == k) 
+                {
+                    continue;
+                }
+
+                
+                if (arr[k] > 0) 
+                {
+                    part += "(x - " + arr[k] + ")";
+                } else 
+                {
+                    part += "(x + " + ((-1) * (arr[k])) + ")";
+                }
+                
+
+                menovatel *= (arr[i] - arr[k]);
+        }
+
+        menovatel = 1/ menovatel;
+        
+
+        
+
+        if (first) 
+        {
+            part = (arr[i + 1] * menovatel) + part;
+            equation += part;
+            first = false;
+        } else 
+        {
+            if (arr[i + 1] * menovatel > 0) 
+            {
+                part = "+" + (arr[i + 1] * menovatel) + part;
+            } else 
+            {
+                part = (arr[i + 1] * menovatel) + part;
+            }
+
+            equation += part;
+        }
+
+
+    }
+
+    alert(equation);
+
+
+}
+
+
 function leastSquares() 
 {
-    let data = validate();
+    if ( !isValid()) 
+    {
+        return;
+    }
 
     linear(data);
     logaritmic(data);
@@ -237,7 +333,10 @@ function error(equation,data)
 
 function newtonInterpolate() 
 {
-    let data = validate();
+    if ( !isValid()) 
+    {
+        return;
+    }
 
     var equation = "";
     for (let i = 0; i < data.length; ++i) 
@@ -293,7 +392,10 @@ function newtonInterpolate()
 
 function spline() 
 {
-    let data = validate();
+    if ( !isValid()) 
+    {
+        return;
+    }
 
     let dk = [];
     
@@ -334,74 +436,7 @@ function spline()
 }
 
 
-function langrangeInterpolate() 
-{
-    var eq = document.getElementById("equation").value;
-    let matches = eq.match(/-?\d+(\.\d+)?/g);
 
-    matches.forEach((element) => console.log(element));
-    arr = matches;
-    let equation = "";
-    let first = true;
-    
-    for (let i = 0; i < arr.length; i+=2) 
-    {
-        let part = "";
-        let menovatel = 1;
-        for (let k = 0; k < arr.length; k+=2) 
-        {
-            
-                if (i == k) 
-                {
-                    continue;
-                }
-
-                
-                if (arr[k] > 0) 
-                {
-                    part += "(x - " + arr[k] + ")";
-                } else 
-                {
-                    part += "(x + " + ((-1) * (arr[k])) + ")";
-                }
-                
-
-                menovatel *= (arr[i] - arr[k]);
-                alert(menovatel);
-        }
-
-        menovatel = 1/ menovatel;
-        
-
-        
-
-        if (first) 
-        {
-            part = (arr[i + 1] * menovatel) + part;
-            equation += part;
-            first = false;
-        } else 
-        {
-            if (arr[i + 1] * menovatel > 0) 
-            {
-                part = "+" + (arr[i + 1] * menovatel) + part;
-            } else 
-            {
-                part = (arr[i + 1] * menovatel) + part;
-            }
-
-            equation += part;
-        }
-
-
-    }
-
-    var res = document.getElementById("result");
-
-    res.innerHTML = equation;
-
-
-}
 
 
 

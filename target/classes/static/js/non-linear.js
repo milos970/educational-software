@@ -119,18 +119,30 @@ function increase() {
     }
 }
 
-function isEmpty() 
+function isEmpty(elementId) 
 {
-    var value = document.getElementById("equation").value;
+    let element = document.getElementById(elementId);
 
-    if (value.length === 0) 
+    if (element.value.length === 0) 
     {
         element.innerHTML = "Nevalidný výraz!";
         return true;
     }
 
     return false;
+}
 
+
+function validateBisection() 
+{
+    let DH = document.getElementById("dh");
+    let HH = document.getElementById("hh");
+
+    if (DH > HH) 
+    {
+        document.getElementById("tolerance-error").innerHTML = "Dolná hranica je väčšia než horná!";
+        return false;
+    }
 }
 
 
