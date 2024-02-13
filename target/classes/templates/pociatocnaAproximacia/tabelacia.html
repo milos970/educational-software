@@ -26,45 +26,55 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<script src="/src/main/resources/static/js/non-linear.js"></script>
+	<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+    </script>
+	
 </head>
 
 <body>
 
-	
+
 
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
-					
-					<table id="table"  class="table table-bordered">
+
+					<table id="table" class="table table-bordered">
 
 						<tbody>
-				
+
 						</tbody>
 					</table>
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-                        <h1>Tabelácia funkcie</h1>
+						<h1>Tabelácia funkcie</h1>
 					</span>
 
 					<div class="wrap-input100 validate-input">
 						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="f(x) = 0" on >
+						<input class="input100" id="equation" type="text" placeholder="f(x) = 0" on>
 						<span class="focus-input100"></span>
 					</div>
 					<p id="equation-error"></p>
 
-					
-				
+
+
 
 
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" onclick="tabelation()">
 							Vypíš tabuľku
+						</button>
+					</div>
+
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn" onclick="cl()">
+							vycisti
 						</button>
 					</div>
 
@@ -82,11 +92,6 @@
 	</div>
 
 
-	
-	
-
-
-	
 
 
 
@@ -94,6 +99,11 @@
 
 
 
+
+
+
+
+<script src="/src/main/resources/static/js/tabelation.js"></script>
 
 </body>
 

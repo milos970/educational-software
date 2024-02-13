@@ -194,87 +194,12 @@ function validate()
 }
 
 
-function tabelation() 
-{
-    var equation = document.getElementById("equation").value;
 
-
-    equation = equation.slice(0, -1);
-    equation = equation.replace("=","");
-    equation = equation.trim();
-
-
-    var parsedEquation = math.parse(equation).toString();
-
-
-
-    var value = 0;
-    var step = 0.1;
-    var data = [];
-
-    
-
-    for (let i = 0; i < 1000; i++) 
-    {
-        var first = math.evaluate(parsedEquation, { x: value });
-
-        value += step;
-
-        var second = math.evaluate(parsedEquation, { x: value })
-
-
-        if (first * second < 0) 
-        {   
-            data.push(value - step);
-            data.push(value);
-        }
-        value += step;
-
-    }
-
-
-    let headers = ["Dolná hranica", "Horná hranica"];
-
-    initializTable(headers, data);
-
-}
 
 
 
 
-    function initializTable(headers, data) 
-    {
-        var table = document.getElementById("table");
-        table.style.display = "block";
     
-        var header = table.createTHead();
-        var row = header.insertRow(0);
-        for (let i = 0; i < headers.length; ++i) {
-            var cell = row.insertCell(i);
-            cell.innerHTML = headers[i];
-        }
-    
-        var till = 0;
-    
-        if (data.length / 2 > 10) 
-        {
-            till = 10;
-        }
-
-        
-    
-    
-        for (let i = 0; i < till; i += 2) 
-        {
-            let row = table.insertRow(-1);
-            row.insertCell(0).innerText = data[i].toFixed(6);
-            row.insertCell(1).innerText = data[i + 1].toFixed(6);
-        }
-    
-    
-    
-    
-    }
 
 
 
