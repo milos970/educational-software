@@ -5,6 +5,9 @@ function isValid()
 {
     const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*\]$/;
     
+    let s = 0;
+
+
     
     let element = document.getElementById("error");
 
