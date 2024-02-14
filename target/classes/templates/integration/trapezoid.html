@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Login V1</title>
+	<title>Simpsonová metóda</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -24,9 +24,8 @@
 	<!--===============================================================================================-->
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-	<script src="/src/main/resources/static/js/non-linear.js"></script>
+	<script src="/src/main/resources/static/js/integration.js"></script>
 </head>
 
 <body>
@@ -35,52 +34,60 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
-
+					
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-						
+						<h1>Lichobežníková metóda</h1>
 					</span>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="equation" type="text" name="email" placeholder="Rovnica">
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Funkcia</label>
+						<input class="input100" id="function" type="text"  placeholder="f(x)">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="tolerance" type="number" min="1e-15" max="1e-10" name="email"
-							placeholder="Tolerancia">
+					<p id="error-function"></p>
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Dolná hranica</label>
+						<input class="input100" id="dh" type="number"
+							placeholder="DH < HH">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="iterations" type="number" min="1" max="1000000000" name="pass"
-							placeholder="Iteracie">
+					<p id="error-dh"></p>
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Horná hranica</label>
+						<input class="input100" id="hh" type="number"
+							placeholder="HH > DH">
 						<span class="focus-input100"></span>
 					</div>
 
+					<p id="error-hh"></p>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="a" type="number" min="0.1" name="pass" placeholder="a">
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Počet podintervalov</label>
+						<input class="input100" id="n" type="number"  placeholder="<1;10>">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="b" type="number" max="10000" name="pass" placeholder="b">
+					<p id="error-n"></p>
+
+					<div class="wrap-input100 validate-input text-center" >
+						<label class="label" for="tolerance">Výsledok</label>
+						<input class="input100" id="result" type="text" readonly>
 						<span class="focus-input100"></span>
 					</div>
 
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="initial" type="number" min="0" max="1000" name="pass"
-							placeholder="Inicializacna hodnota">
-						<span class="focus-input100"></span>
-					</div>
+					
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="newtonMethod()">
-							Vyrieš
+						<button class="login100-form-btn" onclick="trapezoid()">
+							Vypočítaj
 						</button>
 					</div>
 
@@ -99,23 +106,6 @@
 
 
 	
-
-	<canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span>
-
-
-
- <!-- <table id="table"  class="table table-bordered">
-
-		<tbody>
-
-		</tbody>
-	</table> -->
-
-
-
-
-
-
 </body>
 
 </html>

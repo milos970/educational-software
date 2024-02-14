@@ -34,7 +34,7 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
-					<h1 id="result"></h1>
+					
 				</div>
 
 				<div class="login100-form validate-form">
@@ -42,28 +42,44 @@
 						<h1>Simpsonová metóda</h1>
 					</span>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="function" type="text"  placeholder="funkcia">
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Funkcia</label>
+						<input class="input100" id="function" type="text"  placeholder="f(x)">
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error"></p>
+					<p id="error-function"></p>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="a" type="number"
-							placeholder="a">
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Dolná hranica</label>
+						<input class="input100" id="dh" type="number"
+							placeholder="DH < HH">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="b" type="number"
-							placeholder="b">
+					<p id="error-dh"></p>
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Horná hranica</label>
+						<input class="input100" id="hh" type="number"
+							placeholder="HH > DH">
 						<span class="focus-input100"></span>
 					</div>
 
+					<p id="error-hh"></p>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="n" type="number"  placeholder="n">
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Počet podintervalov</label>
+						<input class="input100" id="n" type="number"  placeholder="<1;10>">
+						<span class="focus-input100"></span>
+					</div>
+
+					<p id="error-n"></p>
+
+					<div class="wrap-input100 validate-input text-center" >
+						<label class="label" for="tolerance">Výsledok</label>
+						<input class="input100" id="result" type="text" readonly>
 						<span class="focus-input100"></span>
 					</div>
 
@@ -90,23 +106,6 @@
 
 
 	
-
-	<!-- <canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span> -->
-
-
-
- <!-- <table id="table"  class="table table-bordered">
-
-		<tbody>
-
-		</tbody>
-	</table> -->
-
-
-
-
-
-
 </body>
 
 </html>

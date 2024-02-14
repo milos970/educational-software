@@ -78,7 +78,7 @@ function display() {
 
 
     const layout = {
-        title: parsedEquation.toString(),
+        title: "parsedEquation.toString()",
         xaxis: { title: 'x' },
         yaxis: { title: 'f(x)' }
     };

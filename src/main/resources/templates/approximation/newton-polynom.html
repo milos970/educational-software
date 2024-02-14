@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V1</title>
+	<title>Newtonov interpolačný polynom</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -24,33 +24,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<script src="/src/main/resources/static/js/approximation.js"></script>
+
 </head>
 <body>
 	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<div class="login100-pic js-tilt" data-tilt>
-					
+				<div class="login100-pic" data-tilt>
+					<div id="plot"></div>
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title" >
-
+                        <h1>Newtonov interpolačný polynom</h1>
 					</span>
 
-					<div class="wrap-input100 validate-input" >
-						<input class="input100" id="equation" type="text"  name="email" placeholder="Pole" required>
+					<div class="wrap-input100 validate-input text-center" >
+						<label class="label" for="tolerance">Data</label>
+						<input class="input100" id="nodes" type="text" placeholder="[(x,y),(x,y),...]">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p id="error"></p>
 
+					<div class="wrap-input100 validate-input text-center" >
+						<label class="label" for="tolerance">Výsledok</label>
+						<input class="input100" id="result" type="text" readonly>
+						<span class="focus-input100"></span>
+					</div>
+
 					
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="validate()">
-							Vyrieš
+						<button class="login100-form-btn" onclick="newtonInterpolate()">
+							Spočítaj
 						</button>
 					</div>
 
@@ -67,29 +74,14 @@
 
 	</div>
 
-	<div id="plot"></div>
 	
 	
+	
 
 	
-<!--===============================================================================================-->	
-	<script src="/src/main/resources/static/vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-	<script src="/src/main/resources/static/vendor/bootstrap/js/popper.js"></script>
-	<script src="/src/main/resources/static/vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-	<script src="/src/main/resources/static/vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-	<script src="/src/main/resources/static/vendor/tilt/tilt.jquery.min.js"></script>
-	<script >
-		$('.js-tilt').tilt({
-			scale: 1.1
-		})
-	</script>
-<!--===============================================================================================-->
 
 
-
+<script src="/src/main/resources/static/js/approximation.js"></script>
 
 </body>
 </html>

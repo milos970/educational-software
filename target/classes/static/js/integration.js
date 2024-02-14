@@ -1,12 +1,17 @@
+const fun = document.getElementById("function");
+const a = document.getElementById("a");
+const b = document.getElementById("b");
+const n = document.getElementById("n");
+const errorFun = document.getElementById("error-function");
+const errorDH = document.getElementById("error-dh");
+const errorHH = document.getElementById("error-hh");
+const errorN = document.getElementById("error-n");
 
 function validate() 
 {
-    
-    var fun = document.getElementById("function").value;
-    var element = document.getElementById("error");
     try {
         
-        var expression = math.parse(fun);
+        var expression = math.parse(fun.value);
         math.evaluate(expression.toString(), { x: 0 });
     
         element.innerText = "";
@@ -27,29 +32,20 @@ function trapezoid()
         return;
     }
 
-    var fun = document.getElementById("function").value;
-    var a = document.getElementById("a").value;
-    var b = document.getElementById("b").value;
+   
+    let h = (b.value - a.value) / n.value;
 
-    var n = document.getElementById("n").value;
-
-    var parsedEquation = math.parse(fun);
-
-    
-    var res = document.getElementById("result");
-    var h = (b - a) / n;
-
-    
+    let parsedEquation = math.parse(fun.value);
     
 
-    var result = math.evaluate(parsedEquation.toString(), { x: 0 });
-    var result = result + math.evaluate(parsedEquation.toString(), { x: b - a });
+    let result = math.evaluate(parsedEquation.toString(), { x: 0 });
+    result = result + math.evaluate(parsedEquation.toString(), { x: b - a });
 
-    var sum = h;
-    for (var i = 0; i < n - 1; ++i) 
+    let sum = h;
+    for (let i = 0; i < n.value - 1; ++i) 
     {
         
-        var fx = math.evaluate(parsedEquation.toString(), { x: sum });
+        let fx = math.evaluate(parsedEquation.toString(), { x: sum });
         result = result + 2 * fx;
 
         sum += h;
@@ -58,10 +54,7 @@ function trapezoid()
 
 
     result = result * (h/2);
-
-    res.innerHTML = result.toFixed(6);
-
-    
+    res.value = result.toFixed(6);
 }
 
 function simpson() 
@@ -70,33 +63,24 @@ function simpson()
         return;
     }
     
-    var fun = document.getElementById("function").value;
-    var a = document.getElementById("a").value;
-    var b = document.getElementById("b").value;
+    
+    let parsedEquation = math.parse(fun);
 
-    var n = document.getElementById("n").value;
-
-    var parsedEquation = math.parse(fun);
-
-    var res = document.getElementById("result");
+    let h = (b - a) / n;
 
     
 
-    var h = (b - a) / n;
+    let result = math.evaluate(parsedEquation.toString(), { x: 0 });
+    result = result + math.evaluate(parsedEquation.toString(), { x: b - a });
 
-    
+    let sum = h;
 
-    var result = math.evaluate(parsedEquation.toString(), { x: 0 });
-    var result = result + math.evaluate(parsedEquation.toString(), { x: b - a });
+    let parResultA = 0;
+    let parResultB = 0;
 
-    var sum = h;
-
-    var parResultA = 0;
-    var parResultB = 0;
-
-    for (var i = 1; i < n ; ++i) 
+    for (let i = 1; i < n ; ++i) 
     {
-        var yi = math.evaluate(parsedEquation.toString(), { x: sum });
+        let yi = math.evaluate(parsedEquation.toString(), { x: sum });
 
         if (i % 2 !== 0) 
         {
@@ -118,7 +102,7 @@ function simpson()
 
     result *= (h/3);
 
-   res.innerHTML = result.toFixed(6);
+   res.value = result.toFixed(6);
 
 }
 

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Lichobežníková metóda</title>
+	<title>Metóda najmenších štvorcov</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -23,9 +23,16 @@
 	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/main.css">
 	<!--===============================================================================================-->
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
 
-	<script src="/src/main/resources/static/js/integration.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
 </head>
 
 <body>
@@ -34,46 +41,62 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
-					<h1 id="result"></h1>
+					<div id="plot"></div>
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-						<h1>Lichobežníková metóda</h1>
+						<h1>Metóda najmenších štvorcov</h1>
 					</span>
 
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="function" type="text"  placeholder="funkcia">
-						<span class="focus-input100"></span>
-					</div>
-
-					<p id="error"></p>
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="a" type="number"
-							placeholder="a">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="b" type="number"
-							placeholder="b">
-						<span class="focus-input100"></span>
-					</div>
-
-
-					<div class="wrap-input100 validate-input">
-						<input class="input100" id="n" type="number"  placeholder="n">
+					<div class="wrap-input100 validate-input text-center">
+						<label class="label" for="tolerance">Nodes</label>
+						<input class="input100" id="nodes" type="text" placeholder="[(x,y),(x,y),...]">
 						<span class="focus-input100"></span>
 					</div>
 
 					
 
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio1" checked>
+						<label class="form-check-label" for="radio1">
+							Lineárna funkcia
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio2">
+						<label class="form-check-label" for="radio2">
+							Logaritmická funkcia
+						</label>
+					</div>
+
+
+					<div class="wrap-input100 validate-input text-center">
+						<label class="label" for="tolerance">Výsledok</label>
+						<input class="input100" id="result" type="text" readonly>
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input text-center">
+						<label class="label" for="tolerance">Chyba</label>
+						<input class="input100" id="error" type="text" readonly>
+						<span class="focus-input100"></span>
+					</div>
+
+
+
+
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="trapezoid()">
-							Vypočítaj
+						<button class="login100-form-btn" onclick="leastSquares()">
+							Spočítaj
 						</button>
 					</div>
+
+
+
+
+
+
 
 
 					<div class="text-center p-t-136">
@@ -89,24 +112,12 @@
 	</div>
 
 
-	
-
-	<!-- <canvas id="myChart" style="width:100%;max-width:1000px"></canvas> <span></span> -->
-
-
-
- <!-- <table id="table"  class="table table-bordered">
-
-		<tbody>
-
-		</tbody>
-	</table> -->
 
 
 
 
 
-
+	<script src="/src/main/resources/static/js/approximation.js"></script>
 </body>
 
 </html>

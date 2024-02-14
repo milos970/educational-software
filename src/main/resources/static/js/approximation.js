@@ -1,6 +1,7 @@
 
 const nodes = document.getElementById("nodes");
 const result = document.getElementById("result");
+const err = document.getElementById("error");
 
 function isValid() 
 {
@@ -88,6 +89,53 @@ function parse()
 }
 
 
+function display(fun) 
+{
+    let plot = document.getElementById("plot");
+    plot.style.display = "block";
+
+    
+
+    
+    const xValues = [];
+
+
+    let start = -10;
+    let finish = 100;
+    let step = 0.1;
+
+
+    for (let i = start; i < finish; i += step) {
+        xValues.push(i);
+    }
+
+
+
+    let parsedEquation = math.parse(fun);
+    const yValues = xValues.map(x => math.evaluate(parsedEquation.toString(), { x: x }));
+
+
+    const trace = {
+        x: xValues,
+        y: yValues,
+        mode: 'lines',
+        name: 'Function',
+    };
+
+
+    const layout = {
+        title: "Funkcia",
+        xaxis: { title: 'x' },
+        yaxis: { title: 'f(x)' }
+    };
+
+
+    Plotly.newPlot('plot', [trace], layout);
+
+    
+}
+
+
 function langrangeInterpolate() 
 {
 
@@ -117,10 +165,10 @@ function langrangeInterpolate()
                 
                 if (arr[k] > 0) 
                 {
-                    part += "(x - " + arr[k] + ")";
+                    part += "(x - " + (Number.isInteger(1 * arr[k]) ? (1 * arr[k]): ((1 * arr[k]).toFixed(3))) + ")";
                 } else 
                 {
-                    part += "(x + " + ((-1) * (arr[k])) + ")";
+                    part += "(x + " + (Number.isInteger(-1 * arr[k]) ? (-1 * arr[k]): ((-1 * arr[k]).toFixed(3))) + ")";
                 }
                 
 
@@ -134,17 +182,17 @@ function langrangeInterpolate()
 
         if (first) 
         {
-            part = (arr[i + 1] * menovatel).toFixed(3) + part;
+            part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
             equation += part;
             first = false;
         } else 
         {
             if (arr[i + 1] * menovatel > 0) 
             {
-                part = "+" + (arr[i + 1] * menovatel).toFixed(3) + part;
+                part = "+" + (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
             } else 
             {
-                part = (arr[i + 1] * menovatel).toFixed(3) + part;
+                part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
             }
 
             equation += part;
@@ -153,26 +201,42 @@ function langrangeInterpolate()
 
     }
 
-    result.innerText = equation;
+    result.value = equation;
+
+    display(equation);
 
 
 }
 
-
-function leastSquares() 
-{
-    if ( !isValid()) 
-    {
+function leastSquares() {
+    if (!isValid()) {
         return;
     }
 
-    linear(data);
-    logaritmic(data);
+    if (document.getElementById('radio1').checked) {
+        
+        linear();
+    }
+
+    if (document.getElementById('radio2').checked) {
+        logaritmic();
+    }
+
+    
+
+
+
 }
 
 
-function logaritmic(data) 
+
+function logaritmic() 
 {
+
+    
+
+    let data = parse();
+
     let coeficients = [];
 
     
@@ -214,20 +278,23 @@ function logaritmic(data)
 
     coeficients.push(sum_x_y);
 
-    var equation = cramer(2,coeficients);
+    let equation = cramer(2,coeficients);
 
-    var res = document.getElementById("result");
+    result.value = equation;
 
-    res.innerHTML = equation;
+    display(equation);
 
     error(equation, data);
-
 
 }
 
 
-function linear(data) 
+function linear() 
 {
+    
+
+    let data = parse();
+
     let coeficients = [];
 
     
@@ -268,11 +335,15 @@ function linear(data)
     coeficients.push(sum_x_y);
 
 
-    var equation = cramer(1,coeficients);
-    var res = document.getElementById("result2");
+    let equation = cramer(1,coeficients);
 
-    res.innerHTML = equation;
-    error(equation, data);
+    
+
+    result.value = equation;
+
+    display(equation);
+    
+    error(equation,data);
 }
 
 
@@ -290,10 +361,10 @@ function cramer(option, coeficients) {
     switch (option) 
     {
         case 1:
-            return "f(x) = " + (A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "x";
+            return "" + (A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "x";
         
         case 2:
-            return "f(x) = " +(A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "log(x)";
+            return "" +(A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "log(x)";
             
     }
 
@@ -305,12 +376,11 @@ function cramer(option, coeficients) {
 function error(equation,data) 
 {
     let e = 0;
-    var parsedEquation = math.parse(equation);
-    console.log(parsedEquation.toString());
+    let parsedEquation = math.parse(equation);
     for (let i = 0; i < data.length; ++i) 
     {
-        var fx = math.evaluate(parsedEquation.toString(), { x: data[i][0] });
-        var yi = data[i][1];
+        let fx = math.evaluate(parsedEquation.toString(), { x: data[i][0] });
+        let yi = data[i][1];
         
         e += Math.pow(fx - yi, 2);
         
@@ -321,17 +391,11 @@ function error(equation,data)
    
     e = Math.sqrt(e);
 
-    console.log("E = " + e);
+    
+    err.value = e;
 }
 
 
-
-
-
-    
-    
-
-    
 
 function newtonInterpolate() 
 {
@@ -341,6 +405,8 @@ function newtonInterpolate()
     }
 
     var equation = "";
+
+    let data = parse();
     for (let i = 0; i < data.length; ++i) 
     {
         let cislo = dividedDifference(0,i);
@@ -349,9 +415,10 @@ function newtonInterpolate()
         {
             if (cislo < 0) 
             {
-                equation += "- " + ((-1) * cislo);
+                equation += "- " + (Number.isInteger(1 * cislo) ? ((-1) * cislo): ((-1) * cislo.toFixed(3)));
             } else {
-                equation += cislo;
+                equation += (Number.isInteger(1 * cislo) ? ( 1 * cislo): (1 * cislo).toFixed(3));
+                
             }
             continue;
         }
@@ -360,23 +427,25 @@ function newtonInterpolate()
         {
             equation += "+";
         }
-        equation += cislo;
+        equation += (Number.isInteger(1 * cislo) ? (1 * cislo): (1 * cislo).toFixed(3));
         
         for (let j = 0; j < i; ++j) 
         {
             if (data[j][0] < 0) 
             {
-                equation += "(x + " + ((-1) * data[j][0]) + ")";
+                equation += "(x + " + (Number.isInteger((-1) * data[j][0]) ? ((-1) * data[j][0]): ((-1) * data[j][0]).toFixed(3))+ ")";
             } else {
-                equation += "(x - " + data[j][0] + ")";
+                equation += "(x - " + (Number.isInteger(1 * data[j][0]) ? (1 * data[j][0]): (1 * data[j][0]).toFixed(3)) + ")";
             }
         }
     }
 
 
-    var res = document.getElementById("result");
+    
 
-    res.innerHTML = equation;
+    result.value = equation;
+
+    display(equation);
 
 
 
