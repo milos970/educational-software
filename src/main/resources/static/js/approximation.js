@@ -1,25 +1,23 @@
 
-let equation = document.getElementById("equation");
+const nodes = document.getElementById("nodes");
+const result = document.getElementById("result");
 
 function isValid() 
 {
     const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*\]$/;
     
-    let s = 0;
-
-
     
     let element = document.getElementById("error");
 
 
-    if (equation.value.length === 0) 
+    if (nodes.value.length === 0) 
     {
         element.innerText = "Prázdne pole!";
         return false;
     }
 
 
-    if (regex.test(equation.value)) 
+    if (regex.test(nodes.value)) 
     {
         element.innerText = "";
     } else {
@@ -69,7 +67,7 @@ function isValid()
 
 function parse() 
 {
-    let matches = equation.value.match(/-?\d+(\.\d+)?/g);
+    let matches = nodes.value.match(/-?\d+(\.\d+)?/g);
 
 
     let data = [];
@@ -92,14 +90,15 @@ function parse()
 
 function langrangeInterpolate() 
 {
+
     if ( !isValid()) 
     {
         return;
     }
+    
+    let matches = nodes.value.match(/-?\d+(\.\d+)?/g);
 
-
-    //matches.forEach((element) => console.log(element));
-    arr = matches;
+    let arr = matches;
     let equation = "";
     let first = true;
     
@@ -126,26 +125,26 @@ function langrangeInterpolate()
                 
 
                 menovatel *= (arr[i] - arr[k]);
+            
         }
 
         menovatel = 1/ menovatel;
         
-
         
 
         if (first) 
         {
-            part = (arr[i + 1] * menovatel) + part;
+            part = (arr[i + 1] * menovatel).toFixed(3) + part;
             equation += part;
             first = false;
         } else 
         {
             if (arr[i + 1] * menovatel > 0) 
             {
-                part = "+" + (arr[i + 1] * menovatel) + part;
+                part = "+" + (arr[i + 1] * menovatel).toFixed(3) + part;
             } else 
             {
-                part = (arr[i + 1] * menovatel) + part;
+                part = (arr[i + 1] * menovatel).toFixed(3) + part;
             }
 
             equation += part;
@@ -154,7 +153,7 @@ function langrangeInterpolate()
 
     }
 
-    alert(equation);
+    result.innerText = equation;
 
 
 }
