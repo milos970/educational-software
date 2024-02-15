@@ -7,7 +7,6 @@ function isValid()
 {
     const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*\]$/;
     
-    
     let element = document.getElementById("error");
 
 

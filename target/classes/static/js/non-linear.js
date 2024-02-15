@@ -1,9 +1,177 @@
 
+const equation = document.getElementById("equation");
+const tolerance = document.getElementById("tolerance");
+const initialValue = document.getElementById("initial");
+const res = document.getElementById("result");
+
+const a = document.getElementById("dh");
+const b = document.getElementById("hh");
 
 
 let start = 0;
 let finish = 0;
 let step = 0;
+
+
+function regulaFalsi() {
+    if (!validateRegulaFalsi()) {
+        return;
+    }
+    var equation = document.getElementById("equation").value;
+    var tolerance = document.getElementById("tolerance").value;
+
+
+
+
+    let a = parseFloat(document.getElementById("dh").value);
+    let b = parseFloat(document.getElementById("hh").value);
+    var prev = a;
+
+    let data = [];
+
+
+    iterations = 100;
+    
+
+    var parsedEquation = math.parse(equation);
+
+    for (let k = 0; k < iterations; ++k) {
+
+        data[k] = [5];
+        let fak = math.evaluate(parsedEquation.toString(), { x: a });
+        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
+
+
+        let xk = a - (b - a) / (fbk - fak) * fak;
+
+        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+
+        data[k][0] = k;
+        data[k][1] = a;
+        data[k][2] = b;
+        data[k][3] = xk;
+        data[k][4] = Math.abs(xk - prev);
+        if (fxk === 0) {
+            res.value = xk;
+            break;
+        }
+
+        if (fak * fxk < 0) {
+            b = xk;
+        }
+
+        if (fbk * fxk < 0) {
+            a = xk;
+        }
+
+        if (Math.abs(xk - prev) <= tolerance) {
+            res.value = xk;
+            break;
+        }
+
+        prev = xk;
+    }
+
+    res.value = xk;
+
+    let headers = ["k", "a", "b", "x", "chyba"];
+
+    initializeTable(headers, data);
+
+
+
+}
+
+
+function bisection() {
+    if (!validateBisection()) {
+        return;
+    }
+
+    var equation = document.getElementById("equation").value;
+    var tolerance = document.getElementById("tolerance").value;
+
+    let modified = equation;
+    modified = modified.slice(0, -1);
+    modified = modified.replace("=","");
+    modified = modified.trim();
+
+    
+
+    let iterations = 100;
+
+    var parsedEquation = math.parse(modified);
+
+    let xvalues = [];
+    let yvalues = [];
+
+    let data = []
+
+    let a = parseFloat(document.getElementById("dh").value);
+    let b = parseFloat(document.getElementById("hh").value);
+   
+    let xk = 0;
+    for (let k = 0; k < iterations; ++k) 
+    {
+
+        
+        xk = (a + b)/2;
+        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+
+        let fak = math.evaluate(parsedEquation.toString(), { x: a });
+
+        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
+
+        xvalues.push(xk);
+        yvalues.push(fxk);
+
+        data[k] = [5];
+
+        data[k][0] = k;
+        data[k][1] = a;
+        data[k][2] = b;
+        data[k][3] = xk;
+        data[k][4] = (b - a) / 2;
+
+        if ((b - a) / 2 <= tolerance.value) {
+            
+            res.value = xk;
+            break;
+        }
+
+        if (fxk === 0) {
+            
+            res.value = xk;
+            break;
+        }
+
+        if (fak * fxk < 0) {
+            b = xk;
+        }
+
+        if (fbk * fxk < 0) {
+            a = xk;
+        }
+
+
+
+
+       
+
+    }
+
+    res.value = xk;
+
+    let headers = ["k", "a", "b", "x", "(b - a)/2"];
+
+    initializeTable(headers, data);
+
+
+
+
+
+}
+
 
 function simpleIterationMethod() {
 
@@ -119,89 +287,310 @@ function increase() {
     }
 }
 
-function isEmpty(elementId) 
-{
-    let element = document.getElementById(elementId);
 
-    if (element.value.length === 0) 
+function validateRegulaFalsi() 
+{
+    let valid = true;
+
+    const a = document.getElementById("dh");
+    const b = document.getElementById("hh");
+
+    
+    if (tolerance.value.length === 0) 
     {
-        element.innerHTML = "Nevalidný výraz!";
-        return true;
+        document.getElementById("tolerance-error").innerHTML = "Prázdne pole!";
+        document.getElementById("tolerance-error").style.color = "red";
+        valid = false;
+    } else 
+    {
+        if (tolerance.value < 0.000001 || tolerance.value > 0.001) 
+        {
+            document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
+            document.getElementById("tolerance-error").style.color = "red";
+            valid = false;
+        } else {
+            document.getElementById("tolerance-error").innerText = "";
+        }
     }
 
-    return false;
+   
+
+    if (a.value === "") 
+    {
+        document.getElementById("dh-error").innerHTML = "Prázdne pole!";
+        document.getElementById("dh-error").style.color = "red";
+        valid = false;
+    } else {
+        if (a.value >= b.value) 
+    {
+        document.getElementById("dh-error").innerHTML = "Dolná hranica je väčšia než horná!";
+        document.getElementById("dh-error").style.color = "red";
+        valid = false;
+    }else {
+        document.getElementById("dh-error").innerText = "";
+    }
+    }
+
+
+    if (b.value === "") 
+    {
+        document.getElementById("hh-error").innerHTML = "Prázdne pole!";
+        document.getElementById("hh-error").style.color = "red";
+        valid = false;
+    } else {
+        document.getElementById("hh-error").innerText = "";
+    }
+
+
+
+    
+
+
+    if (equation.value.length === 0) 
+    {
+        document.getElementById("equation-error").innerHTML = "Prázdne pole!";
+        document.getElementById("equation-error").style.color = "red";
+        valid = false;
+    } else 
+    {
+        if (equation.value.charAt(equation.value.length - 1) !== "0") 
+        {
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        } else {
+            document.getElementById("equation-error").innerText = "";
+        }
+
+        if (!equation.value.includes("=")) 
+        {
+          
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        } else {
+            document.getElementById("equation-error").innerText = "";
+        }
+
+
+        let modified = equation.value;
+        modified = modified.slice(0, -1);
+        modified = modified.replace("=","");
+        modified = modified.trim();
+
+
+        try 
+        {
+            var expression = math.parse(modified);
+            math.evaluate(expression.toString(), { x: 0 });
+            document.getElementById("equation-error").innerText = "";
+    
+        } catch (error) 
+        {
+            
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        }
+    }
+
+
+    return valid;
+
 }
+
 
 
 function validateBisection() 
 {
-    let DH = document.getElementById("dh");
-    let HH = document.getElementById("hh");
+    let valid = true;
 
-    if (DH > HH) 
+    const a = document.getElementById("dh");
+    const b = document.getElementById("hh");
+
+    
+    if (tolerance.value.length === 0) 
     {
-        document.getElementById("tolerance-error").innerHTML = "Dolná hranica je väčšia než horná!";
-        return false;
+        document.getElementById("tolerance-error").innerHTML = "Prázdne pole!";
+        document.getElementById("tolerance-error").style.color = "red";
+        valid = false;
+    } else 
+    {
+        if (tolerance.value < 0.000001 || tolerance.value > 0.001) 
+        {
+            document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
+            document.getElementById("tolerance-error").style.color = "red";
+            valid = false;
+        } else {
+            document.getElementById("tolerance-error").innerText = "";
+        }
     }
+
+   
+
+    if (a.value === "") 
+    {
+        document.getElementById("dh-error").innerHTML = "Prázdne pole!";
+        document.getElementById("dh-error").style.color = "red";
+        valid = false;
+    } else {
+        if (a.value >= b.value) 
+    {
+        document.getElementById("dh-error").innerHTML = "Dolná hranica je väčšia než horná!";
+        document.getElementById("dh-error").style.color = "red";
+        valid = false;
+    }else {
+        document.getElementById("dh-error").innerText = "";
+    }
+    }
+
+
+    if (b.value === "") 
+    {
+        document.getElementById("hh-error").innerHTML = "Prázdne pole!";
+        document.getElementById("hh-error").style.color = "red";
+        valid = false;
+    } else {
+        document.getElementById("hh-error").innerText = "";
+    }
+
+
+
+    
+
+
+    if (equation.value.length === 0) 
+    {
+        document.getElementById("equation-error").innerHTML = "Prázdne pole!";
+        document.getElementById("equation-error").style.color = "red";
+        valid = false;
+    } else 
+    {
+        if (equation.value.charAt(equation.value.length - 1) !== "0") 
+        {
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        } else {
+            document.getElementById("equation-error").innerText = "";
+        }
+
+        if (!equation.value.includes("=")) 
+        {
+          
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        } else {
+            document.getElementById("equation-error").innerText = "";
+        }
+
+
+        let modified = equation.value;
+        modified = modified.slice(0, -1);
+        modified = modified.replace("=","");
+        modified = modified.trim();
+
+
+        try 
+        {
+            var expression = math.parse(modified);
+            math.evaluate(expression.toString(), { x: 0 });
+            document.getElementById("equation-error").innerText = "";
+    
+        } catch (error) 
+        {
+            
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        }
+    }
+
+
+    return valid;
+
 }
 
 
 
-function validate() 
+function isValidNewton() 
 {
-    var equation = document.getElementById("equation");
-
-    var tolerance = document.getElementById("tolerance");
-
-    var initialValue = document.getElementById("initial");
-
-
-    var error = false;
+    let valid = true;
     
-    
-    if (tolerance.value.length === 0 || tolerance.value < 0.000001 || tolerance.value > 0.001) 
+    if (tolerance.value.length === 0) 
     {
-        document.getElementById("tolerance-error").innerHTML = "Nevalidná hodnota!";
+        document.getElementById("tolerance-error").innerHTML = "Prázdne pole!";
         document.getElementById("tolerance-error").style.color = "red";
-        error = true;
-    } else {
-        document.getElementById("tolerance-error").innerText = "";
+        valid = false;
+    } else 
+    {
+        if (tolerance.value < 0.000001 || tolerance.value > 0.001) 
+        {
+            document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
+            document.getElementById("tolerance-error").style.color = "red";
+            valid = false;
+        } else {
+            document.getElementById("tolerance-error").innerText = "";
+        }
     }
+
+
+    
+    
 
 
     if (initialValue.value.length === 0) 
     {
-        document.getElementById("initial-error").innerHTML = "Nevalidná hodnota!";
+        document.getElementById("initial-error").innerHTML = "Prázdne pole!";
         document.getElementById("initial-error").style.color = "red";
-        error = true;
+        valid = false;
     } else {
         document.getElementById("initial-error").innerText = "";
     }
 
     if (equation.value.length === 0) 
     {
-        document.getElementById("equation-error").innerHTML = "Nevalidný výraz!";
+        document.getElementById("equation-error").innerHTML = "Prázdne pole!";
         document.getElementById("equation-error").style.color = "red";
-        error = true;
+        valid = false;
     } else 
     {
+        if (equation.value.charAt(equation.value.length - 1) !== "0") 
+        {
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        } else {
+            document.getElementById("equation-error").innerText = "";
+        }
+
+        if (!equation.value.includes("=")) 
+        {
+          
+            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
+            return false;
+        } else {
+            document.getElementById("equation-error").innerText = "";
+        }
+
+
+        let modified = equation.value;
+        modified = modified.slice(0, -1);
+        modified = modified.replace("=","");
+        modified = modified.trim();
+
+
         try 
         {
-            var expression = math.parse(equation.value);
+            var expression = math.parse(modified);
             math.evaluate(expression.toString(), { x: 0 });
             document.getElementById("equation-error").innerText = "";
-            return error
     
         } catch (error) 
         {
-    
             document.getElementById("equation-error").innerText = "Nevalidný výraz!";
             return false;
         }
     }
 
-    return error;
-    
+
+    return valid;
+
+
 
 }
 
@@ -218,22 +607,20 @@ function validate()
 function newtonMethod() 
 {
 
-    if (validate()) {
+    if ( !isValidNewton()) {
         return;
     }
-    var equation = document.getElementById("equation").value;
-    var tolerance = document.getElementById("tolerance").value;
-    var initial = document.getElementById("initial").value;
 
-    equation = equation.slice(0, -1);
-    equation = equation.replace("=","");
-    equation = equation.trim();
+    let modified = equation.value;
+        modified = modified.slice(0, -1);
+        modified = modified.replace("=","");
+        modified = modified.trim();
 
     iterations = 100;
 
 
-    var current = initial;
-    var parsedEquation = math.parse(equation);
+    var current = initial.value;
+    var parsedEquation = math.parse(modified);
     var derivative = math.derivative(parsedEquation, 'x');
 
     let xvalues = [];
@@ -283,11 +670,10 @@ function newtonMethod()
 
 function initializeTable(headers, data) {
 
-    var plot = document.getElementById("plot");
-    plot.style.display="none";
-
     var table = document.getElementById("table");
     table.style.display = "block";
+
+    cl();
 
     var header = table.createTHead();
     var row = header.insertRow(0);
@@ -317,13 +703,19 @@ function initializeTable(headers, data) {
             if (j === data[0].length - 2 && i === data.length - 1) {
                 c.style.backgroundColor = "green";
             }
-            c.innerText = data[i][j].toFixed(6);
+            c.innerText = (1 * data[i][j]).toFixed(6);
         }
     }
 
 
 
 
+}
+
+
+function cl() 
+{
+  $("#table tr").remove(); 
 }
 
 
@@ -335,161 +727,5 @@ function initializeTable(headers, data) {
 
 
 
-function regulaFalsi() {
-    if (!validate()) {
-        return;
-    }
-    var equation = document.getElementById("equation").value;
-    var tolerance = document.getElementById("tolerance").value;
-
-    var initial = document.getElementById("initial").value;
-
-
-
-    var a = document.getElementById("a").value;
-    var b = document.getElementById("b").value;
-    var prev = a;
-
-    let data = [];
-
-    equation = "10cos(x - 1) - x^2 + 2x - 1";
-    tolerance = "0.001";
-    iterations = Number.MAX_SAFE_INTEGER;
-    a = 2.3;
-    b = 2.4;
-    prev = a;
-
-    var parsedEquation = math.parse(equation);
-
-    for (let k = 0; k < iterations; ++k) {
-
-        data[k] = [5];
-        let fak = math.evaluate(parsedEquation.toString(), { x: a });
-        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
-
-
-        let xk = a - (b - a) / (fbk - fak) * fak;
-
-        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
-
-        data[k][0] = k;
-        data[k][1] = a;
-        data[k][2] = b;
-        data[k][3] = xk;
-        data[k][4] = Math.abs(xk - prev);
-        if (fxk === 0) {
-            //alert(xk);
-            break;
-        }
-
-        if (fak * fxk < 0) {
-            b = xk;
-        }
-
-        if (fbk * fxk < 0) {
-            a = xk;
-        }
-
-        if (Math.abs(xk - prev) <= tolerance) {
-            //window.alert(xk);
-            break;
-        }
-
-        prev = xk;
-    }
-
-    let headers = ["k", "a", "b", "x", "chyba"];
-
-    initializeTable(headers, data);
-
-
-
-}
-
-
-function bisection() {
-    if (!validate()) {
-        return;
-    }
-    var equation = document.getElementById("equation").value;
-    var tolerance = document.getElementById("tolerance").value;
-
-
-
-
-    var a = document.getElementById("a").value;
-    var b = document.getElementById("b").value;
-
-    equation = "10cos(x - 1) - x^2 + 2x - 1";
-    tolerance = 0.001;
-    iterations = Number.MAX_SAFE_INTEGER;
-    initial = 2.4;
-
-    a = 2.3;
-    b = 2.4;
-
-    var parsedEquation = math.parse(equation);
-
-    let xvalues = [];
-    let yvalues = [];
-
-    let data = []
-
-    for (let k = 0; k < iterations; ++k) {
-
-
-
-        let xk = (a + b) / 2;
-        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
-
-        let fak = math.evaluate(parsedEquation.toString(), { x: a });
-
-        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
-
-        xvalues.push(xk);
-        yvalues.push(fxk);
-
-        data[k] = [5];
-
-        data[k][0] = k;
-        data[k][1] = a;
-        data[k][2] = b;
-        data[k][3] = xk;
-        data[k][4] = (b - a) / 2;
-
-        if ((b - a) / 2 <= tolerance) {
-
-            break;
-        }
-
-        if (fxk === 0) {
-
-            break;
-        }
-
-        if (fak * fxk < 0) {
-            b = xk;
-        }
-
-        if (fbk * fxk < 0) {
-            a = xk;
-        }
-
-
-
-
-
-
-    }
-
-    let headers = ["k", "a", "b", "x", "(b - a)/2"];
-
-    initializeTable(headers, data);
-
-
-
-
-
-}
 
 
