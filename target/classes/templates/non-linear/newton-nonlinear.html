@@ -60,7 +60,7 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0" on >
+						<input class="input100" id="equation" type="text" placeholder="f(x) = 0" on >
 						<span class="focus-input100"></span>
 					</div>
 
@@ -68,8 +68,8 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Tolerancia</label>
-						<input class="input100" id="tolerance" type="number" oninput="increase()" min="0.000001" max="0.1"
-							placeholder="< 1*10e-6 ; 1*10e-3 >" >
+						<input class="input100" id="tolerance" type="number" value="0.001" onchange="increase()"
+							placeholder="< 10^(-6) ; 10^(-3) >" >
 						<span class="focus-input100"></span>
 					</div>
 
@@ -88,7 +88,7 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="initial">Výsledok</label>
-						<input class="input100" id="result" type="number" 
+						<input class="input100" id="result" type="text" 
 							placeholder="" readonly>
 						<span class="focus-input100"></span>
 					</div>

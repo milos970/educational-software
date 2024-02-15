@@ -2,15 +2,78 @@
 const equation = document.getElementById("equation");
 const tolerance = document.getElementById("tolerance");
 const initialValue = document.getElementById("initial");
-const res = document.getElementById("result");
+const result = document.getElementById("result");
 
-const a = document.getElementById("dh");
-const b = document.getElementById("hh");
+const toleranceError = document.getElementById("tolerance-error");
+const equationError = document.getElementById("equation-error");
+const initialError = document.getElementById("initial-error");
+
+const dh = document.getElementById("dh");
+const hh = document.getElementById("hh");
 
 
 let start = 0;
 let finish = 0;
 let step = 0;
+
+
+function newtonMethod() 
+{
+
+    if ( !isValidNewton()) {
+        return;
+    }
+
+    let modified = equation.value;
+        modified = modified.slice(0, -1);
+        modified = modified.replace("=","");
+        modified = modified.trim();
+
+    let iterations = 100;
+
+
+    let current = initial.value;
+    let parsedEquation = math.parse(modified);
+    let derivative = math.derivative(parsedEquation, 'x');
+
+    let data = [];
+
+    for (let i = 0; i < iterations; ++i) 
+    {
+        data[i] = [3];
+
+        let fx = math.evaluate(parsedEquation.toString(), { x: current });
+        let derfx = math.evaluate(derivative.toString(), { x: current });
+
+
+        let next = current - (fx / derfx);
+        data[i][0] = i + 1;
+        data[i][1] = next;
+        let error = Math.abs(next - current);
+        data[i][2] = error;
+
+
+
+        if (error <= tolerance.value) {
+            result.value = next;
+            break;
+        }
+
+        current = next;
+    }
+
+
+
+
+    
+    let headers = ["k", "x", "chyba"];
+
+    initializeTable(headers, data);
+
+
+
+}
+
 
 
 function regulaFalsi() {
@@ -180,7 +243,6 @@ function simpleIterationMethod() {
     }
 
     var equation = document.getElementById("equation").value;
-    var iterations = document.getElementById("iterations").value;
     var tolerance = document.getElementById("tolerance").value;
 
     var initial = document.getElementById("initial").value;
@@ -259,30 +321,40 @@ function display() {
 
 
 
+function setMinToleranceValue() 
+{
+    
+    if (tolerance.value === "") 
+    {
+        tolerance.value = 0.001;
+    }
+}
 
-function increase() {
-    const el = document.getElementById("tolerance");
 
-    const value = el.value;
-    if (value.split('.')[1].length === 6) {
-        el.step = 0.000001
+
+
+function increase() 
+{
+    const value = tolerance.value;
+    if (value.split('.')[1].length <= 6) {
+        tolerance.value = 0.000001
         return
     }
 
 
     if (value.split('.')[1].length === 5) {
-        el.step = 0.00001
+        tolerance.value = 0.00001
         return
     }
 
 
     if (value.split('.')[1].length === 4) {
-        el.step = 0.0001
+        tolerance.value= 0.0001
         return
     }
 
     if (value.split('.')[1].length === 3) {
-        el.step = 0.001
+        tolerance.value= 0.001
         return
     }
 }
@@ -596,77 +668,6 @@ function isValidNewton()
 
 
 
-
-
-
-
-    
-
-
-
-function newtonMethod() 
-{
-
-    if ( !isValidNewton()) {
-        return;
-    }
-
-    let modified = equation.value;
-        modified = modified.slice(0, -1);
-        modified = modified.replace("=","");
-        modified = modified.trim();
-
-    iterations = 100;
-
-
-    var current = initial.value;
-    var parsedEquation = math.parse(modified);
-    var derivative = math.derivative(parsedEquation, 'x');
-
-    let xvalues = [];
-    let yvalues = [];
-
-    let data = [];
-
-
-
-    for (let i = 0; i < iterations; i++) {
-        data[i] = [3];
-
-        let fx = math.evaluate(parsedEquation.toString(), { x: current });
-        let derfx = math.evaluate(derivative.toString(), { x: current });
-
-        xvalues.push(current);
-        yvalues.push(fx);
-
-        next = current - (fx / derfx);
-        data[i][0] = i + 1;
-        data[i][1] = next;
-        data[i][2] = Math.abs(next - current);
-
-
-
-        if (Math.abs(next - current) <= tolerance) {
-
-            break;
-        }
-
-        current = next;
-
-
-    }
-
-
-
-
-
-    let headers = ["k", "x", "chyba"];
-
-    initializeTable(headers, data);
-
-
-
-}
 
 function initializeTable(headers, data) {
 
