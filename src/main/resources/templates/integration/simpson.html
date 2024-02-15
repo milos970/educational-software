@@ -25,7 +25,9 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 
-	<script src="/src/main/resources/static/js/integration.js"></script>
+	
+
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/lan.css">
 </head>
 
 <body>
@@ -48,7 +50,7 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error-function"></p>
+					<p class="error" id="error-function"></p>
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Dolná hranica</label>
@@ -57,7 +59,7 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error-dh"></p>
+					<p class="error" id="error-dh"></p>
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Horná hranica</label>
@@ -66,7 +68,7 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error-hh"></p>
+					<p class="error" id="error-hh"></p>
 
 
 					<div class="wrap-input100 validate-input text-center">
@@ -75,15 +77,13 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<p id="error-n"></p>
+					<p class="error" id="error-n"></p>
 
 					<div class="wrap-input100 validate-input text-center" >
 						<label class="label" for="tolerance">Výsledok</label>
 						<input class="input100" id="result" type="text" readonly>
 						<span class="focus-input100"></span>
 					</div>
-
-					
 
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" onclick="simpson()">
@@ -105,7 +105,7 @@
 	</div>
 
 
-	
+	<script src="/src/main/resources/static/js/integration.js"></script>
 </body>
 
 </html>
