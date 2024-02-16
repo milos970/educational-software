@@ -1,15 +1,18 @@
 
 const equation = document.getElementById("equation");
-const tolerance = document.getElementById("tolerance");
+let tolerance = document.getElementById("tolerance");
 const initialValue = document.getElementById("initial");
 const result = document.getElementById("result");
 
 const toleranceError = document.getElementById("tolerance-error");
 const equationError = document.getElementById("equation-error");
 const initialError = document.getElementById("initial-error");
+const progressError = document.getElementById("progress-error");
 
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
+
+const table = document.getElementById("table");
 
 
 let start = 0;
@@ -19,7 +22,6 @@ let step = 0;
 
 function newtonMethod() 
 {
-
     if ( !isValidNewton()) {
         return;
     }
@@ -29,7 +31,7 @@ function newtonMethod()
         modified = modified.replace("=","");
         modified = modified.trim();
 
-    let iterations = 100;
+    let iterations = 1000;
 
 
     let current = initial.value;
@@ -45,6 +47,12 @@ function newtonMethod()
         let fx = math.evaluate(parsedEquation.toString(), { x: current });
         let derfx = math.evaluate(derivative.toString(), { x: current });
 
+        if (derfx === 0) 
+        {
+            progressError.value = "Delenie hodnotou 0 vo výpočte!"
+            return;
+        }
+
 
         let next = current - (fx / derfx);
         data[i][0] = i + 1;
@@ -54,24 +62,17 @@ function newtonMethod()
 
 
 
-        if (error <= tolerance.value) {
-            result.value = next;
+        if (error <= tolerance.value) 
+        {
+            result.value = next.toFixed(6);
             break;
         }
 
         current = next;
     }
 
-
-
-
-    
     let headers = ["k", "x", "chyba"];
-
     initializeTable(headers, data);
-
-
-
 }
 
 
@@ -321,42 +322,57 @@ function display() {
 
 
 
-function setMinToleranceValue() 
-{
-    
-    if (tolerance.value === "") 
+
+function iterate(from, num) 
     {
-        tolerance.value = 0.001;
+        let sum = parseFloat(tolerance.value).toFixed(1 * num);
+        
+        for (let i = 0; i < 10; ++i) 
+        {
+            sum =  (1 * sum + 1 * from);
+        }
+        
+        tolerance.value = parseFloat(sum).toFixed(num - 1);
+        
+
     }
-}
-
-
 
 
 function increase() 
 {
-    const value = tolerance.value;
-    if (value.split('.')[1].length <= 6) {
-        tolerance.value = 0.000001
+
+    
+
+
+    
+
+
+/* 
+
+
+    if (value.split('.')[1].length === 6) {
+        
+        iterate(0.000001,6);
         return
     }
 
-
+    
     if (value.split('.')[1].length === 5) {
-        tolerance.value = 0.00001
+        iterate(0.00001,5);
         return
     }
 
 
     if (value.split('.')[1].length === 4) {
-        tolerance.value= 0.0001
-        return
-    }
+        iterate(0.0001,4);
 
-    if (value.split('.')[1].length === 3) {
-        tolerance.value= 0.001
         return
     }
+    
+    if (value.split('.')[1].length === 3) {
+        
+        iterate(0.001,3);
+    } */
 }
 
 
@@ -669,15 +685,13 @@ function isValidNewton()
 
 
 
-function initializeTable(headers, data) {
+function initializeTable(headers, data) 
+{
 
-    var table = document.getElementById("table");
-    table.style.display = "block";
+    clearTable();
 
-    cl();
-
-    var header = table.createTHead();
-    var row = header.insertRow(0);
+    let header = table.createTHead();
+    let row = header.insertRow(0);
     for (let i = 0; i < headers.length; ++i) {
         var cell = row.insertCell(i);
         cell.innerHTML = headers[i];
@@ -704,7 +718,16 @@ function initializeTable(headers, data) {
             if (j === data[0].length - 2 && i === data.length - 1) {
                 c.style.backgroundColor = "green";
             }
-            c.innerText = (1 * data[i][j]).toFixed(6);
+
+            if (Number.isInteger(1 * data[i][j])) 
+            {
+                c.innerText = (1 * data[i][j]);
+            } else 
+            {
+                c.innerText = (1 * data[i][j]).toFixed(6);
+            }
+
+            
         }
     }
 
@@ -714,7 +737,7 @@ function initializeTable(headers, data) {
 }
 
 
-function cl() 
+function clearTable() 
 {
   $("#table tr").remove(); 
 }

@@ -68,7 +68,7 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Tolerancia</label>
-						<input class="input100" id="tolerance" type="number" value="0.001" onchange="increase()"
+						<input class="input100" id="tolerance" type="number" min="5" max="15"
 							placeholder="< 10^(-6) ; 10^(-3) >" >
 						<span class="focus-input100"></span>
 					</div>
@@ -92,6 +92,8 @@
 							placeholder="" readonly>
 						<span class="focus-input100"></span>
 					</div>
+
+					<p class ="error" id="progress-error"></p>
 
 
 
