@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Graf</title>
+	<title>Graf funkcie</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -26,74 +26,78 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<script src="/src/main/resources/static/js/non-linear.js"></script>
+	
 </head>
 
 <body>
 
-	
-
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<div class="login100-pic" data-tilt>
+				<div class="login100-pic">
 					<div id="plot"></div>
-				
 				</div>
-
+	
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-                        <h1>Počiatočná aproximácia cez graf</h1>
+						<h1>Graf funkcie</h1>
 					</span>
-
+	
 					<div class="wrap-input100 validate-input text-center">
-						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x)">
+						<label class="text-center" for="equation">Funkcia</label>
+						<input class="input100" id="equation" type="text" placeholder="f(x)">
 						<span class="focus-input100"></span>
 					</div>
-
-                    <div class="wrap-input100 validate-input text-center">
-						<label class="text-center" for="equation">Definičný obor</label>
-						<input class="input100" id="interval" type="number" placeholder="">
-						<span class="focus-input100"></span>
-					</div>
-
+	
+	
+	
 					<p id="equation-error"></p>
 
 
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Dolná hranica</label>
+						<input class="input100" id="dh" type="number"
+							placeholder="DH < HH">
+						<span class="focus-input100"></span>
+					</div>
+
+					<p class="error" id="error-dh"></p>
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Horná hranica</label>
+						<input class="input100" id="hh" type="number"
+							placeholder="HH > DH">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="tolerance">Krok</label>
+						<input class="input100" id="step" type="number"
+							placeholder="">
+						<span class="focus-input100"></span>
+					</div>
+	
+	
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" onclick="display()">
 							Vykresli graf
 						</button>
 					</div>
-
-
+	
+	
 					<div class="text-center p-t-136">
 						<a class="txt2" href="#">
 						</a>
 					</div>
-
+	
 				</div>
-
+	
 			</div>
 		</div>
-
+	
 	</div>
 
-
-	
-	
-
-
-	
-
-
-
-
-
-
-
-
+	<script src="/src/main/resources/static/js/non-linear.js"></script>
 </body>
 
 </html>

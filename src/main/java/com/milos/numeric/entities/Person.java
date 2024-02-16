@@ -1,16 +1,15 @@
 package com.milos.numeric.entities;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,13 +22,14 @@ public class Person
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank
     private String username;
+
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{12,}$",
+            message = "password must contain at least 1 uppercase, 1 lowercase, 1 special character and 1 digit ")
     private String password;
+
+    @NotBlank
     private String authority;
-
-    private List<Task> tasks;
-
-
-
 
 }

@@ -11,6 +11,7 @@ const progressError = document.getElementById("progress-error");
 
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
+const stp = document.getElementById("step");
 
 const table = document.getElementById("table");
 
@@ -265,22 +266,15 @@ function simpleIterationMethod() {
     }
 }
 
-function setParameters(a,b,step) 
+function display() 
 {
-    start = a;
-    finish = b;
-    step = step;
+
+    graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(stp));
 }
 
 
-function display() {
-    if (isEmpty()) {
-        return;
-    }
-
-    var table = document.getElementById("table");
-    table.style.display="none";
-
+function graph(dh,hh,step) 
+{
     var plot = document.getElementById("plot");
     plot.style.display = "block";
 
@@ -290,7 +284,8 @@ function display() {
     const xValues = [];
 
 
-    for (let i = start; i < finish; i += step) {
+    for (let i = dh; i < hh; i += 1) 
+    {
         xValues.push(i);
     }
 
@@ -309,7 +304,7 @@ function display() {
 
 
     const layout = {
-        title: "parsedEquation.toString()",
+        title: parsedEquation.toString(),
         xaxis: { title: 'x' },
         yaxis: { title: 'f(x)' }
     };
