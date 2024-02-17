@@ -1,6 +1,5 @@
 package com.milos.numeric.dtos;
 
-import com.milos.numeric.validators.NonLinearCheck;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DTO {
-    @NonLinearCheck
+
     private String expression;
 
     @Size(min = 1, message = "At least 1 iteration is required)")

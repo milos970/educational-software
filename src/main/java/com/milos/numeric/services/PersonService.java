@@ -1,7 +1,10 @@
 package com.milos.numeric.services;
 
-import com.milos.numeric.entities.Person;
 import com.milos.numeric.dtos.NewPasswordDTO;
+import com.milos.numeric.dtos.NewPersonDTO;
+import com.milos.numeric.dtos.NewAuthorityDTO;
+import com.milos.numeric.entities.Person;
+import com.milos.numeric.mappers.PersonNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,28 +16,46 @@ import java.util.List;
 @Service
 public class PersonService
 {
+
+    private final PersonRepository personRepository;
+
+    private PersonNewPersonDTOMapper personNewPersonDTOMapper;
+
     @Autowired
-    private PersonRepository personRepository;
-
-    public Person getByUsername(String username)
-    {
-        return this.personRepository.findByUsername(username);
+    public PersonService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
     }
 
 
-    public Person getById(int id)
+
+    public void create(NewPersonDTO newPersonDTO)
     {
-        return this.personRepository.getReferenceById(id);
+        Person person = personNewPersonDTOMapper.sourceToDestination(newPersonDTO);
+        personRepository.save(person);
     }
 
-
-    public void changePassword(Person person, String newPassword)
+    public boolean findByUsername(String username)
     {
-        person.setPassword(newPassword);
-        this.personRepository.save(person);
+        return this.personRepository.findByUsername(username) != null;
     }
 
-    public List<Person> getAll() {
+    public void updatePassword(int id, NewPasswordDTO newPasswordDTO)
+    {
+
+    }
+
+    public void updateAuthority(int id, NewAuthorityDTO newAuthorityDTO)
+    {
+
+    }
+
+    public void delete(int id)
+    {
+        this.personRepository.deleteById(id);
+    }
+
+    public List<Person> getAll()
+    {
         return personRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
     }
 }
