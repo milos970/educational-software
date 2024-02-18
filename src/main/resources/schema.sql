@@ -1,7 +1,10 @@
 CREATE TABLE IF NOT EXISTS person
 (
     id      int PRIMARY KEY,
-    username VARCHAR(50) ,
-    password VARCHAR(100),
-    authority VARCHAR(20)
+    nam VARCHAR(255),
+    surname VARCHAR(255),
+    username VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    authority VARCHAR(255)
 );

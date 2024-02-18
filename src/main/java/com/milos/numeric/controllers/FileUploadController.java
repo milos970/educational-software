@@ -1,9 +1,8 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.CsvConverter;
+import com.milos.numeric.converters.CSVConverter;
 import com.milos.numeric.entities.Pdf;
 import com.milos.numeric.services.FileService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ import java.io.IOException;
 public class FileUploadController
 {
     @Autowired
-    private CsvConverter converter;
+    private CSVConverter converter;
 
     @Autowired
     private FileService fileService;

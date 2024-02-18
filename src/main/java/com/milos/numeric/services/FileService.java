@@ -1,6 +1,8 @@
 package com.milos.numeric.services;
 
+import com.milos.numeric.converters.CSVConverter;
 import com.milos.numeric.entities.Pdf;
+import com.milos.numeric.entities.Person;
 import com.milos.numeric.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,24 @@ import java.util.List;
 @Service
 public class FileService
 {
+    private final FileRepository fileRepository;
+    private final CSVConverter csvConverter;
+
     @Autowired
-    private FileRepository fileRepository;
+    public FileService(FileRepository fileRepository, CSVConverter csvConverter) {
+        this.fileRepository = fileRepository;
+        this.csvConverter = csvConverter;
+    }
 
     public Pdf store(MultipartFile file) throws IOException {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Pdf pdf = new Pdf(file.getBytes(), fileName);
+
+        return this.fileRepository.save(pdf);
+    }
+
+
+    public List<Person> convert(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Pdf pdf = new Pdf(file.getBytes(), fileName);
 
