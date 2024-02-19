@@ -50,6 +50,13 @@ public class PageController {
     }
 
 
+    @GetMapping("/file/upload-csv-page")
+    public String uploadCSV(Model model)
+    {
+        return "upload-csv";
+    }
+
+
 
 
 

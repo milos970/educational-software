@@ -21,6 +21,7 @@ public class Person
     private Integer id;
 
     @NotBlank
+    @Column(name = "nam") //zmenit!!!!!
     private String name;
 
     @NotBlank
@@ -29,6 +30,10 @@ public class Person
     @NotBlank
     @Column(unique = true)
     private String username;
+
+    @NotBlank
+    @Column(unique = true)
+    private String personalNumber;
 
     @Email
     @Column(unique = true)

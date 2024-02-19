@@ -1,25 +1,16 @@
 package com.milos.numeric.services;
 
+import com.milos.numeric.dtos.NewAuthorityDTO;
 import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.dtos.NewPersonDTO;
-import com.milos.numeric.dtos.NewAuthorityDTO;
 import com.milos.numeric.entities.Person;
 import com.milos.numeric.mappers.PersonNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonRepository;
-import com.milos.numeric.security.PasswordGenerator;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
 
 @Service
@@ -54,6 +45,11 @@ public class PersonService
     public boolean findByUsername(String username)
     {
         return this.personRepository.findByUsername(username) != null;
+    }
+
+    public boolean findByPIN(String pin)
+    {
+        return this.personRepository.findByPersonalNumber(pin) != null;
     }
 
     public void updatePassword(int id, NewPasswordDTO newPasswordDTO)

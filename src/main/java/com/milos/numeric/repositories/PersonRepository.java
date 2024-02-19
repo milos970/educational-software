@@ -13,6 +13,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>
 {
     public Person findByUsername(String username);
 
+    public Person findByPersonalNumber(String pin);
+
     @Override
     List<Person> findAll(Sort sort);
 }

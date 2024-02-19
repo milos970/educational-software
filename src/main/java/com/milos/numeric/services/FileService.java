@@ -16,12 +16,12 @@ import java.util.List;
 public class FileService
 {
     private final FileRepository fileRepository;
-    private final CSVConverter csvConverter;
+
 
     @Autowired
-    public FileService(FileRepository fileRepository, CSVConverter csvConverter) {
+    public FileService(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
-        this.csvConverter = csvConverter;
+
     }
 
     public Pdf store(MultipartFile file) throws IOException {

@@ -1,51 +1,55 @@
 package com.milos.numeric.converters;
 
-import com.milos.numeric.entities.Person;
 import com.milos.numeric.entities.UnregisteredPerson;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
+@Component
 public class CSVConverterUnregisteredPerson extends CSVConverter<UnregisteredPerson>
 {
 
     @Override
-    public List<UnregisteredPerson> convert(MultipartFile file)
-    {
+    public List<UnregisteredPerson> convert(MultipartFile file) throws IOException {
+
         List<UnregisteredPerson> list = new LinkedList<>();
 
-        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT))
+        Reader reader = new InputStreamReader(file.getInputStream());
+        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
+
+        String[] values = null;
+        while ((values = csvReader.readNext()) != null)
         {
+            UnregisteredPerson unregisteredPerson = new UnregisteredPerson();
 
-            for (CSVRecord csvRecord : csvParser)
-            {
-                UnregisteredPerson unregisteredPerson = new UnregisteredPerson();
+            String[] rec = values[0].split(";");
 
-                String surname = csvRecord.get(1);
-                String name = csvRecord.get(2);
-                String personalNumber = csvRecord.get(3);
+            String surname = rec[1];
 
-                unregisteredPerson.setSurname(surname);
-                unregisteredPerson.setName(name);
-                unregisteredPerson.setPersonalNumber(personalNumber);
+            String name = rec[2];
 
-                list.add(unregisteredPerson);
-            }
-        } catch (IOException e) {
+            String personalNumber = rec[3];
 
-            throw new RuntimeException(e);
+
+            unregisteredPerson.setSurname(surname);
+            unregisteredPerson.setName(name);
+            unregisteredPerson.setPersonalNumber(personalNumber);
+
+            list.add(unregisteredPerson);
         }
 
 
+
+
         return list;
+
+
     }
 }

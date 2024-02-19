@@ -1,6 +1,6 @@
 
 const equation = document.getElementById("equation");
-let tolerance = document.getElementById("tolerance");
+const tolerance = document.getElementById("tolerance");
 const initialValue = document.getElementById("initial");
 const result = document.getElementById("result");
 
@@ -19,6 +19,22 @@ const table = document.getElementById("table");
 let start = 0;
 let finish = 0;
 let step = 0;
+
+function checkValues()
+{
+    let num = Number.parseFloat(tolerance.value);
+
+    if ( !(num === 0.001 || num === 0.0001 || num === 0.00001 || num === 0.000001 || num === 0.0000001 || num === 0.00000001))
+    {
+        tolerance.value = 0.001;
+    }
+}
+
+
+function round()
+{
+    return tolerance.value.split(".")[1].length;
+}
 
 
 function newtonMethod() 
@@ -57,15 +73,15 @@ function newtonMethod()
 
         let next = current - (fx / derfx);
         data[i][0] = i + 1;
-        data[i][1] = next;
+        data[i][1] = next.toFixed(round());
         let error = Math.abs(next - current);
-        data[i][2] = error;
+        data[i][2] = error.toFixed(round());
 
 
 
         if (error <= tolerance.value) 
         {
-            result.value = next.toFixed(6);
+            result.value = next.toFixed(round());
             break;
         }
 
@@ -386,7 +402,7 @@ function validateRegulaFalsi()
         valid = false;
     } else 
     {
-        if (tolerance.value < 0.000001 || tolerance.value > 0.001) 
+        if (tolerance.value < 0.00000001 || tolerance.value > 0.001)
         {
             document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
             document.getElementById("tolerance-error").style.color = "red";
@@ -719,7 +735,7 @@ function initializeTable(headers, data)
                 c.innerText = (1 * data[i][j]);
             } else 
             {
-                c.innerText = (1 * data[i][j]).toFixed(6);
+                c.innerText = (1 * data[i][j]);
             }
 
             

@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-public class UserController
+public class PersonController
 {
     private final PersonService personService;
 
     @Autowired
-    public UserController(PersonService personService) {
+    public PersonController(PersonService personService) {
         this.personService = personService;
     }
 
@@ -43,6 +43,13 @@ public class UserController
     public boolean checkUsername(@RequestParam("username") String username)
     {
         return this.personService.findByUsername(username);
+    }
+
+    @GetMapping("/check-personal-number")
+    @ResponseBody
+    public boolean checkPersonalNumber(@RequestParam("pin") String pin)
+    {
+        return this.personService.findByPIN(pin);
     }
 
 

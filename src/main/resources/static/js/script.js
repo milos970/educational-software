@@ -78,6 +78,44 @@
 
         }
 
+    function personalNumber() {
+        validUsername = true;
+
+        if (username.value === "") { //nac posielat cez ajax prazdne heslo ze
+            validUsername = false;
+            canSubmit();
+            return;
+        }
+
+
+
+
+        jQuery.ajax({
+            url: "/check-username",
+            data: 'username=' + $("#username").val(),
+            type: "GET",
+            success: function (data) {
+                if (data === true) {
+                    usernameHint.innerHTML = "Používateľské meno existuje!";
+                    validUsername = false;
+                    canSubmit();
+                } else {
+                    if ( validUsername || (username.value === "")) {
+                        usernameHint.innerHTML = "";
+                        canSubmit();
+                    }
+
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            },
+        });
+
+
+    }
+
 
 
         function usernameValidation() {

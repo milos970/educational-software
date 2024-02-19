@@ -55,23 +55,23 @@
 
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Dolná hranica</label>
-						<input class="input100" id="dh" type="number"
-							placeholder="DH < HH">
+						<label for="dh">Dolná hranica</label>
+						<input class="input100" id="dh" type="number" min="-1000000"  max="1000000"
+							placeholder="DH < HH" >
 						<span class="focus-input100"></span>
 					</div>
 
 					<p class="error" id="error-dh"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Horná hranica</label>
+						<label for="hh">Horná hranica</label>
 						<input class="input100" id="hh" type="number"
 							placeholder="HH > DH">
 						<span class="focus-input100"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Krok</label>
+						<label for="step">Krok</label>
 						<input class="input100" id="step" type="number"
 							placeholder="">
 						<span class="focus-input100"></span>
