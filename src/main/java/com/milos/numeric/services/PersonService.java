@@ -20,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -31,13 +30,11 @@ public class PersonService
 
     private PersonNewPersonDTOMapper personNewPersonDTOMapper;
 
-    private final PasswordGenerator passwordGenerator;
 
 
     @Autowired
-    public PersonService(PersonRepository personRepository, PasswordGenerator passwordGenerator) {
+    public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.passwordGenerator = passwordGenerator;
     }
 
 
@@ -51,28 +48,7 @@ public class PersonService
 
     public void createMultiple(MultipartFile file)
     {
-        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT))
-        {
 
-            Person person = new Person();
-            for (CSVRecord csvRecord : csvParser)
-            {
-
-                    String name = csvRecord.get(1);
-                    String surname = csvRecord.get(2);
-                    person.setUsername(username);
-
-                    String authority = "STUDENT";
-                    String password = this.passwordGenerator.generate();
-                    person.setPassword(password);
-                    person.setAuthority(authority);
-
-
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public boolean findByUsername(String username)

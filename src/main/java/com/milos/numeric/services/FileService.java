@@ -36,7 +36,7 @@ public class FileService
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Pdf pdf = new Pdf(file.getBytes(), fileName);
 
-        return this.fileRepository.save(pdf);
+        return null;
     }
 
     public Pdf getFile(int id) {

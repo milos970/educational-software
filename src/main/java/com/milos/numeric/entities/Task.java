@@ -4,6 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+
 public class Task
 {
     @Id
@@ -11,8 +12,6 @@ public class Task
     private Integer id;
 
     private String name;
-    private String password;
-    private String authority;
 
 
 }
