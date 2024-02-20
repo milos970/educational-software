@@ -8,6 +8,8 @@ const toleranceError = document.getElementById("tolerance-error");
 const equationError = document.getElementById("equation-error");
 const initialError = document.getElementById("initial-error");
 const progressError = document.getElementById("progress-error");
+const dhError = document.getElementById("dh-error");
+const hhError = document.getElementById("hh-error");
 
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
@@ -15,6 +17,9 @@ const stp = document.getElementById("step");
 
 const table = document.getElementById("table");
 
+let validFunction = false;
+let validLowerBound = false;
+let validUpperBound = false;
 
 let start = 0;
 let finish = 0;
@@ -121,10 +126,14 @@ function newtonMethod()
 
     let data = [];
 
-    for (let i = 0; i < iterations; ++i) 
+    data[0] = [3];
+    data[0][0] = "k";
+    data[0][1] = "k";
+    data[0][2] = "chyba";
+    for (let i = 1; i < iterations; ++i)
     {
-        data[i] = [3];
 
+        data[i] = [3];
         let fx = math.evaluate(parsedEquation.toString(), { x: current });
         let derfx = math.evaluate(derivative.toString(), { x: current });
 
@@ -152,8 +161,8 @@ function newtonMethod()
         current = next;
     }
 
-    let headers = ["k", "x", "chyba"];
-    initializeTable(headers, data);
+    saveToFile(data);
+    initializeTable(data);
 }
 
 
@@ -162,42 +171,44 @@ function regulaFalsi() {
     if (!validateRegulaFalsi()) {
         return;
     }
-    var equation = document.getElementById("equation").value;
-    var tolerance = document.getElementById("tolerance").value;
 
 
+    let a = parseFloat(dh.value);
+    let b = parseFloat(hh.value);
+    let prev = a;
+
+     let iterations = 1000;
+
+    const parsedEquation = math.parse(equation.value);
+
+    const data = [];
+
+    data[0] = [5];
+    data[0][0] = "k";
+    data[0][1] = "a";
+    data[0][2] = "b";
+    data[0][3] = "x";
+    data[0][4] = "chyba";
 
 
-    let a = parseFloat(document.getElementById("dh").value);
-    let b = parseFloat(document.getElementById("hh").value);
-    var prev = a;
-
-    let data = [];
-
-
-    iterations = 100;
-    
-
-    var parsedEquation = math.parse(equation);
-
-    for (let k = 0; k < iterations; ++k) {
-
+    for (let k = 1; k < iterations; ++k) {
+alert(45);
         data[k] = [5];
-        let fak = math.evaluate(parsedEquation.toString(), { x: a });
-        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
+        const fak = math.evaluate(parsedEquation.toString(), { x: a });
+        const fbk = math.evaluate(parsedEquation.toString(), { x: b });
 
 
-        let xk = a - (b - a) / (fbk - fak) * fak;
+        const xk = a - (b - a) / (fbk - fak) * fak;
 
-        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+        const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
-        data[k][0] = k;
+        data[k][0] = k - 1;
         data[k][1] = a;
         data[k][2] = b;
         data[k][3] = xk;
         data[k][4] = Math.abs(xk - prev);
         if (fxk === 0) {
-            res.value = xk;
+            result.value = xk;
             break;
         }
 
@@ -209,19 +220,20 @@ function regulaFalsi() {
             a = xk;
         }
 
-        if (Math.abs(xk - prev) <= tolerance) {
-            res.value = xk;
+        if (Math.abs(xk - prev) <= tolerance.value)
+        {
+            result.value = xk;
             break;
         }
 
         prev = xk;
     }
 
-    res.value = xk;
+    result.value = xk;
 
-    let headers = ["k", "a", "b", "x", "chyba"];
 
-    initializeTable(headers, data);
+
+    initializeTable(data);
 
 
 
@@ -241,14 +253,12 @@ function bisection() {
     modified = modified.replace("=","");
     modified = modified.trim();
 
-    
 
-    let iterations = 100;
 
-    var parsedEquation = math.parse(modified);
+    const iterations = 100;
 
-    let xvalues = [];
-    let yvalues = [];
+    const parsedEquation = math.parse(modified);
+
 
     let data = []
 
@@ -267,8 +277,6 @@ function bisection() {
 
         let fbk = math.evaluate(parsedEquation.toString(), { x: b });
 
-        xvalues.push(xk);
-        yvalues.push(fxk);
 
         data[k] = [5];
 
@@ -279,14 +287,14 @@ function bisection() {
         data[k][4] = (b - a) / 2;
 
         if ((b - a) / 2 <= tolerance.value) {
-            
-            res.value = xk;
+
+            result.value = xk;
             break;
         }
 
         if (fxk === 0) {
-            
-            res.value = xk;
+
+            result.value = xk;
             break;
         }
 
@@ -305,7 +313,7 @@ function bisection() {
 
     }
 
-    res.value = xk;
+    result.value = xk;
 
     let headers = ["k", "a", "b", "x", "(b - a)/2"];
 
@@ -398,24 +406,6 @@ function graph(dh,hh,step)
 
 
 
-function iterate(from, num) 
-    {
-        let sum = parseFloat(tolerance.value).toFixed(1 * num);
-        
-        for (let i = 0; i < 10; ++i) 
-        {
-            sum =  (1 * sum + 1 * from);
-        }
-        
-        tolerance.value = parseFloat(sum).toFixed(num - 1);
-        
-
-    }
-
-
-
-
-
 function validateRegulaFalsi() 
 {
     let valid = true;
@@ -442,7 +432,7 @@ function validateRegulaFalsi()
     }
 
    
-
+   
     if (a.value === "") 
     {
         document.getElementById("dh-error").innerHTML = "Prázdne pole!";
@@ -725,19 +715,19 @@ function isValidNewton()
 
 
 
-function initializeTable(headers, data) 
+function initializeTable(data)
 {
 
     clearTable();
 
     let header = table.createTHead();
     let row = header.insertRow(0);
-    for (let i = 0; i < headers.length; ++i) {
-        var cell = row.insertCell(i);
-        cell.innerHTML = headers[i];
+    for (let i = 0; i < data[0].length; ++i) {
+        let cell = row.insertCell(i);
+        cell.innerHTML = data[0][i];
     }
 
-    let from = 0;
+    let from = 1;
 
     if (data.length > 8) {
         from = data.length - 8;
@@ -761,10 +751,10 @@ function initializeTable(headers, data)
 
             if (Number.isInteger(1 * data[i][j])) 
             {
-                c.innerText = (1 * data[i][j]);
+                c.innerText = data[i][j];
             } else 
             {
-                c.innerText = (1 * data[i][j]);
+                c.innerText = data[i][j];
             }
 
             
@@ -787,19 +777,116 @@ function clearTable()
 
 ////////////////////////////////////////////////////////SAVE TO FILE//////////////////////////////////////////////////////////////////////////////////////////////
 
-function saveToFile() {
+function saveToFile(array)
+{
+    function download2DArrayAsCSV(array) {
+        // Convert the 2D array to a CSV string
+        const csvContent = array.map(row => row.join(';')).join('\n');
 
+        // Create a Blob object representing the data as a file
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+
+        // Create a link element
+        const link = document.createElement('a');
+
+        // Set the href attribute of the link to the Blob object
+        link.href = window.URL.createObjectURL(blob);
+
+        // Set the download attribute to specify the filename
+        link.download = "Výsledok.csv";
+
+        // Append the link to the document body
+        document.body.appendChild(link);
+
+        // Trigger a click event on the link to prompt download
+        link.click();
+
+        // Clean up by removing the link from the DOM
+        document.body.removeChild(link);
+    }
+
+    download2DArrayAsCSV(array);
 }
 
 
 
+////////////////////////////////////////////////////////SAVE TO FILE//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
+////////////////////////////////////////////////////////VALIDATE BOUNDS//////////////////////////////////////////////////////////////////////////////////////////////
+
+function validateLowerBound()
+{
+    validLowerBound = true;
+
+    if (dh.value === "")
+    {
+        dhError.innerHTML = "Prázdne poľe!";
+        validLowerBound = false;
+        return;
+    } else {
+        dhError.innerHTML = "";
+    }
+
+    let num = Number.parseInt(dh.value);
+    let numD = Number.parseInt(hh.value);
+
+    if (-1000 > num || num > 999)
+    {
+        dhError.innerHTML = "Hodnota mimo intervalu!";
+        validLowerBound = false;
+        return;
+    }else {
+        dhError.innerHTML = "";
+    }
+
+    if (hh.value !== "" && num >= numH)
+    {
+        dhError.innerHTML = "Dolná hranica je väčšia/rovná než dolná!";
+        validLowerBound = false;
+    }else {
+        validateUpperBound();
+        dhError.innerHTML = "";
+    }
+
+}
+
+function validateUpperBound()
+{
+    validUpperBound = true;
+    if (hh.value === "")
+    {
+        hhError.innerHTML = "Prázdne poľe!";
+        validUpperBound = false;
+        return;
+    } else {
+        hhError.innerHTML = "";
+    }
+
+    let num = Number.parseInt(hh.value);
+    let numD = Number.parseInt(dh.value);
+
+    if (-999 > num || num > 1000)
+    {
+        validUpperBound = false;
+        hhError.innerHTML = "Hodnota mimo intervalu!";
+        return;
+    }else {
+        hhError.innerHTML = "";
+    }
+
+    if (numD >= num)
+    {
+        validUpperBound = false;
+        hhError.innerHTML = "Horná hranica je menšia/rovná než dolná!";
+    }else {
+        hhError.innerHTML = "";
+    }
 
 
-
-
+}
+///////////////////////////////////////////////////////VALIDATE BOUNDS//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

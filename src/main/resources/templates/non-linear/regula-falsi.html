@@ -58,7 +58,7 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0">
+						<input class="input100" id="equation" type="text" placeholder="f(x) = 0" onchange=>
 						<span class="focus-input100"></span>
 					</div>
 
@@ -67,7 +67,7 @@
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Tolerancia</label>
 						<input class="input100" id="tolerance" type="number"
-						placeholder="< 1*10e-6 ; 1*10e-3 >" >
+							   step="1" value="0.001" onchange="checkValues()">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -75,16 +75,16 @@
 
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Dolná hranica intervalu</label>
-						<input class="input100" id="dh" type="number" placeholder="DH < HH">
+						<label for="dh">Dolná hranica intervalu</label>
+						<input class="input100" id="dh" type="number" placeholder="DH < HH" onchange="validateLowerBound()">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p class="error" id="dh-error"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Horná hranica intervalu</label>
-						<input class="input100" id="hh" type="number" placeholder="HH > DH">
+						<label for="hh">Horná hranica intervalu</label>
+						<input class="input100" id="hh" type="number" placeholder="HH > DH" onchange="validateUpperBound()">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -92,14 +92,13 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="result">Koreň rovnice</label>
-						<input class="input100" id="result" type="number" 
-							placeholder="" readonly>
+						<input class="input100" id="result" type="number" readonly>
 						<span class="focus-input100"></span>
 					</div>
 
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="bisection()">
+						<button class="login100-form-btn" onclick="regulaFalsi()">
 							Spočítaj
 						</button>
 					</div>
@@ -121,12 +120,6 @@
 	
 
 	<script src="/src/main/resources/static/js/non-linear.js"></script>
-
-
-
- 
-
-
 
 
 
