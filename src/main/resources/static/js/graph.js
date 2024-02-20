@@ -1,13 +1,132 @@
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
-const stp = document.getElementById("step");
 const equation = document.getElementById("equation");
 const plot = document.getElementById("plot");
-const result = document.getElementById("error-result");
-function display()
+
+const equationError = document.getElementById("equation-error");
+const dhError = document.getElementById("dh-error");
+const hhError = document.getElementById("hh-error");
+const resultError = document.getElementById("result-error");
+
+const button = document.getElementById("button");
+
+
+let validFunction = false;
+let validLowerBound = false;
+let validUpperBound = false;
+
+const step = 1;
+
+
+function validateFunction()
 {
-    graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(stp));
+    validFunction = true;
+
+
+    if (equation.value == null || equation.value === "")
+    {
+        equationError.innerHTML = "Prázdne poľe!";
+        validFunction = false;
+        return;
+    } else {
+        equationError.innerHTML = "";
+    }
+
+    equation.value = equation.value.toLowerCase();
+
+    if (equation.value.indexOf("x") === -1)
+    {
+        equationError.innerHTML  = "Nevalidný výraz!";
+        validFunction = false;
+    } else {
+        try
+        {
+            let expression = math.parse(equation.value);
+            math.evaluate(expression.toString(), { x: 0 });
+            equationError.innerHTML = "";
+
+        } catch (error)
+        {
+            equationError.innerHTML  = "Nevalidný výraz!";
+            validFunction = false;
+        }
+    }
+
+
+
 }
+
+function validateLowerBound()
+{
+    validLowerBound = true;
+
+    if (dh.value === "")
+    {
+        dhError.innerHTML = "Prázdne poľe!";
+        validLowerBound = false;
+        return;
+    } else {
+        dhError.innerHTML = "";
+    }
+
+    let num = Number.parseInt(dh.value);
+    let numD = Number.parseInt(hh.value);
+
+    if (-1000 > num || num > 999)
+    {
+        dhError.innerHTML = "Hodnota mimo intervalu!";
+        validLowerBound = false;
+        return;
+    }else {
+        dhError.innerHTML = "";
+    }
+
+    if (hh.value !== "" && num >= numH)
+    {
+        dhError.innerHTML = "Dolná hranica je väčšia/rovná než dolná!";
+        validLowerBound = false;
+    }else {
+        validateUpperBound();
+        dhError.innerHTML = "";
+    }
+
+}
+
+function validateUpperBound()
+{
+    validUpperBound = true;
+    if (hh.value === "")
+    {
+        hhError.innerHTML = "Prázdne poľe!";
+        validUpperBound = false;
+        return;
+    } else {
+        hhError.innerHTML = "";
+    }
+
+    let num = Number.parseInt(hh.value);
+    let numD = Number.parseInt(dh.value);
+
+    if (-999 > num || num > 1000)
+    {
+        validUpperBound = false;
+        hhError.innerHTML = "Hodnota mimo intervalu!";
+        return;
+    }else {
+        hhError.innerHTML = "";
+    }
+
+    if (numD >= num)
+    {
+        validUpperBound = false;
+        hhError.innerHTML = "Horná hranica je menšia/rovná než dolná!";
+    }else {
+        hhError.innerHTML = "";
+    }
+
+
+}
+
 
 
 function graph(dh,hh,step)
@@ -19,8 +138,9 @@ function graph(dh,hh,step)
     const xValues = [];
 
 
-    for (let i = dh; i < hh; i += 1)
+    for (let i = dh; i < hh; i += step)
     {
+
         xValues.push(i);
     }
 
@@ -37,7 +157,7 @@ function graph(dh,hh,step)
         let x = xValues[i];
         yValues[i] = math.evaluate(parsedEquation.toString(), { x: x });
 
-        if (prev * yValues[i] < 0)
+        if (prev * yValues[i] < 0 || prev === 0 || yValues[i] ===0)
         {
             found = true;
         }
@@ -48,9 +168,9 @@ function graph(dh,hh,step)
 
     if (!found)
     {
-        result.innerHTML = "Koreň na intervale <" + dh.value + ";" + hh.value + "> neleží!";
+        resultError.innerHTML = "Koreň na intervale <" + dh.value + ";" + hh.value + "> neleží!";
     } else {
-        result.innerHTML = "";
+        resultError.innerHTML = "";
     }
 
     const trace = {
@@ -72,3 +192,15 @@ function graph(dh,hh,step)
 
 
 }
+
+
+function display()
+{
+    if ( validFunction&& validLowerBound && validUpperBound)
+    {
+
+        graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(step));
+    }
+
+}
+

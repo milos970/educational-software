@@ -64,7 +64,7 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Tolerancia</label>
-						<input class="input100" id="tolerance" type="number" value="0.001" onchange="checkValues()">
+						<input class="input100" id="tolerance" type="number"   step="1" value="0.001" onchange="checkValues()">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -94,6 +94,12 @@
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" onclick="newtonMethod()">
 							Spočítaj
+						</button>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn" onclick="newtonMethod()">
+							Ulož do súboru
 						</button>
 					</div>
 

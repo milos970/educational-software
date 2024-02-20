@@ -20,9 +20,73 @@ let start = 0;
 let finish = 0;
 let step = 0;
 
+let prev = 0.001;
+
 function checkValues()
 {
     let num = Number.parseFloat(tolerance.value);
+
+    if (prev === 0.001 && num < 0)
+    {
+        tolerance.value = 0.0001;
+        prev = 0.0001;
+        return;
+    }
+
+    if (prev === 0.001 && num > 0)
+    {
+        tolerance.value = 0.001;
+        prev = 0.001;
+        return;
+    }
+
+
+    if (prev === 0.0001 && num < 0)
+    {
+        tolerance.value = 0.00001;
+        prev = 0.00001;
+        return;
+    }
+
+    if (prev === 0.0001 && num > 0)
+    {
+        tolerance.value = 0.001;
+        prev = 0.001;
+        return;
+    }
+
+
+    if (prev === 0.00001 && num < 0)
+    {
+        tolerance.value = 0.000001;
+        prev = 0.000001;
+        return;
+    }
+
+
+    if (prev === 0.00001 && num > 0)
+    {
+        tolerance.value = 0.0001;
+        prev = 0.0001;
+        return;
+    }
+
+
+    if (prev === 0.000001 && num > 0)
+    {
+        tolerance.value = 0.00001;
+        prev = 0.00001;
+        return;
+    }
+
+    if (prev === 0.000001 && num < 0)
+    {
+        tolerance.value = 0.000001;
+        prev = 0.000001;
+        return;
+    }
+
+
 
     if ( !(num === 0.001 || num === 0.0001 || num === 0.00001 || num === 0.000001 || num === 0.0000001 || num === 0.00000001))
     {
@@ -349,42 +413,7 @@ function iterate(from, num)
     }
 
 
-function increase() 
-{
 
-    
-
-
-    
-
-
-/* 
-
-
-    if (value.split('.')[1].length === 6) {
-        
-        iterate(0.000001,6);
-        return
-    }
-
-    
-    if (value.split('.')[1].length === 5) {
-        iterate(0.00001,5);
-        return
-    }
-
-
-    if (value.split('.')[1].length === 4) {
-        iterate(0.0001,4);
-
-        return
-    }
-    
-    if (value.split('.')[1].length === 3) {
-        
-        iterate(0.001,3);
-    } */
-}
 
 
 function validateRegulaFalsi() 
@@ -752,6 +781,22 @@ function clearTable()
 {
   $("#table tr").remove(); 
 }
+
+
+
+
+////////////////////////////////////////////////////////SAVE TO FILE//////////////////////////////////////////////////////////////////////////////////////////////
+
+function saveToFile() {
+
+}
+
+
+
+
+
+
+
 
 
 

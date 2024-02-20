@@ -46,49 +46,41 @@
 	
 					<div class="wrap-input100 validate-input text-center">
 						<label class="text-center" for="equation">Funkcia</label>
-						<input class="input100" id="equation" type="text" placeholder="f(x)">
+						<input class="input100" id="equation" type="text" placeholder="f(x)" onchange="validateFunction()">
 						<span class="focus-input100"></span>
 					</div>
-	
-	
-	
-					<p id="equation-error"></p>
 
+					<p class ="error" id="equation-error"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="dh">Dolná hranica</label>
-						<input class="input100" id="dh" type="number" value="-1000" min="-10000"  max="10000"
-							placeholder="DH < HH" >
+						<label for="dh">Dolná hranica intervalu</label>
+						<input class="input100" id="dh" type="number"  min="-1000"  max="999"
+							placeholder="<-1000;999>" onchange="validateLowerBound()">
 						<span class="focus-input100"></span>
 					</div>
 
-					<p class="error" id="error-dh"></p>
+					<p class="error" id="dh-error"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="hh">Horná hranica</label>
-						<input class="input100" id="hh" type="number" value="1000" min="-9999"  max="10000"
-							placeholder="HH > DH">
+						<label for="hh">Horná hranica intervalu</label>
+						<input class="input100" id="hh" type="number"  min="-999"  max="1000"
+							   placeholder="<-999;1000>" onchange="validateUpperBound()">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input text-center">
-						<label for="step">Krok</label>
-						<input class="input100" id="step" type="number"
-							placeholder="">
-						<span class="focus-input100"></span>
-					</div>
+					<p class="error" id="hh-error"></p>
 
-					<p class="error" id="error-result"></p>
+					<p class="error" id="result-error"></p>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="display()">
+						<button type="button" id="button" class="login100-form-btn" onclick="display()" >
 							Vykresli graf
 						</button>
 					</div>
 
 
-	
-	
+
+
 					<div class="text-center p-t-136">
 						<a class="txt2" href="#">
 						</a>
