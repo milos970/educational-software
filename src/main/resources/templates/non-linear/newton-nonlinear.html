@@ -51,8 +51,28 @@
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-                        <h1>Newtonová metóda</h1>
+                        <h1>Numerické metódy</h1>
 					</span>
+
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio1">
+						<label class="form-check-label" for="radio1">
+							Metóda dotyčníc
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio2">
+						<label class="form-check-label" for="radio2">
+							Bisekcia
+						</label>
+					</div>
+
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio3">
+						<label class="form-check-label" for="radio3">
+							Regula falsi
+						</label>
+					</div>
 
 					<div class="wrap-input100 validate-input text-center">
 						<label class="text-center" for="equation">Rovnica</label>
@@ -70,7 +90,6 @@
 
 					<p class ="error" id="tolerance-error"></p>
 
-
 					<div class="wrap-input100 validate-input text-center">
 						<label for="initial">Počiatočná aproximácia</label>
 						<input class="input100" id="initial" type="number" 
@@ -83,11 +102,15 @@
 
 
 
-
-
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" onclick="newtonMethod()">
 							Spočítaj
+						</button>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<button type="button" id="button" class="login100-form-btn" onclick="display()" >
+							Vykresli graf
 						</button>
 					</div>
 
@@ -98,12 +121,6 @@
 					</div>
 
 
-
-					<div class="wrap-input100 validate-input text-center">
-						<label for="result"></label>
-						<input class="input100" id="result" type="number" readonly>
-						<span class="focus-input100"></span>
-					</div>
 					<p class ="error" id="progress-error"></p>
 
 					<div class="text-center p-t-136">

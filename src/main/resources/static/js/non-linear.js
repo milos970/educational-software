@@ -2,7 +2,6 @@
 const equation = document.getElementById("equation");
 const tolerance = document.getElementById("tolerance");
 const initialValue = document.getElementById("initial");
-const result = document.getElementById("result");
 
 const toleranceError = document.getElementById("tolerance-error");
 const equationError = document.getElementById("equation-error");
@@ -156,7 +155,7 @@ function newtonMethod()
 
         if (error <= tolerance.value) 
         {
-            result.value = next.toFixed(round());
+
             break;
         }
 
@@ -213,7 +212,7 @@ function regulaFalsiMethod()
         data[k][3] = xk.toFixed(round());
         data[k][4] = (Math.abs(xk - prev)).toFixed(round());
         if (fxk === 0) {
-            result.value = xk;
+
             break;
         }
 
@@ -227,7 +226,7 @@ function regulaFalsiMethod()
 
         if (Math.abs(xk - prev) <= tolerance.value)
         {
-            result.value = xk.toFixed(round());
+
             break;
         }
 
@@ -288,13 +287,13 @@ function bisectionMethod()
 
         if ((b - a) / 2 <= tolerance.value) {
 
-            result.value = xk.toFixed(round());;
+
             break;
         }
 
         if (fxk === 0) {
 
-            result.value = xk.toFixed(round());;
+
             break;
         }
 
