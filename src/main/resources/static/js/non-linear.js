@@ -109,7 +109,10 @@ function round()
 
 function newtonMethod() 
 {
-
+    if (!validateEquation() || !validateFirstApproximation() )
+    {
+        return;
+    }
 
     let modified = equation.value;
         modified = modified.slice(0, -1);
@@ -127,7 +130,7 @@ function newtonMethod()
 
     data[0] = [3];
     data[0][0] = "k";
-    data[0][1] = "k";
+    data[0][1] = "x";
     data[0][2] = "chyba";
     for (let i = 1; i < iterations; ++i)
     {
@@ -144,7 +147,7 @@ function newtonMethod()
 
 
         let next = current - (fx / derfx);
-        data[i][0] = i + 1;
+        data[i][0] = i - 1;
         data[i][1] = next.toFixed(round());
         let error = Math.abs(next - current);
         data[i][2] = error.toFixed(round());
@@ -494,6 +497,23 @@ function saveToFile(array)
 ////////////////////////////////////////////////////////VALIDATE//////////////////////////////////////////////////////////////////////////////////////////////
 
 
+function validateFirstApproximation()
+{
+    if (initialValue.value === "")
+    {
+        initialError.innerHTML = "Prázdne poľe!";
+        return false;
+
+    }else
+    {
+        equationError.innerHTML = "";
+    }
+
+
+
+
+return true;
+}
 function modifyEquation()
 {
     let eq = equation.value;
@@ -571,6 +591,16 @@ function validateLowerBound()
         return false;
     } else {
         dhError.innerHTML = "";
+    }
+
+    let num = Number.parseFloat(dh.value);
+
+    if (-1000 > num || num > 999)
+    {
+        hhError.innerHTML = "Hodnota mimo intervalu!";
+        return false;
+    }else {
+        hhError.innerHTML = "";
     }
 
     return true;

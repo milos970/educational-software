@@ -1,93 +1,139 @@
 const fun = document.getElementById("function");
-const a = document.getElementById("dh");
-const b = document.getElementById("hh");
+const dh = document.getElementById("dh");
+const hh = document.getElementById("hh");
 const n = document.getElementById("n");
 const res = document.getElementById("result");
-const errorFun = document.getElementById("error-function");
-const errorDH = document.getElementById("error-dh");
-const errorHH = document.getElementById("error-hh");
-const errorN = document.getElementById("error-n");
+const funError = document.getElementById("function-error");
+const dhError = document.getElementById("dh-error");
+const hhError = document.getElementById("hh-error");
+const nError = document.getElementById("n-error");
 
-function isValid() {
-  let valid = true;
-
-  if (a.value === "") {
-    errorDH.innerHTML = "Prázdne pole!";
-    valid = false;
-  } else {
-    if (a.value > b.value) {
-        errorDH.innerHTML = "Dolná hranica je väčšia než horná!";
-      valid = false;
-    } else {
-        errorDH.innerHTML = "";
-    }
+function validateEquation()
+{
+  if (fun.value == null || fun.value === "")
+  {
+    funError.innerHTML = "Prázdne poľe!";
+    return false;
+  } else
+  {
+    funError.innerHTML = "";
   }
 
-  if (b.value === "") {
-    errorHH.innerHTML = "Prázdne pole!";
-    valid = false;
-  } else {
-    errorHH.innerHTML = "";
+  fun.value = fun.value.toLowerCase();
+
+  if (fun.value.indexOf("x") === -1)
+  {
+
+    funError.innerHTML  = "Nevalidný výraz!";
+    return false;
+  } else
+  {
+    funError.innerHTML = "";
+  }
+
+
+
+  try
+  {
+    let expression = math.parse(fun.value);
+    math.evaluate(expression.toString(), { x: 0 });
+    funError.innerHTML = "";
+
+  } catch (error)
+  {
+    funError.innerHTML  = "Nevalidný výraz!";
+    return false;
+  }
+
+
+  return true;
 }
+function validateLowerBound()
+{
 
-  if (n.value === "") {
-    errorN.innerHTML = "Prázdne pole!";
-    valid = false;
-  } else {
-    if (!Number.isInteger((1 * n.value)) || n.value <= 0) {
-      errorN.innerHTML = "Nevalidná hodnota!";
-      valid = false;
-    } else {
-      if (1 <= n.value && n.value <= 10) {
-        errorN.innerHTML = "";
-      } else {
-        errorN.innerHTML = "Hodnota mimo povoleného intervalu!";
-        valid = false;
-      }
-    }
-  }
-
-  if (fun.value.length === 0) {
-    errorFun.innerHTML = "Prázdne pole!";
+  if (dh.value === "")
+  {
+    dhError.innerHTML = "Prázdne poľe!";
     return false;
   } else {
-    try {
-      var expression = math.parse(fun.value);
-      math.evaluate(expression.toString(), { x: 0 });
-      errorFun.innerHTML = "";
-      return true;
-    } catch (error) {
-      errorFun.innerHTML = "Nevalidný výraz!";
-      return false;
-    }
+    dhError.innerHTML = "";
   }
+
+
+  let num = Number.parseFloat(dh.value);
+
+  if (-10 > num || num > 9)
+  {
+    hhError.innerHTML = "Hodnota mimo intervalu!";
+    return false;
+  }else {
+    hhError.innerHTML = "";
+  }
+
+  return true;
+
 }
 
-function trapezoid() {
-    if (!isValid()) {
-        return;
-      }
+function validateUpperBound()
+{
+
+  if (hh.value === "")
+  {
+    hhError.innerHTML = "Prázdne poľe!";
+    return false;
+  } else {
+    hhError.innerHTML = "";
+  }
+
+  let num = Number.parseFloat(hh.value);
+  let numD = Number.parseFloat(dh.value);
+
+  if (-9 > num || num > 10)
+  {
+    hhError.innerHTML = "Hodnota mimo intervalu!";
+    return false;
+  }else {
+    hhError.innerHTML = "";
+  }
+
+  if (numD >= num)
+  {
+    hhError.innerHTML = "Horná hranica je menšia/rovná než dolná!";
+    return false;
+  }else {
+    hhError.innerHTML = "";
+  }
+
+  return true;
+}
+
+function trapezoid()
+{
+  if ( !(validateEquation() && validateLowerBound() && validateUpperBound()) )
+  {
+    return;
+  }
     
-      let h = (b.value - a.value) / n.value;
+      const h = (hh.value - dh.value) / n.value;
     
-      let parsedEquation = math.parse(fun.value);
+      const parsedEquation = math.parse(fun.value);
     
     
       let sum = 0;
-      let part = 1 * a.value;
+      let part = 1 * dh.value;
     
       for (let i = 0; i <= n.value; ++i) 
       {
 
-        if (i == 0) 
+        if (i == 0)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: a.value});
+            sum += math.evaluate(parsedEquation.toString(), { x: dh.value});
             continue;
         }
 
-        if (i == n.value) 
+        if (i == n.value)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: b.value});
+            sum += math.evaluate(parsedEquation.toString(), { x: hh.value});
             continue;
         }
 
@@ -98,46 +144,47 @@ function trapezoid() {
     
       }
     
-      let result = sum * h/2;
-      res.value = result.toFixed(6);
+      const result = sum * h/2;
+      res.value = result.toFixed(3);
 }
 
 function simpson() {
-    if (!isValid()) {
-        return;
-      }
+  if ( !(validateEquation() && validateLowerBound() && validateUpperBound()) )
+  {
+    return;
+  }
     
-      let h = (b.value - a.value) / n.value;
-    
-      let parsedEquation = math.parse(fun.value);
+      const h = (hh.value - dh.value) / n.value;
+
+      const parsedEquation = math.parse(fun.value);
     
     
       let sum = 0;
-      let part = 1 * a.value;
+      let part = 1 * dh.value;
     
       for (let i = 0; i <= n.value; ++i) 
       {
 
-        if (i == 0) 
+        if (i == 0)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: a.value});
+            sum += math.evaluate(parsedEquation.toString(), { x: dh.value});
             continue;
         }
 
-        if (i == n.value) 
+        if (i == n.value)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: b.value});
+            sum += math.evaluate(parsedEquation.toString(), { x: hh.value});
             continue;
         }
 
         part += 1 * h;
 
-        if (i % 2 != 0) 
+        if (i % 2 !== 0)
         {
             sum = sum + (4 * math.evaluate(parsedEquation.toString(), { x: part }));
         }
 
-        if (i % 2 == 0) 
+        if (i % 2 === 0)
         {
             sum = sum + (2 * math.evaluate(parsedEquation.toString(), { x: part }));
         }
@@ -146,6 +193,6 @@ function simpson() {
         
       }
     
-      let result = sum * h/3;
-      res.value = result.toFixed(6);
+      const result = sum * h/3;
+      res.value = result.toFixed(3);
 }

@@ -7,21 +7,21 @@ function isValid()
 {
     const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*\]$/;
     
-    let element = document.getElementById("error");
+    let element = document.getElementById("nodes-error");
 
 
     if (nodes.value.length === 0) 
     {
-        element.innerText = "Prázdne pole!";
+        element.innerHTML = "Prázdne pole!";
         return false;
     }
 
 
     if (regex.test(nodes.value)) 
     {
-        element.innerText = "";
+        element.innerHTML = "";
     } else {
-        element.innerText = "Nevalidný výraz!";
+        element.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
@@ -30,19 +30,19 @@ function isValid()
 
     if (data.length === 1) 
     {
-        element.innerText = "Málo vstupných bodov!";
+        element.innerHTML = "Málo vstupných bodov!";
         return false;
     } else {
-        element.innerText = "";
+        element.innerHTML = "";
     }
 
 
     if (data.length === 100) 
     {
-        element.innerText = "Veľa vstupných údajov!";
+        element.innerHTML = "Veľa vstupných údajov!";
         return false;
     } else {
-        element.innerText = "";
+        element.innerHTML = "";
     }
 
 
@@ -55,10 +55,10 @@ function isValid()
 
     if (data.length !== uniques.size) 
     {
-        element.innerText = "Duplikatný vstupný údaj!";
+        element.innerHTML = "Duplikatný vstupný údaj!";
         return false;
     } else {
-        element.innerText = "";
+        element.innerHTML = "";
     }
 
     return true;
@@ -391,7 +391,7 @@ function error(equation,data)
     e = Math.sqrt(e);
 
     
-    err.value = e;
+    err.value = e.toFixed(6);;
 }
 
 
