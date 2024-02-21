@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Polovičné delenie intervalov</title>
+	<title>Bisekcia</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -50,12 +50,12 @@
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-                        <h1>Polovičné delenie intervalov</h1>
+                        <h1>Bisekcia</h1>
 					</span>
 
 					<div class="wrap-input100 validate-input text-center">
 						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0">
+						<input class="input100" id="equation" type="text" placeholder="f(x) = 0">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -63,8 +63,7 @@
 
 					<div class="wrap-input100 validate-input text-center">
 						<label for="tolerance">Tolerancia</label>
-						<input class="input100" id="tolerance" type="number"
-						placeholder="< 1*10e-6 ; 1*10e-3 >" >
+						<input class="input100" id="tolerance" type="number">
 						<span class="focus-input100"></span>
 					</div>
 
@@ -72,36 +71,42 @@
 
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Dolná hranica intervalu</label>
-						<input class="input100" id="dh" type="number" placeholder="DH < HH">
+						<label for="dh">Dolná hranica intervalu</label>
+						<input class="input100" id="dh" type="number" placeholder="<-999;1000>">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p class="error" id="dh-error"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Horná hranica intervalu</label>
-						<input class="input100" id="hh" type="number" placeholder="HH > DH">
+						<label for="hh">Horná hranica intervalu</label>
+						<input class="input100" id="hh" type="number" placeholder="<-1000;999>">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p class="error" id="hh-error"></p>
 
-
-					<div class="wrap-input100 validate-input text-center">
-						<label for="result">Koreň rovnice</label>
-						<input class="input100" id="result" type="number" 
-							placeholder="" readonly>
-						<span class="focus-input100"></span>
-					</div>
-
-
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="bisection()">
+						<button class="login100-form-btn" onclick="bisectionMethod()">
 							Spočítaj
 						</button>
 					</div>
 
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn" onclick="saveToFile()">
+							Ulož do súboru
+						</button>
+					</div>
+
+
+
+					<div class="wrap-input100 validate-input text-center">
+						<label for="result"></label>
+						<input class="input100" id="result" type="number" readonly>
+						<span class="focus-input100"></span>
+					</div>
+					<p class ="error" id="progress-error"></p>
 
 					<div class="text-center p-t-136">
 						<a class="txt2" href="#">

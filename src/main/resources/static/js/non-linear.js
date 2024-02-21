@@ -17,15 +17,16 @@ const stp = document.getElementById("step");
 
 const table = document.getElementById("table");
 
-let validFunction = false;
-let validLowerBound = false;
-let validUpperBound = false;
+
 
 let start = 0;
 let finish = 0;
 let step = 0;
 
 let prev = 0.001;
+
+
+let successfullCalucation = false;
 
 function checkValues()
 {
@@ -108,9 +109,7 @@ function round()
 
 function newtonMethod() 
 {
-    if ( !isValidNewton()) {
-        return;
-    }
+
 
     let modified = equation.value;
         modified = modified.slice(0, -1);
@@ -167,19 +166,22 @@ function newtonMethod()
 
 
 
-function regulaFalsi() {
-    if (!validateRegulaFalsi()) {
+function regulaFalsiMethod()
+{
+    if ( !(validateEquation() && validateLowerBound() && validateUpperBound()) )
+    {
         return;
     }
 
+    const modifiedEquation = modifyEquation();
 
     let a = parseFloat(dh.value);
     let b = parseFloat(hh.value);
     let prev = a;
 
-     let iterations = 1000;
+    const iterations = 1000;
 
-    const parsedEquation = math.parse(equation.value);
+    const parsedEquation = math.parse(modifiedEquation);
 
     const data = [];
 
@@ -192,7 +194,7 @@ function regulaFalsi() {
 
 
     for (let k = 1; k < iterations; ++k) {
-alert(45);
+
         data[k] = [5];
         const fak = math.evaluate(parsedEquation.toString(), { x: a });
         const fbk = math.evaluate(parsedEquation.toString(), { x: b });
@@ -203,10 +205,10 @@ alert(45);
         const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
         data[k][0] = k - 1;
-        data[k][1] = a;
-        data[k][2] = b;
-        data[k][3] = xk;
-        data[k][4] = Math.abs(xk - prev);
+        data[k][1] = a.toFixed(round());
+        data[k][2] = b.toFixed(round());
+        data[k][3] = xk.toFixed(round());
+        data[k][4] = (Math.abs(xk - prev)).toFixed(round());
         if (fxk === 0) {
             result.value = xk;
             break;
@@ -222,14 +224,12 @@ alert(45);
 
         if (Math.abs(xk - prev) <= tolerance.value)
         {
-            result.value = xk;
+            result.value = xk.toFixed(round());
             break;
         }
 
         prev = xk;
     }
-
-    result.value = xk;
 
 
 
@@ -240,61 +240,58 @@ alert(45);
 }
 
 
-function bisection() {
-    if (!validateBisection()) {
-        return;
-    }
-
-    var equation = document.getElementById("equation").value;
-    var tolerance = document.getElementById("tolerance").value;
-
-    let modified = equation;
-    modified = modified.slice(0, -1);
-    modified = modified.replace("=","");
-    modified = modified.trim();
+function bisectionMethod()
+{
 
 
+    const modifiedEquation = modifyEquation();
+    const iterations = 1000;
+    const parsedEquation = math.parse(modifiedEquation);
 
-    const iterations = 100;
 
-    const parsedEquation = math.parse(modified);
+    const data = []
+    data[0] = [5];
+
+    data[0][0] = "k";
+    data[0][1] = "a";
+    data[0][2] = "b";
+    data[0][3] = "x";
+    data[0][4] = "chyba";
 
 
-    let data = []
-
-    let a = parseFloat(document.getElementById("dh").value);
-    let b = parseFloat(document.getElementById("hh").value);
+    let a = parseFloat(dh.value);
+    let b = parseFloat(hh.value);
    
     let xk = 0;
-    for (let k = 0; k < iterations; ++k) 
+    for (let k = 1; k < iterations; ++k)
     {
 
         
         xk = (a + b)/2;
-        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+        const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
-        let fak = math.evaluate(parsedEquation.toString(), { x: a });
+        const fak = math.evaluate(parsedEquation.toString(), { x: a });
 
-        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
+        const fbk = math.evaluate(parsedEquation.toString(), { x: b });
 
 
         data[k] = [5];
 
-        data[k][0] = k;
-        data[k][1] = a;
-        data[k][2] = b;
-        data[k][3] = xk;
-        data[k][4] = (b - a) / 2;
+        data[k][0] = k - 1;
+        data[k][1] = a.toFixed(round());
+        data[k][2] = b.toFixed(round());
+        data[k][3] = xk.toFixed(round());
+        data[k][4] = ((b - a) / 2).toFixed(round());
 
         if ((b - a) / 2 <= tolerance.value) {
 
-            result.value = xk;
+            result.value = xk.toFixed(round());;
             break;
         }
 
         if (fxk === 0) {
 
-            result.value = xk;
+            result.value = xk.toFixed(round());;
             break;
         }
 
@@ -313,11 +310,9 @@ function bisection() {
 
     }
 
-    result.value = xk;
 
-    let headers = ["k", "a", "b", "x", "(b - a)/2"];
 
-    initializeTable(headers, data);
+    initializeTable(data);
 
 
 
@@ -404,319 +399,9 @@ function graph(dh,hh,step)
 }
 
 
-
-
-function validateRegulaFalsi() 
-{
-    let valid = true;
-
-    const a = document.getElementById("dh");
-    const b = document.getElementById("hh");
-
-    
-    if (tolerance.value.length === 0) 
-    {
-        document.getElementById("tolerance-error").innerHTML = "Prázdne pole!";
-        document.getElementById("tolerance-error").style.color = "red";
-        valid = false;
-    } else 
-    {
-        if (tolerance.value < 0.00000001 || tolerance.value > 0.001)
-        {
-            document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
-            document.getElementById("tolerance-error").style.color = "red";
-            valid = false;
-        } else {
-            document.getElementById("tolerance-error").innerText = "";
-        }
-    }
-
-   
-   
-    if (a.value === "") 
-    {
-        document.getElementById("dh-error").innerHTML = "Prázdne pole!";
-        document.getElementById("dh-error").style.color = "red";
-        valid = false;
-    } else {
-        if (a.value >= b.value) 
-    {
-        document.getElementById("dh-error").innerHTML = "Dolná hranica je väčšia než horná!";
-        document.getElementById("dh-error").style.color = "red";
-        valid = false;
-    }else {
-        document.getElementById("dh-error").innerText = "";
-    }
-    }
-
-
-    if (b.value === "") 
-    {
-        document.getElementById("hh-error").innerHTML = "Prázdne pole!";
-        document.getElementById("hh-error").style.color = "red";
-        valid = false;
-    } else {
-        document.getElementById("hh-error").innerText = "";
-    }
-
-
-
-    
-
-
-    if (equation.value.length === 0) 
-    {
-        document.getElementById("equation-error").innerHTML = "Prázdne pole!";
-        document.getElementById("equation-error").style.color = "red";
-        valid = false;
-    } else 
-    {
-        if (equation.value.charAt(equation.value.length - 1) !== "0") 
-        {
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        } else {
-            document.getElementById("equation-error").innerText = "";
-        }
-
-        if (!equation.value.includes("=")) 
-        {
-          
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        } else {
-            document.getElementById("equation-error").innerText = "";
-        }
-
-
-        let modified = equation.value;
-        modified = modified.slice(0, -1);
-        modified = modified.replace("=","");
-        modified = modified.trim();
-
-
-        try 
-        {
-            var expression = math.parse(modified);
-            math.evaluate(expression.toString(), { x: 0 });
-            document.getElementById("equation-error").innerText = "";
-    
-        } catch (error) 
-        {
-            
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        }
-    }
-
-
-    return valid;
-
-}
-
-
-
-function validateBisection() 
-{
-    let valid = true;
-
-    const a = document.getElementById("dh");
-    const b = document.getElementById("hh");
-
-    
-    if (tolerance.value.length === 0) 
-    {
-        document.getElementById("tolerance-error").innerHTML = "Prázdne pole!";
-        document.getElementById("tolerance-error").style.color = "red";
-        valid = false;
-    } else 
-    {
-        if (tolerance.value < 0.000001 || tolerance.value > 0.001) 
-        {
-            document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
-            document.getElementById("tolerance-error").style.color = "red";
-            valid = false;
-        } else {
-            document.getElementById("tolerance-error").innerText = "";
-        }
-    }
-
-   
-
-    if (a.value === "") 
-    {
-        document.getElementById("dh-error").innerHTML = "Prázdne pole!";
-        document.getElementById("dh-error").style.color = "red";
-        valid = false;
-    } else {
-        if (a.value >= b.value) 
-    {
-        document.getElementById("dh-error").innerHTML = "Dolná hranica je väčšia než horná!";
-        document.getElementById("dh-error").style.color = "red";
-        valid = false;
-    }else {
-        document.getElementById("dh-error").innerText = "";
-    }
-    }
-
-
-    if (b.value === "") 
-    {
-        document.getElementById("hh-error").innerHTML = "Prázdne pole!";
-        document.getElementById("hh-error").style.color = "red";
-        valid = false;
-    } else {
-        document.getElementById("hh-error").innerText = "";
-    }
-
-
-
-    
-
-
-    if (equation.value.length === 0) 
-    {
-        document.getElementById("equation-error").innerHTML = "Prázdne pole!";
-        document.getElementById("equation-error").style.color = "red";
-        valid = false;
-    } else 
-    {
-        if (equation.value.charAt(equation.value.length - 1) !== "0") 
-        {
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        } else {
-            document.getElementById("equation-error").innerText = "";
-        }
-
-        if (!equation.value.includes("=")) 
-        {
-          
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        } else {
-            document.getElementById("equation-error").innerText = "";
-        }
-
-
-        let modified = equation.value;
-        modified = modified.slice(0, -1);
-        modified = modified.replace("=","");
-        modified = modified.trim();
-
-
-        try 
-        {
-            var expression = math.parse(modified);
-            math.evaluate(expression.toString(), { x: 0 });
-            document.getElementById("equation-error").innerText = "";
-    
-        } catch (error) 
-        {
-            
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        }
-    }
-
-
-    return valid;
-
-}
-
-
-
-function isValidNewton() 
-{
-    let valid = true;
-    
-    if (tolerance.value.length === 0) 
-    {
-        document.getElementById("tolerance-error").innerHTML = "Prázdne pole!";
-        document.getElementById("tolerance-error").style.color = "red";
-        valid = false;
-    } else 
-    {
-        if (tolerance.value < 0.000001 || tolerance.value > 0.001) 
-        {
-            document.getElementById("tolerance-error").innerHTML = "Hodnota mimo intervalu!";
-            document.getElementById("tolerance-error").style.color = "red";
-            valid = false;
-        } else {
-            document.getElementById("tolerance-error").innerText = "";
-        }
-    }
-
-
-    
-    
-
-
-    if (initialValue.value.length === 0) 
-    {
-        document.getElementById("initial-error").innerHTML = "Prázdne pole!";
-        document.getElementById("initial-error").style.color = "red";
-        valid = false;
-    } else {
-        document.getElementById("initial-error").innerText = "";
-    }
-
-    if (equation.value.length === 0) 
-    {
-        document.getElementById("equation-error").innerHTML = "Prázdne pole!";
-        document.getElementById("equation-error").style.color = "red";
-        valid = false;
-    } else 
-    {
-        if (equation.value.charAt(equation.value.length - 1) !== "0") 
-        {
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        } else {
-            document.getElementById("equation-error").innerText = "";
-        }
-
-        if (!equation.value.includes("=")) 
-        {
-          
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        } else {
-            document.getElementById("equation-error").innerText = "";
-        }
-
-
-        let modified = equation.value;
-        modified = modified.slice(0, -1);
-        modified = modified.replace("=","");
-        modified = modified.trim();
-
-
-        try 
-        {
-            var expression = math.parse(modified);
-            math.evaluate(expression.toString(), { x: 0 });
-            document.getElementById("equation-error").innerText = "";
-    
-        } catch (error) 
-        {
-            document.getElementById("equation-error").innerText = "Nevalidný výraz!";
-            return false;
-        }
-    }
-
-
-    return valid;
-
-
-
-}
-
-
-
-
 function initializeTable(data)
 {
+
 
     clearTable();
 
@@ -779,33 +464,25 @@ function clearTable()
 
 function saveToFile(array)
 {
-    function download2DArrayAsCSV(array) {
-        // Convert the 2D array to a CSV string
-        const csvContent = array.map(row => row.join(';')).join('\n');
 
-        // Create a Blob object representing the data as a file
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-
-        // Create a link element
-        const link = document.createElement('a');
-
-        // Set the href attribute of the link to the Blob object
-        link.href = window.URL.createObjectURL(blob);
-
-        // Set the download attribute to specify the filename
-        link.download = "Výsledok.csv";
-
-        // Append the link to the document body
-        document.body.appendChild(link);
-
-        // Trigger a click event on the link to prompt download
-        link.click();
-
-        // Clean up by removing the link from the DOM
-        document.body.removeChild(link);
+    if (array == null)
+    {
+        return;
     }
+    const csvContent = array.map(row => row.join(';')).join('\n');
 
-    download2DArrayAsCSV(array);
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+
+    const link = document.createElement('a');
+
+    link.href = window.URL.createObjectURL(blob);
+
+    link.download = "Výsledok.csv";
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
 }
 
 
@@ -814,85 +491,124 @@ function saveToFile(array)
 
 
 
-////////////////////////////////////////////////////////VALIDATE BOUNDS//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////VALIDATE//////////////////////////////////////////////////////////////////////////////////////////////
 
+
+function modifyEquation()
+{
+    let eq = equation.value;
+    eq = eq.slice(0, -1);
+    eq = eq.replace("=","");
+    eq = eq.trim();
+
+    return eq;
+}
+function validateEquation()
+{
+    if (equation.value == null || equation.value === "")
+    {
+        equationError.innerHTML = "Prázdne poľe!";
+        return false;
+    } else
+    {
+        equationError.innerHTML = "";
+    }
+
+    equation.value = equation.value.toLowerCase();
+
+    if (equation.value.indexOf("x") === -1)
+    {
+        equationError.innerHTML  = "Nevalidný výraz!";
+        return false;
+    } else
+    {
+        equationError.innerHTML = "";
+    }
+
+
+
+    if (equation.value.charAt(equation.value.length - 1) !== "0")
+    {
+        equationError.innerHTML = "Nevalidný výraz!";
+        return false;
+    } else {
+        equationError.innerHTML = "";
+    }
+
+    if (!equation.value.includes("="))
+    {
+
+        equationError.innerHTML = "Nevalidný výraz!";
+        return false;
+    } else
+    {
+        equationError.innerHTML = "";
+    }
+
+
+
+    try
+    {
+        let expression = math.parse(modifyEquation());
+        math.evaluate(expression.toString(), { x: 0 });
+        equationError.innerHTML = "";
+
+    } catch (error)
+    {
+        equationError.innerHTML  = "Nevalidný výraz!";
+        return false;
+    }
+
+
+    return true;
+}
 function validateLowerBound()
 {
-    validLowerBound = true;
 
     if (dh.value === "")
     {
         dhError.innerHTML = "Prázdne poľe!";
-        validLowerBound = false;
-        return;
+        return false;
     } else {
         dhError.innerHTML = "";
     }
 
-    let num = Number.parseInt(dh.value);
-    let numD = Number.parseInt(hh.value);
-
-    if (-1000 > num || num > 999)
-    {
-        dhError.innerHTML = "Hodnota mimo intervalu!";
-        validLowerBound = false;
-        return;
-    }else {
-        dhError.innerHTML = "";
-    }
-
-    if (hh.value !== "" && num >= numH)
-    {
-        dhError.innerHTML = "Dolná hranica je väčšia/rovná než dolná!";
-        validLowerBound = false;
-    }else {
-        validateUpperBound();
-        dhError.innerHTML = "";
-    }
+    return true;
 
 }
 
 function validateUpperBound()
 {
-    validUpperBound = true;
+
     if (hh.value === "")
     {
         hhError.innerHTML = "Prázdne poľe!";
-        validUpperBound = false;
-        return;
+        return false;
     } else {
         hhError.innerHTML = "";
     }
 
-    let num = Number.parseInt(hh.value);
-    let numD = Number.parseInt(dh.value);
+    let num = Number.parseFloat(hh.value);
+    let numD = Number.parseFloat(dh.value);
 
     if (-999 > num || num > 1000)
     {
-        validUpperBound = false;
         hhError.innerHTML = "Hodnota mimo intervalu!";
-        return;
+        return false;
     }else {
         hhError.innerHTML = "";
     }
 
     if (numD >= num)
     {
-        validUpperBound = false;
         hhError.innerHTML = "Horná hranica je menšia/rovná než dolná!";
+        return false;
     }else {
         hhError.innerHTML = "";
     }
 
-
+    return true;
 }
-///////////////////////////////////////////////////////VALIDATE BOUNDS//////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
+///////////////////////////////////////////////////////VALIDATE//////////////////////////////////////////////////////////////////////////////////////////////
 
 
