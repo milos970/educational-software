@@ -1,6 +1,7 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.dtos.NewPasswordDTO;
+import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,8 @@ public class PageController {
     @Autowired
     private PersonService personService;
 
-
+    @Autowired
+    private EmailServiceImpl emailService;
 
     @GetMapping("/login")
     public String login()
@@ -53,6 +55,7 @@ public class PageController {
     @GetMapping("/file/upload-csv-page")
     public String uploadCSV(Model model)
     {
+        this.emailService.sendSimpleMessage("asda","dasdas","dasdad","dasd");
         return "upload-csv";
     }
 

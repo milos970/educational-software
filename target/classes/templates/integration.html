@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Regula falsi</title>
+	<title>Integračné metódy</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -24,16 +24,8 @@
 	<!--===============================================================================================-->
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/lan.css">
-
-	<script src=
-"https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
-    </script>
-	
-
-	
 </head>
 
 <body>
@@ -43,65 +35,59 @@
 			<div class="wrap-login100">
 				<div class="login100-pic" data-tilt>
 					
-					<table id="table"  class="table table-bordered">
-
-						<tbody>
-				
-						</tbody>
-					</table>
 				</div>
 
 				<div class="login100-form validate-form">
 					<span class="login100-form-title">
-                        <h1>Regula falsi</h1>
+						<h1>Integračné metódy</h1>
 					</span>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="Rovnica v tvare f(x) = 0">
+						<label for="function">Funkcia</label>
+						<input class="input100" id="function" type="text"  placeholder="f(x)">
 						<span class="focus-input100"></span>
 					</div>
 
-					<p class ="error" id="equation-error"></p>
+					<p class="error" id="function-error"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Tolerancia</label>
-						<input class="input100" id="tolerance" type="number"
-						placeholder="< 1*10e-6 ; 1*10e-3 >" >
-						<span class="focus-input100"></span>
-					</div>
-
-					<p class ="error" id="tolerance-error"></p>
-
-
-					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Dolná hranica</label>
-						<input class="input100" id="dh" type="number" placeholder="DH < HH">
+						<label for="dh">Dolná hranica intervalu</label>
+						<input class="input100" id="dh" type="number"
+							placeholder="<-10;9>">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p class="error" id="dh-error"></p>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Horná hranica</label>
-						<input class="input100" id="hh" type="number" placeholder="HH > DH">
+						<label for="hh">Horná hranica intervalu</label>
+						<input class="input100" id="hh" type="number"
+							placeholder="<-9;10>">
 						<span class="focus-input100"></span>
 					</div>
 
 					<p class="error" id="hh-error"></p>
 
+
 					<div class="wrap-input100 validate-input text-center">
-						<label for="initial">Výsledok</label>
-						<input class="input100" id="result" type="number" 
-							placeholder="" readonly>
+						<label for="n">Počet podintervalov</label>
+						<input class="input100" id="n" type="number"  placeholder="<1;10>">
 						<span class="focus-input100"></span>
 					</div>
 
+					<p class="error" id="n-error"></p>
+
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="bisection()">
-							Spočítaj
+						<button class="login100-form-btn" onclick="trapezoid()">
+							Vypočítaj
 						</button>
+					</div>
+
+					<div class="wrap-input100 validate-input text-center" >
+						<label class="label" for="result">Výsledok</label>
+						<input class="input100" id="result" type="text" readonly>
+						<span class="focus-input100"></span>
 					</div>
 
 
@@ -118,19 +104,7 @@
 	</div>
 
 
-	
-
-	<script src="/src/main/resources/static/js/non-linear.js"></script>
-
-
-
- 
-
-
-
-
-
-
+	<script src="/src/main/resources/static/js/integration.js"></script>
 </body>
 
 </html>

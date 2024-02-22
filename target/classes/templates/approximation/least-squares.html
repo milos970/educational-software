@@ -32,7 +32,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/lan.css">
 </head>
 
 <body>
@@ -50,15 +50,17 @@
 					</span>
 
 					<div class="wrap-input100 validate-input text-center">
-						<label class="label" for="tolerance">Nodes</label>
+						<label class="label" for="nodes">Vstupné hodnoty</label>
 						<input class="input100" id="nodes" type="text" placeholder="[(x,y),(x,y),...]">
 						<span class="focus-input100"></span>
 					</div>
 
+					<p class="error" id="nodes-error"></p>
+
 					
 
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio1" checked>
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio1"  checked>
 						<label class="form-check-label" for="radio1">
 							Lineárna funkcia
 						</label>
@@ -71,17 +73,15 @@
 					</div>
 
 
-					<div class="wrap-input100 validate-input text-center">
-						<label class="label" for="tolerance">Výsledok</label>
-						<input class="input100" id="result" type="text" readonly>
-						<span class="focus-input100"></span>
-					</div>
+
 
 					<div class="wrap-input100 validate-input text-center">
-						<label class="label" for="tolerance">Chyba</label>
+						<label class="label" for="error">Chyba</label>
 						<input class="input100" id="error" type="text" readonly>
 						<span class="focus-input100"></span>
 					</div>
+
+
 
 
 
@@ -94,7 +94,11 @@
 
 
 
-
+					<div class="wrap-input100 validate-input text-center">
+						<label class="label" for="result">Výsledok</label>
+						<input class="input100" id="result" type="text" readonly>
+						<span class="focus-input100"></span>
+					</div>
 
 
 

@@ -196,3 +196,19 @@ function simpson() {
       const result = sum * h/3;
       res.value = result.toFixed(3);
 }
+
+function chooseMethod()
+{
+    if (document.getElementById('radio1').checked)
+    {
+        langrangeInterpolate();
+    }
+
+    if (document.getElementById('radio2').checked)
+    {
+        simpson();
+    }
+
+
+
+}

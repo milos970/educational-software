@@ -1,6 +1,7 @@
 package com.milos.numeric.converters;
 
-import com.milos.numeric.entities.UnregisteredPerson;
+import com.milos.numeric.PersonToValidate;
+import com.milos.numeric.entities.Person;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.springframework.stereotype.Component;
@@ -13,13 +14,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Component
-public class CSVConverterUnregisteredPerson extends CSVConverter<UnregisteredPerson>
+public class CSVConverterUnregisteredPerson extends CSVConverter<PersonToValidate>
 {
 
     @Override
-    public List<UnregisteredPerson> convert(MultipartFile file) throws IOException {
+    public List<PersonToValidate> convert(MultipartFile file) throws IOException {
 
-        List<UnregisteredPerson> list = new LinkedList<>();
+        List<PersonToValidate> list = new LinkedList<>();
 
         Reader reader = new InputStreamReader(file.getInputStream());
         CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
@@ -27,26 +28,27 @@ public class CSVConverterUnregisteredPerson extends CSVConverter<UnregisteredPer
         String[] values = null;
         while ((values = csvReader.readNext()) != null)
         {
-            UnregisteredPerson unregisteredPerson = new UnregisteredPerson();
+            PersonToValidate person = new PersonToValidate();
 
             String[] rec = values[0].split(";");
 
-            String surname = rec[1];
+            String personalNumber = rec[0];
 
-            String name = rec[2];
+            String name = rec[1];
 
-            String personalNumber = rec[3];
+            String surname = rec[2];
 
+            String email = rec[3];
 
-            unregisteredPerson.setSurname(surname);
-            unregisteredPerson.setName(name);
-            unregisteredPerson.setPersonalNumber(personalNumber);
+            System.out.println(personalNumber + " " + name + " " + surname + " " + email);
 
-            list.add(unregisteredPerson);
+            person.setPersonalNumber(personalNumber);
+            person.setName(name);
+            person.setSurname(surname);
+            person.setUsername(personalNumber);
+            person.setEmail(email);
+            list.add(person);
         }
-
-
-
 
         return list;
 

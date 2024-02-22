@@ -17,7 +17,7 @@ import lombok.Setter;
 public class Person
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @NotBlank
@@ -32,7 +32,7 @@ public class Person
     private String username;
 
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, name = "personal_number")
     private String personalNumber;
 
     @Email

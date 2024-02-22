@@ -1,11 +1,7 @@
 package com.milos.numeric.methods;
 
-import com.milos.numeric.methods.aproximation.Aproximation;
-import com.milos.numeric.methods.aproximation.Lagrangev;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionNewtonForm;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.LinkedList;
 import java.util.List;

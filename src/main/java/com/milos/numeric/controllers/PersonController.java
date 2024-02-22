@@ -61,10 +61,11 @@ public class PersonController
 
 
 
-    @PostMapping("admin/")
-    public void addCSV(@RequestParam("file") MultipartFile file)
+    @PostMapping("/file/upload-csv")
+    public void addCSV(@RequestParam("csv") MultipartFile file)
     {
-
+        System.out.println("45454545445454");
+        this.personService.createMultiple(file);
     }
 
 

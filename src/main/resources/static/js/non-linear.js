@@ -651,6 +651,8 @@ function chooseMethod()
         document.getElementById('initial-div').style.display="block";
         document.getElementById('dh-div').style.display="none";
         document.getElementById('hh-div').style.display="none";
+
+        newtonMethod();
     }
 
     if (document.getElementById('radio2').checked)
@@ -658,6 +660,8 @@ function chooseMethod()
         document.getElementById('initial-div').style.display="none";
         document.getElementById('dh-div').style.display="block";
         document.getElementById('hh-div').style.display="block";
+
+        regulaFalsiMethod();
     }
 
     if (document.getElementById('radio3').checked) {
@@ -665,6 +669,8 @@ function chooseMethod()
         document.getElementById('initial-div').style.display="none";
         document.getElementById('dh-div').style.display="block";
         document.getElementById('hh-div').style.display="block";
+
+        bisectionMethod();
     }
 
 }

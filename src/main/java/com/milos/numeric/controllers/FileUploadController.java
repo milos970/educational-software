@@ -1,11 +1,8 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.converters.CSVConverter;
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.entities.Pdf;
-import com.milos.numeric.entities.UnregisteredPerson;
 import com.milos.numeric.services.FileService;
-import com.milos.numeric.services.UnregisteredPersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 
 @Controller
@@ -28,22 +24,13 @@ public class FileUploadController
     @Autowired
     private FileService fileService;
 
-    @Autowired
-    private UnregisteredPersonService unregisteredPersonService;
 
 
     @Autowired
     private CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
 
-    @PostMapping("/file/upload-csv")
-    public void uploadCSV(@RequestParam("csv") MultipartFile csv) throws IOException
-    {
 
-        List<UnregisteredPerson> list = this.csvConverterUnregisteredPerson.convert(csv);
-
-        this.unregisteredPersonService.create(list);
-    }
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
