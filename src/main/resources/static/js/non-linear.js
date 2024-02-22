@@ -25,7 +25,9 @@ let step = 0;
 let prev = 0.001;
 
 
-let successfullCalucation = false;
+
+
+
 
 function checkValues()
 {
@@ -641,3 +643,28 @@ function validateUpperBound()
 ///////////////////////////////////////////////////////VALIDATE//////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+function chooseMethod()
+{
+    if (document.getElementById('radio1').checked)
+    {
+        document.getElementById('initial-div').style.display="block";
+        document.getElementById('dh-div').style.display="none";
+        document.getElementById('hh-div').style.display="none";
+    }
+
+    if (document.getElementById('radio2').checked)
+    {
+        document.getElementById('initial-div').style.display="none";
+        document.getElementById('dh-div').style.display="block";
+        document.getElementById('hh-div').style.display="block";
+    }
+
+    if (document.getElementById('radio3').checked) {
+
+        document.getElementById('initial-div').style.display="none";
+        document.getElementById('dh-div').style.display="block";
+        document.getElementById('hh-div').style.display="block";
+    }
+
+}
