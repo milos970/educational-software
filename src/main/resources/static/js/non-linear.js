@@ -108,7 +108,7 @@ function round()
 }
 
 
-function newtonMethod() 
+function newtonMethod()
 {
     if (!validateEquation() || !validateFirstApproximation() )
     {
@@ -116,9 +116,9 @@ function newtonMethod()
     }
 
     let modified = equation.value;
-        modified = modified.slice(0, -1);
-        modified = modified.replace("=","");
-        modified = modified.trim();
+    modified = modified.slice(0, -1);
+    modified = modified.replace("=","");
+    modified = modified.trim();
 
     let iterations = 1000;
 
@@ -140,7 +140,7 @@ function newtonMethod()
         let fx = math.evaluate(parsedEquation.toString(), { x: current });
         let derfx = math.evaluate(derivative.toString(), { x: current });
 
-        if (derfx === 0) 
+        if (derfx === 0)
         {
             progressError.value = "Delenie hodnotou 0 vo výpočte!"
             return;
@@ -155,7 +155,7 @@ function newtonMethod()
 
 
 
-        if (error <= tolerance.value) 
+        if (error <= tolerance.value)
         {
 
             break;
@@ -265,12 +265,12 @@ function bisectionMethod()
 
     let a = parseFloat(dh.value);
     let b = parseFloat(hh.value);
-   
+
     let xk = 0;
     for (let k = 1; k < iterations; ++k)
     {
 
-        
+
         xk = (a + b)/2;
         const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
@@ -310,7 +310,7 @@ function bisectionMethod()
 
 
 
-       
+
 
     }
 
@@ -353,25 +353,26 @@ function simpleIterationMethod() {
     }
 }
 
-function display() 
+function display()
 {
-
-    graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(stp));
+    graph(-6,7, 1);
+    //graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(stp));
 }
 
 
-function graph(dh,hh,step) 
+
+function graph(dh,hh,step)
 {
     var plot = document.getElementById("plot");
     plot.style.display = "block";
 
-    var equation = document.getElementById("equation").value;
+    var equation = "10cos (x -1) -x^2 + 2x -1"
 
-    
+
     const xValues = [];
 
 
-    for (let i = dh; i < hh; i += 1) 
+    for (let i = dh; i < hh; i += 0.1)
     {
         xValues.push(i);
     }
@@ -397,9 +398,28 @@ function graph(dh,hh,step)
     };
 
 
-    Plotly.newPlot('plot', [trace], layout);
 
-    
+    Plotly.newPlot('plot', [trace], layout).then(function(gd) {
+        Plotly.toImage(gd, {format: 'png', height: 550, width: 400})
+            .then(function(url) {
+                var cardHeading = document.querySelector('.card-heading');
+                cardHeading.style.background = 'url(' + url + ')';
+
+                var downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'multiplot.png'; // Specify the file name
+                downloadLink.style.display = 'none';
+                document.body.appendChild(downloadLink);
+
+                // Simulate a click on the anchor element to trigger the download
+                downloadLink.click();
+
+                // Remove the anchor element from the document
+                document.body.removeChild(downloadLink);
+            });
+    });
+
+
 }
 
 
@@ -438,15 +458,15 @@ function initializeTable(data)
                 c.style.backgroundColor = "green";
             }
 
-            if (Number.isInteger(1 * data[i][j])) 
+            if (Number.isInteger(1 * data[i][j]))
             {
                 c.innerText = data[i][j];
-            } else 
+            } else
             {
                 c.innerText = data[i][j];
             }
 
-            
+
         }
     }
 
@@ -456,9 +476,9 @@ function initializeTable(data)
 }
 
 
-function clearTable() 
+function clearTable()
 {
-  $("#table tr").remove(); 
+    $("#table tr").remove();
 }
 
 
@@ -513,7 +533,7 @@ function validateFirstApproximation()
 
 
 
-return true;
+    return true;
 }
 function modifyEquation()
 {

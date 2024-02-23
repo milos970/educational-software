@@ -2,171 +2,123 @@
 <html lang="en">
 
 <head>
-	<title>Newtonová metóda</title>
+	<!-- Required meta tags-->
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="/src/main/resources/static/images/icons/favicon.ico" />
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/bootstrap/css/bootstrap.min.css">
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css"
-		href="/src/main/resources/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/animate/animate.css">
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/css-hamburgers/hamburgers.min.css">
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/vendor/select2/select2.min.css">
-	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/util.css">
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/main.css">
-	<!--===============================================================================================-->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Colorlib Templates">
+	<meta name="author" content="Colorlib">
+	<meta name="keywords" content="Colorlib Templates">
+
+	<!-- Title Page-->
+	<title>Nelineárne metódy</title>
+
+	<!-- Icons font CSS-->
+	<link href="/static/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+	<link href="/static/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+	<!-- Font special for pages-->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+	<!-- Vendor CSS-->
+	<link href="/static/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+	<link href="/static/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+	<!-- Main CSS-->
+	<link href="/static/css/main.css" rel="stylesheet" media="all">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	
-
-	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/lan.css">
 </head>
 
-<body onload="chooseMethod()">
+<body>
+<div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+	<div class="wrapper wrapper--w780">
+		<div class="card card-3">
+			<div class="card-heading">
+				<table id="table" style="border-color: #57b846"  class="table table-bordered">
 
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
-				<div class="login100-pic">
-					<div id="plot"></div>
-					<table id="table"  class="table table-bordered">
+					<tbody>
 
-						<tbody>
-				
-						</tbody>
-					</table>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-body">
+				<h2 class="title">Newtnova metoda</h2>
+
+
+
+				<div class="input-group">
+					<input class="input--style-3" id="equation" type="text" placeholder="f(x) = 0" name="name">
 				</div>
 
-				<div class="login100-form validate-form">
-					<span class="login100-form-title">
-                        <h1>Numerické metódy</h1>
-					</span>
+				<p class ="error" id="equation-error"></p>
 
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio1" onclick="chooseMethod()" checked>
-						<label class="form-check-label" for="radio1">
-							Metóda dotyčníc
-						</label>
+				<div class="input-group">
+					<div class="rs-select2 js-select-simple select--no-search">
+						<select id="tolerance" name="gender">
+							<option disabled="disabled" selected="selected">Tolerancia</option>
+							<option selected>0.001</option>
+							<option>0.0001</option>
+							<option>0.00001</option>
+							<option>0.000001</option>
+						</select>
+						<div class="select-dropdown"></div>
 					</div>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault"  id="radio2" onclick="chooseMethod()">
-						<label class="form-check-label" for="radio2">
-							Bisekcia
-						</label>
-					</div>
+				</div>
 
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="radio3" onclick="chooseMethod()">
-						<label class="form-check-label" for="radio3">
-							Regula falsi
-						</label>
-					</div>
-
-					<div class="wrap-input100 validate-input text-center">
-						<label class="text-center" for="equation">Rovnica</label>
-						<input class="input100" id="equation" type="text" placeholder="f(x) = 0">
-						<span class="focus-input100"></span>
-					</div>
-
-					<p class ="error" id="equation-error"></p>
-
-					<div class="wrap-input100 validate-input text-center">
-						<label for="tolerance">Tolerancia</label>
-						<input class="input100" id="tolerance" type="number"  step="1" value="0.001" onchange="checkValues()">
-						<span class="focus-input100"></span>
-					</div>
-
-					<p class ="error" id="tolerance-error"></p>
-
-					<div class="wrap-input100 validate-input text-center" id="dh-div">
-						<label for="dh">Dolná hranica intervalu</label>
-						<input class="input100" id="dh" type="number" placeholder="<-999;1000>">
-						<span class="focus-input100"></span>
-					</div>
-
-					<p class="error" id="dh-error"></p>
-
-					<div class="wrap-input100 validate-input text-center" id="hh-div">
-						<label for="hh">Horná hranica intervalu</label>
-						<input class="input100" id="hh" type="number" placeholder="<-1000;999>">
-						<span class="focus-input100"></span>
-					</div>
-
-					<p class="error" id="hh-error"></p>
+				<p class ="error" id="tolerance-error"></p>
 
 
 
-					<div class="wrap-input100 validate-input text-center" id="initial-div">
-						<label for="initial">Počiatočná aproximácia</label>
-						<input class="input100" id="initial" type="number" 
-							placeholder="">
-						<span class="focus-input100"></span>
-					</div>
+				<div class="input-group" id="initial-div">
+					<input class="input--style-3" id="initial" type="number" placeholder="Počiatočná aproximácia">
+				</div>
 
-					<p class ="error" id="initial-error"></p>
+				<p class ="error" id="initial-error"></p>
 
+				<div class="input-group" id="dh-div">
+					<input class="input--style-3" id="dh" type="number" placeholder="Dolná hranica intervalu">
+				</div>
 
+				<p class="error" id="dh-error"></p>
 
+				<div class="input-group" id="hh-div">
+					<input class="input--style-3" id="sh" type="number" placeholder="Horná hranica intervalu">
+				</div>
 
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="chooseMethod()">
-							Spočítaj
-						</button>
-					</div>
+				<p class="error" id="hh-error"></p>
 
-					<div class="container-login100-form-btn">
-						<button type="button" id="button" class="login100-form-btn" onclick="display()" >
-							Vykresli graf
-						</button>
-					</div>
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="saveToFile()">
-							Ulož do súboru
-						</button>
-					</div>
-
-
-					<p class ="error" id="progress-error"></p>
-
-					<div class="text-center p-t-136">
-						<a class="txt2" href="#">
-						</a>
-					</div>
-
+				<div class="p-t-10">
+					<button class="btn btn--pill btn--green" onclick="newtonMethod()">Spočítaj</button>
+				</div>
+				<div class="p-t-10">
+					<button class="btn btn--pill btn--green" type="submit">Vykresli graf funkcie</button>
+				</div>
+				<div class="p-t-10">
+					<button class="btn btn--pill btn--green" type="submit">Ulož do súboru</button>
 				</div>
 
 			</div>
 		</div>
-
 	</div>
+</div>
+
+<!-- Jquery JS-->
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<!-- Vendor JS-->
+<script src="/static/vendor/select2/select2.min.js"></script>
+<script src="/static/vendor/datepicker/moment.min.js"></script>
+<script src="/static/vendor/datepicker/daterangepicker.js"></script>
+<script src="/static/js/non-linear.js"></script>
+<!-- Main JS-->
+<script src="/static/js/global.js"></script>
 
 
+<div id="plot" style="visibility: hidden"></div>
 
+<div class="card-heading"></div>
 
-	<script src="/src/main/resources/static/js/non-linear.js"></script>
-
-
-
-
-
-
-
-
-
-
-</body>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
 </html>
+<!-- end document-->
