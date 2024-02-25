@@ -20,40 +20,60 @@
                         <div class="card-body p-5 text-center">
 
 
-                                <div class="mb-md-5 mt-md-4 pb-5  animate__animated animate__fadeInLeft" id="reg">
+                                <div class="mb-md-5 mt-md-4 pb-5" id="reg">
 
 
                                     <h2 class="fw-bold mb-2 text-uppercase">Registrácia</h2>
-                                    <p class="text-white-50 mb-5">Registrácia možná len osobám navštevujúcim predmet
-                                        Numerika</p>
+                                    <p class="text-white-50 mb-5">Registrácia možná len zamestnancom fakulty riadenia a informatiky</p>
+
+                                    <form th:action="@{/registration}" th:object="${newPersonDTO}" method="post">
+
+                                        <div class="form-outline form-white mb-4">
+                                            <label for="pin-input"></label>
+                                            <input type="text" placeholder="Osobné číslo" id="pin-input" class="form-control form-control-lg" onchange="validatePIN()"/>
+                                        </div>
+
+                                        <p class="error" id="pin-hint"></p>
+
+                                        <div class="form-outline form-white mb-4">
+                                            <label for="name-input"></label>
+                                            <input type="text" placeholder="Meno" id="name-input" class="form-control form-control-lg"  th:field="*{name}" onchange="isEmpty(this.value,document.getElementById('name-hint'))" />
+                                        </div>
+
+                                        <p class="error" id="name-hint"></p>
+
+
+                                        <div class="form-outline form-white mb-4">
+                                            <label for="surname-input"></label>
+                                            <input type="text" placeholder="Priezvisko" id="surname-input" class="form-control form-control-lg"  th:field="*{surname}" onchange="isEmpty(this.value,document.getElementById('surname-hint'))" />
+                                        </div>
+
+                                        <p class="error" id="surname-hint"></p>
 
                                     <div class="form-outline form-white mb-4">
-                                        <input type="text" placeholder="Meno" id="username"
-                                            class="form-control form-control-lg" onchange="usernameValidation()"
-                                            th:field="*{username}" />
+                                        <label for="email-input"></label>
+                                        <input type="email" placeholder="Email" id="email-input" class="form-control form-control-lg"  th:field="*{email}" onchange="validateSchoolEmail()" />
                                     </div>
 
-                                    <p class="error" id="username-hint"></p>
+                                    <p class="error" id="email-hint"></p>
 
                                     <div class="form-outline form-white mb-4">
-                                        <input type="password" placeholder="Heslo" id="password"
-                                            class="form-control form-control-lg" oninput="passwordValidation()" />
+                                        <label for="password-input"></label>
+                                        <input type="password" placeholder="Heslo" id="password-input" class="form-control form-control-lg" th:field="*{password}" onchange="validatePassword()"/>
                                     </div>
 
                                     <p class="error" id="password-hint"></p>
 
                                     <div class="form-outline form-white mb-4">
-                                        <input type="password" placeholder="Zadajte znova heslo" id="repPassword"
-                                            class="form-control form-control-lg" oninput="repPasswordValidation()"
-                                            th:field="*{password}" />
+                                        <label for="rep-password-input"></label>
+                                        <input type="password" placeholder="Zadajte znova heslo" id="rep-password-input" class="form-control form-control-lg" th:field="*{password}" onchange="validateRepPassword()" />
                                     </div>
 
                                     <p class="error" id="rep-password-hint"></p>
 
-                                    <button class="btn btn-outline-light btn-lg px-5" id="button"
-                                        onclick="showUpload()">Registruj</button>
+                                    <button type="submit" id="submit-button" class="btn btn-outline-light btn-lg px-5" >Registrovať</button>
 
-
+                                    </form>
 
                                 </div>
 
@@ -73,50 +93,10 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-md-5 mt-md-4 pb-5  animate__animated animate__fadeInLeft" id="upload"
-                                    style="display: none">
 
-                                    <h2 class="fw-bold mb-2 text-uppercase">Nahraj študentov</h2>
-                                    <p class="text-white-50 mb-5">Možne nahrať len súbory s príponou csv!</p>
-                                    <div class="form-outline form-white mb-4">
-                                        <input type="file" class="form-control form-control-lg" />
-                                    </div>
 
-                                    <button class="btn btn-outline-light btn-lg px-5" onclick="showReg()">Späť</button>
-                                    <button class="btn btn-outline-light btn-lg px-5" onclick="showDeadline()">Nahraj
-                                        súbor</button>
 
-                                </div>
 
-                                <div class="mb-md-5 mt-md-4 pb-5  animate__animated animate__fadeInLeft" id="dead"
-                                    style="display: none">
-
-                                    <h2 class="fw-bold mb-2 text-uppercase">Deadline</h2>
-                                    <div class="form-outline form-white mb-4">
-                                        <input type="date" class="form-control form-control-lg" />
-                                    </div>
-
-                                    <button class="btn btn-outline-light btn-lg px-5"
-                                        onclick="showUpload()">Späť</button>
-                                    <button class="btn btn-outline-light btn-lg px-5">Sumar</button>
-
-                                </div>
-
-                            <div class="mb-md-5 mt-md-4 pb-5  animate__animated animate__fadeInLeft" id="summary"
-                                 style="display: none">
-
-                                <h2 class="fw-bold mb-2 text-uppercase">Sumár</h2>
-                                <form id="form" th:action="@{/add-worker}" th:object="${worker}"  method="post">
-
-                                <div class="form-outline form-white mb-4">
-                                    <input type="date" class="form-control form-control-lg" />
-                                </div>
-
-                                <button class="btn btn-outline-light btn-lg px-5"
-                                        onclick="showUpload()">Späť</button>
-                                <button type="submit" class="btn btn-outline-light btn-lg px-5">Sumar</button>
-                                </form>
-                            </div>
 
 
 
@@ -130,7 +110,9 @@
     </section>
 
 
-    <script th:src="@{/js/script.js}"></script>
+
+    <script src="/static/js/registration.js"></script>
+    <!--    <script th:src="@{/js/registration.js}"></script>-->
 </body>
 
 </html>

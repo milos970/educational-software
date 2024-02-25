@@ -1,7 +1,9 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.dtos.NewPasswordDTO;
+import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.email.EmailServiceImpl;
+import com.milos.numeric.entities.Person;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PageController {
@@ -26,6 +30,19 @@ public class PageController {
     }
 
 
+    @GetMapping("/registration")
+    public ModelAndView registration()
+    {
+        return new ModelAndView("registration", "newPersonDTO", new NewPersonDTO());
+    }
+
+//*********************************************CUSTOMIZE************************************************************************
+
+
+
+    //*********************************************CUSTOMIZE************************************************************************
+
+
 
     @GetMapping("/admin")
     public String admin(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
@@ -40,16 +57,11 @@ public class PageController {
     {
         String username = myUserDetails.getUsername();
         model.addAttribute("username", username);
-        model.addAttribute("newPasswordDTO", new NewPasswordDTO());
+        model.addAttribute("newPersonDTO", new NewPasswordDTO());
         return "student";
     }
 
 
-    @GetMapping("/registration")
-    public String registration(Model model)
-    {
-        return "registration";
-    }
 
 
     @GetMapping("/file/upload-csv-page")

@@ -1,0 +1,44 @@
+.error
+{
+    color: red;
+    text-align: center;
+}
+
+.tab {
+    display: inline-block; /* Ensure the div does not span the entire width */
+    text-align: left; /* Align the content within the div to the left */
+}
+
+.card-heading table
+{
+    width: 100%;
+    color: white;
+    font-size:200%
+}
+
+button:disabled
+{
+    background-color: #ccc;
+    color: #666;
+    font-size:20px;
+    pointer-events: none;
+}
+
+select option:checked {
+    background-color: #f0f0f0; /* Change background color */
+    color: red; /* Change text color */
+    font-weight: bold; /* Add bold font weight */
+
+}
+
+option[value="Bisekcia"]{
+    display:none;
+}
+
+
+
+
+ 
+
+
+

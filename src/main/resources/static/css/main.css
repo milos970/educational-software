@@ -502,7 +502,7 @@ input {
 }
 
 .card-3 .card-body {
-  padding: 57px 50px;
+  padding: 57px 65px;
   padding-bottom: 65px;
   display: table-cell;
 }
@@ -514,7 +514,7 @@ input {
   .card-3 .card-heading {
     display: block;
     width: 100%;
-    padding-top: 1000px;
+    padding-top: 100px;
     background-position: center center;
   }
   .card-3 .card-body {
@@ -524,6 +524,7 @@ input {
     padding-bottom: 45px;
   }
 }
+
 
 
 

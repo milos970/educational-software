@@ -30,14 +30,18 @@ public class SecurityConfig
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
 
         MvcRequestMatcher.Builder mvcMatcherBuilderA = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderB = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderC = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderD = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers(mvcMatcherBuilderA.pattern("/css/**")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderB.pattern("/js/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderD.pattern("/registration")).permitAll()
                         .requestMatchers(mvcMatcherAdmin.pattern("/admin/**")).hasAuthority("ADMIN")
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).hasAuthority("STUDENT")
                         .anyRequest().authenticated()

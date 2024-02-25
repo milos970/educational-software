@@ -9,6 +9,18 @@ const initialError = document.getElementById("initial-error");
 const progressError = document.getElementById("progress-error");
 const dhError = document.getElementById("dh-error");
 const hhError = document.getElementById("hh-error");
+const methods = document.getElementById("methods");
+
+
+const calculateButton =  document.getElementById("calculate-button");
+const displayButton =  document.getElementById("display-button");
+const saveButton =  document.getElementById("save-button");
+
+calculateButton.disabled = true;
+displayButton.disabled = true;
+saveButton.disabled = true;
+
+const title = document.getElementById("title");
 
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
@@ -16,13 +28,18 @@ const stp = document.getElementById("step");
 
 const table = document.getElementById("table");
 
-
+let isValidEquation = false;
+let isValidApproximation = false;
+let isValidUpperBound = false;
+let isValidLowerBound = false;
 
 let start = 0;
 let finish = 0;
 let step = 0;
 
 let prev = 0.001;
+
+let array = [];
 
 
 
@@ -110,10 +127,6 @@ function round()
 
 function newtonMethod()
 {
-    if (!validateEquation() || !validateFirstApproximation() )
-    {
-        return;
-    }
 
     let modified = equation.value;
     modified = modified.slice(0, -1);
@@ -164,7 +177,8 @@ function newtonMethod()
         current = next;
     }
 
-    saveToFile(data);
+    array = data;
+    saveToFile();
     initializeTable(data);
 }
 
@@ -400,10 +414,10 @@ function graph(dh,hh,step)
 
 
     Plotly.newPlot('plot', [trace], layout).then(function(gd) {
-        Plotly.toImage(gd, {format: 'png', height: 550, width: 400})
+        Plotly.toImage(gd, {format: 'png', height: 1011, width: 600})
             .then(function(url) {
                 var cardHeading = document.querySelector('.card-heading');
-                cardHeading.style.background = 'url(' + url + ')';
+                cardHeading.style.background = 'url(' + url + ') top left/cover no-repeat';
 
                 var downloadLink = document.createElement('a');
                 downloadLink.href = url;
@@ -418,6 +432,9 @@ function graph(dh,hh,step)
                 document.body.removeChild(downloadLink);
             });
     });
+
+
+    plot.style.display="none";
 
 
 }
@@ -486,13 +503,10 @@ function clearTable()
 
 ////////////////////////////////////////////////////////SAVE TO FILE//////////////////////////////////////////////////////////////////////////////////////////////
 
-function saveToFile(array)
+function saveToFile()
 {
 
-    if (array == null)
-    {
-        return;
-    }
+
     const csvContent = array.map(row => row.join(';')).join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -501,7 +515,25 @@ function saveToFile(array)
 
     link.href = window.URL.createObjectURL(blob);
 
-    link.download = "Výsledok.csv";
+    let fileName = "";
+
+    switch(methods.value)
+    {
+        case "1":
+            fileName = "Newtnová metoda";
+            break;
+
+        case "2":
+            fileName = "Regula falsi";
+            break;
+
+        case "3":
+            fileName = "Bisekcia";
+            break;
+
+    }
+
+    link.download = fileName + ".csv";
 
     document.body.appendChild(link);
     link.click();
@@ -518,21 +550,22 @@ function saveToFile(array)
 ////////////////////////////////////////////////////////VALIDATE//////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function validateFirstApproximation()
+function isFirstApproximationValid()
 {
+    isValidApproximation = true;
     if (initialValue.value === "")
     {
         initialError.innerHTML = "Prázdne poľe!";
+        isValidApproximation = false;
+        setCalculateButton();
         return false;
 
     }else
     {
-        equationError.innerHTML = "";
+        initialError.innerHTML = "";
     }
 
-
-
-
+    setCalculateButton();
     return true;
 }
 function modifyEquation()
@@ -546,9 +579,15 @@ function modifyEquation()
 }
 function validateEquation()
 {
+
+    isValidEquation = true;
+
     if (equation.value == null || equation.value === "")
     {
         equationError.innerHTML = "Prázdne poľe!";
+        isValidEquation = false;
+        setCalculateButton();
+        setGraphButton();
         return false;
     } else
     {
@@ -560,6 +599,9 @@ function validateEquation()
     if (equation.value.indexOf("x") === -1)
     {
         equationError.innerHTML  = "Nevalidný výraz!";
+        isValidEquation = false;
+        setCalculateButton();
+        setGraphButton();
         return false;
     } else
     {
@@ -571,6 +613,9 @@ function validateEquation()
     if (equation.value.charAt(equation.value.length - 1) !== "0")
     {
         equationError.innerHTML = "Nevalidný výraz!";
+        isValidEquation = false;
+        setCalculateButton();
+        setGraphButton();
         return false;
     } else {
         equationError.innerHTML = "";
@@ -580,6 +625,9 @@ function validateEquation()
     {
 
         equationError.innerHTML = "Nevalidný výraz!";
+        isValidEquation = false;
+        setCalculateButton();
+        setGraphButton();
         return false;
     } else
     {
@@ -597,43 +645,74 @@ function validateEquation()
     } catch (error)
     {
         equationError.innerHTML  = "Nevalidný výraz!";
+        isValidEquation = false;
+        setCalculateButton();
+        setGraphButton();
         return false;
     }
 
-
+    setCalculateButton();
+    setGraphButton();
     return true;
 }
 function validateLowerBound()
 {
 
+    isValidLowerBound = false;
+
     if (dh.value === "")
     {
         dhError.innerHTML = "Prázdne poľe!";
+        setCalculateButton();
+        setGraphButton();
         return false;
     } else {
         dhError.innerHTML = "";
     }
 
-    let num = Number.parseFloat(dh.value);
+    let num = Number.parseFloat(hh.value);
+    let numD = Number.parseFloat(dh.value);
+
 
     if (-1000 > num || num > 999)
     {
         hhError.innerHTML = "Hodnota mimo intervalu!";
+        setCalculateButton();
+        setGraphButton();
         return false;
     }else {
         hhError.innerHTML = "";
     }
 
+    if (numD >= num)
+    {
+        hhError.innerHTML = "Horná hranica je menšia/rovná než dolná!";
+
+        setCalculateButton();
+        setGraphButton();
+        return false;
+    }else {
+        hhError.innerHTML = "";
+    }
+
+
+
+    isValidLowerBound = true;
+    setCalculateButton();
+    setGraphButton();
     return true;
 
 }
 
 function validateUpperBound()
 {
+    isValidUpperBound = false;
 
     if (hh.value === "")
     {
         hhError.innerHTML = "Prázdne poľe!";
+        setCalculateButton();
+        setGraphButton();
         return false;
     } else {
         hhError.innerHTML = "";
@@ -645,6 +724,8 @@ function validateUpperBound()
     if (-999 > num || num > 1000)
     {
         hhError.innerHTML = "Hodnota mimo intervalu!";
+        setCalculateButton();
+        setGraphButton();
         return false;
     }else {
         hhError.innerHTML = "";
@@ -653,44 +734,105 @@ function validateUpperBound()
     if (numD >= num)
     {
         hhError.innerHTML = "Horná hranica je menšia/rovná než dolná!";
+        setCalculateButton();
+        setGraphButton();
         return false;
     }else {
         hhError.innerHTML = "";
     }
 
+    isValidUpperBound = true;
+    isValidLowerBound = true;
+    setCalculateButton();
+    setGraphButton();
     return true;
 }
 ///////////////////////////////////////////////////////VALIDATE//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-function chooseMethod()
+function setGraphButton()
 {
-    if (document.getElementById('radio1').checked)
+
+
+    if (methods.value === "1")
+    {
+        displayButton.disabled = !(isValidEquation);
+    }
+
+    if (methods.value === "2" || methods.value === "3")
+    {
+        displayButton.disabled = !(isValidEquation && isValidUpperBound && isValidLowerBound);
+    }
+}
+
+function setCalculateButton()
+{
+    switch(methods.value)
+    {
+        case "1":
+            calculateButton.disabled = !(isValidApproximation && isValidEquation);
+            break;
+        case "2":
+            calculateButton.disabled = !(isValidUpperBound && isValidLowerBound && isValidEquation);
+            break;
+        case "3":
+            calculateButton.disabled = !(isValidUpperBound && isValidLowerBound && isValidEquation);
+            break;
+    }
+}
+
+function calculate()
+{
+    switch(methods.value)
+    {
+        case "1":
+            newtonMethod();
+            break;
+        case "2":
+            regulaFalsiMethod();
+            break;
+        case "3":
+            bisectionMethod();
+            break;
+    }
+}
+
+
+function setMethod()
+{
+    if (methods.value === "1")
     {
         document.getElementById('initial-div').style.display="block";
         document.getElementById('dh-div').style.display="none";
         document.getElementById('hh-div').style.display="none";
 
-        newtonMethod();
+        title.innerHTML = methods.options[methods.selectedIndex].text;
+
+
     }
 
-    if (document.getElementById('radio2').checked)
+    if (methods.value === "2")
     {
         document.getElementById('initial-div').style.display="none";
         document.getElementById('dh-div').style.display="block";
         document.getElementById('hh-div').style.display="block";
 
-        regulaFalsiMethod();
+        title.innerHTML = methods.options[methods.selectedIndex].text;
     }
 
-    if (document.getElementById('radio3').checked) {
-
+    if (methods.value === "3")
+    {
         document.getElementById('initial-div').style.display="none";
         document.getElementById('dh-div').style.display="block";
         document.getElementById('hh-div').style.display="block";
 
-        bisectionMethod();
+        title.innerHTML = methods.options[methods.selectedIndex].text;
     }
 
 }
+
+
+
+
+

@@ -45,4 +45,12 @@ public class Person
 
     @NotBlank
     private String authority;
+
+    private boolean enabled;
+
+    /*@OneToOne()
+    @JoinColumn(name = "token_id", referencedColumnName = "id")
+    private VerificationToken verification;*/
+
+
 }

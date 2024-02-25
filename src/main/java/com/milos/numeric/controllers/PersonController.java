@@ -23,7 +23,7 @@ public class PersonController
     @PostMapping("/user/create")
     public void createUser(@Valid @RequestBody NewPersonDTO NewPersonDTO)
     {
-        this.personService.create(NewPersonDTO);
+        //this.personService.create(NewPersonDTO);
     }
 
     @PatchMapping("/user/{id}/update-password")
@@ -64,8 +64,13 @@ public class PersonController
     @PostMapping("/file/upload-csv")
     public void addCSV(@RequestParam("csv") MultipartFile file)
     {
-        System.out.println("45454545445454");
         this.personService.createMultiple(file);
+    }
+
+    @PostMapping("/registrate")
+    public void registratePerson(@Valid @RequestBody NewPersonDTO newPersonDTO)
+    {
+        this.personService.create(newPersonDTO, "sd");
     }
 
 

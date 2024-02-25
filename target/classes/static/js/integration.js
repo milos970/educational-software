@@ -2,11 +2,11 @@ const fun = document.getElementById("function");
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
 const n = document.getElementById("n");
-const res = document.getElementById("result");
+//const res = document.getElementById("result");
 const funError = document.getElementById("function-error");
 const dhError = document.getElementById("dh-error");
 const hhError = document.getElementById("hh-error");
-const nError = document.getElementById("n-error");
+//const nError = document.getElementById("n-error");
 
 function validateEquation()
 {
@@ -113,6 +113,9 @@ function trapezoid()
   {
     return;
   }
+
+    let textarea = document.getElementById("text-area");
+
     
       const h = (hh.value - dh.value) / n.value;
     
@@ -127,25 +130,31 @@ function trapezoid()
 
         if (i == 0)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: dh.value});
+            let fx = math.evaluate(parsedEquation.toString(), { x: dh.value});
+            sum += fx;
+            textarea.value += (fx + "\n");
             continue;
         }
 
         if (i == n.value)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: hh.value});
+            let fx = math.evaluate(parsedEquation.toString(), { x: hh.value});
+            sum += fx;
+            textarea.value += (fx + "\n");
             continue;
         }
 
         part += 1 * h;
-        
-        sum = sum + (2 * math.evaluate(parsedEquation.toString(), { x: part }));
+
+        let fx = 2 * math.evaluate(parsedEquation.toString(), { x: part })
+        sum = sum + fx;
+          textarea.value += (fx + "\n");
         
     
       }
     
       const result = sum * h/2;
-      res.value = result.toFixed(3);
+      //res.value = result.toFixed(3);
 }
 
 function simpson() {
@@ -194,5 +203,23 @@ function simpson() {
       }
     
       const result = sum * h/3;
-      res.value = result.toFixed(3);
+      //res.value = result.toFixed(3);
 }
+
+function setMethod()
+{
+
+
+
+        title.innerHTML = methods.options[methods.selectedIndex].text;
+
+
+
+}
+
+
+function displayProcess()
+{
+
+}
+

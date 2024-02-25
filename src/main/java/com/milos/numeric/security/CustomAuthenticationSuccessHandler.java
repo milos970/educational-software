@@ -14,8 +14,10 @@ import java.util.Collection;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    SimpleUrlAuthenticationSuccessHandler userSuccessHandler =
+    SimpleUrlAuthenticationSuccessHandler studentSuccessHandler =
             new SimpleUrlAuthenticationSuccessHandler("/student");
+    SimpleUrlAuthenticationSuccessHandler employeeSuccessHandler =
+            new SimpleUrlAuthenticationSuccessHandler("/employee");
     SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
             new SimpleUrlAuthenticationSuccessHandler("/admin");
 
@@ -31,7 +33,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 this.adminSuccessHandler.onAuthenticationSuccess(request, response, authentication);
                 return;
             }
+
+            if (authorityName.equals("STUDENT"))
+            {
+                this.studentSuccessHandler.onAuthenticationSuccess(request, response, authentication);
+                return;
+            }
+
+            if (authorityName.equals("EMPLOYEE"))
+            {
+                this.studentSuccessHandler.onAuthenticationSuccess(request, response, authentication);
+                return;
+            }
+
         }
-        this.userSuccessHandler.onAuthenticationSuccess(request, response, authentication);
     }
 }

@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS person
     personal_number VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255),
-    authority VARCHAR(255)
+    authority VARCHAR(255),
+    enabled BOOLEAN
 );
