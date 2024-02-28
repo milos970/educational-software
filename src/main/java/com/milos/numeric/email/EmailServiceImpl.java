@@ -14,8 +14,12 @@ import java.io.UnsupportedEncodingException;
 @Component
 public class EmailServiceImpl
 {
+    private final JavaMailSender emailSender;
+
     @Autowired
-    private JavaMailSender emailSender;
+    public EmailServiceImpl(JavaMailSender emailSender) {
+        this.emailSender = emailSender;
+    }
 
     public void sendSimpleMessage(String from, String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -31,7 +35,7 @@ public class EmailServiceImpl
         String toAddress = person.getEmail();
         String fromAddress = "Your email address";
         String senderName = "Your company name";
-        String subject = "Please verify your registration";
+        String subject = "Verifikácia emailu";
         String content = "Dear [[name]],<br>"
                 + "Please click the link below to verify your registration:<br>"
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"

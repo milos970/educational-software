@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nahranie súborov</title>
+    <!-- Bootstrap CSS -->
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/static/js/files-list.js"></script>
+    <link href="/static/css/files-list.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        /* Center the container */
+        .container-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Adjust according to your needs */
+
+        }
+        /* Adjust the object's width */
+        .rounded-object {
+            width: 80%; /* Adjust as needed */
+        }
+
+
+
+        .item {
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 container-center">
+            <div class="rounded p-3 bg-dark rounded-object">
+                <div class="container">
+                    <ul id="accordion" class="accordion">
+                        <li>
+                            <div class="link"><i class="fa fa-laptop"></i>Nelineárne rovnice<i class="fa fa-chevron-down"></i></div>
+                            <ul class="submenu">
+                                <li>
+                                    <div class="flex-item" id="href1"><a href="#">Pridať material</a></div>
+                                    <input type="file" id="fileInput1" accept=".csv" style="display: none;">
+                                </li>
+
+                                <li>
+                                    <div class="flex-item"><a href="#">Integraly</a></div>
+                                    <div class="flex-item last" ><a href="#">Odstrániť</a></div>
+                                </li>
+
+
+
+                            </ul>
+                        </li>
+                        <li>
+                            <div class="link"><i class="fa fa-tv"></i>Určité intergrály<i class="fa fa-chevron-down"></i></div>
+                            <ul class="submenu">
+                                <li>
+                                    <div class="flex-item"><a href="#">Pridať material</a></div>
+
+                                    <input type="file" id="fileInput2" accept=".csv" style="display: none;">
+
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <div class="link"><i class="fa fa-mobile"></i>Aproximácia & interpolácia<i class="fa fa-chevron-down"></i></div>
+                            <ul class="submenu">
+                                <li>
+                                    <div class="flex-item"><a href="#">Pridať material</a></div>
+
+                                    <input type="file" id="fileInput3" accept=".csv" style="display: none;">
+
+                                </li>
+
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="item">
+                    <button type="button" class="btn">Basic</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+
+
+</body>
+</html>

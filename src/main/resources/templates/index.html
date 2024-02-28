@@ -10,23 +10,19 @@
 
 <div class="d-flex align-items-center justify-content-center" style="height: 250px;">
     <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-primary" id="but">
             Nelineárne rovnice
         </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/src/main/resources/templates/non-linear/newton-nonlinear.html">Newtonová metóda</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/non-linear/simple-iteration.html">Prostá iterácia</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/non-linear/bisection.html">Polovičné delenie intervalov</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/non-linear/regula-falsi.html">Regula falsi</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/pociatocnaAproximacia/tabelacia.html">Tabelácia</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/pociatocnaAproximacia/graf.html">Graf</a></li>
-        </ul>
+
     </div>
 
     <div class="btn-group">
         <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             Aproximácia a interpolácia funkcii
         </button>
+
+
+
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/src/main/resources/templates/approximation/lagrange.html">Lagrangeov interpolačný polynom</a></li>
             <li><a class="dropdown-item" href="/src/main/resources/templates/approximation/newton-polynom.html">Newtonov interpolačný polynom</a></li>
@@ -35,16 +31,27 @@
     </div>
 
     <div class="btn-group">
-        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-success dropdown-toggle" id="buty">
             Určitý integrál
         </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/src/main/resources/templates/integration/trapezoid.html">Lichobežníková metóda</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/integration/simpson.html">Simpsonova metóda</a></li>
-        </ul>
+
     </div>
 
 </div>
+
+<script>
+    // JavaScript to navigate when button is clicked
+    document.getElementById("but").onclick = function () {
+        location.href = "/src/main/resources/templates/non-linear.html";
+    };
+</script>
+
+<script>
+    // JavaScript to navigate when button is clicked
+    document.getElementById("buty").onclick = function () {
+        location.href = "/src/main/resources/templates/integration.html";
+    };
+</script>
 
 
 

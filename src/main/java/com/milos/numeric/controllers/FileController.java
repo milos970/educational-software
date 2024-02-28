@@ -1,7 +1,6 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
-import com.milos.numeric.entities.Pdf;
 import com.milos.numeric.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -9,30 +8,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-public class FileUploadController
+public class FileController
 {
+    private final FileService fileService;
+    private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
 
     @Autowired
-    private FileService fileService;
+    public FileController(FileService fileService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson) {
+        this.fileService = fileService;
+        this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
+    }
 
-
-
-    @Autowired
-    private CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
-
-
-
-
-    @PostMapping("/upload")
+    @PostMapping("/file/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
 
         try
@@ -46,18 +40,13 @@ public class FileUploadController
     }
 
     @GetMapping("/file/pdf")
-    public String getFiles(Model model)
+    public ModelAndView getFiles()
     {
-        for (Pdf item : this.fileService.getAllFiles())
-        {
-            System.out.println(item.getName());
-        }
-        model.addAttribute("pdf", this.fileService.getAllFiles());
-        return "list";
+        return new ModelAndView("list", "pdf", this.fileService.getAllFiles());
     }
 
     @GetMapping("/file/pdf/{id}")
-    public ResponseEntity<byte[]> getPDF1(@PathVariable int id)
+    public ResponseEntity<byte[]> getSpecificFile(@PathVariable int id)
     {
         String filename = "pdf1.pdf";
         byte[] pdf = this.fileService.getFile(id).getData();

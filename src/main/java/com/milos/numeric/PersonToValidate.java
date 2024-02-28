@@ -9,7 +9,6 @@ public class PersonToValidate
 {
     private String name;
 
-
     private String surname;
 
 

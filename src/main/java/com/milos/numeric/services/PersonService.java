@@ -8,6 +8,8 @@ import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.Person;
 import com.milos.numeric.entities.VerificationToken;
+import com.milos.numeric.mappers.PersonNewAuthorityDTOMapper;
+import com.milos.numeric.mappers.PersonNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonRepository;
 import com.milos.numeric.security.PasswordGenerator;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,6 +32,10 @@ public class PersonService
     private final PersonRepository personRepository;
 
     private PersonNewPersonDTOMapper personNewPersonDTOMapper;
+
+    private PersonNewPasswordDTOMapper personNewPasswordDTOMapper;
+
+    private PersonNewAuthorityDTOMapper personNewAuthorityDTOMapper;
 
     private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
@@ -112,12 +119,32 @@ public class PersonService
 
     public void updatePassword(int id, NewPasswordDTO newPasswordDTO)
     {
+        Optional<Person> optional = this.personRepository.findById(id);
 
+        if (optional.isEmpty()) {
+            return;
+        }
+
+        Person person = optional.get();
+
+        person = personNewPasswordDTOMapper.sourceToDestination(newPasswordDTO);
+
+        this.personRepository.save(person);
     }
 
     public void updateAuthority(int id, NewAuthorityDTO newAuthorityDTO)
     {
+        Optional<Person> optional = this.personRepository.findById(id);
 
+        if (optional.isEmpty()) {
+            return;
+        }
+
+        Person person = optional.get();
+
+        person = personNewAuthorityDTOMapper.sourceToDestination(newAuthorityDTO);
+
+        this.personRepository.save(person);
     }
 
     public void delete(int id)

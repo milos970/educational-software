@@ -125,10 +125,12 @@ function round()
 }
 
 
+
+
 function newtonMethod()
 {
-
-    let modified = equation.value;
+    saveButton.disabled = true;
+    modified = equation.value;
     modified = modified.slice(0, -1);
     modified = modified.replace("=","");
     modified = modified.trim();
@@ -146,12 +148,22 @@ function newtonMethod()
     data[0][0] = "k";
     data[0][1] = "x";
     data[0][2] = "chyba";
-    for (let i = 1; i < iterations; ++i)
+
+    let fx = math.evaluate(parsedEquation.toString(), { x: current });
+    let derfx = math.evaluate(derivative.toString(), { x: current });
+    let next = current - (fx / derfx);
+
+    data[1] = [3];
+    data[1][0] = "0";
+    data[1][1] = current;
+    data[1][2] = Math.abs(next - current).toFixed(round());
+    current = next;
+    for (let i = 2; i < iterations; ++i)
     {
 
         data[i] = [3];
-        let fx = math.evaluate(parsedEquation.toString(), { x: current });
-        let derfx = math.evaluate(derivative.toString(), { x: current });
+        fx = math.evaluate(parsedEquation.toString(), { x: current });
+         derfx = math.evaluate(derivative.toString(), { x: current });
 
         if (derfx === 0)
         {
@@ -160,7 +172,7 @@ function newtonMethod()
         }
 
 
-        let next = current - (fx / derfx);
+        next = current - (fx / derfx);
         data[i][0] = i - 1;
         data[i][1] = next.toFixed(round());
         let error = Math.abs(next - current);
@@ -178,8 +190,8 @@ function newtonMethod()
     }
 
     array = data;
-    saveToFile();
     initializeTable(data);
+    saveButton.disabled = false;
 }
 
 
@@ -369,7 +381,7 @@ function simpleIterationMethod() {
 
 function display()
 {
-    graph(-6,7, 1);
+    graph(-100,100, 1);
     //graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(stp));
 }
 
@@ -380,7 +392,7 @@ function graph(dh,hh,step)
     var plot = document.getElementById("plot");
     plot.style.display = "block";
 
-    var equation = "10cos (x -1) -x^2 + 2x -1"
+    var equation = modifyEquation();
 
 
     const xValues = [];
