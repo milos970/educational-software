@@ -27,6 +27,27 @@ public class MyUserDetails implements UserDetails {
         return  grantedAuthorities;
     }
 
+    public String getName() {
+        return this.person.getName();
+    }
+
+    public String getSurname() {
+        return this.person.getSurname();
+    }
+
+
+    public String getAuthority() {
+        return this.person.getAuthority();
+    }
+
+    public String getPersonalNumber() {
+        return this.person.getPersonalNumber();
+    }
+
+    public String getEmail() {
+        return this.person.getEmail();
+    }
+
     @Override
     public String getPassword() {
         return this.person.getPassword();

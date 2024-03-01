@@ -30,36 +30,43 @@
 
                                         <div class="form-outline form-white mb-4">
                                             <label for="pin-input"></label>
-                                            <input type="text" placeholder="Osobné číslo" id="pin-input" class="form-control form-control-lg"/>
+                                            <input type="text" placeholder="Osobné číslo" id="pin-input" class="form-control form-control-lg" onchange="validatePIN()"/>
                                         </div>
+
+                                        <p class="error" id="pin-hint"></p>
 
                                         <div class="form-outline form-white mb-4">
                                             <label for="name-input"></label>
-                                            <input type="text" placeholder="Meno" id="name-input" class="form-control form-control-lg"  th:field="*{name}" />
+                                            <input type="text" placeholder="Meno" id="name-input" class="form-control form-control-lg"  th:field="*{name}" onchange="isEmpty(this.value,document.getElementById('name-hint'))" />
                                         </div>
+
+                                        <p class="error" id="name-hint"></p>
+
 
                                         <div class="form-outline form-white mb-4">
                                             <label for="surname-input"></label>
-                                            <input type="text" placeholder="Priezvisko" id="surname-input" class="form-control form-control-lg"  th:field="*{surname}" />
+                                            <input type="text" placeholder="Priezvisko" id="surname-input" class="form-control form-control-lg"  th:field="*{surname}" onchange="isEmpty(this.value,document.getElementById('surname-hint'))" />
                                         </div>
+
+                                        <p class="error" id="surname-hint"></p>
 
                                     <div class="form-outline form-white mb-4">
                                         <label for="email-input"></label>
-                                        <input type="email" placeholder="Email" id="email-input" class="form-control form-control-lg"  th:field="*{email}" />
+                                        <input type="email" placeholder="Email" id="email-input" class="form-control form-control-lg"  th:field="*{email}" onchange="validateSchoolEmail()" />
                                     </div>
 
-                                    <p class="error" id="username-hint"></p>
+                                    <p class="error" id="email-hint"></p>
 
                                     <div class="form-outline form-white mb-4">
                                         <label for="password-input"></label>
-                                        <input type="password" placeholder="Heslo" id="password-input" class="form-control form-control-lg" th:field="*{password}"/>
+                                        <input type="password" placeholder="Heslo" id="password-input" class="form-control form-control-lg" th:field="*{password}" onchange="validatePassword()"/>
                                     </div>
 
                                     <p class="error" id="password-hint"></p>
 
                                     <div class="form-outline form-white mb-4">
                                         <label for="rep-password-input"></label>
-                                        <input type="password" placeholder="Zadajte znova heslo" id="rep-password-input" class="form-control form-control-lg" th:field="*{password}" />
+                                        <input type="password" placeholder="Zadajte znova heslo" id="rep-password-input" class="form-control form-control-lg" th:field="*{password}" onchange="validateRepPassword()" />
                                     </div>
 
                                     <p class="error" id="rep-password-hint"></p>
@@ -103,7 +110,9 @@
     </section>
 
 
-    <script th:src="@{/js/registration.js}"></script>
+
+    <script src="/static/js/registration.js"></script>
+    <!--    <script th:src="@{/js/registration.js}"></script>-->
 </body>
 
 </html>

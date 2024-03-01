@@ -24,7 +24,7 @@
 
 	<!-- Main CSS-->
 	<link href="/static/css/main.css" rel="stylesheet" media="all">
-	<link href="/css/moj.css" rel="stylesheet" media="all">
+	<link href="/static/css/moj.css" rel="stylesheet" media="all">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
@@ -62,7 +62,7 @@
 				</div>
 
 				<div class="input-group">
-					<input class="input--style-3" id="equation" type="text" placeholder="f(x) = 0" name="name" onchange="validateEquation()">
+					<input class="input--style-3" id="equation" type="text" placeholder="f(x) = 0" name="name" oninput="validateEquation()">
 				</div>
 
 				<p class ="error" id="equation-error"></p>
@@ -83,19 +83,19 @@
 				<p class ="error" id="tolerance-error"></p>
 
 				<div class="input-group" id="initial-div">
-					<input class="input--style-3" id="initial" type="number" placeholder="Počiatočná aproximácia" onchange="isFirstApproximationValid()">
+					<input class="input--style-3" id="initial" type="number" placeholder="Počiatočná aproximácia" oninput="isFirstApproximationValid()">
 				</div>
 
 				<p class ="error" id="initial-error"></p>
 
 				<div class="input-group" id="dh-div">
-					<input class="input--style-3" id="dh" type="number" placeholder="Dolná hranica intervalu" onchange="validateLowerBound()">
+					<input class="input--style-3" id="dh" type="number" placeholder="Dolná hranica intervalu" oninput="validateLowerBound()">
 				</div>
 
 				<p class="error" id="dh-error"></p>
 
 				<div class="input-group" id="hh-div">
-					<input class="input--style-3" id="hh" type="number" placeholder="Horná hranica intervalu" onchange="validateUpperBound()">
+					<input class="input--style-3" id="hh" type="number" placeholder="Horná hranica intervalu" oninput="validateUpperBound()">
 				</div>
 
 				<p class="error" id="hh-error"></p>

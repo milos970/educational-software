@@ -44,21 +44,63 @@ public class PageController {
 
 
 
-    @GetMapping("/admin")
-    public String admin(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
+    @GetMapping("/student")
+    public ModelAndView student(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         String username = myUserDetails.getUsername();
-        model.addAttribute("username", username);
-        return "admin";
+        String name = myUserDetails.getName();
+        String surname = myUserDetails.getSurname();
+        String personalNumber = myUserDetails.getPersonalNumber();
+        String authority = myUserDetails.getAuthority();
+        String email = myUserDetails.getEmail();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("username", username);
+        modelAndView.addObject("fullName", name + " " + surname);
+        modelAndView.addObject("personalNumber", personalNumber);
+        modelAndView.addObject("email", email);
+        modelAndView.addObject("authority", authority);
+        modelAndView.setViewName("user-profile");
+
+        return modelAndView;
     }
 
-    @GetMapping("/student")
-    public String student(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
+    @GetMapping("/admin")
+    public ModelAndView admin(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         String username = myUserDetails.getUsername();
-        model.addAttribute("username", username);
-        model.addAttribute("newPersonDTO", new NewPasswordDTO());
-        return "student";
+        String name = myUserDetails.getName();
+        String surname = myUserDetails.getSurname();
+        String personalNumber = myUserDetails.getPersonalNumber();
+        String authority = myUserDetails.getAuthority();
+        String email = myUserDetails.getEmail();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("username", username);
+        modelAndView.addObject("fullName", name + " " + surname);
+        modelAndView.addObject("personalNumber", personalNumber);
+        modelAndView.addObject("email", email);
+        modelAndView.addObject("authority", authority);
+        modelAndView.setViewName("user-profile");
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/admin/file-list-upload")
+    public ModelAndView fileListUpload()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("list-of-files");
+        return modelAndView;
+    }
+
+    @GetMapping("/authentificated/methods")
+    public ModelAndView methods()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("methods");
+        return modelAndView;
     }
 
 
