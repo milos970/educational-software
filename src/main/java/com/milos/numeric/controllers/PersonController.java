@@ -1,5 +1,8 @@
 package com.milos.numeric.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.dtos.NewAuthorityDTO;
@@ -9,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -81,12 +85,29 @@ public class PersonController
     @GetMapping("/admin/user")
     public ModelAndView getUsers()
     {
-
         List<Person> persons = this.personService.getAll();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("persons", persons);
         modelAndView.setViewName("users-list");
         return modelAndView;
+    }
+
+
+    @GetMapping("/admin/determine-gender/{name}")
+    @ResponseBody
+    private String determineGender(@PathVariable String name) {
+        String uri = "https://api.genderize.io?name=" + name;
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(uri, String.class);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode newNode = null;
+        try {
+             newNode = mapper.readTree(result);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return newNode.get("gender").asText();
     }
 
 
