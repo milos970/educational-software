@@ -1,9 +1,8 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.dtos.NewPersonDTO;
+import com.milos.numeric.dtos.SystemSettingsDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.Person;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -68,6 +66,12 @@ public class PageController {
     @GetMapping("/admin")
     public ModelAndView admin(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
+
+        if (this.personService.getAll().size() == 1)
+        {
+            return new ModelAndView("redirect:/admin/set-up");
+        }
+
         String username = myUserDetails.getUsername();
         String name = myUserDetails.getName();
         String surname = myUserDetails.getSurname();
@@ -104,13 +108,25 @@ public class PageController {
     }
 
 
+    @GetMapping("/admin/set-up")
+    public ModelAndView setUp()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("systemSettingsDto", new SystemSettingsDto());
+        modelAndView.setViewName("set-up");
+        return modelAndView;
+    }
+
+
+
+
 
 
     @GetMapping("/file/upload-csv-page")
     public String uploadCSV(Model model)
     {
         this.emailService.sendSimpleMessage("asda","dasdas","dasdad","dasd");
-        return "upload-csv";
+        return "set-up";
     }
 
 

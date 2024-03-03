@@ -48,6 +48,7 @@ public class Person
 
     private boolean enabled;
 
+
     /*@OneToOne()
     @JoinColumn(name = "token_id", referencedColumnName = "id")
     private VerificationToken verification;*/

@@ -14,3 +14,11 @@ CREATE TABLE IF NOT EXISTS person
     authority VARCHAR(255),
     enabled BOOLEAN
 );
+
+
+CREATE TABLE IF NOT EXISTS image
+(
+    id int,
+    url VARCHAR(255)
+);
+

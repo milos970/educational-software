@@ -111,6 +111,20 @@ public class PersonController
     }
 
 
+    @GetMapping("/admin/hi")
+    @ResponseBody
+    public String get() {
+        System.out.println(54);
+        return "665";
+    }
+
+
+
+
+
+
+
+
 
 
 
