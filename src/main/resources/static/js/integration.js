@@ -1,8 +1,8 @@
 const fun = document.getElementById("function");
 const dh = document.getElementById("dh");
 const hh = document.getElementById("hh");
-const n = document.getElementById("n");
-//const res = document.getElementById("result");
+const n = document.getElementById("sub-interval");
+const res = document.getElementById("result");
 const funError = document.getElementById("function-error");
 const dhError = document.getElementById("dh-error");
 const hhError = document.getElementById("hh-error");
@@ -107,12 +107,17 @@ function validateUpperBound()
   return true;
 }
 
+
+
+
+///////////////////////////////////////////////////METHODS///////////////////////////////////////////////////////////////////////////
+
 function trapezoid()
 {
-  if ( !(validateEquation() && validateLowerBound() && validateUpperBound()) )
+  /*if ( !(validateEquation() && validateLowerBound() && validateUpperBound()) )
   {
     return;
-  }
+  }*/
 
     let textarea = document.getElementById("text-area");
 
@@ -132,7 +137,6 @@ function trapezoid()
         {
             let fx = math.evaluate(parsedEquation.toString(), { x: dh.value});
             sum += fx;
-            textarea.value += (fx + "\n");
             continue;
         }
 
@@ -140,7 +144,6 @@ function trapezoid()
         {
             let fx = math.evaluate(parsedEquation.toString(), { x: hh.value});
             sum += fx;
-            textarea.value += (fx + "\n");
             continue;
         }
 
@@ -148,13 +151,12 @@ function trapezoid()
 
         let fx = 2 * math.evaluate(parsedEquation.toString(), { x: part })
         sum = sum + fx;
-          textarea.value += (fx + "\n");
         
     
       }
     
       const result = sum * h/2;
-      //res.value = result.toFixed(3);
+      res.value = result.toFixed(6);
 }
 
 function simpson() {
@@ -203,23 +205,15 @@ function simpson() {
       }
     
       const result = sum * h/3;
-      //res.value = result.toFixed(3);
+      res.value = result.toFixed(6);
 }
 
 function setMethod()
 {
 
-
-
         title.innerHTML = methods.options[methods.selectedIndex].text;
 
 
-
-}
-
-
-function displayProcess()
-{
 
 }
 

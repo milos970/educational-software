@@ -107,6 +107,30 @@ public class PageController {
         return modelAndView;
     }
 
+    @GetMapping("/authentificated/non-linear")
+    public ModelAndView nonLinearMethods()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("non-linear");
+        return modelAndView;
+    }
+
+    @GetMapping("/authentificated/approximation")
+    public ModelAndView approximationMethods()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("approximation");
+        return modelAndView;
+    }
+
+    @GetMapping("/authentificated/integration")
+    public ModelAndView integrationMethods()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("integration");
+        return modelAndView;
+    }
+
 
     @GetMapping("/admin/set-up")
     public ModelAndView setUp()

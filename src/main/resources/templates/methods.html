@@ -11,49 +11,38 @@
 <body>
 
 <div class="d-flex align-items-center justify-content-center" style="height: 250px;">
+
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" id="but">
-            Nelineárne rovnice
-        </button>
+        <form th:action ="@{/authentificated/non-linear}" method="get">
+            <button type="submit" class="btn btn--green" >
+                Nelineárne rovnice
+            </button>
+        </form>
+
 
     </div>
 
     <div class="btn-group">
-        <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Aproximácia a interpolácia funkcii
-        </button>
+        <form th:action ="@{/authentificated/approximation}" method="get">
+            <button type="submit" class="btn btn-primary" >
+                Aproximácia & interpolácia
+            </button>
+        </form>
 
-
-
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/src/main/resources/templates/approximation/lagrange.html">Lagrangeov interpolačný polynom</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/approximation/newton-polynom.html">Newtonov interpolačný polynom</a></li>
-            <li><a class="dropdown-item" href="/src/main/resources/templates/approximation/least-squares.html">Metóda najmenších štvorcov</a></li>
-        </ul>
     </div>
 
     <div class="btn-group">
-        <button type="button" class="btn btn-success dropdown-toggle" id="buty">
-            Určitý integrál
-        </button>
+        <form th:action ="@{/authentificated/integration}" method="get">
+            <button type="submit" class="btn btn-primary" >
+                Integrácia
+            </button>
+        </form>
 
     </div>
 
 </div>
 
-<script>
-    // JavaScript to navigate when button is clicked
-    document.getElementById("but").onclick = function () {
-        location.href = "/src/main/resources/templates/non-linear.html";
-    };
-</script>
 
-<script>
-    // JavaScript to navigate when button is clicked
-    document.getElementById("buty").onclick = function () {
-        location.href = "/src/main/resources/templates/integration.html";
-    };
-</script>
 
 
 

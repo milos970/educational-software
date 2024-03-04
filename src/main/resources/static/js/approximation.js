@@ -1,7 +1,111 @@
 
-const nodes = document.getElementById("nodes");
+const nodes = document.getElementById("nodes-input");
 const result = document.getElementById("result");
 const err = document.getElementById("error");
+const methods = document.getElementById("methods");
+const functions = document.getElementById("least-squares-type");
+
+
+function display()
+{
+    graph(-100,100, 1);
+    //graph(Number.parseInt(dh.value),Number.parseInt(hh.value), Number.parseInt(stp));
+}
+
+function graph(dh,hh,step)
+{
+    var plot = document.getElementById("plot");
+    plot.style.display = "block";
+
+
+
+
+    const xValues = [];
+
+
+    for (let i = dh; i < hh; i += 0.1)
+    {
+        xValues.push(i);
+    }
+
+
+
+    var parsedEquation = result.value;
+    const yValues = xValues.map(x => math.evaluate(parsedEquation.toString(), { x: x }));
+
+
+    const trace = {
+        x: xValues,
+        y: yValues,
+        mode: 'lines',
+        name: 'Function',
+    };
+
+
+    const layout = {
+        title: parsedEquation.toString(),
+        xaxis: { title: 'x' },
+        yaxis: { title: 'f(x)' }
+    };
+
+
+
+    Plotly.newPlot('plot', [trace], layout).then(function(gd) {
+        Plotly.toImage(gd, {format: 'png', height: 600, width: 500})
+            .then(function(url) {
+                var cardHeading = document.querySelector('.card-heading');
+                cardHeading.style.background = 'url(' + url + ') top left/cover no-repeat';
+
+                var downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'multiplot.png'; // Specify the file name
+                downloadLink.style.display = 'none';
+                document.body.appendChild(downloadLink);
+
+                // Simulate a click on the anchor element to trigger the download
+                downloadLink.click();
+
+                // Remove the anchor element from the document
+                document.body.removeChild(downloadLink);
+            });
+    });
+
+
+    plot.style.display="none";
+
+
+}
+
+function calculate()
+{
+    switch(methods.value)
+    {
+        case "1":
+            langrangeInterpolate();
+            break;
+        case "2":
+            newtonInterpolate();
+            break;
+        case "3":
+            leastSquares();
+            break;
+    }
+}
+
+function setMethod()
+{
+
+    if (methods.value === "3")
+    {
+        document.getElementById('select-div').style.display="block";
+        title.innerHTML = methods.options[methods.selectedIndex].text;
+    } else {
+        document.getElementById('select-div').style.display="none";
+        title.innerHTML = methods.options[methods.selectedIndex].text;
+    }
+}
+
+
 
 function isValid() 
 {
@@ -87,52 +191,12 @@ function parse()
     return data;
 }
 
-
-function display(fun) 
+function parseCsvToArray()
 {
-    let plot = document.getElementById("plot");
-    plot.style.display = "block";
 
-    
-
-    
-    const xValues = [];
-
-
-    let start = -10;
-    let finish = 100;
-    let step = 0.1;
-
-
-    for (let i = start; i < finish; i += step) {
-        xValues.push(i);
-    }
-
-
-
-    let parsedEquation = math.parse(fun);
-    const yValues = xValues.map(x => math.evaluate(parsedEquation.toString(), { x: x }));
-
-
-    const trace = {
-        x: xValues,
-        y: yValues,
-        mode: 'lines',
-        name: 'Function',
-    };
-
-
-    const layout = {
-        title: "Funkcia",
-        xaxis: { title: 'x' },
-        yaxis: { title: 'f(x)' }
-    };
-
-
-    Plotly.newPlot('plot', [trace], layout);
-
-    
 }
+
+
 
 
 function langrangeInterpolate() 
@@ -202,22 +266,20 @@ function langrangeInterpolate()
 
     result.value = equation;
 
-    display(equation);
+    display();
 
 
 }
 
 function leastSquares() {
-    if (!isValid()) {
-        return;
-    }
 
-    if (document.getElementById('radio1').checked) {
-        
+
+    if (functions.value === "1") {
+
         linear();
     }
 
-    if (document.getElementById('radio2').checked) {
+    if (functions.value === "2") {
         logaritmic();
     }
 
@@ -281,7 +343,7 @@ function logaritmic()
 
     result.value = equation;
 
-    display(equation);
+    display();
 
     error(equation, data);
 
@@ -290,7 +352,6 @@ function logaritmic()
 
 function linear() 
 {
-    
 
     let data = parse();
 
@@ -340,7 +401,7 @@ function linear()
 
     result.value = equation;
 
-    display(equation);
+    display();
     
     error(equation,data);
 }
@@ -391,7 +452,7 @@ function error(equation,data)
     e = Math.sqrt(e);
 
     
-    err.value = e.toFixed(6);;
+    //err.value = e.toFixed(6);;
 }
 
 
@@ -444,7 +505,7 @@ function newtonInterpolate()
 
     result.value = equation;
 
-    display(equation);
+    display();
 
 
 

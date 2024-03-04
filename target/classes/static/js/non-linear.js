@@ -16,7 +16,7 @@ const calculateButton =  document.getElementById("calculate-button");
 const displayButton =  document.getElementById("display-button");
 const saveButton =  document.getElementById("save-button");
 
-calculateButton.disabled = true;
+calculateButton.disabled = false;
 displayButton.disabled = true;
 saveButton.disabled = true;
 
@@ -351,31 +351,29 @@ function bisectionMethod()
 }
 
 
-function simpleIterationMethod() {
+function simpleIterationMethod()
+{
 
-    if (!validate()) {
-        return;
-    }
+    const modifiedEquation = modifyEquation();
+    const iterations = 1000;
+    const parsedEquation = math.parse(modifiedEquation);
 
-    var equation = document.getElementById("equation").value;
-    var tolerance = document.getElementById("tolerance").value;
+    const tolerance = document.getElementById("tolerance").value;
+    const initial = document.getElementById("initial");
 
-    var initial = document.getElementById("initial").value;
+    let current = initial.value;
 
-    var current = initial;
-    var parsedEquation = math.parse(equation);
-    var derivative = math.derivative(parsedEquation, 'x');
-
-    alert(current);
-    for (let i = 0; i < 8; i++) {
-        var next = math.evaluate(parsedEquation.toString(), { x: current });
-        alert(next);
+    for (let i = 0; i < iterations; i++)
+    {
+        const next = math.evaluate(parsedEquation.toString(), { x: current });
         if (Math.abs(next - current) <= tolerance) {
+
             return next;
         }
 
-        current = next;
+        console.log(next);
 
+        current = next;
     }
 }
 
@@ -807,6 +805,9 @@ function calculate()
         case "3":
             bisectionMethod();
             break;
+        case "4":
+            simpleIterationMethod();
+            break;
     }
 }
 
@@ -818,10 +819,7 @@ function setMethod()
         document.getElementById('initial-div').style.display="block";
         document.getElementById('dh-div').style.display="none";
         document.getElementById('hh-div').style.display="none";
-
         title.innerHTML = methods.options[methods.selectedIndex].text;
-
-
     }
 
     if (methods.value === "2")
@@ -838,6 +836,15 @@ function setMethod()
         document.getElementById('initial-div').style.display="none";
         document.getElementById('dh-div').style.display="block";
         document.getElementById('hh-div').style.display="block";
+
+        title.innerHTML = methods.options[methods.selectedIndex].text;
+    }
+
+    if (methods.value === "4")
+    {
+        document.getElementById('initial-div').style.display="none";
+        document.getElementById('dh-div').style.display="none";
+        document.getElementById('hh-div').style.display="none";
 
         title.innerHTML = methods.options[methods.selectedIndex].text;
     }

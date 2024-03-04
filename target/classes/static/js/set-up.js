@@ -38,6 +38,7 @@ function validateInterval(min, max, element, elementHint)
     }else {
         elementHint.innerHTML = "";
     }
+
 }
 
 function validateDate(element, elementHint)
