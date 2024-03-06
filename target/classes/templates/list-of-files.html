@@ -14,6 +14,8 @@
 
     <script th:src="@{/js/files-list.js}"></script>
     <link rel="stylesheet" th:href="@{/css/files-list.css}">
+    <!----><script src = "/static/js/files-list.js"></script>
+    <link rel="stylesheet" href="/static/css/files-list.css">
     <!-- Custom CSS -->
     <style>
         /* Center the container */
@@ -42,19 +44,48 @@
                         <li>
                             <div class="link"><i class="fa fa-laptop"></i>Nelineárne rovnice<i class="fa fa-chevron-down"></i></div>
                             <ul class="submenu">
-                                <li>
+                                <li class="li-container">
+                                    <a id="href1" href="#">Pridať materiál</a>
+                                    <a  class="upload" href="#">Upload</a>
+
+                                    <form th:action="@{/admin/file/upload}" method="POST"  enctype="multipart/form-data">
+                                        <label>
+                                            <input id="upload-non-linear" type="file" style="display: none;" name="file">
+                                        </label>
+
+                                        <button type="submit">sadfd</button>
+                                    </form>
+
                                 </li>
+
+
+
+                                <li th:id="${file.id}" class="li-container" th:each="file : ${files}">
+                                    <a  th:href="@{/admin/file/pdf/{id}(id=${file.id})}" target="_blank"  th:text="${file.id}"></a>
+                                    <a  class="upload" th:attr="onclick=|deletePdf('${file.id}')|"  th:text="Vymazať"></a>
+                                </li>
+
                             </ul>
                         </li>
+
                         <li>
                             <div class="link"><i class="fa fa-tv"></i>Určité intergrály<i class="fa fa-chevron-down"></i></div>
                             <ul class="submenu">
+                                <li><a href="#">Pridať materiál</a></li>
+
+                                <form>
+                                    <input id="upload-non-integration" type="file"/>
+                                </form>
                             </ul>
                         </li>
                         <li>
                             <div class="link"><i class="fa fa-mobile"></i>Aproximácia & interpolácia<i class="fa fa-chevron-down"></i></div>
                             <ul class="submenu">
+                                <li><a href="#">Pridať materiál</a></li>
 
+                                <form>
+                                    <input id="upload-approximation" type="file"/>
+                                </form>
                             </ul>
                         </li>
 
@@ -67,6 +98,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
 
 
 

@@ -64,7 +64,7 @@ public class PersonController
     @PatchMapping("admin/user/{id}")
     public void deleteUser(@PathVariable int id)
     {
-        this.personService.delete(id);
+        this.personService.deleteSpecificPersonById(id);
     }
 
 
@@ -85,7 +85,7 @@ public class PersonController
     @GetMapping("/admin/user")
     public ModelAndView getUsers()
     {
-        List<Person> persons = this.personService.getAll();
+        List<Person> persons = this.personService.getAllPersons();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("persons", persons);
         modelAndView.setViewName("users-list");
@@ -116,6 +116,28 @@ public class PersonController
     public String get() {
         System.out.println(54);
         return "665";
+    }
+
+
+    @PatchMapping("/admin/student/{id}/update-points")
+    @ResponseBody
+    public int addPoints(@PathVariable int id, @RequestParam("value") String value)
+    {
+        System.out.println(value);
+        this.personService.updatePoints(id, Integer.valueOf(value));
+
+        return this.personService.getPersonById(id).get().getPoints();
+
+    }
+
+    @PatchMapping("/admin/student/{id}/update-absencie")
+    @ResponseBody
+    public int addAbsencie(@PathVariable int id, @RequestParam("points") int absencie)
+    {
+        this.personService.updateAbsencie(id, absencie);
+
+        return this.personService.getPersonById(id).get().getAbsencie();
+
     }
 
 

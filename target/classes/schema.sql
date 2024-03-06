@@ -1,10 +1,13 @@
-
+drop table message;
+drop table chat;
 drop table person;
+
+
 
 
 CREATE TABLE IF NOT EXISTS person
 (
-    id int,
+    person_id int,
     nam VARCHAR(255),
     surname VARCHAR(255),
     username VARCHAR(255),
@@ -12,7 +15,10 @@ CREATE TABLE IF NOT EXISTS person
     email VARCHAR(255),
     password VARCHAR(255),
     authority VARCHAR(255),
-    enabled BOOLEAN
+    enabled BOOLEAN,
+    points int,
+    absencie int,
+    chats JAVA_OBJECT
 );
 
 

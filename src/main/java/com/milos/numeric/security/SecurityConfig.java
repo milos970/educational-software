@@ -47,7 +47,7 @@ public class SecurityConfig
                         .anyRequest().authenticated()
                 ).headers(headers -> headers.frameOptions().disable())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
+                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).disable())
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(authenticationEntryPoint))
                 .formLogin(form -> form.successHandler(new CustomAuthenticationSuccessHandler())
                 .loginPage("/login")

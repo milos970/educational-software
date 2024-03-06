@@ -1,13 +1,13 @@
 package com.milos.numeric.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +18,7 @@ public class Person
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name  = "person_id")
     private Integer id;
 
     @NotBlank
@@ -47,6 +48,17 @@ public class Person
     private String authority;
 
     private boolean enabled;
+
+    @Min(0)
+    @Max(100)
+    private int points;
+
+    @Max(13)
+    private int absencie;
+
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats;
 
 
     /*@OneToOne()

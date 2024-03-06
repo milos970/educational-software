@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Random;
+
 
 @Controller
 public class FileController
@@ -26,7 +28,7 @@ public class FileController
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
     }
 
-    @PostMapping("/file/upload")
+    @PostMapping("/admin/file/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
 
         try
@@ -39,16 +41,16 @@ public class FileController
         }
     }
 
-    @GetMapping("/file/pdf")
+    @GetMapping("/admin/file/pdf")
     public ModelAndView getFiles()
     {
-        return new ModelAndView("list", "pdf", this.fileService.getAllFiles());
+        return new ModelAndView("list-of-files", "files", this.fileService.getAllFiles());
     }
 
-    @GetMapping("/file/pdf/{id}")
-    public ResponseEntity<byte[]> getSpecificFile(@PathVariable int id)
+    @GetMapping("/admin/file/pdf/{id}")
+    public ResponseEntity<byte[]> getSpecificFile(@PathVariable Integer id)
     {
-        String filename = "pdf1.pdf";
+        String filename = "pdf";
         byte[] pdf = this.fileService.getFile(id).getData();
         HttpHeaders headers = new HttpHeaders();
 
@@ -56,9 +58,17 @@ public class FileController
 
         headers.add("content-disposition", "inline;filename=" + filename);
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-
         return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
+
+    @DeleteMapping("/admin/file/pdf/delete/{id}")
+    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Integer id)
+    {
+        this.fileService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 
 
 }

@@ -3,6 +3,7 @@ package com.milos.numeric.controllers;
 import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.dtos.SystemSettingsDto;
 import com.milos.numeric.email.EmailServiceImpl;
+import com.milos.numeric.entities.Person;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 @Controller
 public class PageController {
@@ -67,7 +71,7 @@ public class PageController {
     public ModelAndView admin(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
 
-        if (this.personService.getAll().size() == 1)
+        if (this.personService.getAllPersons().size() == 1)
         {
             return new ModelAndView("redirect:/admin/set-up");
         }
@@ -153,6 +157,19 @@ public class PageController {
         return "set-up";
     }
 
+
+
+    @GetMapping("/admin/student/{id}")
+    public ModelAndView students(@PathVariable int id)
+    {
+        Optional<Person> optional = this.personService.getPersonById(id);
+        Person person = optional.get();
+        System.out.println(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("person", person);
+        modelAndView.setViewName("user-profile-admin-student");
+        return modelAndView;
+    }
 
 
 

@@ -46,4 +46,10 @@ public class FileService
     public List<Pdf> getAllFiles() {
         return this.fileRepository.findAll();
     }
+
+
+    public void remove(int id)
+    {
+        this.fileRepository.deleteById(id);
+    }
 }

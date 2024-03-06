@@ -27,6 +27,10 @@ public class MyUserDetails implements UserDetails {
         return  grantedAuthorities;
     }
 
+    public Person getPerson() {
+        return person;
+    }
+
     public String getName() {
         return this.person.getName();
     }

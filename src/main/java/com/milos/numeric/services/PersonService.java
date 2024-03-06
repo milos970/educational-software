@@ -55,6 +55,8 @@ public class PersonService
         this.passwordGenerator = passwordGenerator;
     }
 
+
+
     public void create(NewPersonDTO newPersonDTO, String url)
     {
         Person person = personNewPersonDTOMapper.sourceToDestination(newPersonDTO);
@@ -73,6 +75,11 @@ public class PersonService
             throw new RuntimeException(e);
         }
         personRepository.save(person);
+    }
+
+    public Optional<Person> getPersonById(int id)
+    {
+        return this.personRepository.findById(id);
     }
 
 
@@ -119,40 +126,47 @@ public class PersonService
 
     public void updatePassword(int id, NewPasswordDTO newPasswordDTO)
     {
-        Optional<Person> optional = this.personRepository.findById(id);
-
-        if (optional.isEmpty()) {
-            return;
-        }
-
+        Optional<Person> optional = this.getPersonById(id);
+        optional.ifPresent(person -> personNewPasswordDTOMapper.sourceToDestination(newPasswordDTO));
         Person person = optional.get();
-
-        person = personNewPasswordDTOMapper.sourceToDestination(newPasswordDTO);
-
         this.personRepository.save(person);
     }
 
     public void updateAuthority(int id, NewAuthorityDTO newAuthorityDTO)
     {
-        Optional<Person> optional = this.personRepository.findById(id);
-
-        if (optional.isEmpty()) {
-            return;
-        }
-
+        Optional<Person> optional = this.getPersonById(id);
+        optional.ifPresent(person -> personNewAuthorityDTOMapper.sourceToDestination(newAuthorityDTO));
         Person person = optional.get();
-
-        person = personNewAuthorityDTOMapper.sourceToDestination(newAuthorityDTO);
-
         this.personRepository.save(person);
     }
 
-    public void delete(int id)
+    public void updatePoints(int id, int points)
+    {
+        Optional<Person> optional = this.getPersonById(id);
+        optional.ifPresent(person -> person.setPoints(person.getPoints() + points));
+        Person person = optional.get();
+        this.personRepository.save(person);
+    }
+
+    public void updateAbsencie(int id, int number)
+    {
+        Optional<Person> optional = this.getPersonById(id);
+        optional.ifPresent(person -> person.setPoints(person.getAbsencie() + number));
+        Person person = optional.get();
+        this.personRepository.save(person);
+    }
+
+    public void deleteSpecificPersonById(int id)
     {
         this.personRepository.deleteById(id);
     }
 
-    public List<Person> getAll()
+    public void deleteAllPersons()
+    {
+        this.personRepository.deleteAll();
+    }
+
+    public List<Person> getAllPersons()
     {
         return personRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
     }
