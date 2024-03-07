@@ -23,17 +23,24 @@ public class Person
 
     @NotBlank
     @Column(name = "nam") //zmenit!!!!!
+    @Size(min = 1, message = "{validation.name.size.too_short}")
+    @Size(max = 50, message = "{validation.name.size.too_long}")
     private String name;
 
     @NotBlank
+    @Size(min = 1, message = "{validation.name.size.too_short}")
+    @Size(max = 50, message = "{validation.name.size.too_long}")
     private String surname;
 
     @NotBlank
     @Column(unique = true)
+    @Size(min = 1, message = "{validation.name.size.too_short}")
+    @Size(max = 50, message = "{validation.name.size.too_long}")
     private String username;
 
     @NotBlank
     @Column(unique = true, name = "personal_number")
+    @Size(max = 50, message = "{validation.name.size.too_long}")
     private String personalNumber;
 
     @Email
@@ -49,21 +56,10 @@ public class Person
 
     private boolean enabled;
 
-    @Min(0)
-    @Max(100)
-    private int points;
-
-    @Max(13)
-    private int absencie;
-
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> chats;
 
-
-    /*@OneToOne()
-    @JoinColumn(name = "token_id", referencedColumnName = "id")
-    private VerificationToken verification;*/
 
 
 }

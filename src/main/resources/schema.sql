@@ -1,5 +1,6 @@
 drop table message;
 drop table chat;
+drop table verification_token;
 drop table person;
 
 

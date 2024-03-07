@@ -35,7 +35,7 @@ public class PageController {
     @GetMapping("/registration")
     public ModelAndView registration()
     {
-        return new ModelAndView("registration", "newPersonDTO", new NewPersonDTO());
+        return new ModelAndView("sign-up", "newPersonDTO", new NewPersonDTO());
     }
 
 //*********************************************CUSTOMIZE************************************************************************
@@ -94,6 +94,16 @@ public class PageController {
         return modelAndView;
     }
 
+    @GetMapping("/sign-up")
+    public ModelAndView signUp()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("newPersonDTO", new NewPersonDTO());
+        modelAndView.setViewName("sign-up");
+        return modelAndView;
+    }
+
+
 
     @GetMapping("/admin/file-list-upload")
     public ModelAndView fileListUpload()
@@ -141,7 +151,7 @@ public class PageController {
     {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("systemSettingsDto", new SystemSettingsDto());
-        modelAndView.setViewName("set-up");
+        modelAndView.setViewName("set-up-system");
         return modelAndView;
     }
 
@@ -154,7 +164,7 @@ public class PageController {
     public String uploadCSV(Model model)
     {
         this.emailService.sendSimpleMessage("asda","dasdas","dasdad","dasd");
-        return "set-up";
+        return "set-up-system";
     }
 
 

@@ -1,12 +1,8 @@
 package com.milos.numeric.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,21 +12,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor //su nutne aj tieto anotacie?
-public class SystemSettings
+@AllArgsConstructor
+public class Student
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name  = "person_id")
     private Integer id;
 
-    @NotBlank
-    private String name;
+    @Min(0)
+    @Max(100)
+    private int points;
 
     @Min(0)
     @Max(13)
-    private int absencky;
+    private int absencie;
 
-
+    @OneToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "person_id")
+    private Person person;
 
 
 }

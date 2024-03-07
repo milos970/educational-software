@@ -31,16 +31,10 @@ public class CSVConverterUnregisteredPerson extends CSVConverter<PersonToValidat
             PersonToValidate person = new PersonToValidate();
 
             String[] rec = values[0].split(";");
-
             String personalNumber = rec[0];
-
             String name = rec[1];
-
             String surname = rec[2];
-
             String email = rec[3];
-
-            System.out.println(personalNumber + " " + name + " " + surname + " " + email);
 
             person.setPersonalNumber(personalNumber);
             person.setName(name);

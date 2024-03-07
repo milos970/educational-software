@@ -33,6 +33,7 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderB = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderC = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderD = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderE = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
@@ -41,7 +42,8 @@ public class SecurityConfig
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderD.pattern("/registration")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderD.pattern("/registrate")).permitAll()
                         .requestMatchers(mvcMatcherAdmin.pattern("/admin/**")).hasAuthority("ADMIN")
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).hasAuthority("STUDENT")
                         .anyRequest().authenticated()

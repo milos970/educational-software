@@ -9,24 +9,18 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "verification_token")
-public class VerificationToken
+@AllArgsConstructor
+public class Employee
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private String code;
+    @Column(name  = "employee_id")
+    private Integer id;
 
     @OneToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "person_id")
     private Person person;
-
-
-
-
 
 
 }

@@ -7,9 +7,13 @@ import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.dtos.NewAuthorityDTO;
 import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.SystemSettings;
 import com.milos.numeric.services.PersonService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PersonController
@@ -29,9 +34,15 @@ public class PersonController
     }
 
     @PostMapping("/user/create")
-    public void createUser(@Valid @RequestBody NewPersonDTO NewPersonDTO)
+    public ResponseEntity createUser(@Valid @RequestBody NewPersonDTO NewPersonDTO)
     {
-        //this.personService.create(NewPersonDTO);
+        Optional<Person> optional = this.personService.create(NewPersonDTO);
+
+        if (optional.isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/user/{id}/update-password")
@@ -61,7 +72,7 @@ public class PersonController
     }
 
 
-    @PatchMapping("admin/user/{id}")
+    @PatchMapping("/admin/user/{id}")
     public void deleteUser(@PathVariable int id)
     {
         this.personService.deleteSpecificPersonById(id);
@@ -70,16 +81,22 @@ public class PersonController
 
 
     @PostMapping("/file/upload-csv")
-    public void addCSV(@RequestParam("csv") MultipartFile file)
+    public void addCSV(@RequestParam("csv") MultipartFile file, HttpServletRequest request)
     {
         this.personService.createMultiple(file);
     }
 
-    @PostMapping("/registrate")
-    public void registratePerson(@Valid @RequestBody NewPersonDTO newPersonDTO)
-    {
-        this.personService.create(newPersonDTO, "sd");
+    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
+        return personService.confirmEmail(confirmationToken);
     }
+
+    @PostMapping("/registrate")
+    public void registratePerson(@Valid @RequestBody NewPersonDTO newPersonDTO, HttpServletRequest request)
+    {
+        this.personService.create(newPersonDTO);
+    }
+
 
 
     @GetMapping("/admin/user")

@@ -30,7 +30,7 @@ public class EmailServiceImpl
         this.emailSender.send(message);
     }
 
-    public void sendVerificationEmail(Person person, String siteURL)
+    public void sendVerificationEmail(Person person, String verifyUrl)
             throws MessagingException, UnsupportedEncodingException {
         String toAddress = person.getEmail();
         String fromAddress = "Your email address";
@@ -50,9 +50,7 @@ public class EmailServiceImpl
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", person.getName());
-       // String verifyURL = siteURL + "/verify?code=" + person.getVerification().getCode();
-
-        //content = content.replace("[[URL]]", verifyURL);
+        content = content.replace("[[URL]]", verifyUrl);
 
         helper.setText(content, true);
 

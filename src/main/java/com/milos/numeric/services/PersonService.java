@@ -1,5 +1,6 @@
 package com.milos.numeric.services;
 
+import com.milos.numeric.Authority;
 import com.milos.numeric.PersonToValidate;
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewAuthorityDTO;
@@ -16,6 +17,7 @@ import com.milos.numeric.security.PasswordGenerator;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,34 +49,67 @@ public class PersonService
     @Autowired
     private EmailServiceImpl emailService;
 
+    private final VerificationTokenService verificationTokenService;
+
 
     @Autowired
-    public PersonService(PersonRepository personRepository, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator) {
+    public PersonService(PersonRepository personRepository, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator, VerificationTokenService verificationTokenService) {
         this.personRepository = personRepository;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.passwordGenerator = passwordGenerator;
+        this.verificationTokenService = verificationTokenService;
     }
 
 
 
-    public void create(NewPersonDTO newPersonDTO, String url)
+    public Optional<Person> create(NewPersonDTO newPersonDTO)
     {
         Person person = personNewPersonDTOMapper.sourceToDestination(newPersonDTO);
-
 
         String password = person.getPassword();
         String hashedPassword = this.passwordEncoder.encode(password);
         person.setPassword(hashedPassword);
 
+        String email = person.getEmail();
+        person.setUsername(person.getEmail().substring(person.getEmail().indexOf("@")));
+
+
+
+        if (email.substring(email.indexOf("@"), email.length() - 1).equals("fri.uniza.sk"))
+        {
+            person.setAuthority(Authority.EMPLOYEE.name());
+        } else {
+            person.setAuthority(Authority.STUDENT.name());
+        }
+
+
         VerificationToken token = new VerificationToken();
         token.setCode(UUID.randomUUID().toString());
+        token.setPerson(person);
+
+        this.verificationTokenService.save(token);
+
+        String url = "http://localhost:8080/confirm-account?token="+token.getCode();
 
         try {
             this.emailService.sendVerificationEmail(person, url);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-        personRepository.save(person);
+
+        return Optional.of(this.personRepository.save(person));
+    }
+
+    public ResponseEntity confirmEmail(String code)
+    {
+        VerificationToken token = this.verificationTokenService.findByCode(code);
+
+        if(code != null)
+        {
+            Optional<Person> optional = this.personRepository.findByEmail(token.getPerson().getEmail());
+            return ResponseEntity.ok("Email verified successfully!");
+        }
+        return ResponseEntity.badRequest().body("Error: Couldn't verify email");
     }
 
     public Optional<Person> getPersonById(int id)
@@ -94,22 +129,18 @@ public class PersonService
 
         for (PersonToValidate personToValidate : list)
         {
-            Person person = new Person();
+            NewPersonDTO newPersonDTO = new NewPersonDTO();
 
-            person.setPersonalNumber(personToValidate.getPersonalNumber());
-            person.setName(personToValidate.getName());
-            person.setSurname(personToValidate.getSurname());
-            person.setEmail(personToValidate.getEmail());
+            newPersonDTO.setPersonalNumber(personToValidate.getPersonalNumber());
+            newPersonDTO.setName(personToValidate.getName());
+            newPersonDTO.setSurname(personToValidate.getSurname());
+            newPersonDTO.setEmail(personToValidate.getEmail());
 
-            person.setUsername(personToValidate.getEmail().substring(personToValidate.getEmail().indexOf("@")));
-
-            person.setAuthority("STUDENT");
 
             String password = this.passwordGenerator.generate();
-            String hashedPassword = this.passwordEncoder.encode(password);
-            person.setPassword(hashedPassword);
+            newPersonDTO.setPassword(password);
 
-            this.personRepository.save(person);
+            this.create(newPersonDTO);
         }
 
     }
