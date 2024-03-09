@@ -18,11 +18,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer>
 
     public Optional<Person> findByEmail(String email);
 
-    public Optional<Person> findByPersonalNumber(String pin);
 
-    @Query(value = "SELECT * FROM Person u WHERE u.authority <> ADMIN", nativeQuery = true)
+
+    /*@Query(value = "SELECT * FROM Person u WHERE u.authority <> ADMIN", nativeQuery = true)
     public List<Person> findAllExceptAdmin();
-
+*/
     @Override
     List<Person> findAll(Sort sort);
 }

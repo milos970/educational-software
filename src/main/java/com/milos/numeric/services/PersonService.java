@@ -8,11 +8,13 @@ import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.Student;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.mappers.PersonNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonRepository;
+import com.milos.numeric.repositories.StudentRepository;
 import com.milos.numeric.security.PasswordGenerator;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ import java.util.UUID;
 public class PersonService
 {
     private final PersonRepository personRepository;
+
+    private final StudentService studentService;
 
     private PersonNewPersonDTOMapper personNewPersonDTOMapper;
 
@@ -53,8 +57,9 @@ public class PersonService
 
 
     @Autowired
-    public PersonService(PersonRepository personRepository, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator, VerificationTokenService verificationTokenService) {
+    public PersonService(PersonRepository personRepository, StudentService studentService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator, VerificationTokenService verificationTokenService) {
         this.personRepository = personRepository;
+        this.studentService = studentService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.passwordGenerator = passwordGenerator;
         this.verificationTokenService = verificationTokenService;
@@ -62,7 +67,7 @@ public class PersonService
 
 
 
-    public Optional<Person> create(NewPersonDTO newPersonDTO)
+    public Optional<Person> createPerson(NewPersonDTO newPersonDTO)
     {
         Person person = personNewPersonDTOMapper.sourceToDestination(newPersonDTO);
 
@@ -73,19 +78,21 @@ public class PersonService
         String email = person.getEmail();
         person.setUsername(person.getEmail().substring(person.getEmail().indexOf("@")));
 
-
-
         if (email.substring(email.indexOf("@"), email.length() - 1).equals("fri.uniza.sk"))
         {
             person.setAuthority(Authority.EMPLOYEE.name());
         } else {
             person.setAuthority(Authority.STUDENT.name());
+            Student student = new Student();
+            student.setPerson(person);
+            this.studentService.saveStudent(student);
         }
 
 
         VerificationToken token = new VerificationToken();
         token.setCode(UUID.randomUUID().toString());
         token.setPerson(person);
+        person.setEnabled(false);
 
         this.verificationTokenService.save(token);
 
@@ -140,7 +147,7 @@ public class PersonService
             String password = this.passwordGenerator.generate();
             newPersonDTO.setPassword(password);
 
-            this.create(newPersonDTO);
+            this.createPerson(newPersonDTO);
         }
 
     }
@@ -152,7 +159,7 @@ public class PersonService
 
     public boolean findByPIN(String pin)
     {
-        return this.personRepository.findByPersonalNumber(pin) != null;
+        return true;
     }
 
     public void updatePassword(int id, NewPasswordDTO newPasswordDTO)
@@ -171,20 +178,21 @@ public class PersonService
         this.personRepository.save(person);
     }
 
-    public void updatePoints(int id, int points)
+    public void updatePoints(String personalNumber, int points)
     {
-        Optional<Person> optional = this.getPersonById(id);
+
+       /* Optional<Person> optional = this.getPersonById(id);
         optional.ifPresent(person -> person.setPoints(person.getPoints() + points));
         Person person = optional.get();
-        this.personRepository.save(person);
+        this.personRepository.save(person);*/
     }
 
     public void updateAbsencie(int id, int number)
     {
-        Optional<Person> optional = this.getPersonById(id);
+        /*Optional<Person> optional = this.getPersonById(id);
         optional.ifPresent(person -> person.setPoints(person.getAbsencie() + number));
         Person person = optional.get();
-        this.personRepository.save(person);
+        this.personRepository.save(person);*/
     }
 
     public void deleteSpecificPersonById(int id)

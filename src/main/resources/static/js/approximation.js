@@ -1,9 +1,91 @@
 
-const nodes = document.getElementById("nodes-input");
-const result = document.getElementById("result");
-const err = document.getElementById("error");
-const methods = document.getElementById("methods");
-const functions = document.getElementById("least-squares-type");
+
+function lagrangeInterpolating()
+{
+
+    if ( !isValid())
+    {
+        return;
+    }
+
+
+    let arr = nodes.value.match(/-?\d+(\.\d+)?/g);
+    let equation = "";
+    let first = true;
+
+    for (let i = 0; i < arr.length; i+=2)
+    {
+        let part = "";
+        let menovatel = 1;
+        for (let k = 0; k < arr.length; k+=2)
+        {
+
+            if (i === k)
+            {
+                continue;
+            }
+
+
+            if (arr[k] > 0)
+            {
+                part += "(x - " + (Number.isInteger(1 * arr[k]) ? (1 * arr[k]): ((1 * arr[k]).toFixed(3))) + ")";
+            } else
+            {
+                part += "(x + " + (Number.isInteger(-1 * arr[k]) ? (-1 * arr[k]): ((-1 * arr[k]).toFixed(3))) + ")";
+            }
+
+
+            menovatel *= (arr[i] - arr[k]);
+
+        }
+
+        menovatel = 1/ menovatel;
+
+
+
+        if (first)
+        {
+            part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
+            equation += part;
+            first = false;
+        } else
+        {
+            if (arr[i + 1] * menovatel > 0)
+            {
+                part = "+" + (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
+            } else
+            {
+                part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
+            }
+
+            equation += part;
+        }
+
+
+    }
+
+    resultElement.value = equation;
+
+    display();
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function display()
@@ -14,7 +96,7 @@ function display()
 
 function graph(dh,hh,step)
 {
-    var plot = document.getElementById("plot");
+    const plot = document.getElementById("plot");
     plot.style.display = "block";
 
 
@@ -30,7 +112,7 @@ function graph(dh,hh,step)
 
 
 
-    var parsedEquation = result.value;
+    const parsedEquation = result.value;
     const yValues = xValues.map(x => math.evaluate(parsedEquation.toString(), { x: x }));
 
 
@@ -107,169 +189,14 @@ function setMethod()
 
 
 
-function isValid() 
-{
-    const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*\]$/;
-    
-    let element = document.getElementById("nodes-error");
-
-
-    if (nodes.value.length === 0) 
-    {
-        element.innerHTML = "Prázdne pole!";
-        return false;
-    }
-
-
-    if (regex.test(nodes.value)) 
-    {
-        element.innerHTML = "";
-    } else {
-        element.innerHTML = "Nevalidný výraz!";
-        return false;
-    }
-
-
-    let data = parse();
-
-    if (data.length === 1) 
-    {
-        element.innerHTML = "Málo vstupných bodov!";
-        return false;
-    } else {
-        element.innerHTML = "";
-    }
-
-
-    if (data.length === 100) 
-    {
-        element.innerHTML = "Veľa vstupných údajov!";
-        return false;
-    } else {
-        element.innerHTML = "";
-    }
-
-
-    const uniques = new Set();
-
-    for (let i = 0; i < data.length; ++i) 
-    {
-        uniques.add(data[i][0]);
-    }
-
-    if (data.length !== uniques.size) 
-    {
-        element.innerHTML = "Duplikatný vstupný údaj!";
-        return false;
-    } else {
-        element.innerHTML = "";
-    }
-
-    return true;
-}
-
-
-function parse() 
-{
-    let matches = nodes.value.match(/-?\d+(\.\d+)?/g);
-
-
-    let data = [];
-    let j = 0;
-    for (let i = 0; i < matches.length; i += 2) 
-    {
-        data[j] = [2];
-
-        data[j][0] = matches[i];
-
-        data[j][1] = matches[i + 1];
-
-        ++j;
-    }
-
-
-    return data;
-}
-
-function parseCsvToArray()
-{
-
-}
 
 
 
 
-function langrangeInterpolate() 
-{
-
-    if ( !isValid()) 
-    {
-        return;
-    }
-    
-    let matches = nodes.value.match(/-?\d+(\.\d+)?/g);
-
-    let arr = matches;
-    let equation = "";
-    let first = true;
-    
-    for (let i = 0; i < arr.length; i+=2) 
-    {
-        let part = "";
-        let menovatel = 1;
-        for (let k = 0; k < arr.length; k+=2) 
-        {
-            
-                if (i == k) 
-                {
-                    continue;
-                }
-
-                
-                if (arr[k] > 0) 
-                {
-                    part += "(x - " + (Number.isInteger(1 * arr[k]) ? (1 * arr[k]): ((1 * arr[k]).toFixed(3))) + ")";
-                } else 
-                {
-                    part += "(x + " + (Number.isInteger(-1 * arr[k]) ? (-1 * arr[k]): ((-1 * arr[k]).toFixed(3))) + ")";
-                }
-                
-
-                menovatel *= (arr[i] - arr[k]);
-            
-        }
-
-        menovatel = 1/ menovatel;
-        
-        
-
-        if (first) 
-        {
-            part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
-            equation += part;
-            first = false;
-        } else 
-        {
-            if (arr[i + 1] * menovatel > 0) 
-            {
-                part = "+" + (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
-            } else 
-            {
-                part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
-            }
-
-            equation += part;
-        }
 
 
-    }
-
-    result.value = equation;
-
-    display();
 
 
-}
 
 function leastSquares() {
 
@@ -457,14 +384,14 @@ function error(equation,data)
 
 
 
-function newtonInterpolate() 
+function newtonInterpolating()
 {
     if ( !isValid()) 
     {
         return;
     }
 
-    var equation = "";
+    let equation = "";
 
     let data = parse();
     for (let i = 0; i < data.length; ++i) 

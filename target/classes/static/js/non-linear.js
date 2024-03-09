@@ -465,8 +465,8 @@ function initializeTable(data)
 
     let from = 1;
 
-    if (data.length > 8) {
-        from = data.length - 8;
+    if (data.length > 6) {
+        from = data.length - 6;
     }
 
 

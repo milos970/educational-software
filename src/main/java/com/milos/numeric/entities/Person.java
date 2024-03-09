@@ -18,7 +18,6 @@ public class Person
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name  = "person_id")
     private Integer id;
 
     @NotBlank
@@ -38,11 +37,6 @@ public class Person
     @Size(max = 50, message = "{validation.name.size.too_long}")
     private String username;
 
-    @NotBlank
-    @Column(unique = true, name = "personal_number")
-    @Size(max = 50, message = "{validation.name.size.too_long}")
-    private String personalNumber;
-
     @Email
     @Column(unique = true)
     private String email;
@@ -56,9 +50,6 @@ public class Person
 
     private boolean enabled;
 
-
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Chat> chats;
 
 
 

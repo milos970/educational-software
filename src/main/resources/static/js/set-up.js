@@ -7,45 +7,11 @@ let isIntervalValid = false;
 const button = document.getElementById("submit-button");
 button.disabled = true;
 
-function getById(id)
-{
-    let el = document.getElementById(id);
-    if (!el)
-    {
-        throw new ReferenceError(id + " is not defined");
-    }
-    return el;
-}
 
 
 
-function isEmpty(element, elementHint)
-{
-    if (element.value === "")
-    {
-        elementHint.innerHTML = "Pole je prázdne!";
-
-    } else {
-        elementHint.innerHTML = "";
-
-    }
-}
-
-function validateInterval(min, max, element, elementHint)
-{
-    isIntervalValid = true;
-    if (min > element.value || element.value > max)
-    {
-        elementHint.innerHTML = "Hodnota mimo intervalu!";
-        isIntervalValid = false;
-
-    }else {
-        elementHint.innerHTML = "";
 
 
-    }
-
-}
 
 function validateDate(element, elementHint)
 {
@@ -98,25 +64,15 @@ function validateName(element, elementHint)
 
 }
 
-function validateCsv(csvString)
+function validateCoordinates(coordinates)
 {
     var result = $.csv.toArrays(csvString);
 
     const element = document.getElementById("file-hint")
 
-    if (result[0][0].trim().toLowerCase() !== "osobné číslo" || result[0][1].trim().toLowerCase() !== "meno" || result[0][2].trim().toLowerCase() !== "priezvisko" || result[0][3].trim().toLowerCase() !== "email")
-    {
-        element.innerHTML = "Nevalidná hlavička!";
-        return;
-    } else {
-        element.innerHTML = "";
-    }
 
-    const regexPin = /^\d{6}$/;
-    const regexEmail = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
-    for (let i = 1; i < result.length; ++i)
+    for (let i = 1; i < coordinates.length; ++i)
     {
-
 
 
             if (!regexPin.test(result[i][0].trim()))

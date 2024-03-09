@@ -1,12 +1,3 @@
-function getById(id)
-{
-    let el = document.getElementById(id);
-    if (!el)
-    {
-        throw new ReferenceError(id + " is not defined");
-    }
-    return el;
-}
 
 const pinInput = getById("pin-input");
 const emailInput = getById("email-input");
@@ -47,15 +38,7 @@ function isNotEmpty()
     submitButton.disabled = usernameInput.value === "" || passwordInput.value === "";
 }
 
-function isEmpty(element, errorElement)
-{
-    if (element.value === "")
-    {
-        errorElement.innerHTML = "Prázdne pole!";
-    } else {
-        errorElement.innerHTML = "";
-    }
-}
+
 
 
 function validateEmail()

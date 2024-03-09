@@ -26,9 +26,9 @@ public class SystemSettings
     @NotBlank
     private String name;
 
-    @Min(0)
-    @Max(13)
-    private int absencky;
+
+    private int studentsNumber;
+
 
 
 

@@ -4,8 +4,10 @@ import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.dtos.SystemSettingsDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.Student;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.PersonService;
+import com.milos.numeric.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -23,12 +26,16 @@ public class PageController {
     private PersonService personService;
 
     @Autowired
+    private StudentService studentService;
+
+    @Autowired
     private EmailServiceImpl emailService;
 
     @GetMapping("/login")
     public String login()
     {
-        return "login";
+        System.out.print("fsdf");
+        return "/pages/samples/login";
     }
 
 
@@ -52,14 +59,14 @@ public class PageController {
         String username = myUserDetails.getUsername();
         String name = myUserDetails.getName();
         String surname = myUserDetails.getSurname();
-        String personalNumber = myUserDetails.getPersonalNumber();
+
         String authority = myUserDetails.getAuthority();
         String email = myUserDetails.getEmail();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("username", username);
         modelAndView.addObject("fullName", name + " " + surname);
-        modelAndView.addObject("personalNumber", personalNumber);
+
         modelAndView.addObject("email", email);
         modelAndView.addObject("authority", authority);
         modelAndView.setViewName("user-profile");
@@ -70,27 +77,10 @@ public class PageController {
     @GetMapping("/admin")
     public ModelAndView admin(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
-
-        if (this.personService.getAllPersons().size() == 1)
-        {
-            return new ModelAndView("redirect:/admin/set-up");
-        }
-
-        String username = myUserDetails.getUsername();
-        String name = myUserDetails.getName();
-        String surname = myUserDetails.getSurname();
-        String personalNumber = myUserDetails.getPersonalNumber();
-        String authority = myUserDetails.getAuthority();
-        String email = myUserDetails.getEmail();
-
+        List<Student> students = this.studentService.findAllByPointsAsc();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("fullName", name + " " + surname);
-        modelAndView.addObject("personalNumber", personalNumber);
-        modelAndView.addObject("email", email);
-        modelAndView.addObject("authority", authority);
-        modelAndView.setViewName("user-profile");
-
+        modelAndView.addObject("students", students);
+        modelAndView.setViewName("index");
         return modelAndView;
     }
 

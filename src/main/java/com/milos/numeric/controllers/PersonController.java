@@ -7,8 +7,10 @@ import com.milos.numeric.dtos.NewPasswordDTO;
 import com.milos.numeric.dtos.NewPersonDTO;
 import com.milos.numeric.dtos.NewAuthorityDTO;
 import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.Student;
 import com.milos.numeric.entities.SystemSettings;
 import com.milos.numeric.services.PersonService;
+import com.milos.numeric.services.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,18 @@ public class PersonController
 {
     private final PersonService personService;
 
+    private final StudentService studentService;
+
     @Autowired
-    public PersonController(PersonService personService) {
+    public PersonController(PersonService personService, StudentService studentService) {
         this.personService = personService;
+        this.studentService = studentService;
     }
 
     @PostMapping("/user/create")
     public ResponseEntity createUser(@Valid @RequestBody NewPersonDTO NewPersonDTO)
     {
-        Optional<Person> optional = this.personService.create(NewPersonDTO);
+        Optional<Person> optional = this.personService.createPerson(NewPersonDTO);
 
         if (optional.isEmpty())
         {
@@ -94,7 +99,7 @@ public class PersonController
     @PostMapping("/registrate")
     public void registratePerson(@Valid @RequestBody NewPersonDTO newPersonDTO, HttpServletRequest request)
     {
-        this.personService.create(newPersonDTO);
+        this.personService.createPerson(newPersonDTO);
     }
 
 
@@ -140,10 +145,11 @@ public class PersonController
     @ResponseBody
     public int addPoints(@PathVariable int id, @RequestParam("value") String value)
     {
-        System.out.println(value);
+        /*System.out.println(value);
         this.personService.updatePoints(id, Integer.valueOf(value));
 
-        return this.personService.getPersonById(id).get().getPoints();
+        return this.personService.getPersonById(id).get().getPoints();*/
+        return 0;
 
     }
 
@@ -153,8 +159,19 @@ public class PersonController
     {
         this.personService.updateAbsencie(id, absencie);
 
-        return this.personService.getPersonById(id).get().getAbsencie();
+        return 0;
 
+    }
+
+
+    @GetMapping("/admin/student")
+    public ModelAndView studentList()
+    {
+        List<Student> students = this.studentService.findAllByPointsAsc();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("students", students);
+        modelAndView.setViewName("index");
+        return modelAndView;
     }
 
 

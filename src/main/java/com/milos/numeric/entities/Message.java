@@ -24,9 +24,6 @@ public class Message
 
     private String date;
 
-    @ManyToOne()
-    @JoinColumn(name = "chat_id", referencedColumnName = "chat_id", nullable=false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Chat chat;
+
 
 }

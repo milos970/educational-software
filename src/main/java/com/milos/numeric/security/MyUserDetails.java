@@ -44,10 +44,6 @@ public class MyUserDetails implements UserDetails {
         return this.person.getAuthority();
     }
 
-    public String getPersonalNumber() {
-        return this.person.getPersonalNumber();
-    }
-
     public String getEmail() {
         return this.person.getEmail();
     }
