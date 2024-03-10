@@ -44,7 +44,7 @@ public class FileController
     @GetMapping("/admin/file/pdf")
     public ModelAndView getFiles()
     {
-        return new ModelAndView("list-of-files", "files", this.fileService.getAllFiles());
+        return new ModelAndView("/pages/tables/materialy", "files", this.fileService.getAllFiles());
     }
 
     @GetMapping("/admin/file/pdf/{id}")

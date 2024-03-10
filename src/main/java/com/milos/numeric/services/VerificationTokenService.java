@@ -5,8 +5,6 @@ import com.milos.numeric.repositories.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class VerificationTokenService
 {

@@ -1,7 +1,6 @@
 package com.milos.numeric.converters;
 
-import com.milos.numeric.PersonToValidate;
-import com.milos.numeric.entities.Person;
+import com.milos.numeric.dtos.NewPersonalInfoDto;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.springframework.stereotype.Component;
@@ -14,13 +13,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Component
-public class CSVConverterUnregisteredPerson extends CSVConverter<PersonToValidate>
+public class CSVConverterUnregisteredPerson extends CSVConverter<NewPersonalInfoDto>
 {
 
     @Override
-    public List<PersonToValidate> convert(MultipartFile file) throws IOException {
+    public List<NewPersonalInfoDto> convert(MultipartFile file) throws IOException {
 
-        List<PersonToValidate> list = new LinkedList<>();
+        List<NewPersonalInfoDto> list = new LinkedList<>();
 
         Reader reader = new InputStreamReader(file.getInputStream());
         CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
@@ -28,7 +27,7 @@ public class CSVConverterUnregisteredPerson extends CSVConverter<PersonToValidat
         String[] values = null;
         while ((values = csvReader.readNext()) != null)
         {
-            PersonToValidate person = new PersonToValidate();
+            NewPersonalInfoDto person = new NewPersonalInfoDto();
 
             String[] rec = values[0].split(";");
             String personalNumber = rec[0];
@@ -39,7 +38,6 @@ public class CSVConverterUnregisteredPerson extends CSVConverter<PersonToValidat
             person.setPersonalNumber(personalNumber);
             person.setName(name);
             person.setSurname(surname);
-            person.setUsername(personalNumber);
             person.setEmail(email);
             list.add(person);
         }

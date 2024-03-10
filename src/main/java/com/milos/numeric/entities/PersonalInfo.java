@@ -7,18 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person
+public class PersonalInfo
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "nam") //zmenit!!!!!
@@ -44,6 +42,7 @@ public class Person
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{12,}$",
             message = "Password must contain at least 1 uppercase, 1 lowercase, 1 special character and 1 digit!")
     private String password;
+
 
     @NotBlank
     private String authority;

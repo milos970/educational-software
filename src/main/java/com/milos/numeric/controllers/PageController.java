@@ -1,14 +1,12 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.dtos.NewPersonDTO;
-import com.milos.numeric.dtos.SystemSettingsDto;
+import com.milos.numeric.dtos.NewPersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.Student;
 import com.milos.numeric.security.MyUserDetails;
-import com.milos.numeric.services.PersonService;
+import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,27 +20,46 @@ import java.util.Optional;
 @Controller
 public class PageController {
 
-    @Autowired
-    private PersonService personService;
+    private final PersonalInfoService personalInfoService;
+    private final StudentService studentService;
+    private final EmailServiceImpl emailService;
 
-    @Autowired
-    private StudentService studentService;
 
-    @Autowired
-    private EmailServiceImpl emailService;
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmailServiceImpl emailService) {
+        this.personalInfoService = personalInfoService;
+        this.studentService = studentService;
+        this.emailService = emailService;
+    }
 
     @GetMapping("/login")
     public String login()
     {
-        System.out.print("fsdf");
         return "/pages/samples/login";
     }
 
-
-    @GetMapping("/registration")
-    public ModelAndView registration()
+    @GetMapping("/admin/conversations-page")
+    public ModelAndView chat()
     {
-        return new ModelAndView("sign-up", "newPersonDTO", new NewPersonDTO());
+        List<Student> students = this.studentService.findAll();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("students",students);
+        Optional<PersonalInfo> optional = this.personalInfoService.findByAuthority("ADMIN");
+        if (optional.isEmpty())
+        {
+
+        }
+
+        PersonalInfo personalInfo = optional.get();
+        modelAndView.addObject("adminId", personalInfo.getId());
+        modelAndView.setViewName("/pages/tables/chat");
+        return modelAndView;
+    }
+
+
+    @GetMapping("/sign-up-page")
+    public ModelAndView signUpPage()
+    {
+        return new ModelAndView("sign-up", "newPersonDTO", new NewPersonalInfoDto());
     }
 
 //*********************************************CUSTOMIZE************************************************************************
@@ -53,8 +70,8 @@ public class PageController {
 
 
 
-    @GetMapping("/student")
-    public ModelAndView student(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    @GetMapping("/student-page")
+    public ModelAndView studentPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         String username = myUserDetails.getUsername();
         String name = myUserDetails.getName();
@@ -74,8 +91,8 @@ public class PageController {
         return modelAndView;
     }
 
-    @GetMapping("/admin")
-    public ModelAndView admin(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    @GetMapping("/admin-page")
+    public ModelAndView adminPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         List<Student> students = this.studentService.findAllByPointsAsc();
         ModelAndView modelAndView = new ModelAndView();
@@ -88,7 +105,7 @@ public class PageController {
     public ModelAndView signUp()
     {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("newPersonDTO", new NewPersonDTO());
+        modelAndView.addObject("newPersonDTO", new NewPersonalInfoDto());
         modelAndView.setViewName("sign-up");
         return modelAndView;
     }
@@ -103,50 +120,6 @@ public class PageController {
         return modelAndView;
     }
 
-    @GetMapping("/authentificated/methods")
-    public ModelAndView methods()
-    {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("methods");
-        return modelAndView;
-    }
-
-    @GetMapping("/authentificated/non-linear")
-    public ModelAndView nonLinearMethods()
-    {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("non-linear");
-        return modelAndView;
-    }
-
-    @GetMapping("/authentificated/approximation")
-    public ModelAndView approximationMethods()
-    {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("approximation");
-        return modelAndView;
-    }
-
-    @GetMapping("/authentificated/integration")
-    public ModelAndView integrationMethods()
-    {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("integration");
-        return modelAndView;
-    }
-
-
-    @GetMapping("/admin/set-up")
-    public ModelAndView setUp()
-    {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("systemSettingsDto", new SystemSettingsDto());
-        modelAndView.setViewName("set-up-system");
-        return modelAndView;
-    }
-
-
-
 
 
 
@@ -159,14 +132,17 @@ public class PageController {
 
 
 
+
+
+
     @GetMapping("/admin/student/{id}")
     public ModelAndView students(@PathVariable int id)
     {
-        Optional<Person> optional = this.personService.getPersonById(id);
-        Person person = optional.get();
+        Optional<PersonalInfo> optional = this.personalInfoService.getPersonById(id);
+        PersonalInfo personalInfo = optional.get();
         System.out.println(id);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("person", person);
+        modelAndView.addObject("person", personalInfo);
         modelAndView.setViewName("user-profile-admin-student");
         return modelAndView;
     }
@@ -178,34 +154,4 @@ public class PageController {
 
 
 
-
-
-
-
-
-
-
-
-
-//tu spraviť generovanie metod
-    @GetMapping("/newton")
-    public String newton() {
-        return "newton-nonlinear";
-    }
-
-    @GetMapping("/simple")
-    public String simple() {
-        return "simple-iteration";
-    }
-
-    @GetMapping("/bisection")
-    public String bisection() {
-        return "bisection";
-    }
-
-
-    @GetMapping("/regula-falsi")
-    public String regula() {
-        return "regula-falsi";
-    }
 }

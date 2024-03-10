@@ -1,6 +1,6 @@
 package com.milos.numeric.email;
 
-import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.PersonalInfo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class EmailServiceImpl
         this.emailSender.send(message);
     }
 
-    public void sendVerificationEmail(Person person, String verifyUrl)
+    public void sendVerificationEmail(PersonalInfo personalInfo, String verifyUrl)
             throws MessagingException, UnsupportedEncodingException {
-        String toAddress = person.getEmail();
+        String toAddress = personalInfo.getEmail();
         String fromAddress = "Your email address";
         String senderName = "Your company name";
         String subject = "Verifikácia emailu";
@@ -49,7 +49,7 @@ public class EmailServiceImpl
         helper.setTo(toAddress);
         helper.setSubject(subject);
 
-        content = content.replace("[[name]]", person.getName());
+        content = content.replace("[[name]]", personalInfo.getName());
         content = content.replace("[[URL]]", verifyUrl);
 
         helper.setText(content, true);

@@ -1,22 +1,22 @@
 package com.milos.numeric.repositories;
 
-import com.milos.numeric.entities.Person;
-import org.hibernate.annotations.SqlFragmentAlias;
+import com.milos.numeric.entities.PersonalInfo;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PersonRepository extends JpaRepository<Person, Integer>
+public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long>
 {
-    public Optional<Person> findByUsername(String username);
+    public Optional<PersonalInfo> findByUsername(String username);
 
-    public Optional<Person> findByEmail(String email);
+    public Optional<PersonalInfo> findByAuthority(String authority);
+
+    public Optional<PersonalInfo> findByEmail(String email);
 
 
 
@@ -24,5 +24,5 @@ public interface PersonRepository extends JpaRepository<Person, Integer>
     public List<Person> findAllExceptAdmin();
 */
     @Override
-    List<Person> findAll(Sort sort);
+    List<PersonalInfo> findAll(Sort sort);
 }

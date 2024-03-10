@@ -1,7 +1,7 @@
 package com.milos.numeric.services;
 
-import com.milos.numeric.entities.Person;
-import com.milos.numeric.repositories.PersonRepository;
+import com.milos.numeric.entities.PersonalInfo;
+import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,19 +14,19 @@ import java.util.Optional;
 public class MyDatabaseUserDetailsService implements UserDetailsService
 {
     @Autowired
-    private PersonRepository personRepository;
+    private PersonalInfoRepository personalInfoRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        Optional<Person> optional = this.personRepository.findByUsername(username);
+        Optional<PersonalInfo> optional = this.personalInfoRepository.findByUsername(username);
 
         if (optional.isEmpty())
         {
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
-        Person person = optional.get();
-        return new MyUserDetails(person);
+        PersonalInfo personalInfo = optional.get();
+        return new MyUserDetails(personalInfo);
 
     }
 }

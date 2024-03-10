@@ -4,5 +4,5 @@ public enum Authority
 {
     STUDENT,
     EMPLOYEE,
-    ADMIN;
+    TEACHER;
 }

@@ -1,6 +1,6 @@
 package com.milos.numeric.security;
 
-import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.PersonalInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,51 +11,51 @@ import java.util.List;
 
 public class MyUserDetails implements UserDetails {
 
-    private final Person person;
+    private final PersonalInfo personalInfo;
 
-    public MyUserDetails(Person person)
+    public MyUserDetails(PersonalInfo personalInfo)
     {
-        this.person = person;
+        this.personalInfo = personalInfo;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
 
         List<SimpleGrantedAuthority> grantedAuthorities = new LinkedList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(this.person.getAuthority()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(this.personalInfo.getAuthority()));
 
         return  grantedAuthorities;
     }
 
-    public Person getPerson() {
-        return person;
+    public PersonalInfo getPerson() {
+        return personalInfo;
     }
 
     public String getName() {
-        return this.person.getName();
+        return this.personalInfo.getName();
     }
 
     public String getSurname() {
-        return this.person.getSurname();
+        return this.personalInfo.getSurname();
     }
 
 
     public String getAuthority() {
-        return this.person.getAuthority();
+        return this.personalInfo.getAuthority();
     }
 
     public String getEmail() {
-        return this.person.getEmail();
+        return this.personalInfo.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return this.person.getPassword();
+        return this.personalInfo.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.person.getUsername();
+        return this.personalInfo.getUsername();
     }
 
     @Override
@@ -75,6 +75,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.person.isEnabled();
+        return this.personalInfo.isEnabled();
     }
 }

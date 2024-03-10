@@ -1,7 +1,6 @@
 package com.milos.numeric.services;
 
 import com.milos.numeric.entities.Message;
-import com.milos.numeric.entities.Person;
 import com.milos.numeric.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,18 +9,18 @@ import org.springframework.stereotype.Service;
 public class MessageService
 {
     private final MessageRepository messageRepository;
-    private final PersonService personService;
+    private final PersonalInfoService personalInfoService;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, PersonService personService) {
+    public MessageService(MessageRepository messageRepository, PersonalInfoService personalInfoService) {
         this.messageRepository = messageRepository;
-        this.personService = personService;
+        this.personalInfoService = personalInfoService;
     }
 
 
-    public void createMessage(Message message, Person person)
+    public void saveMessage(Message message)
     {
-
+        this.messageRepository.save(message);
     }
 
     public void deleteAllMessages()

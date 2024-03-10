@@ -3,13 +3,11 @@ package com.milos.numeric.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.milos.numeric.dtos.NewPasswordDTO;
-import com.milos.numeric.dtos.NewPersonDTO;
-import com.milos.numeric.dtos.NewAuthorityDTO;
-import com.milos.numeric.entities.Person;
-import com.milos.numeric.entities.Student;
-import com.milos.numeric.entities.SystemSettings;
-import com.milos.numeric.services.PersonService;
+import com.milos.numeric.dtos.NewPasswordDto;
+import com.milos.numeric.dtos.NewPersonalInfoDto;
+import com.milos.numeric.entities.PersonalInfo;
+import com.milos.numeric.services.EmployeeService;
+import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -20,28 +18,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class PersonController
 {
-    private final PersonService personService;
+    private final PersonalInfoService personalInfoService;
 
     private final StudentService studentService;
 
+    private final EmployeeService employeeService;
+
     @Autowired
-    public PersonController(PersonService personService, StudentService studentService) {
-        this.personService = personService;
+    public PersonController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService) {
+        this.personalInfoService = personalInfoService;
         this.studentService = studentService;
+        this.employeeService = employeeService;
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity createUser(@Valid @RequestBody NewPersonDTO NewPersonDTO)
+    public ResponseEntity createUser(@Valid @RequestBody NewPersonalInfoDto NewPersonalInfoDTO)
     {
-        Optional<Person> optional = this.personService.createPerson(NewPersonDTO);
+        Optional<PersonalInfo> optional = this.personalInfoService.createPerson(NewPersonalInfoDTO);
 
         if (optional.isEmpty())
         {
@@ -50,69 +49,27 @@ public class PersonController
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PatchMapping("/user/{id}/update-password")
-    public void updatePassword(@PathVariable int id, @Valid @RequestBody NewPasswordDTO newPasswordDTO)
-    {
-        this.personService.updatePassword(id, newPasswordDTO);
-    }
 
-    @PatchMapping("admin/user/{id}/update-role")
-    public void updateAuthority(@PathVariable int id, @Valid @RequestBody NewAuthorityDTO newAuthorityDTO)
-    {
-        this.personService.updateAuthority(id, newAuthorityDTO);
-    }
-
-    @GetMapping("/check-username")
-    @ResponseBody
-    public boolean checkUsername(@RequestParam("username") String username)
-    {
-        return this.personService.findByUsername(username);
-    }
-
-    @GetMapping("/check-personal-number")
-    @ResponseBody
-    public boolean checkPersonalNumber(@RequestParam("pin") String pin)
-    {
-        return this.personService.findByPIN(pin);
-    }
-
-
-    @PatchMapping("/admin/user/{id}")
-    public void deleteUser(@PathVariable int id)
-    {
-        this.personService.deleteSpecificPersonById(id);
-    }
 
 
 
     @PostMapping("/file/upload-csv")
     public void addCSV(@RequestParam("csv") MultipartFile file, HttpServletRequest request)
     {
-        this.personService.createMultiple(file);
+        this.personalInfoService.createMultiple(file);
     }
 
     @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
-        return personService.confirmEmail(confirmationToken);
+        return personalInfoService.confirmEmail(confirmationToken);
     }
 
     @PostMapping("/registrate")
-    public void registratePerson(@Valid @RequestBody NewPersonDTO newPersonDTO, HttpServletRequest request)
+    public void registratePerson(@Valid @RequestBody NewPersonalInfoDto newPersonalInfoDTO, HttpServletRequest request)
     {
-        this.personService.createPerson(newPersonDTO);
+        this.personalInfoService.createPerson(newPersonalInfoDTO);
     }
 
-
-
-    @GetMapping("/admin/user")
-    public ModelAndView getUsers()
-    {
-        List<Person> persons = this.personService.getAllPersons();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("persons", persons);
-        modelAndView.setViewName("users-list");
-        return modelAndView;
-    }
 
 
     @GetMapping("/admin/determine-gender/{name}")
@@ -133,56 +90,30 @@ public class PersonController
     }
 
 
-    @GetMapping("/admin/hi")
-    @ResponseBody
-    public String get() {
-        System.out.println(54);
-        return "665";
+    @PatchMapping("/student/{id}/update-password")
+    public ResponseEntity updateStudentPassword(@PathVariable Long id, @Valid NewPasswordDto newPasswordDTO)
+    {
+        return this.studentService.updatePassword(id, newPasswordDTO);
     }
 
+
+    @PatchMapping("/employee/{id}/update-password")
+    public ResponseEntity updateEmployeePassword(@PathVariable Long id, @Valid NewPasswordDto newPasswordDTO)
+    {
+        return this.employeeService.updatePassword(id, newPasswordDTO);
+    }
 
     @PatchMapping("/admin/student/{id}/update-points")
-    @ResponseBody
-    public int addPoints(@PathVariable int id, @RequestParam("value") String value)
+    public ResponseEntity updatePoints(@PathVariable Long id, @RequestParam int points)
     {
-        /*System.out.println(value);
-        this.personService.updatePoints(id, Integer.valueOf(value));
-
-        return this.personService.getPersonById(id).get().getPoints();*/
-        return 0;
-
+        return this.studentService.updatePoints(id, points);
     }
 
-    @PatchMapping("/admin/student/{id}/update-absencie")
-    @ResponseBody
-    public int addAbsencie(@PathVariable int id, @RequestParam("points") int absencie)
+    @PatchMapping("/admin/student/{id}/update-absents")
+    public ResponseEntity updateAbsents(@PathVariable Long id, @RequestParam int absents)
     {
-        this.personService.updateAbsencie(id, absencie);
-
-        return 0;
-
+        return this.studentService.updateAbsents(id, absents);
     }
-
-
-    @GetMapping("/admin/student")
-    public ModelAndView studentList()
-    {
-        List<Student> students = this.studentService.findAllByPointsAsc();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("students", students);
-        modelAndView.setViewName("index");
-        return modelAndView;
-    }
-
-
-
-
-
-
-
-
-
-
 
 
 }

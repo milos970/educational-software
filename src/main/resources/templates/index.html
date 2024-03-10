@@ -135,7 +135,7 @@
               <span class="menu-icon">
                 <i class="mdi mdi-table-large"></i>
               </span>
-              <span class="menu-title">Tables</span>
+              <span class="menu-title">Profil</span>
             </a>
           </li>
           <li class="nav-item menu-items">
@@ -560,11 +560,11 @@
                             <td colspan="2">Žiadny študent</td>
                         </tr>
                         <tr th:each="student : ${students}">
-                            <td><span th:text="${student.person.name}"></span></td>
-                            <td><span th:text="${student.person.surname}"></span></td>
-                            <td><span th:text="${student.person.username}"></span></td>
+                            <td><span th:text="${student.personalInfo.name}"></span></td>
+                            <td><span th:text="${student.personalInfo.surname}"></span></td>
+                            <td><span th:text="${student.personalInfo.username}"></span></td>
                             <td><span th:text="${student.personalNumber}"></span></td>
-                            <td><span th:text="${student.person.email}"></span></td>
+                            <td><span th:text="${student.personalInfo.email}"></span></td>
                             <td><span th:text="${student.points}"></span></td>
                             <td><span th:text="${student.absencie}"></span></td>
                         </tr>
@@ -608,7 +608,7 @@
                               <h6 class="preview-subject">Luella Mills</h6>
                               <p class="text-muted text-small">10 Minutes Ago</p>
                             </div>
-                            <p class="text-muted">Well, it seems to be working now.</p>
+                            <p class="text-muted">Well, it seems to be working now. I Want to ap</p>
                           </div>
                         </div>
                       </div>

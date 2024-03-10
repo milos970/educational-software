@@ -16,16 +16,16 @@ public class Employee
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
 
     @Column(unique = true, name = "personal_number")
     @Size(min = 6, max = 6, message = "{validation.name.size.too_long}")
     private String personalNumber;
 
-    @OneToOne(targetEntity = Person.class, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "person_id")
-    private Person person;
+    private PersonalInfo personalInfo;
 
 
 

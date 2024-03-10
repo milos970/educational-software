@@ -12,7 +12,7 @@ public class Pdf
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Lob
     private byte[] data;

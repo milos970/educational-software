@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewAuthorityDTO
+public class NewAuthorityDto
 {
     private String newAuthority;
 }

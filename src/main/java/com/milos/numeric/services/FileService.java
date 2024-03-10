@@ -1,8 +1,7 @@
 package com.milos.numeric.services;
 
-import com.milos.numeric.converters.CSVConverter;
 import com.milos.numeric.entities.Pdf;
-import com.milos.numeric.entities.Person;
+import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class FileService
     }
 
 
-    public List<Person> convert(MultipartFile file) throws IOException {
+    public List<PersonalInfo> convert(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Pdf pdf = new Pdf(file.getBytes(), fileName);
 

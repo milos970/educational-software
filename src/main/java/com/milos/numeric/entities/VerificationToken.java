@@ -20,9 +20,9 @@ public class VerificationToken
 
     private String code;
 
-    @OneToOne(targetEntity = Person.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "person_id")
-    private Person person;
+    private PersonalInfo personalInfo;
 
 
 
