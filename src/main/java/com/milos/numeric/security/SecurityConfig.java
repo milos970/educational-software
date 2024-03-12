@@ -33,10 +33,10 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderB = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderC = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderD = new MvcRequestMatcher.Builder(introspector);
-        MvcRequestMatcher.Builder mvcMatcherBuilderE = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderF = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderG = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderH = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderI = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
@@ -48,8 +48,8 @@ public class SecurityConfig
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderE.pattern("/registrate")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderI.pattern("/forget-password-page")).permitAll()
                         .requestMatchers(mvcMatcherAdmin.pattern("/admin/**")).hasAuthority("ADMIN")
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).hasAuthority("STUDENT")
                         .anyRequest().authenticated()

@@ -1,5 +1,7 @@
 package com.milos.numeric.entities;
 
+import com.milos.numeric.Authority;
+import com.milos.numeric.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "personal_info")
 public class PersonalInfo
 {
     @Id
@@ -43,9 +46,12 @@ public class PersonalInfo
             message = "Password must contain at least 1 uppercase, 1 lowercase, 1 special character and 1 digit!")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @NotBlank
-    private String authority;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     private boolean enabled;
 

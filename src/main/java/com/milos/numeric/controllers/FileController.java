@@ -21,7 +21,6 @@ public class FileController
     private final FileService fileService;
     private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
-
     @Autowired
     public FileController(FileService fileService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson) {
         this.fileService = fileService;
@@ -48,21 +47,21 @@ public class FileController
     }
 
     @GetMapping("/admin/file/pdf/{id}")
-    public ResponseEntity<byte[]> getSpecificFile(@PathVariable Integer id)
+    public ResponseEntity<byte[]> getSpecificFile(@PathVariable Long id)
     {
-        String filename = "pdf";
+       /* String filename = "pdf";
         byte[] pdf = this.fileService.getFile(id).getData();
         HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
 
         headers.add("content-disposition", "inline;filename=" + filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");*/
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/file/pdf/delete/{id}")
-    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Integer id)
+    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Long id)
     {
         this.fileService.remove(id);
         return new ResponseEntity<>(HttpStatus.OK);

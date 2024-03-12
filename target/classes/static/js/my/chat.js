@@ -1,6 +1,34 @@
 
 
 
+function sendEmailVerification()
+{
+    const xhttp = new XMLHttpRequest();
+
+    const element = document.getElementById("chat-div");
+    const inputElement = document.getElementById("message-input");
+
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 200)
+        {
+            alert("Success");
+        } else {
+            alert("Unsuccessfull");
+        }
+
+
+    }
+
+    let url = "/admin/"
+
+    xhttp.open("GET", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.send();
+}
+
 
 function sendMessage()
 {

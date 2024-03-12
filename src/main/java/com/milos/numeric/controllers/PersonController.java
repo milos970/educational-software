@@ -50,6 +50,28 @@ public class PersonController
     }
 
 
+    @GetMapping("/admin/student/{id}/resent-email")
+    public ResponseEntity resentEmail(@PathVariable Long id)
+    {
+        boolean value = this.personalInfoService.resentEmail(id);
+
+        if (!value)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/admin/employee/{id}/update-authority")
+    public ResponseEntity updateAuthority(@PathVariable Long id)
+    {
+
+        return null;
+
+
+    }
+
 
 
 
@@ -72,22 +94,7 @@ public class PersonController
 
 
 
-    @GetMapping("/admin/determine-gender/{name}")
-    @ResponseBody
-    private String determineGender(@PathVariable String name) {
-        String uri = "https://api.genderize.io?name=" + name;
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode newNode = null;
-        try {
-             newNode = mapper.readTree(result);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
 
-        return newNode.get("gender").asText();
-    }
 
 
     @PatchMapping("/student/{id}/update-password")
@@ -100,7 +107,7 @@ public class PersonController
     @PatchMapping("/employee/{id}/update-password")
     public ResponseEntity updateEmployeePassword(@PathVariable Long id, @Valid NewPasswordDto newPasswordDTO)
     {
-        return this.employeeService.updatePassword(id, newPasswordDTO);
+        return null;
     }
 
     @PatchMapping("/admin/student/{id}/update-points")

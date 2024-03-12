@@ -22,7 +22,7 @@ public class MyUserDetails implements UserDetails {
     {
 
         List<SimpleGrantedAuthority> grantedAuthorities = new LinkedList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(this.personalInfo.getAuthority()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(this.personalInfo.getAuthority().name()));
 
         return  grantedAuthorities;
     }
@@ -41,7 +41,7 @@ public class MyUserDetails implements UserDetails {
 
 
     public String getAuthority() {
-        return this.personalInfo.getAuthority();
+        return this.personalInfo.getAuthority().name();
     }
 
     public String getEmail() {

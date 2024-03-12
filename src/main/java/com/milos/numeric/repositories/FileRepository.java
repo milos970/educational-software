@@ -1,9 +1,9 @@
 package com.milos.numeric.repositories;
 
-import com.milos.numeric.entities.Pdf;
+import com.milos.numeric.entities.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FileRepository extends JpaRepository<Pdf, Long>
+public interface FileRepository extends JpaRepository<File, Long>
 {
-    public Pdf findByName(String name);
+    public File findByFileName(String name);
 }

@@ -15,11 +15,11 @@ import java.util.Collection;
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     SimpleUrlAuthenticationSuccessHandler studentSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/student");
+            new SimpleUrlAuthenticationSuccessHandler("/student-page");
     SimpleUrlAuthenticationSuccessHandler employeeSuccessHandler =
             new SimpleUrlAuthenticationSuccessHandler("/employee");
     SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/admin");
+            new SimpleUrlAuthenticationSuccessHandler("/admin-page");
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -28,7 +28,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
-            if (authorityName.equals("ADMIN"))
+            if (authorityName.equals("TEACHER"))
             {
                 this.adminSuccessHandler.onAuthenticationSuccess(request, response, authentication);
                 return;

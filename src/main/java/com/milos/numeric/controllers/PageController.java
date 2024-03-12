@@ -1,10 +1,15 @@
 package com.milos.numeric.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.milos.numeric.dtos.NewPersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
+import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.Student;
 import com.milos.numeric.security.MyUserDetails;
+import com.milos.numeric.services.EmployeeService;
 import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -22,19 +29,31 @@ public class PageController {
 
     private final PersonalInfoService personalInfoService;
     private final StudentService studentService;
+
+    private final EmployeeService employeeService;
     private final EmailServiceImpl emailService;
 
 
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmailServiceImpl emailService) {
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
+        this.employeeService = employeeService;
         this.emailService = emailService;
     }
+
+
+
 
     @GetMapping("/login")
     public String login()
     {
-        return "/pages/samples/login";
+        return "/pages/samples/sign-in";
+    }
+
+    @GetMapping("/forget-password-page")
+    public String forgetPassword()
+    {
+        return "/pages/samples/forgot-password";
     }
 
     @GetMapping("/admin/conversations-page")
@@ -42,7 +61,7 @@ public class PageController {
     {
         List<Student> students = this.studentService.findAll();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("students",students);
+       /* modelAndView.addObject("students",students);
         Optional<PersonalInfo> optional = this.personalInfoService.findByAuthority("ADMIN");
         if (optional.isEmpty())
         {
@@ -51,7 +70,7 @@ public class PageController {
 
         PersonalInfo personalInfo = optional.get();
         modelAndView.addObject("adminId", personalInfo.getId());
-        modelAndView.setViewName("/pages/tables/chat");
+        modelAndView.setViewName("/pages/tables/chat");*/
         return modelAndView;
     }
 
@@ -59,7 +78,7 @@ public class PageController {
     @GetMapping("/sign-up-page")
     public ModelAndView signUpPage()
     {
-        return new ModelAndView("sign-up", "newPersonDTO", new NewPersonalInfoDto());
+        return new ModelAndView("/pages/samples/sign-up", "newPersonDTO", new NewPersonalInfoDto());
     }
 
 //*********************************************CUSTOMIZE************************************************************************
@@ -94,8 +113,34 @@ public class PageController {
     @GetMapping("/admin-page")
     public ModelAndView adminPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
-        List<Student> students = this.studentService.findAllByPointsAsc();
         ModelAndView modelAndView = new ModelAndView();
+        String username = myUserDetails.getUsername();
+        Optional<Employee> optional = this.employeeService.findByUsername(username);
+
+        if (optional.isEmpty())
+        {
+
+        }
+
+        Employee employee = optional.get();
+
+
+
+        modelAndView.addObject("employee", employee);
+
+        if (employee.getPersonalInfo().getGender().name().equals("FEMALE"))
+        {
+
+            String path = "/images/faces-clipart/female.png";
+            modelAndView.addObject("imagePath", path);
+        } else {
+            modelAndView.addObject("imagePath", "/images/faces-clipart/male.png");
+        }
+
+
+
+        List<Student> students = this.studentService.findAllByPointsAsc();
+
         modelAndView.addObject("students", students);
         modelAndView.setViewName("index");
         return modelAndView;
@@ -138,7 +183,7 @@ public class PageController {
     @GetMapping("/admin/student/{id}")
     public ModelAndView students(@PathVariable int id)
     {
-        Optional<PersonalInfo> optional = this.personalInfoService.getPersonById(id);
+        Optional<PersonalInfo> optional = null;
         PersonalInfo personalInfo = optional.get();
         System.out.println(id);
         ModelAndView modelAndView = new ModelAndView();
