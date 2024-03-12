@@ -50,7 +50,7 @@ public class SecurityConfig
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()
                         .requestMatchers(mvcMatcherBuilderI.pattern("/forget-password-page")).permitAll()
-                        .requestMatchers(mvcMatcherAdmin.pattern("/admin/**")).hasAuthority("ADMIN")
+                        .requestMatchers(mvcMatcherAdmin.pattern("/admin/**")).hasAuthority("TEACHER")
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).hasAuthority("STUDENT")
                         .anyRequest().authenticated()
                 ).headers(headers -> headers.frameOptions().disable())

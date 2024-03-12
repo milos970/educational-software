@@ -198,10 +198,6 @@ function newtonMethod()
 
 function regulaFalsiMethod()
 {
-    if ( !(validateEquation() && validateLowerBound() && validateUpperBound()) )
-    {
-        return;
-    }
 
     const modifiedEquation = modifyEquation();
 

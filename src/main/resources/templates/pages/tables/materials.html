@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -55,10 +55,10 @@
     <div class="container-scroller">
       <!-- partial:../../partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-          <a class="sidebar-brand brand-logo" href="../../index.html"><img src="../../assets/images/logo.svg" alt="logo" /></a>
-          <a class="sidebar-brand brand-logo-mini" href="../../index.html"><img src="../../assets/images/logo-mini.svg" alt="logo" /></a>
-        </div>
+          <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+              <a class="sidebar-brand brand-logo" href="index.html"><img th:src="@{/images/logo.png}" alt="logo" /></a>
+              <a class="sidebar-brand brand-logo-mini" href="index.html"><img th:src="@{/images/logo-mini.svg}" alt="logo" /></a>
+          </div>
         <ul class="nav">
           <li class="nav-item profile">
             <div class="profile-desc">
@@ -400,42 +400,32 @@
                 <div class="col-4 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Basic form elements</h4>
-                            <p class="card-description"> Basic form elements </p>
-                            <form class="forms-sample">
+                            <h4 class="card-title">Nahrať materiál</h4>
+                            <p class="card-description"></p>
+
+                            <form th:object="${FileDto}"  class="forms-sample" action="#" th:action="@{/admin/material/upload}" method="POST"  enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="exampleInputName1">Názov</label>
-                                    <input type="text" class="form-control" id="exampleInputName1" placeholder="Maximálne 15 znakov">
+                                    <input th:field="*{name}" type="text" class="form-control" id="exampleInputName1" placeholder="Maximálne 15 znakov" >
                                 </div>
 
 
                                 <div class="form-group">
-                                    <label for="exampleSelectGender">Kategória</label>
-                                    <select class="form-control" id="exampleSelectGender">
-                                        <option>Nelineárne metódy</option>
-                                        <option>Integrácie</option>
-                                        <option>Aproximácia & interpolácia</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>File upload</label>
-                                    <input type="file" name="img[]" class="file-upload-default">
+                                    <label>Nahrať súbor</label>
+                                    <input th:field="*{data}" type="file" name="data" class="file-upload-default" id="file-input">
                                     <div class="input-group col-xs-12">
-                                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                                        <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                          </span>
+                                        <input type="text" class="form-control file-upload-info" disabled placeholder="Podporované formáty: csv, docx, pptx">
+                                        <span class="input-group-append"><button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button">Nahrať</button></span>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleTextarea1">Textarea</label>
-                                    <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
+                                    <label for="exampleTextarea1">Popis</label>
+                                    <textarea th:field="*{description}" class="form-control" id="exampleTextarea1" rows="4" maxlength="50" placeholder="Maximálne 100 znakov!"></textarea>
                                 </div>
 
-                                <form th:action="@{/admin/file/upload}" method="POST"  enctype="multipart/form-data">
-                                    <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Nahrať</button>
-                                </form>
+                                <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>
+
                             </form>
                         </div>
                     </div>
@@ -449,7 +439,6 @@
                                     <thead>
                                     <tr>
                                         <th>Názov</th>
-                                        <th>Kategória</th>
                                         <th>Popis</th>
                                         <th></th>
                                         <th></th>
@@ -460,15 +449,14 @@
                                     <tr th:if="${#lists.isEmpty(files)}">
                                         <td colspan="2">Žiadny dokument</td>
                                     </tr>
-                                    <tr th:each="document : ${documents}">
-                                        <td><span th:text="${document.name}"></span></td>
-                                        <td><span th:text="${document.category}"></span></td>
-                                        <td><span th:text="${document.description}"></span></td>
+                                    <tr th:each="file : ${files}">
+                                        <td><span th:text="${file.fileName}"></span></td>
+                                        <td><span th:text="${file.description}"></span></td>
                                         <td>
                                             <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť</button>
                                         </td>
                                         <td>
-                                            <form th:action="@{/admin/file/{id}/remove}" method="POST"  enctype="multipart/form-data">
+                                            <form th:action="@{/admin/material/{id}(id=${file.id})}" th:method="delete">
                                                 <button type="submit" class="btn btn-danger btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť</button>
                                             </form>
                                         </td>
@@ -483,53 +471,7 @@
                 </div>
             </div>
 
-              <div class="row">
-                  <div class="col-lg-6 grid-margin stretch-card">
-                      <div class="card">
-                          <div class="card-body">
-                              <div class="flex-container">
-                                  <div class="flex-item">
-                                      <div class="left-item">Ahoj</div>
-                                      <div class="right-item" style="display: none"></div>
-                                  </div>
-                                  <div class="flex-item">
-                                      <div class="left-item" style="display: none"></div>
-                                      <div class="right-item">Cauko dasffdafsdfa</div>
-                                  </div>
-                                  <div class="flex-item">
-                                      <div class="left-item">Left content</div>
-                                      <div class="right-item">Right content</div>
-                                  </div>
-                                  <div class="flex-item">
-                                      <div class="left-item">Left content</div>
-                                      <div class="right-item">Right content</div>
-                                  </div>
-                                  <div class="flex-item">
-                                      <div class="left-item">Left content</div>
-                                      <div class="right-item">Right content</div>
-                                  </div>
-                                  <div class="flex-item">
-                                      <div class="left-item">Left content</div>
-                                      <div class="right-item">Right content</div>
-                                  </div>
-                                  <!-- Add more items here -->
-                              </div>
 
-                              <div class="form-group">
-                                  <div class="input-group">
-                                      <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                      <div class="input-group-append">
-                                          <button class="btn btn-sm btn-primary" type="button">Odoslať</button>
-                                      </div>
-                                  </div>
-                              </div>
-
-
-
-                          </div>
-                      </div>
-                  </div>
-              </div>
 
             </div>
         </div>
@@ -573,7 +515,7 @@
     <script th:src="@{/js/chart.js}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-    <script src="/static/js/my.js"></script>
-    <script th:src="@{/js/my.js}"></script>
+    <script src="/static/js/my/my.js"></script>
+    <script th:src="@{/js/my/my.js}"></script>
   </body>
 </html>

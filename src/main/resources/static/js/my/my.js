@@ -814,6 +814,13 @@ function graph()
 
 
 
+function clickOnInput() {
+    const element = document.getElementById("file-input");
+
+    element.click();
+}
+
+
 
 
 

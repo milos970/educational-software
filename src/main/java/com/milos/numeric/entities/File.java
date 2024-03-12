@@ -19,16 +19,17 @@ public class File
     private Long id;
 
     @Column(unique = true)
-    @Size(min = 5, max = 50, message = "{validation.name.size.too_long}")
+    @Size(min = 5, max = 100, message = "{validation.name.size.too_long}")
     private String path;
 
     @Column(name = "file_name")
-    @Size(min = 1, max = 50, message = "{validation.name.size.too_long}")
+    @Size(min = 1, max = 15, message = "{validation.name.size.too_long}")
     private String fileName;
 
     @Column(name = "mime_type")
     private String mimeType;
 
+    @Size(max = 15, message = "{validation.name.size.too_long}")
     private String description;
 
     @Column(name = "uploaded_by")

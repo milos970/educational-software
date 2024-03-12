@@ -3,23 +3,29 @@ package com.milos.numeric.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.milos.numeric.dtos.FileDto;
+import com.milos.numeric.dtos.NewChatDto;
 import com.milos.numeric.dtos.NewPersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.Employee;
+import com.milos.numeric.entities.File;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.Student;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.EmployeeService;
+import com.milos.numeric.services.FileService;
 import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.Thymeleaf;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +39,63 @@ public class PageController {
     private final EmployeeService employeeService;
     private final EmailServiceImpl emailService;
 
+    private final FileService fileService;
 
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService) {
+
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, FileService fileService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
         this.emailService = emailService;
+        this.fileService = fileService;
     }
+
+
+
+
+
+    @GetMapping("/admin/material/page")
+    public ModelAndView materialsPage()
+    {
+        List<File> files = this.fileService.findAll();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("files", files);
+        modelAndView.addObject("FileDto", new FileDto());
+        modelAndView.setViewName("/pages/tables/materials");
+        return modelAndView;
+    }
+
+    @PostMapping("/admin/material/upload")
+    public ModelAndView saveFile(@Valid FileDto fileDto)
+    {
+        this.fileService.save(fileDto);
+        return new ModelAndView("redirect:/admin/material/page");
+    }
+
+
+    @GetMapping("/admin/material/{id}")
+    public ResponseEntity findById(@PathVariable Long id)
+    {
+        Optional<File> optional = this.fileService.findById(id);
+
+        if (optional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        this.fileService.remove(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/material/{id}")
+    public ModelAndView remove(@PathVariable Long id)
+    {
+        this.fileService.remove(id);
+
+        return new ModelAndView("redirect:/admin/material/page");
+    }
+
+
 
 
 

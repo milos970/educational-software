@@ -36,8 +36,12 @@
       <link rel="shortcut icon" th:href="@{/images/favicon.png}">
       <link rel="stylesheet" th:href="@{/css/my.css}">
 
+
+
+
   </head>
-  <body>
+  <body onload="selectNumericCategory(1)">
+
     <div class="container-scroller">
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -139,7 +143,7 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/charts/chartjs.html">
+            <a class="nav-link" th:href="@{/admin/material/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
@@ -342,17 +346,17 @@
             <div class="row">
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button type="button" class="btn btn-success btn-lg" style="height: 100%;"><h3 class="mb-0">Nelineárne metódy</h3></button>
+                  <button onclick="selectNumericCategory(1)" type="button" class="btn btn-success btn-lg" style="height: 100%;"><h3 class="mb-0">Nelineárne metódy</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button type="button" class="btn btn-danger btn-lg" style="height: 100%;"><h3 class="mb-0">Integráčné metódy</h3></button>
+                  <button onclick="selectNumericCategory(2)" type="button" class="btn btn-danger btn-lg" style="height: 100%;"><h3 class="mb-0">Integráčné metódy</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button type="button" class="btn btn-behance btn-lg" style="height: 100%;"><h3 class="mb-0">Aproximačné a interpolačné metódy</h3></button>
+                  <button onclick="selectNumericCategory(3)" type="button" class="btn btn-behance btn-lg" style="height: 100%;"><h3 class="mb-0">Aproximačné a interpolačné metódy</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card" style="display: none">
@@ -380,30 +384,88 @@
               <div class="col-md-4 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body" >
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle " type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vyberte numerickú metódu</button>
+                        <div class="dropdown" id="non-linear-dropdown-div">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Newtnová metóda</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <a class="dropdown-item" onclick="selectedMethod(1)">Newtnová metóda</a>
-                                <a class="dropdown-item" onclick="selectedMethod(2)">Regula falsi</a>
-                                <a class="dropdown-item" onclick="selectedMethod(3)">Bisekcia</a>
+
+                                <a class="dropdown-item" onclick="selectNonLinearMethod(1)" href="#">Newtnová metóda</a>
+                                <a class="dropdown-item" onclick="selectNonLinearMethod(2)" href="#">Regula falsi</a>
+                                <a class="dropdown-item" onclick="selectNonLinearMethod(3)" href="#">Bisekcia</a>
+
                             </div>
                         </div>
+
+                        <div class="dropdown" id="integration-dropdown-div">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Lichobežníková metóda</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                <a class="dropdown-item" onclick="selectIntegrationMethod(1)" href="#">Lichobežníková metóda</a>
+                                <a class="dropdown-item" onclick="selectIntegrationMethod(2)" href="#">Simpsnová metóda</a>
+
+                            </div>
+                        </div>
+
+                        <div class="dropdown" id="approximation-dropdown-div">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Lagrangeov polynóm</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                <a class="dropdown-item" onclick="selectApproximationAndInterpolationMethod(1)" href="#">Lagrangeov polynóm</a>
+                                <a class="dropdown-item" onclick="selectApproximationAndInterpolationMethod(2)" href="#">Newtnov polynóm</a>
+                                <a class="dropdown-item" onclick="selectApproximationAndInterpolationMethod(3)" href="#">Metóda najmenších štvorcov</a>
+
+                            </div>
+                        </div>
+
+
                         <p class="card-description"></p>
-                            <div class="form-group">
+                            <div class="form-group" id="equation-div">
                                 <label for="equation-input">Rovnica</label>
                                 <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0" oninput="validateEquation()">
                             </div>
 
+                        <div class="form-group" id="function-div">
+                            <label for="equation-input">Funkcia</label>
+                            <input type="text" class="form-control" id="function-input" placeholder="f(x)" oninput="validateEquation()">
+                        </div>
+
+
+                        <p class="card-description"></p>
+                        <div class="form-group" id="nodes-string-div">
+                            <label for="equation-input">Uzly</label>
+                            <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x100,y100)]" oninput="validateEquation()">
+                        </div>
+
+                        <div class="form-group" id="nodes-csv-div">
+                            <label>CSV súbor</label>
+                            <input type="file" name="img[]" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" disabled placeholder="Nahrať súbor">
+                                <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-primary" type="button">Nahrať</button>
+                          </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="functions-dropdown-div">
+                            <div class="dropdown">
+                                <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tolerancia</button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
+                                    <a class="dropdown-item" onclick="selectedTolerance(1)" href="#">Lineárna funkcia</a>
+                                    <a class="dropdown-item" onclick="selectedTolerance(2)" href="#">Logaritmická funkcia</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <p class ="error" id="equation-hint-error"></p>
 
-                        <div class="form-group">
+                        <div class="form-group" id="tolerance-div">
                                 <div class="dropdown">
                                     <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tolerancia</button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
-                                        <a class="dropdown-item" onclick="selectedTolerance(1)">0.001</a>
-                                        <a class="dropdown-item" onclick="selectedTolerance(2)">0.0001</a>
-                                        <a class="dropdown-item" onclick="selectedTolerance(3)">0.00001</a>
-                                        <a class="dropdown-item" onclick="selectedTolerance(4)">0.000001</a>
+                                        <a class="dropdown-item" onclick="selectedTolerance(1)" href="#">0.001</a>
+                                        <a class="dropdown-item" onclick="selectedTolerance(2)" href="#">0.0001</a>
+                                        <a class="dropdown-item" onclick="selectedTolerance(3)" href="#">0.00001</a>
+                                        <a class="dropdown-item" onclick="selectedTolerance(4)" href="#">0.000001</a>
                                     </div>
                                 </div>
                         </div>
@@ -416,7 +478,7 @@
                         <p class ="error" id="initial-value-hint-error"></p>
 
 
-                            <!--<div class="form-group" id="lower-bound-div">
+                            <div class="form-group" id="lower-bound-div">
                                 <label for="lower-bound-input">Dolná hranica</label>
                                 <input type="number" class="form-control" id="lower-bound-input" placeholder="<-100;99>">
                             </div>
@@ -424,10 +486,26 @@
                             <div class="form-group" id="upper-bound-div">
                                 <label for="upper-bound-input">Horná hranica</label>
                                 <input type="number" class="form-control" id="upper-bound-input" placeholder="<-99;100>">
-                            </div>-->
+                            </div>
 
-                            <button type="button" class="btn btn-primary mr-2" onclick="newtonMethod()">Spočítať</button>
-                            <button type="button" class="btn btn-primary mr-2">Vykresliť graf</button>
+                        <div class="form-group" id="subintervals-div">
+                            <label for="upper-bound-input">Počet dielikov</label>
+                            <input type="number" class="form-control" id="subintervals-input" placeholder="<-99;100>">
+                        </div>
+
+
+
+                        <button onclick="calculate()"  type="button" class="btn btn-primary btn-fw">Vypočítať</button>
+                        <button onclick="graph()"  type="button" class="btn btn-secondary btn-fw">Graf</button>
+                        <button  type="button" class="btn btn-success btn-fw">Uložiť do súboru</button>
+
+
+                        <div class="form-group" id="result-div" style="display: none">
+                            <label for="upper-bound-input"></label>
+                            <input type="number" class="form-control" id="result-input" readonly>
+                        </div>
+
+                        <p class ="error" id="result-hint-error"></p>
 
 
 
@@ -436,14 +514,25 @@
               </div>
               <div class="col-md-5 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Line chart</h4>
-                        <canvas id="lineChart" style="height:250px"></canvas>
+                    <div class="card-body" id="table-div">
+                        <h4 class="card-title"></h4>
+
+                        <div id="graph-div" style="display: none">
+                            <canvas id="lineChart" style="height:500px"></canvas>
+                        </div>
+
+                        <div class="table-responsive table-bordered">
+                            <table class="table table-info" style="color: white" id="table">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
               </div>
             </div>
-            <div class="row">
+            <!--<div class="row">
               <div class="col-sm-4 grid-margin">
                 <div class="card">
                   <div class="card-body">
@@ -500,7 +589,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div>-->
             <div class="row ">
               <div class="col-12 grid-margin">
                 <div class="card">
@@ -592,7 +681,10 @@
     <script th:src="@{/js/chart.js}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-  <script src="/static/js/my.js"></script>
-    <script th:src="@{/js/my.js}"></script>
+  <script src="/static/js/my/my.js"></script>
+    <script th:src="@{/js/my/my.js}"></script>
+
+    <script src="/static/js/my/non-linear"></script>
+    <script th:src="@{/js/my/non-linear.js}"></script>
   </body>
 </html>
