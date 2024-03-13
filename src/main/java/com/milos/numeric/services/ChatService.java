@@ -1,23 +1,13 @@
 package com.milos.numeric.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.milos.numeric.dtos.NewChatDto;
 import com.milos.numeric.dtos.NewMessageDto;
 import com.milos.numeric.entities.Chat;
-import com.milos.numeric.entities.ChatId;
 import com.milos.numeric.entities.Message;
 import com.milos.numeric.mappers.MessageNewMessageDtoMapper;
 import com.milos.numeric.repositories.ChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Service
@@ -34,53 +24,39 @@ public class ChatService
         this.messageService = messageService;
     }
 
-    public ResponseEntity saveMessage(NewMessageDto newMessageDto)
+    public boolean saveMessage(NewMessageDto newMessageDto)
     {
 
-        ChatId chatId = new ChatId(newMessageDto.getRecipientId(), newMessageDto.getSenderId());
 
-        Optional<Chat> optional = this.chatRepository.findById(chatId);
+        Optional<Chat> optional = this.chatRepository.findById(newMessageDto.getChatId());
 
         if (optional.isEmpty())
         {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return false;
         }
 
         Chat chat = optional.get();
 
         Message message = messageNewMessageDtoMapper.sourceToDestination(newMessageDto);
         message.setChat(chat);
-        message.setSenderId(newMessageDto.getSenderId());
+        message.setId(newMessageDto.getSenderId());
+
         this.messageService.saveMessage(message);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return true;
     }
 
 
-    public ResponseEntity findById(NewChatDto newChatDto)
+    public Optional<Chat> findById(Long id)
     {
 
-        ChatId chatId = new ChatId();
-        chatId.setIdA(newChatDto.getIdA());
-        chatId.setIdB(newChatDto.getIdB());
 
-        Optional<Chat> optional = this.chatRepository.findById(chatId);
-
-        if (optional.isEmpty())
-        {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Chat chat = optional.get();
-        this.chatRepository.save(chat);
-
-
-        return new ResponseEntity(HttpStatus.OK);
+        return this.chatRepository.findById(id);
     }
 
-    public ResponseEntity deleteAll()
+    public boolean deleteAll()
     {
         this.chatRepository.deleteAll();
-        return new ResponseEntity(HttpStatus.OK);
+        return true;
     }
 }

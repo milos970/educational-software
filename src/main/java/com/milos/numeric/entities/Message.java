@@ -29,14 +29,10 @@ public class Message
     @Size(max = 100, message = "{validation.name.size.too_long}")
     private String content;
 
-
-    private Long senderId;
+    private String sender;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "chat_id"),
-            @JoinColumn(name = "other_column")
-    })
+    @JoinColumn(name = "chat_id")
     private Chat chat;
 
     private boolean seen;

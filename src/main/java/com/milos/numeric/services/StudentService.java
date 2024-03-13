@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -44,6 +45,12 @@ public class StudentService
     public Optional<Student> findById(Long id)
     {
         return this.studentRepository.findById(id);
+    }
+
+
+    public ResponseEntity update(Map<String, Object> updates)
+    {
+
     }
 
 

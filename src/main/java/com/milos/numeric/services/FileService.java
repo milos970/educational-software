@@ -1,23 +1,17 @@
 package com.milos.numeric.services;
 
 import com.milos.numeric.dtos.FileDto;
-import com.milos.numeric.dtos.NewChatDto;
-import com.milos.numeric.entities.ChatId;
 import com.milos.numeric.entities.File;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.mappers.FileFileDtoMapper;
 import com.milos.numeric.repositories.FileRepository;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 

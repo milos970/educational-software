@@ -4,3 +4,10 @@ insert into personal_info (id,nam,surname,username, email, password, gender, aut
 
 insert into student (id,personal_number,points,absents,person_id) values (0,'559415',0,0,1);
 insert into employee (id,personal_number, person_id) values (0,'646542', 0);
+
+insert into chat(id, person_ida, person_idb) values (0,0,0);
+
+
+insert into message(id,content, sender, chat_id, seen) values (0,'Ahoj Miloš', 'gabrisova', 0, true);
+insert into message(id,content, sender, chat_id,  seen) values (1,'Ahoj Lydia', 'lukacik5', 0, true);
+

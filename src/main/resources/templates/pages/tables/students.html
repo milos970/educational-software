@@ -22,48 +22,19 @@
     <link rel="stylesheet" th:href="@{/vendors/flag-icon-css/css/flag-icon.min.css}">
     <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.carousel.min.css}">
     <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.theme.default.min.css}">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="/static/css/style.css">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="/static/images/favicon.png" />
+    <link rel="shortcut icon" href="/static/images/favicon.png"/>
 
     <link rel="stylesheet" href="/static/css/my.css">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="shortcut icon" th:href="@{/images/favicon.png}">
     <link rel="stylesheet" th:href="@{/css/my.css}">
-
-
-    <style>
-        .flex-container {
-            display: flex;
-            justify-content: space-between; /* Items spaced between */
-            align-items: flex-start; /* Align items to the start (top) of the container */
-            width: 100%; /* Set the container width */
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .left-item {
-            order: 1;
-            border-radius: 20px;
-            background-color: #ab7a7a;
-        }
-
-        .right-item {
-            order: 2; /* Order the right item second */
-            max-width: 50%; /* Set max width to prevent overflow */
-            word-wrap: break-word; /* Allow long words to break and wrap */
-            overflow-wrap: break-word; /* Ensure long words wrap */
-            border-radius: 20px;
-            background-color: #4bb63b;
-        }
-    </style>
 
 
 
@@ -74,24 +45,28 @@
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img th:src="@{/images/logo.png}" alt="logo" /></a>
-            <a class="sidebar-brand brand-logo-mini" href="index.html"><img th:src="@{/images/logo-mini.svg}" alt="logo" /></a>
+            <a class="sidebar-brand brand-logo" href="index.html"><img th:src="@{/images/logo.png}" alt="logo"/></a>
+            <a class="sidebar-brand brand-logo-mini" href="index.html"><img th:src="@{/images/logo-mini.svg}"
+                                                                            alt="logo"/></a>
         </div>
         <ul class="nav">
             <li class="nav-item profile">
                 <div class="profile-desc">
                     <div class="profile-pic">
                         <div class="count-indicator">
-                            <img class="img-xs rounded-circle" th:src="@{${imagePath}}" alt="avatar">
+                            <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                            <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal" th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
+                            <h5 class="mb-0 font-weight-normal"
+                                th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
                             <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
                         </div>
                     </div>
                     <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
-                    <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
+                    <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"
+                         aria-labelledby="profile-dropdown">
                         <a href="#" class="dropdown-item preview-item">
                             <div class="preview-thumbnail">
                                 <div class="preview-icon bg-dark rounded-circle">
@@ -139,7 +114,8 @@
                 </a>
             </li>
             <li class="nav-item menu-items">
-                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                   aria-controls="ui-basic">
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
               </span>
@@ -148,9 +124,11 @@
                 </a>
                 <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+                        <li class="nav-item"><a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
+                        <li class="nav-item"><a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="pages/ui-features/typography.html">Typography</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -186,7 +164,8 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar p-0 fixed-top d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo-mini" href="index.html"><img th:src="@{assets/images/logo-mini.svg}" alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" href="index.html"><img th:src="@{assets/images/logo-mini.svg}"
+                                                                               alt="logo"/></a>
             </div>
             <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -195,7 +174,8 @@
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item dropdown d-none d-lg-block">
 
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="createbuttonDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                             aria-labelledby="createbuttonDropdown">
                             <h6 class="p-3 mb-0">Projects</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -240,16 +220,19 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown border-left">
-                        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
+                           data-toggle="dropdown" aria-expanded="false">
                             <i class="mdi mdi-email"></i>
                             <span class="count bg-success"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                             aria-labelledby="messageDropdown">
                             <h6 class="p-3 mb-0">Messages</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face4.jpg" alt="image" class="rounded-circle profile-pic">
+                                    <img src="assets/images/faces/face4.jpg" alt="image"
+                                         class="rounded-circle profile-pic">
                                 </div>
                                 <div class="preview-item-content">
                                     <p class="preview-subject ellipsis mb-1">Mark send you a message</p>
@@ -259,7 +242,8 @@
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face2.jpg" alt="image" class="rounded-circle profile-pic">
+                                    <img src="assets/images/faces/face2.jpg" alt="image"
+                                         class="rounded-circle profile-pic">
                                 </div>
                                 <div class="preview-item-content">
                                     <p class="preview-subject ellipsis mb-1">Cregh send you a message</p>
@@ -269,7 +253,8 @@
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
-                                    <img src="assets/images/faces/face3.jpg" alt="image" class="rounded-circle profile-pic">
+                                    <img src="assets/images/faces/face3.jpg" alt="image"
+                                         class="rounded-circle profile-pic">
                                 </div>
                                 <div class="preview-item-content">
                                     <p class="preview-subject ellipsis mb-1">Profile picture updated</p>
@@ -281,11 +266,13 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown border-left">
-                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                           data-toggle="dropdown">
                             <i class="mdi mdi-bell"></i>
                             <span class="count bg-danger"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                             aria-labelledby="notificationDropdown">
                             <h6 class="p-3 mb-0">Notifications</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -296,7 +283,8 @@
                                 </div>
                                 <div class="preview-item-content">
                                     <p class="preview-subject mb-1">Event today</p>
-                                    <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event today </p>
+                                    <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event
+                                        today </p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -330,12 +318,15 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
-                                <img class="img-xs rounded-circle" th:src="@{${imagePath}}" alt="">
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name" th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></p>
+                                <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name"
+                                   th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                             aria-labelledby="profileDropdown">
                             <h6 class="p-3 mb-0">Profile</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -362,7 +353,8 @@
                         </div>
                     </li>
                 </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                        data-toggle="offcanvas">
                     <span class="mdi mdi-format-line-spacing"></span>
                 </button>
             </div>
@@ -370,71 +362,74 @@
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
-                <div class="page-header">
-                </div>
 
                 <div class="row">
-                    <div class="col-lg-5 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body" id="conversation">
-
-
-
-                                <br>
-
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input id="message-input" type="text" class="form-control" placeholder="Max počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" onclick="sendMessage()">Odoslať</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="col-6 grid-margin">
+                    <div class="col-lg-8 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Študenti</h4>
+                                <p class="card-description"></p>
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table style="color: whitesmoke" class="table">
                                         <thead>
                                         <tr>
-                                            <th>Celé meno</th>
+                                            <th>Študent</th>
+                                            <th>Meno</th>
+                                            <th>Priezvisko</th>
                                             <th>Používateľské meno</th>
+                                            <th>Osobné číslo</th>
+                                            <th>Email</th>
+                                            <th>Body</th>
+                                            <th>Absencie</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:if="${#lists.isEmpty(students)}">
                                             <td colspan="2">Žiadny študent</td>
                                         </tr>
-                                        <tr th:each="student : ${students}">
-                                            <td><span th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></span></td>
+                                        <tr  th:each="student : ${students}">
+                                            <td class="py-1">
+                                                <img th:if="${student.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                                <img th:if="${student.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                            </td>
+                                            <td><span th:text="${student.personalInfo.name}"></span></td>
+                                            <td><span th:text="${student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><button th:attr="onclick=|getConversation('${student.personalInfo.username}','${adminId}', '${student.personalInfo.id}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
+                                            <td><span th:text="${student.personalNumber}"></span></td>
+                                            <td><span th:text="${student.personalInfo.email}"></span></td>
+                                            <td><span> <div class="input-group">
+                        <input type="number" min="0" max="100" th:value="${student.points}"  class="form-control" aria-label="Recipient's username"
+                               aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                          <button class="btn btn-sm btn-primary" type="button">Pridať</button>
+                        </div>
+                      </div></span></td>
+                                            <td><span> <div class="input-group">
+                        <input type="number" min="0" max="13" th:value="${student.absents}" class="form-control" aria-label="Recipient's username"
+                               aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                          <button class="btn btn-sm btn-primary" type="button">Pridať</button>
+                        </div>
+                      </div></span></td>
                                         </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
 
 
-
             </div>
+
         </div>
-        <!-- main-panel ends -->
+
     </div>
-    <!-- page-body-wrapper ends -->
+
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -470,11 +465,8 @@
 <script th:src="@{/js/dashboard.js}"></script>
 <!-- End custom js for this page -->
 
-<script src="/static/js/my/chart.js"></script>
-<script th:src="@{/js/my/chart.js}"></script>
-
-<script src="/static/js/my/chat.js"></script>
-<script th:src="@{/js/my/chat.js}"></script>
+<script src="/static/js/chart.js"></script>
+<script th:src="@{/js/chart.js}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="/static/js/my/my.js"></script>

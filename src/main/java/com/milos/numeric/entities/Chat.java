@@ -9,14 +9,27 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@IdClass(ChatId.class)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Chat
 {
     @Id
-    private Long idA;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Id
-    private Long idB;
+
+
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "person_ida")
+    private PersonalInfo personalInfoA;
+
+
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "person_idb")
+    private PersonalInfo personalInfoB;
 
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)

@@ -50,6 +50,30 @@ public class PageController {
         this.fileService = fileService;
     }
 
+    @GetMapping("/admin/student/page")
+    public ModelAndView studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    {
+        ModelAndView modelAndView = new ModelAndView();
+
+        String username = myUserDetails.getUsername();
+        Optional<Employee> optional = this.employeeService.findByUsername(username);
+
+        if (optional.isEmpty())
+        {
+
+        }
+
+        Employee employee = optional.get();
+        modelAndView.addObject("employee", employee);
+
+
+        List<Student> students = this.studentService.findAllByPointsAsc();
+
+        modelAndView.addObject("students", students);
+        modelAndView.setViewName("/pages/tables/students");
+        return modelAndView;
+    }
+
 
 
 
@@ -112,21 +136,38 @@ public class PageController {
         return "/pages/samples/forgot-password";
     }
 
-    @GetMapping("/admin/conversations-page")
-    public ModelAndView chat()
+    @GetMapping("/admin/chat-page")
+    public ModelAndView chat(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
+
         List<Student> students = this.studentService.findAll();
+        if (students.isEmpty()) {
+
+        }
+
+
         ModelAndView modelAndView = new ModelAndView();
-       /* modelAndView.addObject("students",students);
-        Optional<PersonalInfo> optional = this.personalInfoService.findByAuthority("ADMIN");
+        modelAndView.addObject("students",students);
+
+        String username = myUserDetails.getUsername();
+        Optional<Employee> optional = this.employeeService.findByUsername(username);
+
         if (optional.isEmpty())
         {
 
         }
 
-        PersonalInfo personalInfo = optional.get();
-        modelAndView.addObject("adminId", personalInfo.getId());
-        modelAndView.setViewName("/pages/tables/chat");*/
+
+
+
+
+        Employee employee = optional.get();
+
+        modelAndView.addObject("employee", employee);
+
+
+        modelAndView.addObject("adminId", employee.getId());
+        modelAndView.setViewName("/pages/tables/chat");
         return modelAndView;
     }
 
