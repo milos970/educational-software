@@ -79,13 +79,31 @@ public class PageController {
 
 
     @GetMapping("/admin/material/page")
-    public ModelAndView materialsPage()
+    public ModelAndView materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         List<File> files = this.fileService.findAll();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("files", files);
         modelAndView.addObject("FileDto", new FileDto());
         modelAndView.setViewName("/pages/tables/materials");
+
+        String username = myUserDetails.getUsername();
+        Optional<Employee> optional = this.employeeService.findByUsername(username);
+
+        if (optional.isEmpty())
+        {
+
+        }
+
+        Employee employee = optional.get();
+        modelAndView.addObject("employee", employee);
+
+
+        List<Student> students = this.studentService.findAllByPointsAsc();
+
+        modelAndView.addObject("students", students);
+
+
         return modelAndView;
     }
 
@@ -186,7 +204,7 @@ public class PageController {
 
 
 
-    @GetMapping("/student-page")
+    @GetMapping("/student/page")
     public ModelAndView studentPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         String username = myUserDetails.getUsername();
@@ -207,7 +225,7 @@ public class PageController {
         return modelAndView;
     }
 
-    @GetMapping("/admin-page")
+    @GetMapping("/admin/page")
     public ModelAndView adminPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         ModelAndView modelAndView = new ModelAndView();

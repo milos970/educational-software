@@ -66,10 +66,7 @@ public class PersonController
     @PatchMapping("/admin/employee/{id}/update-authority")
     public ResponseEntity updateAuthority(@PathVariable Long id)
     {
-
         return null;
-
-
     }
 
 
@@ -97,30 +94,7 @@ public class PersonController
 
 
 
-    @PatchMapping("/student/{id}/update-password")
-    public ResponseEntity updateStudentPassword(@PathVariable Long id, @Valid NewPasswordDto newPasswordDTO)
-    {
-        return this.studentService.updatePassword(id, newPasswordDTO);
-    }
 
-
-    @PatchMapping("/employee/{id}/update-password")
-    public ResponseEntity updateEmployeePassword(@PathVariable Long id, @Valid NewPasswordDto newPasswordDTO)
-    {
-        return null;
-    }
-
-    @PatchMapping("/admin/student/{id}/update-points")
-    public ResponseEntity updatePoints(@PathVariable Long id, @RequestParam int points)
-    {
-        return this.studentService.updatePoints(id, points);
-    }
-
-    @PatchMapping("/admin/student/{id}/update-absents")
-    public ResponseEntity updateAbsents(@PathVariable Long id, @RequestParam int absents)
-    {
-        return this.studentService.updateAbsents(id, absents);
-    }
 
 
 }

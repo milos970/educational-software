@@ -15,11 +15,11 @@ import java.util.Collection;
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     SimpleUrlAuthenticationSuccessHandler studentSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/student-page");
+            new SimpleUrlAuthenticationSuccessHandler("/student/page");
     SimpleUrlAuthenticationSuccessHandler employeeSuccessHandler =
             new SimpleUrlAuthenticationSuccessHandler("/employee");
     SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/admin-page");
+            new SimpleUrlAuthenticationSuccessHandler("/admin/page");
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

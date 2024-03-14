@@ -48,34 +48,28 @@ public class StudentService
     }
 
 
-    public ResponseEntity update(Map<String, Object> updates)
+
+
+    public boolean updatePassword(Long id, NewPasswordDto newPasswordDTO)
     {
-
-    }
-
-
-    public ResponseEntity updatePassword(Long id, NewPasswordDto newPasswordDTO)
-    {
-        Optional<Student> optional = this.studentRepository.findById(id);
+        Optional<Student> optional = this.findById(id);
 
         if (optional.isPresent())
         {
             Student student = optional.get();
             PersonalInfo personalInfo = personalInfoNewPasswordDTOMapper.sourceToDestination(newPasswordDTO);
             student.setPersonalInfo(personalInfo);
-
             this.studentRepository.save(student);
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            return true;
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return false;
         }
     }
 
 
-    public ResponseEntity updatePoints(Long id,int points)
+    public boolean updatePoints(Long id,int points)
     {
-        Optional<Student> optional = this.studentRepository.findById(id);
+        Optional<Student> optional = this.findById(id);
 
         if (optional.isPresent())
         {
@@ -83,16 +77,15 @@ public class StudentService
             int currentPoints = student.getPoints();
             student.setPoints(currentPoints + points);
             this.studentRepository.save(student);
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            return true;
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return false;
         }
     }
 
-    public ResponseEntity updateAbsents(Long id,int absents)
+    public boolean updateAbsents(Long id,int absents)
     {
-        Optional<Student> optional = this.studentRepository.findById(id);
+        Optional<Student> optional = this.findById(id);;
 
         if (optional.isPresent())
         {
@@ -100,10 +93,9 @@ public class StudentService
             int currentAbsents = student.getAbsents();
             student.setAbsents(currentAbsents + absents);
             this.studentRepository.save(student);
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            return true;
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return false;
         }
     }
 
