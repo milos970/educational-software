@@ -404,14 +404,14 @@
 
                         <div class="form-group" id="function-div">
                             <label for="equation-input">Funkcia</label>
-                            <input type="text" class="form-control" id="function-input" placeholder="f(x)" oninput="validateEquation()">
+                            <input type="text" class="form-control" id="function-input" placeholder="f(x)" >
                         </div>
 
 
                         <p class="card-description"></p>
                         <div class="form-group" id="nodes-string-div">
                             <label for="equation-input">Uzly</label>
-                            <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x100,y100)]" oninput="validateEquation()">
+                            <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x100,y100)]" >
                         </div>
 
                         <div class="form-group" id="nodes-csv-div">
@@ -427,10 +427,10 @@
 
                         <div class="form-group" id="functions-dropdown-div">
                             <div class="dropdown">
-                                <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tolerancia</button>
+                                <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Funkcie</button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
-                                    <a class="dropdown-item" onclick="selectedTolerance(1)" href="#">Lineárna funkcia</a>
-                                    <a class="dropdown-item" onclick="selectedTolerance(2)" href="#">Logaritmická funkcia</a>
+                                    <a class="dropdown-item" onclick="selectFunction(1)" href="#">Lineárna funkcia</a>
+                                    <a class="dropdown-item" onclick="selectFunction(2)" href="#">Logaritmická funkcia</a>
                                 </div>
                             </div>
                         </div>
@@ -451,7 +451,7 @@
 
                             <div class="form-group" id="initial-value-div">
                                 <label for="initial-value-input">Počiatočná aproximácia</label>
-                                <input type="number" class="form-control" id="initial-value-input" placeholder="<-100;100>" oninput="validateInitialValue()">
+                                <input type="number" class="form-control" id="initial-value-input" placeholder="<-100;100>" min="-100" max="100" oninput="validateInitialValue()">
                             </div>
 
                         <p class ="error" id="initial-value-hint-error"></p>
@@ -459,17 +459,17 @@
 
                             <div class="form-group" id="lower-bound-div">
                                 <label for="lower-bound-input">Dolná hranica</label>
-                                <input type="number" class="form-control" id="lower-bound-input" placeholder="<-100;99>">
+                                <input type="number" class="form-control" id="lower-bound-input" min="-100" max="99" placeholder="<-100;99>">
                             </div>
 
                             <div class="form-group" id="upper-bound-div">
                                 <label for="upper-bound-input">Horná hranica</label>
-                                <input type="number" class="form-control" id="upper-bound-input" placeholder="<-99;100>">
+                                <input type="number" class="form-control" id="upper-bound-input" min="-99" max="100" placeholder="<-99;100>">
                             </div>
 
                         <div class="form-group" id="subintervals-div">
                             <label for="upper-bound-input">Počet dielikov</label>
-                            <input type="number" class="form-control" id="subintervals-input" placeholder="<-99;100>">
+                            <input type="number" class="form-control" id="subintervals-input" min="-99" max="100" placeholder="<-99;100>">
                         </div>
 
 
@@ -479,12 +479,14 @@
                         <button  type="button" class="btn btn-success btn-fw">Uložiť do súboru</button>
 
 
-                        <div class="form-group" id="result-div" style="display: none">
+                        <div class="form-group" id="result-div" > <!--style="display: none"-->
                             <label for="upper-bound-input"></label>
-                            <input type="number" class="form-control" id="result-input" readonly>
+                            <input style="color: black" type="text" class="form-control" id="result-input" readonly>
                         </div>
 
                         <p class ="error" id="result-hint-error"></p>
+
+
 
 
 
