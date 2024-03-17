@@ -22,6 +22,7 @@
       <link rel="stylesheet" th:href="@{/vendors/flag-icon-css/css/flag-icon.min.css}">
       <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.carousel.min.css}">
       <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.theme.default.min.css}">
+
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
@@ -40,7 +41,7 @@
 
 
   </head>
-  <body onload="selectNumericCategory(1)">
+  <body >
 
     <div class="container-scroller">
       <!-- partial:partials/_sidebar.html -->
@@ -359,9 +360,9 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-4 grid-margin stretch-card">
-                <div class="card">
+            <div class="row" >
+              <div class="col-md-4 grid-margin stretch-card" style="display: none" id="methods-calculation-div">
+                <div class="card" >
                     <div class="card-body" >
                         <div class="dropdown" id="non-linear-dropdown-div">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Newtnová metóda</button>
@@ -400,6 +401,7 @@
                             <div class="form-group" id="equation-div">
                                 <label for="equation-input">Rovnica</label>
                                 <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0" oninput="validateEquation()">
+                                <p class ="error" id="equation-hint-error"></p>
                             </div>
 
                         <div class="form-group" id="function-div">
@@ -411,18 +413,21 @@
                         <p class="card-description"></p>
                         <div class="form-group" id="nodes-string-div">
                             <label for="equation-input">Uzly</label>
-                            <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x100,y100)]" >
+                            <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x10,y10)]" oninput="validateStringCoordinates()" >
+                            <p class ="error" id="coordinates-string-error-hint"></p>
                         </div>
 
                         <div class="form-group" id="nodes-csv-div">
-                            <label>CSV súbor</label>
+                            <label>Súbor</label>
                             <input type="file" name="img[]" class="file-upload-default">
                             <div class="input-group col-xs-12">
-                                <input type="text" class="form-control file-upload-info" disabled placeholder="Nahrať súbor">
+                                <input type="text"  id="text-input" class="form-control file-upload-info" disabled placeholder="Súbor s príponou .csv">
+                                <input  type="file"  id="file-input" class="form-control file-upload-info" style="display: none">
                                 <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-primary" type="button">Nahrať</button>
+                            <button onclick="insertFile()" class="file-upload-browse btn btn-primary" type="button" id="insert-file-button">Vložiť</button>
                           </span>
                             </div>
+                            <p class ="error" id="coordinates-csv-error-hint"></p>
                         </div>
 
                         <div class="form-group" id="functions-dropdown-div">
@@ -435,7 +440,7 @@
                             </div>
                         </div>
 
-                        <p class ="error" id="equation-hint-error"></p>
+
 
                         <div class="form-group" id="tolerance-div">
                                 <div class="dropdown">
@@ -452,9 +457,10 @@
                             <div class="form-group" id="initial-value-div">
                                 <label for="initial-value-input">Počiatočná aproximácia</label>
                                 <input type="number" class="form-control" id="initial-value-input" placeholder="<-100;100>" min="-100" max="100" oninput="validateInitialValue()">
+                                <p class ="error" id="initial-value-hint-error"></p>
                             </div>
 
-                        <p class ="error" id="initial-value-hint-error"></p>
+
 
 
                             <div class="form-group" id="lower-bound-div">
@@ -475,16 +481,17 @@
 
 
                         <button onclick="calculate()"  type="button" class="btn btn-primary btn-fw">Vypočítať</button>
-                        <button onclick="graph()"  type="button" class="btn btn-secondary btn-fw">Graf</button>
+                        <button onclick="graph()"  type="button" class="btn btn-danger btn-fw">Graf</button>
                         <button  type="button" class="btn btn-success btn-fw">Uložiť do súboru</button>
 
+                        <p class ="error" id="result-hint-error"></p>
 
                         <div class="form-group" id="result-div" > <!--style="display: none"-->
                             <label for="upper-bound-input"></label>
                             <input style="color: black" type="text" class="form-control" id="result-input" readonly>
                         </div>
 
-                        <p class ="error" id="result-hint-error"></p>
+
 
 
 
@@ -493,7 +500,7 @@
                     </div>
                 </div>
               </div>
-              <div class="col-md-5 grid-margin stretch-card">
+              <div class="col-md-5 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
                 <div class="card">
                     <div class="card-body" id="table-div">
                         <h4 class="card-title"></h4>
@@ -627,5 +634,11 @@
 
     <script src="/static/js/my/non-linear"></script>
     <script th:src="@{/js/my/non-linear.js}"></script>
+
+    <script src="/static/js/jquery.csv.js"></script>
+    <script th:src="@{/js/jquery.csv.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   </body>
 </html>
