@@ -42,7 +42,7 @@ public class PersonalInfo
     @Column(unique = true)
     private String email;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{12,}$",
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$",
             message = "Password must contain at least 1 uppercase, 1 lowercase, 1 special character and 1 digit!")
     private String password;
 

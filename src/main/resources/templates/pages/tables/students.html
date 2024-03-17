@@ -376,7 +376,8 @@
                                             <td><span th:text="${student.personalNumber}"></span></td>
                                             <td><span th:text="${student.personalInfo.email}"></span></td>
                                             <td ><span th:id="'points-' + ${student.id}" th:text="${student.getPoints()}"></span></td>
-                                            <td><span> <div class="input-group">
+                                            <td><span>
+                                                <div class="input-group">
                         <input type="number" min="0" max="100"   class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
                                aria-describedby="basic-addon2">
                         <div class="input-group-append">

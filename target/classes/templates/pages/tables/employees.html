@@ -342,56 +342,46 @@
                     <div class="col-lg-10 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Študenti</h4>
+                                <h4 class="card-title">Zamestnanci</h4>
                                 <p class="card-description"></p>
                                 <div class="table-responsive">
                                     <table style="color: whitesmoke" class="table">
                                         <thead>
                                         <tr>
-                                            <th>Študent</th>
+                                            <th>Zamestnanec</th>
                                             <th>Meno</th>
                                             <th>Priezvisko</th>
                                             <th>Používateľské meno</th>
                                             <th>Osobné číslo</th>
                                             <th>Email</th>
-                                            <th>Body</th>
                                             <th></th>
-                                            <th>Absencie</th>
                                             <th></th>
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:if="${#lists.isEmpty(students)}">
-                                            <td colspan="2">Žiadny študent</td>
+                                        <tr th:if="${#lists.isEmpty(employees)}">
+                                            <td colspan="2">Žiadny zamestnanec</td>
                                         </tr>
-                                        <tr  th:each="student : ${students}">
+                                        <tr  th:each="employee : ${employees}">
                                             <td class="py-1">
-                                                <img th:if="${student.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                                <img th:if="${student.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                                <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                                <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                                             </td>
-                                            <td><span th:text="${student.personalInfo.name}"></span></td>
-                                            <td><span th:text="${student.personalInfo.surname}"></span></td>
-                                            <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><span th:text="${student.personalNumber}"></span></td>
-                                            <td><span th:text="${student.personalInfo.email}"></span></td>
-                                            <td ><span th:id="'points-' + ${student.id}" th:text="${student.getPoints()}"></span></td>
-                                            <td><span>
-                                                <div class="input-group">
+                                            <td><span th:text="${employee.personalInfo.name}"></span></td>
+                                            <td><span th:text="${employee.personalInfo.surname}"></span></td>
+                                            <td><span th:text="${employee.personalInfo.username}"></span></td>
+                                            <td><span th:text="${employee.personalNumber}"></span></td>
+                                            <td><span th:text="${employee.personalInfo.email}"></span></td>
+                                            <td><span th:if="${employee.personalInfo.enabled == false}">
+                            <div class="input-group">
                         <input type="number" min="0" max="100"   class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
                                aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                          <button class="btn btn-sm btn-primary" th:attr="onclick=|sendPoints('${student.id}')|"  type="button">Pridať</button>
+                          <button class="btn btn-sm btn-primary" th:attr="onclick=|sendPoints('${student.id}')|"  type="button">Aktivovať</button>
                         </div>
-                      </div></span></td>
-                                            <td ><span th:id="'absents-' + ${student.id}" th:text="${student.getAbsents()}"></span></td>
-                                            <td><span> <div class="input-group">
-                        <input type="number" min="0" max="13"  class="form-control" aria-label="Recipient's username" th:id="'absents-input-' + ${student.id}"
-                               aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-sm btn-primary" th:attr="onclick=|sendAbsents('${student.id}')|"  type="button">Pridať</button>
-                        </div>
-                      </div></span></td>
+                      </div>
+                                            </span></td>
                                         </tr>
                                         </tbody>
                                     </table>

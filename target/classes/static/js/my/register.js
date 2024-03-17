@@ -1,3 +1,59 @@
+
+
+function initializeSignUpPage()
+{
+    studentOrEmployee(1);
+}
+function studentOrEmployee(who)
+{
+    switch (who)
+    {
+        case 1:
+            showFormForStudent();
+            break;
+        case 2:
+            showFormForEmployee();
+            break;
+        default:
+
+    }
+}
+
+function showFormForStudent()
+{
+    const elementsToHide = ["name-div", "pin-div", "surname-div"];
+
+    elementsToHide.forEach((item) => {
+        document.getElementById(item).style.display="none";
+    });
+
+    const elementsToShow = ["email-div", "password-div", "rep-password-div"];
+
+    elementsToShow.forEach((item) => {
+        document.getElementById(item).style.display="block";
+    });
+}
+
+
+function showFormForEmployee()
+{
+    const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div"];
+
+    elementsToShow.forEach((item) => {
+        document.getElementById(item).style.display="block";
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
 function canRegister()
 {
     const nameInput = document.getElementById("name-input");
@@ -107,6 +163,7 @@ function validatePassword()
     const specialCharacterHint = document.getElementById("special-char-checkbox-div");
     const oneNumberHint = document.getElementById("number-checkbox-div");
     const minCharacters = document.getElementById("min-chars-checkbox-div");
+    const maxCharacters = document.getElementById("max-chars-checkbox-div");
 
     if (passwordInput.value.match(regexUpperCase)) {
         upperCaseHint.classList.remove("form-check-danger");
@@ -160,4 +217,16 @@ function validatePassword()
         minCharacters.getElementsByTagName("input")[0].checked = false;
     }
 
+    if (passwordInput.value.length <= 64) {
+        maxCharacters.classList.remove("form-check-danger");
+        maxCharacters.classList.add("form-check-success");
+        maxCharacters.getElementsByTagName("input")[0].checked = true;
+    } else {
+        maxCharacters.classList.remove("form-check-success");
+        maxCharacters.classList.add("form-check-danger");
+        maxCharacters.getElementsByTagName("input")[0].checked = false;
+    }
+
 }
+
+

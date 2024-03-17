@@ -269,6 +269,9 @@ function selectIntegrationMethod(value)
     const lowerBoundDivElement = document.getElementById("lower-bound-div");
     const upperBoundDivElement = document.getElementById("upper-bound-div");
 
+    const functionDiv = document.getElementById("function-div");
+    functionDiv.style.display="block";
+
     lowerBoundDivElement.style.display = "block";
     upperBoundDivElement.style.display = "block";
 
@@ -319,10 +322,11 @@ function calculate()
             calculateNonLinearMethod();
             break;
         case 2:
-
+            calculateIntegrationMethod();
             break;
         case 3:
-
+            calculateApproximationMethod();
+            break;
     }
 }
 
@@ -461,7 +465,7 @@ function newtonMethod()
 
     resultElementErrorHint.innerHTML = "";
 
-    const iterations = 1000_000;
+    const iterations = 1000;
     let current = parseFloat(initialValueInput.value);
     const tolerance =  toleranceValue;
 
@@ -528,7 +532,7 @@ function newtonMethod()
 function bisectionMethod()
 {
 
-    const iterations = 1000_000;
+    const iterations = 1000;
 
     const tolerance =  toleranceValue;
 
@@ -540,8 +544,8 @@ function bisectionMethod()
     data[0] = [5];
 
     data[0][0] = "k";
-    data[0][1] = "a";
-    data[0][2] = "b";
+    data[0][1] = "dolná hranica";
+    data[0][2] = "horná hranica";
     data[0][3] = "x";
     data[0][4] = "chyba";
 
@@ -622,7 +626,7 @@ function regulaFalsiMethod()
     let b = parseFloat(hh.value);
     let prev = a;
 
-    const iterations = 1000_000;
+    const iterations = 1000;
 
     let parsedEquation = math.parse(fun);
 
@@ -630,8 +634,8 @@ function regulaFalsiMethod()
 
     data[0] = [5];
     data[0][0] = "k";
-    data[0][1] = "a";
-    data[0][2] = "b";
+    data[0][1] = "dolná hranica";
+    data[0][2] = "horná hranica";
     data[0][3] = "x";
     data[0][4] = "chyba";
 
@@ -821,6 +825,369 @@ function clickOnInput() {
 }
 
 
+/////////////////////////////////////////Aproximation & interpolation///////////////////////////////////////////////////////////////
+
+
+let selectedFunction = 0;
+function selectFunction(whichOne)
+{
+    if (whichOne === 1) {
+        document.getElementById("dropdownMenuOutlineButton3").innerHTML = "Lineárna funkcia";
+    } else {
+        document.getElementById("dropdownMenuOutlineButton3").innerHTML = "Logaritmická funkcia";
+    }
+
+    selectedFunction = whichOne;
+}
+
+
+function calculateApproximationMethod()
+{
+
+    switch(selectedMethod) {
+        case 1:
+            lagrangeInterpolating();
+            break;
+        case 2:
+            newtonInterpolating();
+            break;
+        case 3:
+            leastSquares();
+            break;
+    }
+}
+
+function lagrangeInterpolating()
+{
+
+    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    let equation = "";
+    let first = true;
+
+    for (let i = 0; i < arr.length; i+=2)
+    {
+        let part = "";
+        let menovatel = 1;
+        for (let k = 0; k < arr.length; k+=2)
+        {
+
+            if (i === k)
+            {
+                continue;
+            }
+
+
+            if (arr[k] > 0)
+            {
+                part += "(x - " + (Number.isInteger(1 * arr[k]) ? (1 * arr[k]): ((1 * arr[k]).toFixed(3))) + ")";
+            } else
+            {
+                part += "(x + " + (Number.isInteger(-1 * arr[k]) ? (-1 * arr[k]): ((-1 * arr[k]).toFixed(3))) + ")";
+            }
+
+
+            menovatel *= (arr[i] - arr[k]);
+
+        }
+
+        menovatel = 1/ menovatel;
+
+
+
+        if (first)
+        {
+            part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
+            equation += part;
+            first = false;
+        } else
+        {
+            if (arr[i + 1] * menovatel > 0)
+            {
+                part = "+" + (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
+            } else
+            {
+                part = (Number.isInteger(arr[i + 1] * menovatel) ? (arr[i + 1] * menovatel): ((arr[i + 1] * menovatel).toFixed(3))) + part;
+            }
+
+            equation += part;
+        }
+
+
+    }
+
+
+    fun = equation;
+
+    document.getElementById("result-input").value = fun;
+
+    graph();
+
+
+
+}
+
+
+
+
+
+function newtonInterpolating()
+{
+
+    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    let data =[];
+
+    let j = 0;
+    for (let i = 0; i < arr.length; i+=2)
+    {
+        data[j] = [2];
+        data[j][0] = arr[i];
+        data[j][1] = arr[i + 1];
+        console.log(data[j][0] + " " + data[j][1]);
+        ++j;
+
+    }
+
+    let equation = "";
+
+
+    for (let i = 0; i < data.length; ++i)
+    {
+        let cislo = dividedDifference(0,i);
+
+        if (i == 0)
+        {
+            if (cislo < 0)
+            {
+                equation += "- " + (Number.isInteger(1 * cislo) ? ((-1) * cislo): ((-1) * cislo.toFixed(3)));
+            } else {
+                equation += (Number.isInteger(1 * cislo) ? ( 1 * cislo): (1 * cislo).toFixed(3));
+
+            }
+            continue;
+        }
+
+        if (cislo > 0)
+        {
+            equation += "+";
+        }
+        equation += (Number.isInteger(1 * cislo) ? (1 * cislo): (1 * cislo).toFixed(3));
+
+        for (let j = 0; j < i; ++j)
+        {
+            if (data[j][0] < 0)
+            {
+                equation += "(x + " + (Number.isInteger((-1) * data[j][0]) ? ((-1) * data[j][0]): ((-1) * data[j][0]).toFixed(3))+ ")";
+            } else {
+                equation += "(x - " + (Number.isInteger(1 * data[j][0]) ? (1 * data[j][0]): (1 * data[j][0]).toFixed(3)) + ")";
+            }
+        }
+    }
+
+
+
+    fun = equation;
+
+    document.getElementById("result-input").value = fun;
+
+    graph();
+
+
+    function dividedDifference(i, j)
+    {
+
+        if (j === 0) {
+            return data[i][1];
+        } else {
+            return (dividedDifference(i + 1, j - 1) - dividedDifference(i, j - 1)) / (data[i + j][0] - data[i][0]);
+        }
+    }
+}
+
+
+function leastSquares() {
+
+
+    if (selectedFunction === 1) {
+
+        linear();
+    }
+
+    if (selectedFunction === 2) {
+        logaritmic();
+    }
+
+
+}
+
+
+
+function logaritmic()
+{
+
+
+
+    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    let data =[];
+
+    let j = 0;
+    for (let i = 0; i < arr.length; i+=2)
+    {
+        data[j] = [2];
+        data[j][0] = arr[i];
+        data[j][1] = arr[i + 1];
+
+        ++j;
+
+    }
+
+    let coeficients = [];
+
+
+    coeficients.push(data.length);
+
+
+    let sum_x = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+
+        sum_x += Math.log(parseFloat(data[i][0]));
+    }
+
+    coeficients.push(sum_x);
+
+
+
+    let sum_y = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_y += parseFloat(data[i][1]);
+    }
+
+    coeficients.push(sum_y);
+
+    let sum_x_2 = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_x_2 += (Math.log(parseFloat(data[i][0])) * Math.log(parseFloat(data[i][0])));
+    }
+
+    coeficients.push(sum_x_2);
+
+    let sum_x_y = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_x_y += (Math.log(parseFloat(data[i][0])) * data[i][1]);
+    }
+
+    coeficients.push(sum_x_y);
+
+    let equation = cramer(2,coeficients);
+
+    fun = equation;
+
+    document.getElementById("result-input").value = fun;
+
+    display();
+
+
+
+}
+
+
+function linear()
+{
+
+    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    let data =[];
+
+    let j = 0;
+    for (let i = 0; i < arr.length; i+=2)
+    {
+        data[j] = [2];
+        data[j][0] = arr[i];
+        data[j][1] = arr[i + 1];
+
+        ++j;
+
+    }
+
+    let coeficients = [];
+
+
+    coeficients.push(data.length);
+
+    let sum_x = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_x += (1 *data[i][0]);
+    }
+
+    coeficients.push(sum_x);
+
+
+    let sum_y = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_y += (1 *data[i][1]);
+    }
+
+    coeficients.push(sum_y);
+
+    let sum_x_2 = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_x_2 += (data[i][0] * data[i][0]);
+
+    }
+
+    coeficients.push(sum_x_2);
+
+    let sum_x_y = 0;
+    for(let i = 0; i < data.length; ++i)
+    {
+        sum_x_y += (data[i][0] * data[i][1]);
+    }
+
+    coeficients.push(sum_x_y);
+
+
+    let equation = cramer(1,coeficients);
+
+
+
+    fun = equation;
+
+    document.getElementById("result-input").value = fun;
+    display();
+
+
+}
+
+
+function cramer(option, coeficients) {
+
+    let A = coeficients[0] * coeficients[3] -  coeficients[1] * coeficients[1];
+
+
+
+    let A1 = coeficients[2] * coeficients[3] -  coeficients[4] * coeficients[1];
+
+
+    let A2 = coeficients[0] * coeficients[4] -  coeficients[2] * coeficients[1];
+
+    switch (option)
+    {
+        case 1:
+            return "" + (A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "x";
+
+        case 2:
+            return "" +(A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "log(x)";
+
+    }
+
+
+
+}
 
 
 
@@ -830,8 +1197,127 @@ function clickOnInput() {
 
 
 
+/////////////////////////////Integration//////////////////////////////////////////////////////////////////////////////
+
+function trapezoid()
+{
+
+    const hh = document.getElementById("upper-bound-input");
+    const dh = document.getElementById("lower-bound-input");
+
+    const n = document.getElementById("subintervals-input");
+
+    const functi = document.getElementById("function-input");
+
+    const h = (hh.value - dh.value) / n.value;
+
+    const parsedEquation = math.parse(functi.value);
 
 
+    let sum = 0;
+    let part = 1 * dh.value;
+
+    for (let i = 0; i <= n.value; ++i)
+    {
+
+        if (i == 0)
+        {
+            let fx = math.evaluate(parsedEquation.toString(), { x: dh.value});
+            sum += fx;
+            continue;
+        }
+
+        if (i == n.value)
+        {
+            let fx = math.evaluate(parsedEquation.toString(), { x: hh.value});
+            sum += fx;
+            continue;
+        }
+
+        part += 1 * h;
+
+        let fx = 2 * math.evaluate(parsedEquation.toString(), { x: part })
+        sum = sum + fx;
+
+
+    }
+
+
+    const result = sum * h/2;
+
+    document.getElementById("result-input").value = result.toFixed(6);
+
+
+}
+
+function simpson() {
+
+    const hh = document.getElementById("upper-bound-input");
+    const dh = document.getElementById("lower-bound-input");
+
+    const n = document.getElementById("subintervals-input");
+
+    const h = (hh.value - dh.value) / n.value;
+    const functi = document.getElementById("function-input");
+    const parsedEquation = math.parse(functi.value);
+
+
+    let sum = 0;
+    let part = 1 * dh.value;
+
+    for (let i = 0; i <= n.value; ++i)
+    {
+
+        if (i == 0)
+        {
+            sum += math.evaluate(parsedEquation.toString(), { x: dh.value});
+            continue;
+        }
+
+        if (i == n.value)
+        {
+            sum += math.evaluate(parsedEquation.toString(), { x: hh.value});
+            continue;
+        }
+
+        part += 1 * h;
+
+        if (i % 2 !== 0)
+        {
+            sum = sum + (4 * math.evaluate(parsedEquation.toString(), { x: part }));
+        }
+
+        if (i % 2 === 0)
+        {
+            sum = sum + (2 * math.evaluate(parsedEquation.toString(), { x: part }));
+        }
+
+
+
+    }
+
+
+    const result = sum * h/3;
+
+    document.getElementById("result-input").value = result.toFixed(6);
+
+
+
+}
+
+
+function calculateIntegrationMethod()
+{
+
+    switch(selectedMethod) {
+        case 1:
+            trapezoid();
+            break;
+        case 2:
+            simpson();
+            break;
+    }
+}
 
 
 

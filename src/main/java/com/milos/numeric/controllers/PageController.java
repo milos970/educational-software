@@ -16,6 +16,8 @@ import com.milos.numeric.services.EmployeeService;
 import com.milos.numeric.services.FileService;
 import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +51,26 @@ public class PageController {
         this.emailService = emailService;
         this.fileService = fileService;
     }
+
+
+    @GetMapping("/confirm/sign-up/page")
+    public ModelAndView confirmSignUpPage()
+    {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("/pages/samples/confirmation");
+
+        return modelAndView;
+    }
+
+
+
+
+
+
+
+
 
     @GetMapping("/admin/student/page")
     public ModelAndView studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
@@ -143,9 +165,13 @@ public class PageController {
 
 
     @GetMapping("/login")
-    public String login()
+    public ModelAndView login(HttpServletRequest request)
     {
-        return "/pages/samples/sign-in";
+        HttpSession session = request.getSession();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("error", session.getAttribute("error"));
+        modelAndView.setViewName("/pages/samples/sign-in");
+        return modelAndView;
     }
 
     @GetMapping("/forget-password-page")
