@@ -40,6 +40,14 @@
 
 
     <style>
+        #conversation
+        {
+            width: 100%; /* Set a fixed width */
+            height: 200px;
+            overflow: auto;
+            scrollbar-color: #1763c7 white;
+            scrollbar-width: thin;
+        }
         .flex-container {
             display: flex;
             justify-content: space-between; /* Items spaced between */
@@ -47,12 +55,13 @@
             width: 100%; /* Set the container width */
             flex-wrap: wrap;
             margin-bottom: 20px;
+
         }
 
         .left-item {
             order: 1;
-            border-radius: 20px;
-            background-color: #ab7a7a;
+            /*border-radius: 20px;
+            background-color: #ab7a7a;*/
         }
 
         .right-item {
@@ -60,8 +69,8 @@
             max-width: 50%; /* Set max width to prevent overflow */
             word-wrap: break-word; /* Allow long words to break and wrap */
             overflow-wrap: break-word; /* Ensure long words wrap */
-            border-radius: 20px;
-            background-color: #4bb63b;
+           /* border-radius: 20px;
+            background-color: #4bb63b;*/
         }
     </style>
 
@@ -379,20 +388,24 @@
                             <div class="card-body" id="conversation">
 
 
+                            <div class="flex-container" style="display: none">
 
-                                <br>
+                            </div>
 
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input id="message-input" type="text" class="form-control" placeholder="Max počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" onclick="sendMessage()">Odoslať</button>
-                                        </div>
+
+
+
+
+
+                            </div>
+
+                            <div id="send-message-div" class="form-group" style="display: none">
+                                <div class="input-group">
+                                    <input id="message-input" type="text" class="form-control" placeholder="Max počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="button" onclick="sendMessage()">Odoslať</button>
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -403,7 +416,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Študenti</h4>
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table" style="color: whitesmoke">
                                         <thead>
                                         <tr>
                                             <th>Celé meno</th>
@@ -417,7 +430,7 @@
                                         <tr th:each="student : ${students}">
                                             <td><span th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><button th:attr="onclick=|getConversation('${student.personalInfo.username}','${adminId}', '${student.personalInfo.id}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
+                                            <td><button th:attr="onclick=|getConversation('${employee.personalInfo.username}','${adminId}', '${student.personalInfo.id}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
                                         </tr>
 
                                         </tbody>

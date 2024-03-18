@@ -24,24 +24,35 @@ public class ChatService
         this.messageService = messageService;
     }
 
+    public Optional<Chat> findByOneParticipant(Long idA, Long idB)
+    {
+        return this.chatRepository.findByParticipants(idA, idB);
+    }
+
+
     public boolean saveMessage(NewMessageDto newMessageDto)
     {
 
 
-        Optional<Chat> optional = this.chatRepository.findById(newMessageDto.getChatId());
+        Optional<Chat> optional = this.chatRepository.findByParticipants(newMessageDto.getRecipientId(), newMessageDto.getSenderId());
 
         if (optional.isEmpty())
         {
+
             return false;
         }
 
         Chat chat = optional.get();
 
-        Message message = messageNewMessageDtoMapper.sourceToDestination(newMessageDto);
+        Message message = new Message();
         message.setChat(chat);
-        message.setId(newMessageDto.getSenderId());
+        message.setContent(newMessageDto.getContent());
+        message.setSeen(false);
+        message.setSender(newMessageDto.getSender());
 
         this.messageService.saveMessage(message);
+
+        System.out.println(message.getContent());
 
         return true;
     }

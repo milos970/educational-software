@@ -331,7 +331,7 @@
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button onclick="selectNumericCategory(2)" type="button" class="btn btn-danger btn-lg" style="height: 100%;"><h3 class="mb-0">Integráčné metódy</h3></button>
+                  <button onclick="selectNumericCategory(2)" type="button" class="btn btn-danger btn-lg" style="height: 100%;"><h3 class="mb-0">Integračné metódy</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
@@ -365,10 +365,10 @@
                 <div class="card" >
                     <div class="card-body" >
                         <div class="dropdown" id="non-linear-dropdown-div">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Newtnová metóda</button>
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Newtonová metóda</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
-                                <a class="dropdown-item" onclick="selectNonLinearMethod(1)" href="#">Newtnová metóda</a>
+                                <a class="dropdown-item" onclick="selectNonLinearMethod(1)" href="#">Newtonová metóda</a>
                                 <a class="dropdown-item" onclick="selectNonLinearMethod(2)" href="#">Regula falsi</a>
                                 <a class="dropdown-item" onclick="selectNonLinearMethod(3)" href="#">Bisekcia</a>
 
@@ -380,7 +380,7 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 
                                 <a class="dropdown-item" onclick="selectIntegrationMethod(1)" href="#">Lichobežníková metóda</a>
-                                <a class="dropdown-item" onclick="selectIntegrationMethod(2)" href="#">Simpsnová metóda</a>
+                                <a class="dropdown-item" onclick="selectIntegrationMethod(2)" href="#">Simpsonová metóda</a>
 
                             </div>
                         </div>
@@ -399,14 +399,15 @@
 
                         <p class="card-description"></p>
                             <div class="form-group" id="equation-div">
-                                <label for="equation-input">Rovnica</label>
+                                <label for="equation-input">Rovnica*</label>
                                 <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0" oninput="validateEquation()">
                                 <p class ="error" id="equation-hint-error"></p>
                             </div>
 
                         <div class="form-group" id="function-div">
-                            <label for="equation-input">Funkcia</label>
-                            <input type="text" class="form-control" id="function-input" placeholder="f(x)" >
+                            <label for="equation-input">Funkcia*</label>
+                            <input type="text" class="form-control" id="function-input" placeholder="f(x)" oninput="validateFunction()" >
+                            <p class ="error" id="function-hint-error"></p>
                         </div>
 
 
@@ -432,7 +433,7 @@
 
                         <div class="form-group" id="functions-dropdown-div">
                             <div class="dropdown">
-                                <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Funkcie</button>
+                                <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Funkcie*</button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
                                     <a class="dropdown-item" onclick="selectFunction(1)" href="#">Lineárna funkcia</a>
                                     <a class="dropdown-item" onclick="selectFunction(2)" href="#">Logaritmická funkcia</a>
@@ -444,7 +445,7 @@
 
                         <div class="form-group" id="tolerance-div">
                                 <div class="dropdown">
-                                    <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tolerancia</button>
+                                    <button  class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tolerancia*</button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
                                         <a class="dropdown-item" onclick="selectedTolerance(1)" href="#">0.001</a>
                                         <a class="dropdown-item" onclick="selectedTolerance(2)" href="#">0.0001</a>
@@ -452,11 +453,12 @@
                                         <a class="dropdown-item" onclick="selectedTolerance(4)" href="#">0.000001</a>
                                     </div>
                                 </div>
+                            <p class ="error" id="tolerance-value-hint-error"></p>
                         </div>
 
                             <div class="form-group" id="initial-value-div">
-                                <label for="initial-value-input">Počiatočná aproximácia</label>
-                                <input type="number" class="form-control" id="initial-value-input" placeholder="<-100;100>" min="-100" max="100" oninput="validateInitialValue()">
+                                <label for="initial-value-input">Počiatočná aproximácia*</label>
+                                <input type="number" class="form-control" id="initial-value-input" placeholder="<-100;100>" min="-100" max="100">
                                 <p class ="error" id="initial-value-hint-error"></p>
                             </div>
 
@@ -464,18 +466,21 @@
 
 
                             <div class="form-group" id="lower-bound-div">
-                                <label for="lower-bound-input">Dolná hranica</label>
+                                <label for="lower-bound-input">Dolná hranica*</label>
                                 <input type="number" class="form-control" id="lower-bound-input" min="-100" max="99" placeholder="<-100;99>">
+                                <p class ="error" id="lower-bound-value-hint-error"></p>
                             </div>
 
                             <div class="form-group" id="upper-bound-div">
-                                <label for="upper-bound-input">Horná hranica</label>
+                                <label for="upper-bound-input">Horná hranica*</label>
                                 <input type="number" class="form-control" id="upper-bound-input" min="-99" max="100" placeholder="<-99;100>">
+                                <p class ="error" id="upper-bound-value-hint-error"></p>
                             </div>
 
                         <div class="form-group" id="subintervals-div">
-                            <label for="upper-bound-input">Počet dielikov</label>
+                            <label for="upper-bound-input">Počet dielikov*</label>
                             <input type="number" class="form-control" id="subintervals-input" min="-99" max="100" placeholder="<-99;100>">
+                            <p class ="error" id="subintervals-value-hint-error"></p>
                         </div>
 
 

@@ -87,7 +87,10 @@ function selectNonLinearMethod(value)
 
     const dropDownButton = document.getElementById("dropdownMenuButton1");
 
+    document.getElementById("lower-bound-input").value = "";
+    document.getElementById("upper-bound-input").value = "";
 
+    document.getElementById("result-input").value = "";
 
     const nonLinearDropdownDiv = document.getElementById("non-linear-dropdown-div");
     nonLinearDropdownDiv.style.display="block";
@@ -101,13 +104,13 @@ function selectNonLinearMethod(value)
 
     const toleranceDiv = document.getElementById("tolerance-div");
 
-
+    $("#table tr").remove();
 
 
     switch (value)
     {
         case 1:
-            dropDownButton.innerHTML = "Newtnová metóda";
+            dropDownButton.innerHTML = "Newtonová metóda";
 
             lowerBoundDivElement.style.display = "none";
             upperBoundDivElement.style.display = "none";
@@ -157,8 +160,10 @@ function selectApproximationAndInterpolationMethod(value)
     const nodesStringDiv = document.getElementById("nodes-string-div");
     const nodesCsvDiv = document.getElementById("nodes-csv-div");
 
+    document.getElementById("result-input").value = "";
     const functionsDropdownDiv = document.getElementById("functions-dropdown-div");
 
+    $("#table tr").remove();
     switch (value)
     {
         case 1:
@@ -171,7 +176,7 @@ function selectApproximationAndInterpolationMethod(value)
             selectedMethod = 1;
             break;
         case 2:
-            document.getElementById("dropdownMenuButton3").innerHTML = "Newtnov polynóm";
+            document.getElementById("dropdownMenuButton3").innerHTML = "Newtonov polynóm";
             nodesStringDiv.style.display = "block";
             nodesCsvDiv.style.display = "block";
 
@@ -213,11 +218,14 @@ function selectIntegrationMethod(value)
 
     lowerBoundDivElement.style.display = "block";
     upperBoundDivElement.style.display = "block";
-
+    $("#table tr").remove();
     const subintervalsDiv = document.getElementById("subintervals-div");
 
+    document.getElementById("initial-value-input").value = "";
+    document.getElementById("lower-bound-input").value = "";
+    document.getElementById("upper-bound-input").value = "";
 
-
+    document.getElementById("result-input").value = "";
 
     switch (value)
     {
@@ -228,7 +236,7 @@ function selectIntegrationMethod(value)
             selectedMethod = 1;
             break;
         case 2:
-            document.getElementById("dropdownMenuButton2").innerHTML.innerHTML = "Simpsnová metóda";
+            document.getElementById("dropdownMenuButton2").innerHTML = "Simpsonová metóda";
 
 
             subintervalsDiv.style.display = "block";
@@ -265,6 +273,7 @@ function calculate()
             break;
         case 3:
             calculateApproximationMethod();
+
             break;
     }
 }
@@ -397,12 +406,24 @@ function initializeTable(data)
 function validateInitialValue()
 {
     const initialValueInput = getById("initial-value-input");
+    const initialValueErrorHint = getById("initial-value-hint-error");
+
+    if (initialValueInput.value.length !== 0)
+    {
+        initialValueErrorHint.innerHTML = "";
+    } else
+    {
+        initialValueErrorHint.innerHTML = "Prázdne pole!";
+        return false;
+    }
 
     if (initialValueInput.value >= -100 && initialValueInput.value <= 100)
     {
+        initialValueErrorHint.innerHTML = "";
         return true;
     } else
     {
+        initialValueErrorHint.innerHTML = "Hodnota mimo intervalu!";
         return false;
     }
 }
@@ -411,13 +432,15 @@ function validateInitialValue()
 function validateToleranceValue()
 {
 
+    const toleranceValueErrorHint = getById("tolerance-value-hint-error");
 
     if (toleranceValue === 0.001 || toleranceValue === 0.0001 || toleranceValue === 0.00001 || toleranceValue === 0.000001)
     {
-
+        toleranceValueErrorHint.innerHTML = "";
         return true;
     } else
     {
+        toleranceValueErrorHint.innerHTML = "Nezvolená hodnota!";
         return false;
     }
 
@@ -428,17 +451,49 @@ function validateBounds()
 {
     const lowerBoundInput = getById("lower-bound-input");
     const upperBoundInput = getById("upper-bound-input");
+    const lowerBoundInputErrorHint = getById("lower-bound-value-hint-error");
+    const upperBoundInputErrorHint = getById("upper-bound-value-hint-error");
+
+
+    if (lowerBoundInput.value.length === 0)
+    {
+        lowerBoundInputErrorHint.innerHTML = "Prázdne pole!";
+
+        return false;
+    } else {
+
+        lowerBoundInputErrorHint.innerHTML = "";
+    }
 
     if (lowerBoundInput.value < -100 || lowerBoundInput.value > 99)
     {
 
+        lowerBoundInputErrorHint.innerHTML = "Hodnota mimo intervalu!";
         return false;
+    } else {
+        lowerBoundInputErrorHint.innerHTML = "";
     }
+
+
+
+
+    if (upperBoundInput.value.length === 0)
+    {
+        upperBoundInputErrorHint.innerHTML = "Prázdne pole!";
+        return false;
+    } else {
+        upperBoundInputErrorHint.innerHTML = "";
+    }
+
+
+
 
     if (upperBoundInput.value < -99 || upperBoundInput.value > 100)
     {
-
+        upperBoundInputErrorHint.innerHTML = "Hodnota mimo intervalu!";
         return false;
+    } else {
+        upperBoundInputErrorHint.innerHTML = "";
     }
 
 
@@ -447,13 +502,50 @@ function validateBounds()
 
     if (upperValue <= lowerValue)
     {
+        upperBoundInputErrorHint.innerHTML = "Horná hranica je menšia/väčšia než dolná!";
+        return false;
+    } else {
+        upperBoundInputErrorHint.innerHTML = "";
+    }
+
+
+    return true;
+
+}
+
+
+function validateFunction()
+{
+    const functionInput = getById("function-input");
+    const functionErrorHint = getById("function-hint-error");
+
+
+    if (functionInput.value.length === 0)
+    {
+        functionErrorHint.innerHTML = "Prázdne pole!";
+        return false;
+    } else {
+        functionErrorHint.innerHTML = "";
+    }
+
+
+
+    try
+    {
+        let expression = math.parse(functionInput.value);
+        math.evaluate(expression.toString(), { x: 0 });
+    } catch (error)
+    {
+        functionErrorHint.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
 
 
-    return true;
+    fun = functionInput.value;
 
+
+    return true;
 }
 
 
@@ -519,7 +611,7 @@ function validateEquation()
 
 function newtonMethod()
 {
-    if (!validateEquation() || !validateInitialValue() || !validateToleranceValue())
+    if (!validateEquation() || !validateToleranceValue() || !validateInitialValue())
     {
         return false;
     }
@@ -585,7 +677,7 @@ function newtonMethod()
 
 
     const resultInput = getById("result-input");
-    resultInput.value = "Aproximačný koreň má hodnotu: " + current.toFixed(round);
+    resultInput.value = "Hodnota aproximačného koreňa: " + current.toFixed(round);
 
     initializeTable(data);
 
@@ -598,7 +690,7 @@ function newtonMethod()
 function bisectionMethod()
 {
 
-    if (!validateEquation() || !validateBounds() || !validateToleranceValue())
+    if (!validateEquation() || !validateToleranceValue() || !validateBounds())
     {
         return false;
     }
@@ -674,7 +766,7 @@ function bisectionMethod()
     }
 
     const resultInput = getById("result-input");
-    resultInput.value = "Aproximačný koreň má hodnotu: " + xk.toFixed(round);
+    resultInput.value = "Hodnota aproximačného koreňa: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -685,9 +777,8 @@ function bisectionMethod()
 
 function regulaFalsiMethod()
 {
-    if (!validateEquation() || !validateBounds() || !validateToleranceValue())
+    if (!validateEquation() || !validateToleranceValue() || !validateBounds())
     {
-
         return false;
     }
 
@@ -716,7 +807,7 @@ function regulaFalsiMethod()
     data[0][3] = "x";
     data[0][4] = "chyba";
 
-
+    let xk = 0;
     for (let k = 1; k < iterations; ++k) {
 
 
@@ -730,7 +821,7 @@ function regulaFalsiMethod()
         }
 
 
-        const xk = a - (b - a) / (fbk - fak) * fak;
+         xk = a - (b - a) / (fbk - fak) * fak;
 
         const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
@@ -765,7 +856,7 @@ function regulaFalsiMethod()
     }
 
     const resultInput = getById("result-input");
-    resultInput.value = "Aproximačný koreň má hodnotu: " + xk.toFixed(round);
+    resultInput.value = "Hodnota aproximačného koreňa: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -976,12 +1067,11 @@ function calculateApproximationMethod()
 function lagrangeInterpolating()
 {
 
-    if (!validateCoordinates(parseStringCoordintatesToArrays(), 1))
-    {
-        return false;
-    }
 
-    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+
+   // let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+
+    let arr = coor;
     let equation = "";
     let first = true;
 
@@ -1039,7 +1129,7 @@ function lagrangeInterpolating()
 
     fun = equation;
 
-    document.getElementById("result-input").value = fun;
+    document.getElementById("result-input").value = "f(x) = " + fun;
 
     graph();
 
@@ -1067,6 +1157,8 @@ function newtonInterpolating()
         ++j;
 
     }
+
+    
 
     let equation = "";
 
@@ -1108,7 +1200,7 @@ function newtonInterpolating()
 
     fun = equation;
 
-    document.getElementById("result-input").value = fun;
+    document.getElementById("result-input").value = "f(x) = " + fun;
 
     graph();
 
@@ -1141,7 +1233,7 @@ function leastSquares() {
 }
 
 
-
+let coor =[];
 function insertFile() {
     const fileInput = getById("file-input");
     fileInput.click();
@@ -1162,15 +1254,14 @@ function insertFile() {
     }
 
 
-    let coordinates =[];
+
 
     fileInput.addEventListener('change', function(event) {
         let file = event.target.files[0];
 
         csvToString(file, function(csvString) {
-            coordinates = $.csv.toArrays(csvString);
-
-            //validateCoordinates(coordinates);
+            coor = $.csv.toArrays(csvString);
+            validateCoordinates(coor,2);
 
         });
 
@@ -1226,10 +1317,6 @@ function validateStringCoordinates()
     return validateCoordinates(parseStringCoordintatesToArrays(), 1);
 }
 
-function validateCsvCoordinates()
-{
-    return validateCoordinates(parseCsvCoordinatesToArrays(), 2);
-}
 
 
 
@@ -1238,6 +1325,9 @@ function validateCoordinates(coordinatesArrays, type)
 
     const coordinatesCsvErrorHint = getById("coordinates-csv-error-hint");
     const coordinatesStringErrorHint = getById("coordinates-string-error-hint");
+
+
+
 
     if (type === 1)
     {
@@ -1392,7 +1482,7 @@ function logaritmic()
 
     fun = equation;
 
-    document.getElementById("result-input").value = fun;
+    document.getElementById("result-input").value = "f(x) = " + fun;
 
     display();
 
@@ -1464,7 +1554,7 @@ function linear()
 
     fun = equation;
 
-    document.getElementById("result-input").value = fun;
+    document.getElementById("result-input").value = "f(x) = " + fun;
     display();
 
 
@@ -1558,15 +1648,39 @@ function spline()
 function validateSubintervals()
 {
     const subIntervalsInputElement = getById("subintervals-input");
+    const subIntervalsInputErrorHint = getById("subintervals-value-hint-error");
 
-    if (!Number.isInteger(subIntervalsInputElement.value))
+
+    if (subIntervalsInputElement.value.length === 0)
     {
+        subIntervalsInputErrorHint.innerHTML = "Prázdne pole!"
         return false;
+    }else
+    {
+        subIntervalsInputErrorHint.innerHTML = "";
+    }
+
+
+    function isPositiveInteger(n)
+    {
+        return n >>> 0 === parseFloat(n);
+    }
+
+
+    if (!isPositiveInteger(subIntervalsInputElement.value))
+    {
+        subIntervalsInputErrorHint.innerHTML = "Nevalidná hodnota!"
+        return false;
+    }else {
+        subIntervalsInputErrorHint.innerHTML = "";
     }
 
     if (subIntervalsInputElement.value  <= 0 || subIntervalsInputElement.value > 100)
     {
+        subIntervalsInputErrorHint.innerHTML = "Hodnota mimo intervalu!"
         return false;
+    } else {
+        subIntervalsInputErrorHint.innerHTML = "";
     }
 
     return true;
@@ -1575,8 +1689,9 @@ function validateSubintervals()
 }
 function trapezoid()
 {
-    if (!validateEquation() || !validateSubintervals() || !validateBounds())
+    if (!validateFunction() || !validateBounds() || !validateSubintervals() )
     {
+
         return false;
     }
 
@@ -1595,11 +1710,11 @@ function trapezoid()
 
     const h = (b - a) / n;
 
-    const parsedEquation = math.parse(functi.value);
+    const parsedEquation = math.parse(fun);
 
 
     let sum = 0;
-    let part = 1 * dh.value;
+    let part = 1 * a;
 
     for (let i = 0; i <= n; ++i)
     {
@@ -1611,7 +1726,7 @@ function trapezoid()
             continue;
         }
 
-        if (i == n.value)
+        if (i == n)
         {
             let fx = math.evaluate(parsedEquation.toString(), { x: b});
             sum += fx;
@@ -1629,7 +1744,7 @@ function trapezoid()
 
     const result = sum * h/2;
 
-    document.getElementById("result-input").value = result.toFixed(6);
+    document.getElementById("result-input").value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
 
 }
@@ -1637,7 +1752,7 @@ function trapezoid()
 function simpson()
 {
 
-    if (!validateEquation() || !validateSubintervals() || !validateBounds())
+    if (!validateFunction() || !validateSubintervals() || !validateBounds())
     {
         return false;
     }
@@ -1657,7 +1772,7 @@ function simpson()
 
     const h = (b - a) / n;
 
-    const parsedEquation = math.parse(functi.value);
+    const parsedEquation = math.parse(fun);
 
 
     let sum = 0;
@@ -1697,7 +1812,7 @@ function simpson()
 
     const result = sum * h/3;
 
-    document.getElementById("result-input").value = result.toFixed(6);
+    document.getElementById("result-input").value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
 
 

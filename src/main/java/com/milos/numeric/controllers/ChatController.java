@@ -35,16 +35,16 @@ public class ChatController
     }
 
 
-    @GetMapping("/person/conversation/{id}")
+    @GetMapping("/person/{ida}/conversation/{idb}")
     @ResponseBody
-    public List<NewMessageDto> findById(@PathVariable Long id)
+    public List<NewMessageDto> findById(@PathVariable("ida") Long idA, @PathVariable("idb") Long idB)
     {
 
-        Optional<Chat> optional = this.chatService.findById(id);
+        Optional<Chat> optional = this.chatService.findByOneParticipant(idA, idB);
 
         if (optional.isEmpty())
         {
-
+            System.out.println("Nenaslo");
         }
 
         Chat chat = optional.get();
@@ -56,8 +56,7 @@ public class ChatController
             NewMessageDto messageDto = new NewMessageDto();
             messageDto.setContent(item.getContent());
             messageDto.setSender(item.getSender());
-
-            newMessageDtos.add(messageDto);
+            System.out.println(messageDto.getSender()); newMessageDtos.add(messageDto);
         }
 
 

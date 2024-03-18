@@ -353,7 +353,7 @@
                             <form th:object="${FileDto}"  class="forms-sample" action="#" th:action="@{/admin/material/upload}" method="POST"  enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="exampleInputName1">Názov</label>
-                                    <input th:field="*{name}" type="text" class="form-control" id="exampleInputName1" placeholder="Maximálne 15 znakov" >
+                                    <input th:field="*{name}" type="text" class="form-control" id="exampleInputName1" minlength="1" maxlength="15" placeholder="Maximálne 15 znakov!" >
                                 </div>
 
 
@@ -368,7 +368,7 @@
 
                                 <div class="form-group">
                                     <label for="exampleTextarea1">Popis</label>
-                                    <textarea th:field="*{description}" class="form-control" id="exampleTextarea1" rows="4" maxlength="50" placeholder="Maximálne 100 znakov!"></textarea>
+                                    <textarea th:field="*{description}" class="form-control" id="exampleTextarea1" rows="4" maxlength="100" placeholder="Maximálne 100 znakov!"></textarea>
                                 </div>
 
                                 <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>

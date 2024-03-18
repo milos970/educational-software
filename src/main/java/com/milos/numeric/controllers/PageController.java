@@ -7,18 +7,13 @@ import com.milos.numeric.dtos.FileDto;
 import com.milos.numeric.dtos.NewChatDto;
 import com.milos.numeric.dtos.NewPersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.Employee;
-import com.milos.numeric.entities.File;
-import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.entities.Student;
+import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
-import com.milos.numeric.services.EmployeeService;
-import com.milos.numeric.services.FileService;
-import com.milos.numeric.services.PersonalInfoService;
-import com.milos.numeric.services.StudentService;
+import com.milos.numeric.services.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,15 +34,19 @@ public class PageController {
     private final StudentService studentService;
 
     private final EmployeeService employeeService;
+
+
     private final EmailServiceImpl emailService;
 
     private final FileService fileService;
 
 
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, FileService fileService) {
+    @Autowired
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService,  EmailServiceImpl emailService, FileService fileService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
+
         this.emailService = emailService;
         this.fileService = fileService;
     }
@@ -211,6 +210,9 @@ public class PageController {
 
 
         modelAndView.addObject("adminId", employee.getId());
+
+
+
         modelAndView.setViewName("/pages/tables/chat");
         return modelAndView;
     }

@@ -1,5 +1,7 @@
 
-
+let idA = 0;
+let idB = 0;
+let userName = "";
 
 function sendEmailVerification()
 {
@@ -30,41 +32,52 @@ function sendEmailVerification()
 }
 
 
-function sendMessage(idA, idB, content)
+function sendMessage()
 {
     const xhttp = new XMLHttpRequest();
-    const element = document.getElementById("chat-div");
+    const element = document.getElementById("conversation");
     const inputElement = document.getElementById("message-input");
 
+    const content = getById("message-input").value;
+
+    let scrollDiv = getById("conversation");
+    scrollDiv.scrollTop = scrollDiv.scrollHeight;
 
 
-    xhttp.onload = function()
-    {
-        if (xhttp.status === 200)
-        {
+    getById("message-input").value = "";
+    xhttp.onload = function() {
+        if (xhttp.status === 200) {
             alert("Success");
         } else {
             alert("Unsuccessfull");
         }
 
+        const lineDiv = document.createElement('div');
+        lineDiv.classList.add("flex-container");
 
-        const newDiv = document.createElement("div");
-        newDiv.className = "flex-item";
+        const innerDivLeft = document.createElement('div');
+        innerDivLeft.classList.add("left-item");
 
-       /* const innerDivA = document.createElement("div");
-        innerDivA.className = "left-item";
+        const button = document.createElement("button");
+        button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
 
-        innerDivA.style.display = "none";*/
 
-        const innerDivB = document.createElement("div");
-        innerDivB.className = "right-item";
 
-        innerDivB.innerHTML = inputElement.value;
-        inputElement.value = "";
+        const innerDivRight = document.createElement('div');
+        innerDivRight.classList.add("right-item");
 
-       // newDiv.appendChild(innerDivA);
-        newDiv.appendChild(innerDivB);
-        element.appendChild(newDiv);
+        innerDivRight.appendChild(button);
+        lineDiv.appendChild(innerDivLeft);
+        lineDiv.appendChild(innerDivRight);
+
+
+        element.appendChild(lineDiv);
+
+
+        innerDivLeft.style.display = "hidden";
+        button.textContent = content;
+
+
     }
 
     let url = "/person/sendMessage";
@@ -75,37 +88,33 @@ function sendMessage(idA, idB, content)
 
 
     let data = {
-        idA: idA,
-        idB: idB,
+        senderId: idA,
+        recipientId: idB,
+        sender: userName,
         content: content
     };
     xhttp.send(JSON.stringify(data));
 }
 
 
-function getConversation(username, idA, idB)
+function getConversation(usrName, ida, idb)
 {
 
+    userName = usrName;
 
-    let dt = {
-        idA: 0,
-        idB: 0
-    };
+    getById("send-message-div").style.display="block";
+    const xhttp = new XMLHttpRequest();
 
-    jQuery.ajax({
-        url: "/person/conversation/0",
-        data: dt,
-        type: "GET",
-        success: function (dejta) {
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 200)
+        {
+            const messages = JSON.parse(xhttp.response);
 
-
-
-            var messages = dejta;
 
             const conversationDivElement = document.getElementById("conversation");
 
-            messages.forEach(function(message)
-            {
+            messages.forEach(function(message) {
                 const lineDiv = document.createElement('div');
                 lineDiv.classList.add("flex-container");
 
@@ -119,32 +128,50 @@ function getConversation(username, idA, idB)
                 lineDiv.appendChild(innerDivLeft);
                 lineDiv.appendChild(innerDivRight);
 
-                conversationDivElement.insertBefore(lineDiv, conversationDivElement.firstChild);
+                conversationDivElement.insertBefore(lineDiv, conversationDivElement.lastChild);
 
+                const button = document.createElement("button");
+                button.textContent = message.content;
 
+                if (message.sender === usrName) {
 
-                if (message.sender === username)
-                {
-
-                    innerDivLeft.style.display="hidden";
-                    innerDivRight.innerHTML = message.content;
+                    button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
+                    innerDivLeft.style.display = "hidden";
+                    innerDivRight.appendChild(button);
+                    //innerDivRight.innerHTML = message.content;
 
                 } else {
-                    innerDivRight.style.display="hidden";
-                    innerDivLeft.innerHTML = message.content;
+                    innerDivRight.style.display = "hidden";
+                    button.classList.add("btn", "btn-light", "btn-rounded", "btn-fw");
+                    innerDivLeft.appendChild(button);
+                    //innerDivLeft.innerHTML = message.content;
                 }
+            })
+            let scrollDiv = getById("conversation");
+            scrollDiv.scrollTop = scrollDiv.scrollHeight;
+        } else {
+            alert("Unsuccessfull");
+        }
 
-            });
+
+
+    }
 
 
 
 
 
+    idA = ida;
+    idA = idb;
 
 
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
 
-        },
-    });
+    let url = "/person/" + idA + "/conversation/" + idB;
+
+    xhttp.open("GET", url, true);
+
+    xhttp.send();
+
+
+
 }

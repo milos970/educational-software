@@ -1,80 +1,17 @@
 
+function getById(id)
+{
+    let el = document.getElementById(id);
+    if (!el)
+    {
+        throw new ReferenceError(id + " is not defined");
+    }
+    return el;
+}
 
 let fun = "";
 
-function validateEquation()
-{
-    const equationInput = document.getElementById("equation-input");
-    const equationError = document.getElementById("equation-hint-error");
 
-    let modifiedEquation = equationInput.value;
-
-
-    if (modifiedEquation === null || modifiedEquation === "")
-    {
-        equationError.innerHTML = "Prázdne poľe!";
-        return false;
-    } else
-    {
-        equationError.innerHTML = "";
-    }
-
-    modifiedEquation = modifiedEquation.trim();
-    modifiedEquation = modifiedEquation.toLowerCase();
-
-
-    if (modifiedEquation.indexOf("x") === -1)
-    {
-        equationError.innerHTML  = "Nevalidný výraz!";
-        return false;
-    } else
-    {
-        equationError.innerHTML = "";
-    }
-
-
-
-    if (modifiedEquation.charAt(modifiedEquation.length - 1) !== "0")
-    {
-        equationError.innerHTML = "Nevalidný výraz!";
-        return false;
-    } else {
-        equationError.innerHTML = "";
-    }
-
-    if (!modifiedEquation.includes("="))
-    {
-
-        equationError.innerHTML = "Nevalidný výraz!";
-        return false;
-    } else
-    {
-        equationError.innerHTML = "";
-    }
-
-
-    modifiedEquation = modifiedEquation.slice(0, -1);
-    modifiedEquation = modifiedEquation.replace("=","");
-    modifiedEquation = modifiedEquation.trim();
-
-
-    try
-    {
-        let expression = math.parse(modifiedEquation);
-        math.evaluate(expression.toString(), { x: 0 });
-        equationError.innerHTML = "";
-
-    } catch (error)
-    {
-        equationError.innerHTML  = "Nevalidný výraz!";
-
-        return false;
-    }
-
-    fun = modifiedEquation;
-
-    return true;
-}
 
 
 
@@ -83,6 +20,8 @@ let selectedCategory = 0;
 let selectedMethod = 0;
 function selectNumericCategory(category)
 {
+    document.getElementById("methods-calculation-div").style.display = "block";
+    document.getElementById("graph-calculation-div").style.display = "block";
     selectedCategory = category;
     setUpElements(category, 1);
 }
@@ -347,12 +286,11 @@ function calculateNonLinearMethod()
 }
 
 
-let toleranceValue = 0.001;
-let round = 3;
-
+let toleranceValue = -1;
+let round = -1;
 function selectedTolerance(value)
 {
-    const dropDownButton = document.getElementById("dropdownMenuOutlineButton1");
+    const dropDownButton = getById("dropdownMenuOutlineButton1");
 
     switch (value)
     {
@@ -376,6 +314,7 @@ function selectedTolerance(value)
             toleranceValue = 0.000001;
             round = 6;
             break;
+        default:
     }
 
 
@@ -385,7 +324,6 @@ function selectedTolerance(value)
 function validateInitialValue()
 {
     const initialValueInput = document.getElementById("initial-value-input");
-
     const initalValueHintError = document.getElementById("initial-value-hint-error");
 
     if (initialValueInput.value < -100 || initialValueInput.value > 100)
@@ -456,31 +394,154 @@ function initializeTable(data)
 
 ////////Non-linear methods//////////////////////////////////////////////////////////////////////////////////////////////
 
+function validateInitialValue()
+{
+    const initialValueInput = getById("initial-value-input");
+
+    if (initialValueInput.value >= -100 && initialValueInput.value <= 100)
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+
+function validateToleranceValue()
+{
+
+
+    if (toleranceValue === 0.001 || toleranceValue === 0.0001 || toleranceValue === 0.00001 || toleranceValue === 0.000001)
+    {
+
+        return true;
+    } else
+    {
+        return false;
+    }
+
+}
+
+
+function validateBounds()
+{
+    const lowerBoundInput = getById("lower-bound-input");
+    const upperBoundInput = getById("upper-bound-input");
+
+    if (lowerBoundInput.value < -100 || lowerBoundInput.value > 99)
+    {
+
+        return false;
+    }
+
+    if (upperBoundInput.value < -99 || upperBoundInput.value > 100)
+    {
+
+        return false;
+    }
+
+
+    const upperValue = parseFloat(upperBoundInput.value);
+    const lowerValue = parseFloat(lowerBoundInput.value);
+
+    if (upperValue <= lowerValue)
+    {
+        return false;
+    }
+
+
+
+    return true;
+
+}
+
+
+function validateEquation()
+{
+    const equationInput = getById("equation-input");
+    let modifiedEquation = equationInput.value;
+    const equationErrorHint = getById("equation-hint-error");
+
+
+    if (modifiedEquation === null || modifiedEquation === "")
+    {
+        equationErrorHint.innerHTML = "Prázdne pole!";
+        return false;
+    }
+
+    modifiedEquation = modifiedEquation.trim();
+    modifiedEquation = modifiedEquation.toLowerCase();
+
+
+    if (modifiedEquation.indexOf("x") === -1)
+    {
+        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        return false;
+    }
+
+
+
+    if (modifiedEquation.charAt(modifiedEquation.length - 1) !== "0")
+    {
+        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        return false;
+    }
+
+    if (!modifiedEquation.includes("="))
+    {
+        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        return false;
+    }
+
+
+    modifiedEquation = modifiedEquation.slice(0, -1);
+    modifiedEquation = modifiedEquation.replace("=","");
+
+
+    try
+    {
+        let expression = math.parse(modifiedEquation);
+        math.evaluate(expression.toString(), { x: 0 });
+    } catch (error)
+    {
+        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        return false;
+    }
+
+    equationErrorHint.innerHTML = "";
+
+    fun = modifiedEquation;
+
+
+    return true;
+}
 
 function newtonMethod()
 {
+    if (!validateEquation() || !validateInitialValue() || !validateToleranceValue())
+    {
+        return false;
+    }
 
-    const initialValueInput = document.getElementById("initial-value-input");
-    const resultElementErrorHint = document.getElementById("result-hint-error");
 
-    resultElementErrorHint.innerHTML = "";
 
+
+    const tolerance = toleranceValue;
+    const resultElementErrorHint = getById("result-hint-error");
     const iterations = 1000;
-    let current = parseFloat(initialValueInput.value);
-    const tolerance =  toleranceValue;
+    let current = parseFloat(getById("initial-value-input").value);
 
 
-
-
-    let data = [];
+    const data = [];
 
     data[0] = [3];
     data[0][0] = "k";
     data[0][1] = "x";
     data[0][2] = "Chyba";
 
-    let parsedEquation = math.parse(fun);
-    let derivative = math.derivative(parsedEquation, 'x');
+    const parsedEquation = math.parse(fun);
+    const derivative = math.derivative(parsedEquation, 'x');
 
     for (let i = 0; i < iterations; ++i)
     {
@@ -490,23 +551,23 @@ function newtonMethod()
         data[i + 1][1] = current.toFixed(round);
 
         let fx = math.evaluate(parsedEquation.toString(), { x: current });
-        let derfx = 0;
+        let derFx = 0;
 
 
         try
         {
-             derfx = math.evaluate(derivative.toString(), { x: current });
+            derFx = math.evaluate(derivative.toString(), { x: current });
         } catch (error) {
-            resultElementErrorHint.innerHTML = "Nemožno derivovať!"
+
         }
 
-        if (derfx === 0)
+        if (derFx === 0)
         {
-            resultElementErrorHint.innerHTML = "Delenie číslom 0 vo výpočte!"
+
             return;
         }
 
-        let next = current - (fx / derfx);
+        let next = current - (fx / derFx);
         let error = Math.abs(next - current);
         data[i + 1][2] = error.toFixed(round);
 
@@ -521,6 +582,11 @@ function newtonMethod()
     }
 
     $("#table tr").remove();
+
+
+    const resultInput = getById("result-input");
+    resultInput.value = "Aproximačný koreň má hodnotu: " + current.toFixed(round);
+
     initializeTable(data);
 
 }
@@ -532,12 +598,19 @@ function newtonMethod()
 function bisectionMethod()
 {
 
-    const iterations = 1000;
+    if (!validateEquation() || !validateBounds() || !validateToleranceValue())
+    {
+        return false;
+    }
 
+    const resultInputHintError = getById("result-hint-error");
+    resultInputHintError.innerHTML = "";
+
+    const iterations = 1000;
     const tolerance =  toleranceValue;
 
-    const dh = document.getElementById("lower-bound-input");
-    const hh = document.getElementById("upper-bound-input");
+    const lowerBound = getById("lower-bound-input").value;
+    const upperBound = getById("upper-bound-input").value;
 
 
     const data = []
@@ -550,8 +623,8 @@ function bisectionMethod()
     data[0][4] = "chyba";
 
 
-    let a = parseFloat(dh.value);
-    let b = parseFloat(hh.value);
+    let a = parseFloat(lowerBound);
+    let b = parseFloat(upperBound);
 
     let parsedEquation = math.parse(fun);
 
@@ -567,6 +640,11 @@ function bisectionMethod()
 
         const fbk = math.evaluate(parsedEquation.toString(), { x: b });
 
+        if (fak * fbk > 0)
+        {
+            resultInputHintError.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            return;
+        }
 
         data[k] = [5];
 
@@ -576,15 +654,12 @@ function bisectionMethod()
         data[k][3] = xk.toFixed(round);
         data[k][4] = ((b - a) / 2).toFixed(round);
 
-        if ((b - a) / 2 <= tolerance) {
-
-
+        if ((b - a) / 2 <= tolerance)
+        {
             break;
         }
 
         if (fxk === 0) {
-
-
             break;
         }
 
@@ -594,22 +669,15 @@ function bisectionMethod()
 
         if (fbk * fxk < 0) {
             a = xk;
-            a = xk;
         }
-
-
-
-
-
 
     }
 
+    const resultInput = getById("result-input");
+    resultInput.value = "Aproximačný koreň má hodnotu: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
-
-
-
 
 
 }
@@ -617,16 +685,25 @@ function bisectionMethod()
 
 function regulaFalsiMethod()
 {
+    if (!validateEquation() || !validateBounds() || !validateToleranceValue())
+    {
 
-    const tolerance =  toleranceValue;
-    const dh = document.getElementById("lower-bound-input");
-    const hh = document.getElementById("upper-bound-input");
+        return false;
+    }
 
-    let a = parseFloat(dh.value);
-    let b = parseFloat(hh.value);
-    let prev = a;
+    const resultInputHintError = getById("result-hint-error");
+    resultInputHintError.innerHTML = "";
 
     const iterations = 1000;
+    const tolerance =  toleranceValue;
+    const lowerBound = getById("lower-bound-input").value;
+    const upperBound = getById("upper-bound-input").value;
+
+    let a = parseFloat(lowerBound);
+    let b = parseFloat(upperBound);
+    let prev = a;
+
+
 
     let parsedEquation = math.parse(fun);
 
@@ -642,42 +719,53 @@ function regulaFalsiMethod()
 
     for (let k = 1; k < iterations; ++k) {
 
-        data[k] = [5];
+
         const fak = math.evaluate(parsedEquation.toString(), { x: a });
         const fbk = math.evaluate(parsedEquation.toString(), { x: b });
+
+        if (fak * fbk > 0)
+        {
+            resultInputHintError.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            return;
+        }
 
 
         const xk = a - (b - a) / (fbk - fak) * fak;
 
         const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
+        data[k] = [5];
         data[k][0] = k - 1;
         data[k][1] = a.toFixed(round);
         data[k][2] = b.toFixed(round);
         data[k][3] = xk.toFixed(round);
         data[k][4] = (Math.abs(xk - prev)).toFixed(round);
-        if (fxk === 0) {
 
+        if (fxk === 0)
+        {
             break;
         }
 
-        if (fak * fxk < 0) {
+        if (fak * fxk < 0)
+        {
             b = xk;
         }
 
-        if (fbk * fxk < 0) {
+        if (fbk * fxk < 0)
+        {
             a = xk;
         }
 
         if (Math.abs(xk - prev) <= tolerance)
         {
-
             break;
         }
 
         prev = xk;
     }
 
+    const resultInput = getById("result-input");
+    resultInput.value = "Aproximačný koreň má hodnotu: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -685,6 +773,16 @@ function regulaFalsiMethod()
 
 
 }
+
+
+
+
+function simpleIterationMethod()
+{
+
+}
+
+
 
 
 function hideGraphTable() {
@@ -750,7 +848,8 @@ function graph()
             ],
             borderWidth: 1,
             fill: false
-        }]
+        }],
+        lineAtIndex: 2
     };
 
     const backgroundColorPlugin = {
@@ -766,22 +865,24 @@ function graph()
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true,
+                   beginAtZero: true,
                     fontColor: "#000000",
                 },
                 gridLines: {
-                    color: "rgba(204, 204, 204,0.1)",
-                    zeroLineColor: '#000000'
+                    zeroLineWidth: 3,
+                    zeroLineColor: "#2C292E",
+
                 }
             }],
             xAxes: [{
                 ticks: {
                     beginAtZero: true,
                     fontColor: "#000000",
+
                 },
                 gridLines: {
-                    color: "rgba(204, 204, 204,0.1)",
-                    zeroLineColor: '#ffffff'
+                    
+                    zeroLineColor: "#2C292E",
                 }
             }]
         },
@@ -798,8 +899,21 @@ function graph()
 
 
 
-
-
+    const pl = {
+        afterDraw: function(chart) {
+            var ctx = chart.ctx;
+            var xAxis = chart.scales['x-axis-0'];
+            var yAxis = chart.scales['y-axis-0'];
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = '#000000'; // Red color for the vertical line
+            ctx.lineWidth = 3;
+            ctx.moveTo(xAxis.getPixelForValue(0), yAxis.top);
+            ctx.lineTo(xAxis.getPixelForValue(0), yAxis.bottom);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
 
 
     if ($("#lineChart").length) {
@@ -808,7 +922,9 @@ function graph()
             type: 'line',
             data: data,
             options: options,
-            plugins: [backgroundColorPlugin]
+            plugins:
+                [backgroundColorPlugin,pl]
+
         });
     }
 
@@ -859,6 +975,11 @@ function calculateApproximationMethod()
 
 function lagrangeInterpolating()
 {
+
+    if (!validateCoordinates(parseStringCoordintatesToArrays(), 1))
+    {
+        return false;
+    }
 
     let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
     let equation = "";
@@ -1021,9 +1142,195 @@ function leastSquares() {
 
 
 
+function insertFile() {
+    const fileInput = getById("file-input");
+    fileInput.click();
+
+    var csvString = "";
+    function csvToString(file, callback) {
+        let reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = function(event) {
+             csvString = event.target.result;
+
+            callback(csvString);
+        };
+
+        // Read in the file as a text
+        reader.readAsText(file);
+    }
+
+
+    let coordinates =[];
+
+    fileInput.addEventListener('change', function(event) {
+        let file = event.target.files[0];
+
+        csvToString(file, function(csvString) {
+            coordinates = $.csv.toArrays(csvString);
+
+            //validateCoordinates(coordinates);
+
+        });
+
+        getById("text-input").value = fileInput.value.split(/(\\|\/)/g).pop();
+
+
+    });
+}
+
+function parseStringCoordintatesToArrays()
+{
+    const stringCoordinatesInputElement = getById("nodes-string-input");
+
+    const array = stringCoordinatesInputElement.value.match(/-?\d+(\.\d+)?/g);
+
+
+    const coordinates = [];
+    let j = 0;
+    for (let i = 0; i < array.length; i += 2)
+    {
+        coordinates[j] = [2];
+        coordinates[j][0] = array[i];
+        coordinates[j][1] = array[i + 1];
+        ++j;
+    }
+
+    return coordinates;
+}
+
+
+function validateStringCoordinates()
+{
+    const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*]$/;
+
+    const coordinatesStringElement = getById("nodes-string-input");
+    const coordinatesStringErrorHint = getById("coordinates-string-error-hint");
+
+    if (coordinatesStringElement.value.length === 0)
+    {
+        coordinatesStringErrorHint.innerHTML = "Prázdne pole!";
+        return false;
+    }
+
+
+    if (regex.test(coordinatesStringElement.value))
+    {
+        coordinatesStringErrorHint.innerHTML = "";
+    } else {
+        coordinatesStringErrorHint.innerHTML = "Nevalidný výraz!";
+        return false;
+    }
+
+    return validateCoordinates(parseStringCoordintatesToArrays(), 1);
+}
+
+function validateCsvCoordinates()
+{
+    return validateCoordinates(parseCsvCoordinatesToArrays(), 2);
+}
+
+
+
+function validateCoordinates(coordinatesArrays, type)
+{
+
+    const coordinatesCsvErrorHint = getById("coordinates-csv-error-hint");
+    const coordinatesStringErrorHint = getById("coordinates-string-error-hint");
+
+    if (type === 1)
+    {
+        if (coordinatesArrays.length > 10)
+        {
+            coordinatesStringErrorHint.innerHTML = "Uzlov je viac než 10!";
+            return false;
+        } else {
+            coordinatesStringErrorHint.innerHTML = "";
+        }
+
+    }
+
+
+    if (type === 2)
+    {
+        if (coordinatesArrays.length > 1000)
+        {
+            coordinatesCsvErrorHint.innerHTML = "Uzlov je viac než 1000!";
+            return false;
+        } else {
+            coordinatesCsvErrorHint.innerHTML = "";
+        }
+
+    }
+
+
+
+    let uniques = new Set();
+
+
+
+    for (let i = 0; i < coordinatesArrays.length; ++i)
+    {
+        const valueX = coordinatesArrays[i][0];
+        const valueY = coordinatesArrays[i][1];
+
+
+
+        if (isNaN(valueX) === true || isNaN(valueY) === true || valueX.length === 0 || valueY.length === 0)
+        {
+            uniques.clear();
+            uniques = null;
+
+            if (type === 1)
+            {
+                coordinatesStringErrorHint.innerHTML = "Nevalidná hodnota vo výraze!";
+                return false;
+            }
+
+            const char = String.fromCharCode(65);
+            coordinatesCsvErrorHint.innerHTML = "Nevalidná hodnota na súradnici: " + char + (i+1);
+
+            return false;
+        }
+
+        uniques.add(valueX);
+
+    }
+
+
+    if (coordinatesArrays.length !== uniques.size)
+    {
+        if (type === 1) {
+            coordinatesStringErrorHint.innerHTML = "Duplikát X!";
+        }
+
+        if (type === 2) {
+            coordinatesCsvErrorHint.innerHTML = "Duplikát X!";
+        }
+
+        return false;
+    }
+    else
+    {
+        coordinatesStringErrorHint.innerHTML = "";
+        coordinatesCsvErrorHint.innerHTML = "";
+    }
+
+
+    return true;
+
+}
+
+
+
 function logaritmic()
 {
 
+    if (!validateCoordinates(parseStringCoordintatesToArrays()))
+    {
+       return false;
+    }
 
 
     let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
@@ -1190,7 +1497,54 @@ function cramer(option, coeficients) {
 }
 
 
+function spline()
+{
+    if ( !isValid())
+    {
+        return;
+    }
 
+    let dk = [];
+
+    for (let i = 0; i < data.length - 1; ++i)
+    {
+        dk[i] = (data[i + 1][1] - data[i][1]) / (data[i + 1][0] - data[i][0]);
+    }
+
+
+
+    let Sx = [data.length - 1];
+
+    for (let i = 0; i < data.length - 1; ++i)
+    {
+        Sx[i] = "";
+        Sx[i] += data[i][1];
+        if (dk[i] > 0)
+        {
+            Sx[i] += "+";
+        }
+        Sx[i] += dk[i];
+
+        if (data[i][0] > 0)
+        {
+            Sx[i] += "(x-" + data[i][0]+ ")";
+        } else
+        {
+            Sx[i] += "(x+" + ((-1) * data[i][0]) + ")";
+        }
+    }
+
+    for(var i = 0; i < Sx.length; i++)
+    {
+        console.log(Sx[i]);
+    }
+
+
+}
+
+
+
+/////////////////////////////////////////Aproximation & interpolation///////////////////////////////////////////////////////////////
 
 
 
@@ -1199,17 +1553,47 @@ function cramer(option, coeficients) {
 
 /////////////////////////////Integration//////////////////////////////////////////////////////////////////////////////
 
+
+
+function validateSubintervals()
+{
+    const subIntervalsInputElement = getById("subintervals-input");
+
+    if (!Number.isInteger(subIntervalsInputElement.value))
+    {
+        return false;
+    }
+
+    if (subIntervalsInputElement.value  <= 0 || subIntervalsInputElement.value > 100)
+    {
+        return false;
+    }
+
+    return true;
+
+
+}
 function trapezoid()
 {
+    if (!validateEquation() || !validateSubintervals() || !validateBounds())
+    {
+        return false;
+    }
 
-    const hh = document.getElementById("upper-bound-input");
-    const dh = document.getElementById("lower-bound-input");
+    const resultInputHintError = getById("result-hint-error");
+    resultInputHintError.innerHTML = "";
 
-    const n = document.getElementById("subintervals-input");
+    const iterations = 1000;
+    const lowerBound = getById("lower-bound-input").value;
+    const upperBound = getById("upper-bound-input").value;
 
-    const functi = document.getElementById("function-input");
+    let a = parseFloat(lowerBound);
+    let b = parseFloat(upperBound);
 
-    const h = (hh.value - dh.value) / n.value;
+    const subIntervals = getById("subintervals-input").value;
+    const n = parseFloat(subIntervals);
+
+    const h = (b - a) / n;
 
     const parsedEquation = math.parse(functi.value);
 
@@ -1217,19 +1601,19 @@ function trapezoid()
     let sum = 0;
     let part = 1 * dh.value;
 
-    for (let i = 0; i <= n.value; ++i)
+    for (let i = 0; i <= n; ++i)
     {
 
         if (i == 0)
         {
-            let fx = math.evaluate(parsedEquation.toString(), { x: dh.value});
+            let fx = math.evaluate(parsedEquation.toString(), { x: a});
             sum += fx;
             continue;
         }
 
         if (i == n.value)
         {
-            let fx = math.evaluate(parsedEquation.toString(), { x: hh.value});
+            let fx = math.evaluate(parsedEquation.toString(), { x: b});
             sum += fx;
             continue;
         }
@@ -1250,33 +1634,47 @@ function trapezoid()
 
 }
 
-function simpson() {
+function simpson()
+{
 
-    const hh = document.getElementById("upper-bound-input");
-    const dh = document.getElementById("lower-bound-input");
+    if (!validateEquation() || !validateSubintervals() || !validateBounds())
+    {
+        return false;
+    }
 
-    const n = document.getElementById("subintervals-input");
+    const resultInputHintError = getById("result-hint-error");
+    resultInputHintError.innerHTML = "";
 
-    const h = (hh.value - dh.value) / n.value;
-    const functi = document.getElementById("function-input");
+    const iterations = 1000;
+    const lowerBound = getById("lower-bound-input").value;
+    const upperBound = getById("upper-bound-input").value;
+
+    let a = parseFloat(lowerBound);
+    let b = parseFloat(upperBound);
+
+    const subIntervals = getById("subintervals-input").value;
+    const n = parseFloat(subIntervals);
+
+    const h = (b - a) / n;
+
     const parsedEquation = math.parse(functi.value);
 
 
     let sum = 0;
-    let part = 1 * dh.value;
+    let part = 1 * a;
 
-    for (let i = 0; i <= n.value; ++i)
+    for (let i = 0; i <= n; ++i)
     {
 
         if (i == 0)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: dh.value});
+            sum += math.evaluate(parsedEquation.toString(), { x: a});
             continue;
         }
 
-        if (i == n.value)
+        if (i == n)
         {
-            sum += math.evaluate(parsedEquation.toString(), { x: hh.value});
+            sum += math.evaluate(parsedEquation.toString(), { x: b});
             continue;
         }
 
@@ -1318,6 +1716,8 @@ function calculateIntegrationMethod()
             break;
     }
 }
+
+
 
 
 

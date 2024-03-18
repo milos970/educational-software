@@ -14,12 +14,10 @@ public class NewMessageDto
     @Size(max = 100, message = "{validation.name.size.too_long}")
     private String content;
 
-    private Long chatId;
-
     private String sender;
 
-    private Long recipientId;
-
     private Long senderId;
+
+    private Long recipientId;
 
 }
