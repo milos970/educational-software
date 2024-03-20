@@ -1,11 +1,9 @@
 package com.milos.numeric.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.milos.numeric.Authority;
 import com.milos.numeric.dtos.FileDto;
-import com.milos.numeric.dtos.NewChatDto;
 import com.milos.numeric.dtos.NewPersonalInfoDto;
+import com.milos.numeric.dtos.SystemSettingsDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
@@ -20,9 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.Thymeleaf;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,16 +36,21 @@ public class PageController {
 
     private final FileService fileService;
 
+    private final SystemSettingsService systemSettingsService;
+
 
     @Autowired
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService,  EmailServiceImpl emailService, FileService fileService) {
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, FileService fileService, SystemSettingsService systemSettingsService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
 
         this.emailService = emailService;
         this.fileService = fileService;
+        this.systemSettingsService = systemSettingsService;
     }
+
+
 
 
     @GetMapping("/confirm/sign-up/page")
@@ -158,6 +159,26 @@ public class PageController {
         return new ModelAndView("redirect:/admin/material/page");
     }
 
+    @GetMapping("/admin/system-page")
+    public ModelAndView systemPage()
+    {
+
+        Optional<Employee> optional = this.employeeService.findByAuthority(Authority.TEACHER);
+
+        if (optional.isEmpty())
+        {
+
+        }
+
+        Employee employee = optional.get();
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("employee", employee);
+        modelAndView.setViewName("/pages/tables/system");
+        return modelAndView;
+    }
+
 
 
 
@@ -185,7 +206,7 @@ public class PageController {
 
         List<Student> students = this.studentService.findAll();
         if (students.isEmpty()) {
-
+            System.out.println(5555555);
         }
 
 

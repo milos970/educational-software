@@ -22,6 +22,7 @@
     <link rel="shortcut icon" href="/static/images/favicon.png" />
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="shortcut icon" th:href="@{/images/favicon.png}">
+    <link rel="stylesheet" th:href="@{/css/my.css}">
 
     <style>
         .flex-container {
@@ -349,8 +350,9 @@
                             <div class="card-body">
                                 <h4 class="card-title">Systém</h4>
 
+
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" style="color: whitesmoke">
+                                    <table class="table" style="color: whitesmoke">
                                         <thead>
                                         <tr>
                                             <th> </th>
@@ -364,13 +366,14 @@
                                             <td> Počet povolených absencii </td>
                                             <td> 2 </td>
                                             <td>
-                                                <div class="input-group">
-                                                <input type="number" min="0" max="100"   class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
-                                                       aria-describedby="basic-addon2">
+                                            <div class="input-group">
+                                                <input id="absents-input" type="number" placeholder="<1;13>" min="1" max="13"   class="form-control" aria-describedby="basic-addon2">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-sm btn-primary" th:attr="onclick=|sendPoints('${student.id}')|"  type="button">Zmeniť</button>
+                                                    <button id="absents-button" class="btn btn-sm btn-primary" onclick="updateSystemAbsents()"   type="button">Vložiť</button>
                                                 </div>
                                             </div>
+                                                <p class="error" id="absents-hint-error"></p>
+
                                             </td>
 
                                         </tr>
@@ -380,12 +383,13 @@
                                             <td> NIE</td>
                                             <td>
                                                 <div class="input-group">
-                                                    <input type="number" min="0" max="100"   class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
-                                                           aria-describedby="basic-addon2">
+                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" class="form-control" aria-describedby="basic-addon2" style="display:none;">
+                                                    <input type="text" id="text-input"    class="form-control" aria-describedby="basic-addon2">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-sm btn-primary" th:attr="onclick=|sendPoints('${student.id}')|"  type="button">Nahrať</button>
+                                                        <button class="btn btn-sm btn-primary" onclick="clic()"   type="button">Vložiť</button>
                                                     </div>
                                                 </div>
+                                                <p class="error" id="students-csv-hint-error"></p>
                                             </td>
 
                                         </tr>
@@ -394,19 +398,32 @@
                                             <td> Lýdia Gábrišová </td>
                                             <td>
                                                 <div class="input-group">
-                                                    <input type="text" placeholder="Vyhľadať vyučujúceho"  class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
+                                                    <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať vyučujúceho"  class="form-control" aria-label="Recipient's username"
                                                            aria-describedby="basic-addon2">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-sm btn-primary" th:attr="onclick=|sendPoints('${student.id}')|"  type="button">Zmeniť</button>
-                                                    </div>
                                                 </div>
+                                                <p class="error" id="username-hint-error"></p>
                                             </td>
 
                                         </tr>
                                         <tr>
 
+                                            <td> Termín najbližšieho cvičenia </td>
+                                            <td> 02.03.2024 </td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input id="date-input"  type="text" placeholder="dd.MM.yyyy HH:mm"  class="form-control" aria-label="Recipient's username"
+                                                           aria-describedby="basic-addon2">
+                                                    <div class="input-group-append">
+                                                        <button onclick="updateSystemDate()" id="date-button" class="btn btn-sm btn-primary"   type="button">Vložiť</button>
+                                                    </div>
+                                                </div>
+
+                                                <p class="error" id="date-hint-error"></p>
+                                            </td>
+
                                         </tr>
                                         <tr>
+
 
                                         </tr>
                                         <tr>
@@ -415,6 +432,8 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -459,6 +478,9 @@
 
 <script src="/static/js/chart.js"></script>
 <script th:src="@{/js/chart.js}"></script>
+
+<script src="/static/js/jquery.csv.js"></script>
+<script th:src="@{/js/jquery.csv.js}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="/static/js/my/my.js"></script>

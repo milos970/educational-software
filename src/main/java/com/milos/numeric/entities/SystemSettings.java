@@ -1,6 +1,10 @@
 package com.milos.numeric.entities;
 
+import com.milos.numeric.validators.DateValid;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,19 +24,20 @@ public class SystemSettings
     private Long id;
 
     @Column(name = "allowed_absents")
+    @Min(0)
+    @Max(13)
     private int allowedAbsents;
 
     @Column(name = "number_of_students")
+    @Min(0)
+    @Max(500)
     private int numberOfStudents;
 
-    @Column(name = "uploaded_students")
-    private boolean uploadedStudents;
+    @Size(min = 1, max = 13, message = "{validation.name.size.too_long}")
+    private String teacher;
 
-    private Date date;
-
-    private int week;
-
-
+    @DateValid
+    private String date;
 
 
 }

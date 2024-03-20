@@ -1158,7 +1158,7 @@ function newtonInterpolating()
 
     }
 
-    
+
 
     let equation = "";
 
@@ -1233,10 +1233,11 @@ function leastSquares() {
 }
 
 
-let coor =[];
-function insertFile() {
-    const fileInput = getById("file-input");
-    fileInput.click();
+
+
+
+
+function parseCsvToArrays() {
 
     var csvString = "";
     function csvToString(file, callback) {
@@ -1254,21 +1255,18 @@ function insertFile() {
     }
 
 
+    const file = getById("file-input").files[0];
 
 
-    fileInput.addEventListener('change', function(event) {
-        let file = event.target.files[0];
-
-        csvToString(file, function(csvString) {
-            coor = $.csv.toArrays(csvString);
-            validateCoordinates(coor,2);
-
-        });
-
-        getById("text-input").value = fileInput.value.split(/(\\|\/)/g).pop();
-
+    csvToString(file, function(csvString) {
+        validateStudentsCsv($.csv.toArrays(csvString));
 
     });
+
+
+
+
+
 }
 
 function parseStringCoordintatesToArrays()
@@ -1831,6 +1829,354 @@ function calculateIntegrationMethod()
             break;
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+function checkUsername(userName)
+{
+    const errorHint = getById("username-hint-error");
+
+    if (userName.length === 0)
+    {
+        getById("username-check-button").disabled = true;
+        errorHint.innerHTML = "";
+        return;
+    }
+
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 404)
+        {
+            getById("username-check-button").disabled = true;
+            errorHint.innerHTML ="Nenájdený!";
+        }
+
+
+        if (xhttp.status === 400)
+        {
+            getById("username-check-button").disabled = true;
+            errorHint.innerHTML ="Nieje aktívny!";
+        }
+
+
+        if (xhttp.status === 200)
+        {
+            getById("username-check-button").disabled = false;
+            errorHint.innerHTML ="Nájdený!";
+        }
+    }
+
+
+
+
+    let url = "/admin/employee/" + userName + "/check-username";
+
+    xhttp.open("GET", url, true);
+
+
+    xhttp.send();
+}
+
+function clic()
+{
+    const fileInputElement = getById("file-input");
+    fileInputElement.click();
+}
+
+
+
+function validateStudentsCsv(arr) {
+
+
+    let coor = arr;
+    getById("text-input").value = getById("file-input").value.split(/(\\|\/)/g).pop();
+
+    alert(coor.length);
+    const studentsCsvHintError = getById("students-csv-hint-error");
+
+
+    for (let i = 1; i < coor.length; ++i)
+    {
+        const surname = coor[i][0].trim();
+
+        if (surname === null || surname.length === 0)
+        {
+            const char = String.fromCharCode(65);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Prázdna bunka!: "  + (char + dig);
+            return false;
+        } else {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+
+        if (surname.length > 50)
+        {
+            const char = String.fromCharCode(65);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Text je dlhší než 50 znakov!: "  + (char + dig);
+        }else {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+        const name = coor[i][1].trim();
+
+        if (name === null || name.length === 0)
+        {
+            const char = String.fromCharCode(66);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Prázdna bunka!: " + (char + dig);
+            return false;
+        }else
+        {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+
+        if (name.length > 50)
+        {
+            const char = String.fromCharCode(66);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Text je dlhší než 50 znakov!: "  + (char + dig);
+            return false;
+        }else {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+        const pin = coor[i][2].trim();
+        const pinRegex = /^\d{6}$/;
+
+        if (pin === null || pin.length === 0)
+        {
+            const char = String.fromCharCode(67);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Prázdna bunka!: "  + (char + dig);
+            return false;
+        }else {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+
+        if (!pinRegex.test(pin))
+        {
+            const char = String.fromCharCode(67);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Nevalidná hodnota!: "  + (char + dig);
+            return false;
+
+        }else {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+
+        const email = coor[i][3].trim();
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
+
+        if (email === null || pin.length === 0)
+        {
+            const char = String.fromCharCode(68);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Prázdna bunka!: "  + (char + dig);
+            return false;
+        }else
+        {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+
+        if (!emailRegex.test(email))
+        {
+            const char = String.fromCharCode(68);
+            const dig = i + 1;
+            studentsCsvHintError.innerHTML = "Nevalidná hodnota!: "  + (char + dig);
+            return false;
+        }else {
+            studentsCsvHintError.innerHTML = "";
+        }
+
+
+    }
+
+
+    return true;
+
+
+}
+
+
+function updateSystemAbsents()
+{
+    const errorHint = getById("absents-hint-error");
+    const absentsInputElement = getById("absents-input");
+    const absentsButton = getById("absents-button");
+
+    if (absentsInputElement.value.length === 0)
+    {
+
+        return;
+    }
+
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 404)
+        {
+            absentsButton.disabled = true;
+            errorHint.innerHTML ="Nenájdený!";
+        }
+
+
+        if (xhttp.status === 400)
+        {
+            absentsButton.disabled = true;
+            errorHint.innerHTML ="Nieje aktívny!";
+        }
+
+
+        if (xhttp.status === 200)
+        {
+            absentsButton.disabled = false;
+            errorHint.innerHTML ="Nájdený!";
+        }
+    }
+
+    let data = {
+        absents: absentsInputElement.value
+    };
+
+
+
+
+    let url = "/admin/system/update/absents";
+
+    xhttp.open("PATCH", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    xhttp.send(JSON.stringify(data));
+}
+
+function updateSystemDate()
+{
+    const errorHint = getById("date-hint-error");
+    const dateInputElement = getById("date-input");
+    const dateButton = getById("date-button");
+
+    if (isDateAfterCurrent(dateInputElement.value))
+    {
+       //return;
+    }
+
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 404)
+        {
+            absentsButton.disabled = true;
+            errorHint.innerHTML ="Nenájdený!";
+        }
+
+
+        if (xhttp.status === 400)
+        {
+            absentsButton.disabled = true;
+            errorHint.innerHTML ="Nieje aktívny!";
+        }
+
+
+        if (xhttp.status === 200)
+        {
+            absentsButton.disabled = false;
+            errorHint.innerHTML ="Nájdený!";
+        }
+    }
+
+    let data = {
+        date: dateInputElement.value
+    };
+
+
+
+
+    let url = "/admin/system/update/date";
+
+    xhttp.open("PATCH", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    xhttp.send(JSON.stringify(data));
+}
+
+
+
+function isDateAfterCurrent(dateString)
+{
+    const dateErrorHint = getById("date-hint-error");
+
+    const regex = /^\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}$/;
+
+    if (!regex.test(dateString)) {
+        dateErrorHint.innerHTML = "Dátum v nesprávnom formáte!";
+        return false;
+    } else {
+        dateErrorHint.innerHTML = "";
+    }
+
+
+    // Parse the date string into a Date object
+    var parts = dateString.split(' ');
+    var dateParts = parts[0].split('.');
+    var timeParts = parts[1].split(':');
+    var year = parseInt(dateParts[2], 10);
+    var month = parseInt(dateParts[1], 10) - 1; // Months are zero-based
+    var day = parseInt(dateParts[0], 10);
+    var hours = parseInt(timeParts[0], 10);
+    var minutes = parseInt(timeParts[1], 10);
+
+
+    const date = new Date(year, month, day, hours, minutes);
+
+
+    const success = date.getFullYear() === year && date.getMonth() === month && date.getDate() === day && date.getHours() === hours && date.getMinutes() === minutes && !isNaN(date.getTime())
+
+    if (!success)
+    {
+        dateErrorHint.innerHTML = "Nevalidný dátum";
+        return false;
+    } else {
+        dateErrorHint.innerHTML = "";
+    }
+
+
+    const currentDateTime = new Date();
+
+
+
+
+
+    if (date <= currentDateTime)
+    {
+        dateErrorHint.innerHTML = "Dátum predchádza dnešný!";
+        return false;
+    } else {
+        dateErrorHint.innerHTML = "";
+    }
+
+    return true;
+}
+
 
 
 

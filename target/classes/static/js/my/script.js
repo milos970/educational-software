@@ -2,43 +2,6 @@
 
 
 
-function parseCsvCoordinatesToArrays()
-{
-    function csvToString(file, callback) {
-        let reader = new FileReader();
-
-        // Closure to capture the file information.
-        reader.onload = function(event) {
-            var csvString = event.target.result;
-            callback(csvString);
-        };
-
-        // Read in the file as a text
-        reader.readAsText(file);
-    }
-
-// Example usage
-    const fileInput = getById("coordinates-csv-input");
-
-    let coordinates = [];
-
-    fileInput.addEventListener('change', function(event) {
-        let file = event.target.files[0];
-
-        csvToString(file, function(csvString) {
-            coordinates = $.csv.toArrays(csvString);
-            validateCoordinates(coordinates);
-
-        });
-    });
-
-
-
-
-
-}
-
-
 
 
 

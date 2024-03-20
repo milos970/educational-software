@@ -1,5 +1,6 @@
 package com.milos.numeric.services;
 
+import com.milos.numeric.Authority;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,18 @@ public class EmployeeService
     }
 
 
+    public Optional<Employee> findById(Long id)
+    {
+        return this.employeeRepository.findById(id);
+    }
     public Optional<Employee> findByUsername(String username)
     {
         return this.employeeRepository.findByUsername(username);
+    }
+
+    public Optional<Employee> findByAuthority(Authority authority)
+    {
+        return this.employeeRepository.findByAuthority(authority.name());
     }
 
 
@@ -28,6 +38,8 @@ public class EmployeeService
     {
         this.employeeRepository.save(employee);
     }
+
+
 
 
 
