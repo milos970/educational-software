@@ -7,7 +7,8 @@ import com.milos.numeric.Authority;
 import com.milos.numeric.Domain;
 import com.milos.numeric.Gender;
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
-import com.milos.numeric.dtos.NewPersonalInfoDto;
+import com.milos.numeric.dtos.NewPasswordDto;
+import com.milos.numeric.dtos.AddPersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
@@ -20,7 +21,6 @@ import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.security.PasswordGenerator;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,11 +76,39 @@ public class PersonalInfoService
         this.verificationTokenService = verificationTokenService;
     }
 
+
+    public boolean updatePassword(String username, NewPasswordDto newPasswordDto)
+    {
+        String newPassword = newPasswordDto.getNewPassword();
+        String newHashedPassword = this.passwordEncoder.encode(newPassword);
+
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoRepository.findByUsername(username);
+
+
+        if (optionalPersonalInfo.isEmpty())
+        {
+            System.out.println("optionalPersonalInfo.isEmpty()");
+            return false;
+        }
+
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        personalInfo.setPassword(newHashedPassword);
+
+        this.personalInfoRepository.save(personalInfo);
+        return true;
+
+    }
+
     private static String removeDiacritics(String input)
     {
         String normalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalizedString).replaceAll("");
+    }
+
+    public Optional<PersonalInfo> findByUsername(String username)
+    {
+        return this.personalInfoRepository.findByUsername(username);
     }
 
     private String determineGender(@PathVariable String name) {
@@ -99,9 +127,9 @@ public class PersonalInfoService
     }
 
 
-    public Optional<PersonalInfo> createPerson(NewPersonalInfoDto newPersonalInfoDTO)
+    public Optional<PersonalInfo> createPerson(AddPersonalInfoDto addPersonalInfoDTO)
     {
-        PersonalInfo personalInfo = personalInfoNewPersonDTOMapper.sourceToDestination(newPersonalInfoDTO);
+        PersonalInfo personalInfo = personalInfoNewPersonDTOMapper.sourceToDestination(addPersonalInfoDTO);
 
         String password = personalInfo.getPassword();
         String hashedPassword = this.passwordEncoder.encode(password);
@@ -139,7 +167,7 @@ public class PersonalInfoService
             personalInfo.setAuthority(Authority.STUDENT);
             Student student = new Student();
             student.setPersonalInfo(personalInfo);
-            this.studentService.save(student);
+
         }
 
 
@@ -161,73 +189,37 @@ public class PersonalInfoService
         return Optional.of(this.personalInfoRepository.save(personalInfo));
     }
 
-    public boolean resentEmail(Long id)
+
+
+
+    public Optional<PersonalInfo> findByEmail(String email)
     {
-        Optional<PersonalInfo> optional = this.personalInfoRepository.findById(id);
-
-        if (optional.isEmpty())
-        {
-            return false;
-        }
-
-        PersonalInfo personalInfo = optional.get();
-        VerificationToken token = new VerificationToken();
-        token.setCode(UUID.randomUUID().toString());
-        token.setPersonalInfo(personalInfo);
-
-        this.verificationTokenService.save(token);
-
-        String url = "http://localhost:8080/confirm-account?token="+token.getCode();
-
-        try {
-            this.emailService.sendVerificationEmail(personalInfo, url);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return true;
-
-
+        return this.personalInfoRepository.findByEmail(email);
     }
-
-
-    public ResponseEntity confirmEmail(String code)
-    {
-        VerificationToken token = this.verificationTokenService.findByCode(code);
-
-        if(code != null)
-        {
-            Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(token.getPersonalInfo().getEmail());
-            return ResponseEntity.ok("Email verified successfully!");
-        }
-        return ResponseEntity.badRequest().body("Error: Couldn't verify email");
-    }
-
-
 
     public void createMultiple(MultipartFile file)
     {
-        List<NewPersonalInfoDto> list;
+        List<AddPersonalInfoDto> list;
         try {
             list = this.csvConverterUnregisteredPerson.convert(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        for (NewPersonalInfoDto personToValidate : list)
+        for (AddPersonalInfoDto personToValidate : list)
         {
-            NewPersonalInfoDto newPersonalInfoDTO = new NewPersonalInfoDto();
+            AddPersonalInfoDto addPersonalInfoDTO = new AddPersonalInfoDto();
 
-            newPersonalInfoDTO.setPersonalNumber(personToValidate.getPersonalNumber());
-            newPersonalInfoDTO.setName(personToValidate.getName());
-            newPersonalInfoDTO.setSurname(personToValidate.getSurname());
-            newPersonalInfoDTO.setEmail(personToValidate.getEmail());
+            addPersonalInfoDTO.setPersonalNumber(personToValidate.getPersonalNumber());
+            addPersonalInfoDTO.setName(personToValidate.getName());
+            addPersonalInfoDTO.setSurname(personToValidate.getSurname());
+            addPersonalInfoDTO.setEmail(personToValidate.getEmail());
 
 
             String password = this.passwordGenerator.generate();
-            newPersonalInfoDTO.setPassword(password);
+            addPersonalInfoDTO.setPassword(password);
 
-            this.createPerson(newPersonalInfoDTO);
+            this.createPerson(addPersonalInfoDTO);
         }
 
     }

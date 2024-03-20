@@ -38,6 +38,10 @@ public class PersonalInfo
     @Size(max = 50, message = "{validation.name.size.too_long}")
     private String username;
 
+    @Column(unique = true, name = "personal_number")
+    @Size(min = 5, max = 6, message = "{validation.name.size.too_long}")
+    private String personalNumber;
+
     @Email
     @Column(unique = true)
     private String email;
@@ -54,8 +58,6 @@ public class PersonalInfo
     private Authority authority;
 
     private boolean enabled;
-
-
 
 
 }

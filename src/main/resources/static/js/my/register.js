@@ -4,20 +4,30 @@ function initializeSignUpPage()
 {
     studentOrEmployee(1);
 }
+
+
+let which = 0;
 function studentOrEmployee(who)
 {
+    const formElement = getById("form");
     switch (who)
     {
         case 1:
             showFormForStudent();
+            formElement.action = "/sign-up/student";
+            which = 1;
             break;
         case 2:
             showFormForEmployee();
+            formElement.action = "/sign-up/employee";
+            which = 2;
             break;
         default:
 
     }
 }
+
+
 
 function showFormForStudent()
 {
@@ -51,10 +61,70 @@ function showFormForEmployee()
 
 
 
+function canRegisterStudent()
+{
+    const passwordInput = document.getElementById("password-input");
+    const repPasswordInput = document.getElementById("rep-password-input");
+    const emailInput = document.getElementById("email-input");
+
+
+    const emailpasswordInputErrorHint = document.getElementById("email-input-error-hint");
+    const passwordInputErrorHint = document.getElementById("password-input-error-hint");
+    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
 
 
 
-function canRegister()
+
+    if (emailInput.value === "")
+    {
+        emailpasswordInputErrorHint.innerHTML = "Zadajte školský email!";
+        return false;
+    } else {
+        emailpasswordInputErrorHint.innerHTML = "";
+    }
+
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
+    if (regexEmail.test(emailInput.value))
+    {
+        emailpasswordInputErrorHint.innerHTML = "";
+    } else {
+        emailpasswordInputErrorHint.innerHTML = "Nevalidný školský email!";
+        return false;
+
+    }
+
+    if (passwordInput.value === "")
+    {
+        passwordInputErrorHint.innerHTML = "Zadajte heslo!";
+        return false;
+    }else {
+        passwordInputErrorHint.innerHTML = "";
+    }
+
+
+    if (repPasswordInput.value === "")
+    {
+        repPasswordInputErrorHint.innerHTML = "Znova zadajte heslo!";
+        return false;
+    }else {
+        repPasswordInputErrorHint.innerHTML = "";
+    }
+
+    if (repPasswordInput.value === passwordInput.value)
+    {
+        repPasswordInputErrorHint.innerHTML = "";
+
+    }else {
+        alert(45);
+        repPasswordInputErrorHint.innerHTML = "Hesla sa nezhodujú!";
+        return false;
+    }
+
+    return true;
+}
+
+
+function canRegisterEmployee()
 {
     const nameInput = document.getElementById("name-input");
     const surnameInput = document.getElementById("name-input");
@@ -148,6 +218,7 @@ $('input[type="checkbox"]').click(function(event) {
 
 ////////////////////
 
+let isValid = false;
 
 function validatePassword()
 {
@@ -165,14 +236,22 @@ function validatePassword()
     const minCharacters = document.getElementById("min-chars-checkbox-div");
     const maxCharacters = document.getElementById("max-chars-checkbox-div");
 
+
+
+
+    isValid = true;
+
     if (passwordInput.value.match(regexUpperCase)) {
         upperCaseHint.classList.remove("form-check-danger");
         upperCaseHint.classList.add("form-check-success");
         upperCaseHint.getElementsByTagName("input")[0].checked = true;
+
     } else {
         upperCaseHint.classList.remove("form-check-success");
         upperCaseHint.classList.add("form-check-danger");
         upperCaseHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+
     }
 
 
@@ -184,6 +263,8 @@ function validatePassword()
         lowerCaseHint.classList.remove("form-check-success");
         lowerCaseHint.classList.add("form-check-danger");
         lowerCaseHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+
     }
 
     if (passwordInput.value.match(regexNumber)) {
@@ -194,6 +275,7 @@ function validatePassword()
         oneNumberHint.classList.remove("form-check-success");
         oneNumberHint.classList.add("form-check-danger");
         oneNumberHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
     if (passwordInput.value.match(regexSpecialCharacter)) {
@@ -204,6 +286,7 @@ function validatePassword()
         specialCharacterHint.classList.remove("form-check-success");
         specialCharacterHint.classList.add("form-check-danger");
         specialCharacterHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
 
@@ -215,18 +298,48 @@ function validatePassword()
         minCharacters.classList.remove("form-check-success");
         minCharacters.classList.add("form-check-danger");
         minCharacters.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
     if (passwordInput.value.length <= 64) {
         maxCharacters.classList.remove("form-check-danger");
         maxCharacters.classList.add("form-check-success");
         maxCharacters.getElementsByTagName("input")[0].checked = true;
+
     } else {
         maxCharacters.classList.remove("form-check-success");
         maxCharacters.classList.add("form-check-danger");
         maxCharacters.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
+    return isValid;
+
+}
+
+
+function submit()
+{
+
+
+    if (which === 1)
+    {
+
+        if (canRegisterStudent() && isValid)
+        {
+            const formElement = getById("form");
+            formElement.submit();
+        }
+    }
+
+    if (which === 2)
+    {
+        if (canRegisterEmployee() && isValid)
+        {
+            const formElement = getById("form");
+            formElement.submit();
+        }
+    }
 }
 
 

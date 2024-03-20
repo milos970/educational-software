@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -42,8 +43,8 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @EnableWebSecurity
 public class SecurityConfig
 {
-    @Autowired
-    private AuthenticationProvider authProvider;
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
@@ -79,10 +80,10 @@ public class SecurityConfig
                 ).headers(headers -> headers.frameOptions().disable())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).disable())
-                .httpBasic(hbc -> hbc.authenticationEntryPoint(authenticationEntryPoint()))
+
                 .formLogin(form -> form.successHandler(authenticationSuccessHandler())
                 .loginPage("/login")
-                .failureHandler(authenticationFailureHandler())
+
                 .permitAll())
                 .logout((logout) -> logout.logoutUrl("/logout").logoutSuccessUrl("/login"))
                 ;
@@ -90,14 +91,23 @@ public class SecurityConfig
         return http.build();
     }
 
+
+    @Bean
+    public DaoAuthenticationProvider authProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService( userDetailsService());
+        authProvider.setPasswordEncoder(encoder());
+        return authProvider;
+    }
+
+
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(authProvider);
+        authenticationManagerBuilder.authenticationProvider(authProvider());
         return authenticationManagerBuilder.build();
     }
-
 
 
     @Bean
@@ -113,19 +123,18 @@ public class SecurityConfig
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    public AuthenticationFailureHandler authenticationFailureHandler()
+    {
         return new CustomAuthenticationFailureHandler();
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+    public AuthenticationSuccessHandler authenticationSuccessHandler()
+    {
+
         return new CustomAuthenticationSuccessHandler();
     }
 
-    @Bean
-    public BasicAuthenticationEntryPoint authenticationEntryPoint() {
-        return new MyBasicAuthenticationEntryPoint();
-    }
 
 
 

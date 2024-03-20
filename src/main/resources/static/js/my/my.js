@@ -677,7 +677,7 @@ function newtonMethod()
 
 
     const resultInput = getById("result-input");
-    resultInput.value = "Hodnota aproximačného koreňa: " + current.toFixed(round);
+    resultInput.value = "Vypočítaný koreň rovnice: " + current.toFixed(round);
 
     initializeTable(data);
 
@@ -766,7 +766,7 @@ function bisectionMethod()
     }
 
     const resultInput = getById("result-input");
-    resultInput.value = "Hodnota aproximačného koreňa: " + xk.toFixed(round);
+    resultInput.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -856,7 +856,7 @@ function regulaFalsiMethod()
     }
 
     const resultInput = getById("result-input");
-    resultInput.value = "Hodnota aproximačného koreňa: " + xk.toFixed(round);
+    resultInput.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);

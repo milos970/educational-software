@@ -20,10 +20,6 @@ public class Student
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true, name = "personal_number")
-    @Size(min = 6, max = 6, message = "{validation.name.size.too_long}")
-    private String personalNumber;
-
     @Min(0)
     @Max(100)
     private int points;

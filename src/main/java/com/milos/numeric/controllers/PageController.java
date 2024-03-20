@@ -2,8 +2,8 @@ package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
 import com.milos.numeric.dtos.FileDto;
-import com.milos.numeric.dtos.NewPersonalInfoDto;
-import com.milos.numeric.dtos.SystemSettingsDto;
+import com.milos.numeric.dtos.NewPasswordDto;
+import com.milos.numeric.dtos.AddPersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
@@ -50,6 +50,14 @@ public class PageController {
         this.systemSettingsService = systemSettingsService;
     }
 
+
+    @GetMapping("/person/password/update/page")
+    public String updatePasswordPage(Model model)
+    {
+
+        model.addAttribute("newPasswordDto", new NewPasswordDto());
+        return "/pages/samples/change-password";
+    }
 
 
 
@@ -242,7 +250,7 @@ public class PageController {
     @GetMapping("/sign-up-page")
     public ModelAndView signUpPage()
     {
-        return new ModelAndView("/pages/samples/sign-up", "newPersonDTO", new NewPersonalInfoDto());
+        return new ModelAndView("/pages/samples/sign-up", "newPersonDTO", new AddPersonalInfoDto());
     }
 
 //*********************************************CUSTOMIZE************************************************************************
@@ -314,7 +322,7 @@ public class PageController {
     public ModelAndView signUp()
     {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("newPersonDTO", new NewPersonalInfoDto());
+        modelAndView.addObject("newPersonDTO", new AddPersonalInfoDto());
         modelAndView.setViewName("sign-up");
         return modelAndView;
     }
