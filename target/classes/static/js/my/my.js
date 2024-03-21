@@ -9,6 +9,32 @@ function getById(id)
     return el;
 }
 
+
+
+function saveToFile(inputs, array, fileName)
+{
+
+    const allRows = inputs.concat(array);
+
+    const csvContent = allRows.map(row => row.join(';')).join('\n');
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv; charset=utf-8' });
+
+    const link = document.createElement('a');
+
+    link.href = window.URL.createObjectURL(blob);
+
+
+
+    link.download = fileName + ".csv";
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+}
+
+
 let fun = "";
 
 
@@ -627,6 +653,8 @@ function newtonMethod()
 
     const data = [];
 
+
+
     data[0] = [3];
     data[0][0] = "k";
     data[0][1] = "x";
@@ -676,10 +704,44 @@ function newtonMethod()
     $("#table tr").remove();
 
 
+
+
     const resultInput = getById("result-input");
     resultInput.value = "Vypočítaný koreň rovnice: " + current.toFixed(round);
 
+    let inputs =[];
+
+    inputs[0] = [2];
+
+
+    inputs[0][0] = "Rovnica";
+    inputs[0][1] = document.getElementById("equation-input").value;
+
+    inputs[1] = [2];
+    inputs[1][0] = "Tolerancia";
+    inputs[1][1] = toleranceValue;
+
+
+    inputs[2] = [2];
+    inputs[2][0] = "Počiatočná aproximácia";
+    inputs[2][1] = document.getElementById("initial-value-input").value;
+
+
+    inputs[3] = [2];
+    inputs[3][0] = "Vypočítaný koreň rovnice"
+    inputs[3][1] = current.toFixed(round);
+
+
+    inputs[4] = [1];
+    inputs[4][0] = "";
+
+
+
+    saveToFile(inputs,data, "Newtonová metóda");
+
     initializeTable(data);
+
+
 
 }
 
@@ -772,6 +834,43 @@ function bisectionMethod()
     initializeTable(data);
 
 
+    let inputs =[];
+
+    inputs[0] = [2];
+
+
+    inputs[0][0] = "Rovnica";
+    inputs[0][1] = document.getElementById("equation-input").value;
+
+
+    inputs[1] = [2];
+    inputs[1][0] = "Tolerancia";
+    inputs[1][1] = toleranceValue;
+
+
+    inputs[2] = [1];
+    inputs[2][0] = "Dolná hranica";
+    inputs[2][1] = document.getElementById("lower-bound-input").value;
+
+
+    inputs[3] = [2];
+    inputs[3][0] = "Horná hranica";
+    inputs[3][1] = document.getElementById("upper-bound-input").value;
+
+
+    inputs[4] = [2];
+    inputs[4][0] = "Vypočítaný koreň rovnice"
+    inputs[4][1] = xk.toFixed(round);
+
+
+    inputs[5] = [1];
+    inputs[5][0] = "";
+
+
+
+    saveToFile(inputs, data, "Bisekcia");
+
+
 }
 
 
@@ -861,6 +960,40 @@ function regulaFalsiMethod()
     $("#table tr").remove();
     initializeTable(data);
 
+
+    let inputs =[];
+
+    inputs[0] = [2];
+
+
+    inputs[0][0] = "Rovnica";
+    inputs[0][1] = document.getElementById("equation-input").value;
+
+
+    inputs[1] = [2];
+    inputs[1][0] = "Tolerancia";
+    inputs[1][1] = toleranceValue;
+
+
+    inputs[2] = [1];
+    inputs[2][0] = "Dolná hranica";
+    inputs[2][1] = document.getElementById("lower-bound-input").value;
+
+
+    inputs[3] = [2];
+    inputs[3][0] = "Horná hranica";
+    inputs[3][1] = document.getElementById("upper-bound-input").value;
+
+
+    inputs[4] = [2];
+    inputs[4][0] = "Vypočítaný koreň rovnice"
+    inputs[4][1] = xk.toFixed(round);
+
+
+    inputs[5] = [1];
+    inputs[5][0] = "";
+
+    saveToFile(inputs, data, "Regula falsi");
 
 
 }

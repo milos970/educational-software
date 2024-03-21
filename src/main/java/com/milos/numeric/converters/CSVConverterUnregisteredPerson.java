@@ -1,6 +1,6 @@
 package com.milos.numeric.converters;
 
-import com.milos.numeric.dtos.AddPersonalInfoDto;
+import com.milos.numeric.dtos.PersonalInfoDto;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.springframework.stereotype.Component;
@@ -13,13 +13,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Component
-public class CSVConverterUnregisteredPerson extends CSVConverter<AddPersonalInfoDto>
+public class CSVConverterUnregisteredPerson extends CSVConverter<PersonalInfoDto>
 {
 
     @Override
-    public List<AddPersonalInfoDto> convert(MultipartFile file) throws IOException {
+    public List<PersonalInfoDto> convert(MultipartFile file) throws IOException {
 
-        List<AddPersonalInfoDto> list = new LinkedList<>();
+        List<PersonalInfoDto> list = new LinkedList<>();
 
         Reader reader = new InputStreamReader(file.getInputStream());
         CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
@@ -27,7 +27,7 @@ public class CSVConverterUnregisteredPerson extends CSVConverter<AddPersonalInfo
         String[] values = null;
         while ((values = csvReader.readNext()) != null)
         {
-            AddPersonalInfoDto person = new AddPersonalInfoDto();
+            PersonalInfoDto person = new PersonalInfoDto();
 
             String[] rec = values[0].split(";");
             String personalNumber = rec[0];

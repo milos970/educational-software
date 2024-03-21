@@ -2,7 +2,7 @@ package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
 import com.milos.numeric.dtos.NewPasswordDto;
-import com.milos.numeric.dtos.AddPersonalInfoDto;
+import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.EmployeeService;
@@ -39,10 +39,25 @@ public class PersonalInfoController
     }
 
 
+
+
     @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String token)
+    public ModelAndView confirmUserAccount(@RequestParam("token")String code)
     {
-        return personalInfoService.confirmEmail(confirmationToken);
+        boolean failure = personalInfoService.confirmEmail(code);
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (failure)
+        {
+            modelAndView.setViewName("redirect:/confirm-account/token-expired/page");
+            return modelAndView;
+        }
+
+        modelAndView.setViewName("redirect:/confirm-account/token-expired/page");
+
+        return modelAndView;
+
     }
 
 
@@ -55,7 +70,6 @@ public class PersonalInfoController
 
         if (result.hasErrors())
         {
-            System.out.println("result.hasErrors()");
             modelAndView.setViewName("/pages/samples/change-password");
             return modelAndView;
         }
@@ -94,9 +108,9 @@ public class PersonalInfoController
 
 
     @PostMapping("/user/create")
-    public ResponseEntity createUser(@Valid @RequestBody AddPersonalInfoDto addPersonalInfoDTO)
+    public ResponseEntity createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO)
     {
-        Optional<PersonalInfo> optional = this.personalInfoService.createPerson(addPersonalInfoDTO);
+        Optional<PersonalInfo> optional = this.personalInfoService.createPerson(personalInfoDTO);
 
         if (optional.isEmpty())
         {
@@ -106,18 +120,6 @@ public class PersonalInfoController
     }
 
 
-    @GetMapping("/admin/student/{id}/resent-email")
-    public ResponseEntity resentEmail(@PathVariable Long id)
-    {
-        boolean value = this.personalInfoService.resentEmail(id);
-
-        if (!value)
-        {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     @PatchMapping("/admin/employee/{id}/update-authority")
     public ResponseEntity updateAuthority(@PathVariable Long id)
@@ -134,15 +136,10 @@ public class PersonalInfoController
         this.personalInfoService.createMultiple(file);
     }
 
-    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
-        return personalInfoService.confirmEmail(confirmationToken);
-    }
-
     @PostMapping("/registrate")
-    public void registratePerson(@Valid @RequestBody AddPersonalInfoDto addPersonalInfoDTO, HttpServletRequest request)
+    public void registratePerson(@Valid @RequestBody PersonalInfoDto personalInfoDTO, HttpServletRequest request)
     {
-        this.personalInfoService.createPerson(addPersonalInfoDTO);
+        this.personalInfoService.createPerson(personalInfoDTO);
     }
 
 

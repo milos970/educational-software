@@ -5,6 +5,8 @@ import com.milos.numeric.repositories.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class VerificationTokenService
 {
@@ -20,7 +22,7 @@ public class VerificationTokenService
         this.verificationTokenRepository.save(verificationToken);
     }
 
-    public VerificationToken findByCode(String code)
+    public Optional<VerificationToken> findByCode(String code)
     {
         return this.verificationTokenRepository.findByCode(code);
     }

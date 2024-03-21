@@ -8,7 +8,7 @@ import com.milos.numeric.Domain;
 import com.milos.numeric.Gender;
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
-import com.milos.numeric.dtos.AddPersonalInfoDto;
+import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
@@ -18,10 +18,9 @@ import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
+import com.milos.numeric.repositories.VerificationTokenRepository;
 import com.milos.numeric.security.PasswordGenerator;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
@@ -64,16 +62,50 @@ public class PersonalInfoService
     private final VerificationTokenService verificationTokenService;
 
 
+    private final VerificationTokenRepository tokenRepository;
+
+
 
 
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator, VerificationTokenService verificationTokenService) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator, VerificationTokenService verificationTokenService, VerificationTokenRepository tokenRepository) {
         this.personalInfoRepository = personalInfoRepository;
         this.studentService = studentService;
         this.employeeService = employeeService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.passwordGenerator = passwordGenerator;
         this.verificationTokenService = verificationTokenService;
+        this.tokenRepository = tokenRepository;
+    }
+
+    public Optional<PersonalInfo> findByAuthority(Authority authority)
+    {
+        return this.personalInfoRepository.findByAuthority(authority.name());
+    }
+
+    public boolean confirmEmail(String code)
+    {
+        Optional<VerificationToken> optional = this.tokenRepository.findByCode(code);
+
+        if (optional.isEmpty())
+        {
+            return false;
+        }
+
+        VerificationToken token = optional.get();
+
+        PersonalInfo personalInfo = token.getPersonalInfo();
+
+        if (personalInfo == null)
+        {
+            return false;
+        }
+
+        personalInfo.setEnabled(true);
+
+        this.personalInfoRepository.save(personalInfo);
+
+        return true;
     }
 
 
@@ -127,9 +159,9 @@ public class PersonalInfoService
     }
 
 
-    public Optional<PersonalInfo> createPerson(AddPersonalInfoDto addPersonalInfoDTO)
+    public Optional<PersonalInfo> createPerson(PersonalInfoDto personalInfoDTO)
     {
-        PersonalInfo personalInfo = personalInfoNewPersonDTOMapper.sourceToDestination(addPersonalInfoDTO);
+        PersonalInfo personalInfo = personalInfoNewPersonDTOMapper.sourceToDestination(personalInfoDTO);
 
         String password = personalInfo.getPassword();
         String hashedPassword = this.passwordEncoder.encode(password);
@@ -180,11 +212,7 @@ public class PersonalInfoService
 
         String url = "http://localhost:8080/confirm-account?token="+token.getCode();
 
-        try {
-            this.emailService.sendVerificationEmail(personalInfo, url);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+
 
         return Optional.of(this.personalInfoRepository.save(personalInfo));
     }
@@ -199,27 +227,27 @@ public class PersonalInfoService
 
     public void createMultiple(MultipartFile file)
     {
-        List<AddPersonalInfoDto> list;
+        List<PersonalInfoDto> list;
         try {
             list = this.csvConverterUnregisteredPerson.convert(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        for (AddPersonalInfoDto personToValidate : list)
+        for (PersonalInfoDto personToValidate : list)
         {
-            AddPersonalInfoDto addPersonalInfoDTO = new AddPersonalInfoDto();
+            PersonalInfoDto personalInfoDTO = new PersonalInfoDto();
 
-            addPersonalInfoDTO.setPersonalNumber(personToValidate.getPersonalNumber());
-            addPersonalInfoDTO.setName(personToValidate.getName());
-            addPersonalInfoDTO.setSurname(personToValidate.getSurname());
-            addPersonalInfoDTO.setEmail(personToValidate.getEmail());
+            personalInfoDTO.setPersonalNumber(personToValidate.getPersonalNumber());
+            personalInfoDTO.setName(personToValidate.getName());
+            personalInfoDTO.setSurname(personToValidate.getSurname());
+            personalInfoDTO.setEmail(personToValidate.getEmail());
 
 
             String password = this.passwordGenerator.generate();
-            addPersonalInfoDTO.setPassword(password);
+            personalInfoDTO.setPassword(password);
 
-            this.createPerson(addPersonalInfoDTO);
+            this.createPerson(personalInfoDTO);
         }
 
     }

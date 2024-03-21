@@ -33,7 +33,7 @@ public class EmailServiceImpl
 
     public void sendVerificationEmail(PersonalInfo personalInfo, VerificationToken token) throws MessagingException, UnsupportedEncodingException {
         String toAddress = personalInfo.getEmail();
-        String fromAddress = "Your email address";
+        String fromAddress = "justforthetest45@gmail.com";
         String senderName = "Numerika";
         String subject = "Verifikácia emailu";
         String content = "To confirm your account, please click here : "

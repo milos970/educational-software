@@ -2,14 +2,12 @@ package com.milos.numeric.dtos;
 
 import com.milos.numeric.validators.EmployeeEmail;
 import com.milos.numeric.validators.EmployeePersonalNumber;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class AddPersonalInfoDto
+public class PersonalInfoDto
 {
     @EmployeePersonalNumber
     private String personalNumber;

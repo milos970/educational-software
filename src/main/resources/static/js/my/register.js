@@ -9,17 +9,19 @@ function initializeSignUpPage()
 let which = 0;
 function studentOrEmployee(who)
 {
-    const formElement = getById("form");
+
     switch (who)
     {
         case 1:
+
             showFormForStudent();
-            formElement.action = "/sign-up/student";
+
+            getById("student-form").action = "/reg/student";
             which = 1;
             break;
         case 2:
             showFormForEmployee();
-            formElement.action = "/sign-up/employee";
+            getById("employee-form").action = "/sign-up/employee";
             which = 2;
             break;
         default:
@@ -31,27 +33,36 @@ function studentOrEmployee(who)
 
 function showFormForStudent()
 {
-    const elementsToHide = ["name-div", "pin-div", "surname-div"];
+    /*const elementsToHide = ["name-div", "pin-div", "surname-div", "password-div", "rep-password-div", "preconditions-div"];
 
     elementsToHide.forEach((item) => {
         document.getElementById(item).style.display="none";
     });
 
-    const elementsToShow = ["email-div", "password-div", "rep-password-div"];
+    const elementsToShow = ["email-div"];
 
     elementsToShow.forEach((item) => {
         document.getElementById(item).style.display="block";
-    });
+    });*/
+
+
+    document.getElementById("student-form-div").style.display="block";
+    document.getElementById("employee-form-div").style.display="none";
 }
 
 
 function showFormForEmployee()
 {
-    const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div"];
+    /*const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div", "preconditions-div"];
 
     elementsToShow.forEach((item) => {
         document.getElementById(item).style.display="block";
     });
+*/
+
+    document.getElementById("employee-form-div").style.display="block";
+    document.getElementById("student-form-div").style.display="none";
+
 }
 
 
@@ -63,15 +74,8 @@ function showFormForEmployee()
 
 function canRegisterStudent()
 {
-    const passwordInput = document.getElementById("password-input");
-    const repPasswordInput = document.getElementById("rep-password-input");
-    const emailInput = document.getElementById("email-input");
-
-
-    const emailpasswordInputErrorHint = document.getElementById("email-input-error-hint");
-    const passwordInputErrorHint = document.getElementById("password-input-error-hint");
-    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
-
+    const emailInput = document.getElementById("student-email-input");
+    const emailpasswordInputErrorHint = document.getElementById("student-email-input-error-hint");
 
 
 
@@ -93,32 +97,6 @@ function canRegisterStudent()
 
     }
 
-    if (passwordInput.value === "")
-    {
-        passwordInputErrorHint.innerHTML = "Zadajte heslo!";
-        return false;
-    }else {
-        passwordInputErrorHint.innerHTML = "";
-    }
-
-
-    if (repPasswordInput.value === "")
-    {
-        repPasswordInputErrorHint.innerHTML = "Znova zadajte heslo!";
-        return false;
-    }else {
-        repPasswordInputErrorHint.innerHTML = "";
-    }
-
-    if (repPasswordInput.value === passwordInput.value)
-    {
-        repPasswordInputErrorHint.innerHTML = "";
-
-    }else {
-        alert(45);
-        repPasswordInputErrorHint.innerHTML = "Hesla sa nezhodujú!";
-        return false;
-    }
 
     return true;
 }
@@ -130,12 +108,12 @@ function canRegisterEmployee()
     const surnameInput = document.getElementById("name-input");
     const passwordInput = document.getElementById("password-input");
     const repPasswordInput = document.getElementById("password-input");
-    const emailInput = document.getElementById("email-input");
+    const emailInput = document.getElementById("employee-email-input");
     const personalNumberInput = document.getElementById("pin-input");
 
     const nameInputErrorHint = document.getElementById("name-input-error-hint");
     const surnameInputErrorHint = document.getElementById("surname-input-error-hint");
-    const emailpasswordInputErrorHint = document.getElementById("email-input-error-hint");
+    const emailpasswordInputErrorHint = document.getElementById("employee-email-input-error-hint");
     const personalNumberInputErrorHint = document.getElementById("pin-input-error-hint");
     const passwordInputErrorHint = document.getElementById("password-input-error-hint");
     const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
@@ -325,10 +303,10 @@ function submit()
     if (which === 1)
     {
 
-        if (canRegisterStudent() && isValid)
+        if (canRegisterStudent())
         {
-            const formElement = getById("form");
-            formElement.submit();
+
+            getById("student-form").submit();
         }
     }
 
@@ -336,8 +314,7 @@ function submit()
     {
         if (canRegisterEmployee() && isValid)
         {
-            const formElement = getById("form");
-            formElement.submit();
+            getById("employee-form").submit();
         }
     }
 }

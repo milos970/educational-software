@@ -4,44 +4,65 @@ function initializeSignUpPage()
 {
     studentOrEmployee(1);
 }
+
+
+let which = 0;
 function studentOrEmployee(who)
 {
+
     switch (who)
     {
         case 1:
+
             showFormForStudent();
+
+            getById("student-form").action = "/reg/student";
+            which = 1;
             break;
         case 2:
             showFormForEmployee();
+            getById("employee-form").action = "/sign-up/employee";
+            which = 2;
             break;
         default:
 
     }
 }
 
+
+
 function showFormForStudent()
 {
-    const elementsToHide = ["name-div", "pin-div", "surname-div"];
+    /*const elementsToHide = ["name-div", "pin-div", "surname-div", "password-div", "rep-password-div", "preconditions-div"];
 
     elementsToHide.forEach((item) => {
         document.getElementById(item).style.display="none";
     });
 
-    const elementsToShow = ["email-div", "password-div", "rep-password-div"];
+    const elementsToShow = ["email-div"];
 
     elementsToShow.forEach((item) => {
         document.getElementById(item).style.display="block";
-    });
+    });*/
+
+
+    document.getElementById("student-form-div").style.display="block";
+    document.getElementById("employee-form-div").style.display="none";
 }
 
 
 function showFormForEmployee()
 {
-    const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div"];
+    /*const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div", "preconditions-div"];
 
     elementsToShow.forEach((item) => {
         document.getElementById(item).style.display="block";
     });
+*/
+
+    document.getElementById("employee-form-div").style.display="block";
+    document.getElementById("student-form-div").style.display="none";
+
 }
 
 
@@ -51,21 +72,48 @@ function showFormForEmployee()
 
 
 
+function canRegisterStudent()
+{
+    const emailInput = document.getElementById("student-email-input");
+    const emailpasswordInputErrorHint = document.getElementById("student-email-input-error-hint");
 
 
 
-function canRegister()
+    if (emailInput.value === "")
+    {
+        emailpasswordInputErrorHint.innerHTML = "Zadajte školský email!";
+        return false;
+    } else {
+        emailpasswordInputErrorHint.innerHTML = "";
+    }
+
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
+    if (regexEmail.test(emailInput.value))
+    {
+        emailpasswordInputErrorHint.innerHTML = "";
+    } else {
+        emailpasswordInputErrorHint.innerHTML = "Nevalidný školský email!";
+        return false;
+
+    }
+
+
+    return true;
+}
+
+
+function canRegisterEmployee()
 {
     const nameInput = document.getElementById("name-input");
     const surnameInput = document.getElementById("name-input");
     const passwordInput = document.getElementById("password-input");
     const repPasswordInput = document.getElementById("password-input");
-    const emailInput = document.getElementById("email-input");
+    const emailInput = document.getElementById("employee-email-input");
     const personalNumberInput = document.getElementById("pin-input");
 
     const nameInputErrorHint = document.getElementById("name-input-error-hint");
     const surnameInputErrorHint = document.getElementById("surname-input-error-hint");
-    const emailpasswordInputErrorHint = document.getElementById("email-input-error-hint");
+    const emailpasswordInputErrorHint = document.getElementById("employee-email-input-error-hint");
     const personalNumberInputErrorHint = document.getElementById("pin-input-error-hint");
     const passwordInputErrorHint = document.getElementById("password-input-error-hint");
     const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
@@ -148,6 +196,7 @@ $('input[type="checkbox"]').click(function(event) {
 
 ////////////////////
 
+let isValid = false;
 
 function validatePassword()
 {
@@ -165,14 +214,22 @@ function validatePassword()
     const minCharacters = document.getElementById("min-chars-checkbox-div");
     const maxCharacters = document.getElementById("max-chars-checkbox-div");
 
+
+
+
+    isValid = true;
+
     if (passwordInput.value.match(regexUpperCase)) {
         upperCaseHint.classList.remove("form-check-danger");
         upperCaseHint.classList.add("form-check-success");
         upperCaseHint.getElementsByTagName("input")[0].checked = true;
+
     } else {
         upperCaseHint.classList.remove("form-check-success");
         upperCaseHint.classList.add("form-check-danger");
         upperCaseHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+
     }
 
 
@@ -184,6 +241,8 @@ function validatePassword()
         lowerCaseHint.classList.remove("form-check-success");
         lowerCaseHint.classList.add("form-check-danger");
         lowerCaseHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+
     }
 
     if (passwordInput.value.match(regexNumber)) {
@@ -194,6 +253,7 @@ function validatePassword()
         oneNumberHint.classList.remove("form-check-success");
         oneNumberHint.classList.add("form-check-danger");
         oneNumberHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
     if (passwordInput.value.match(regexSpecialCharacter)) {
@@ -204,6 +264,7 @@ function validatePassword()
         specialCharacterHint.classList.remove("form-check-success");
         specialCharacterHint.classList.add("form-check-danger");
         specialCharacterHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
 
@@ -215,18 +276,47 @@ function validatePassword()
         minCharacters.classList.remove("form-check-success");
         minCharacters.classList.add("form-check-danger");
         minCharacters.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
     if (passwordInput.value.length <= 64) {
         maxCharacters.classList.remove("form-check-danger");
         maxCharacters.classList.add("form-check-success");
         maxCharacters.getElementsByTagName("input")[0].checked = true;
+
     } else {
         maxCharacters.classList.remove("form-check-success");
         maxCharacters.classList.add("form-check-danger");
         maxCharacters.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
     }
 
+    return isValid;
+
+}
+
+
+function submit()
+{
+
+
+    if (which === 1)
+    {
+
+        if (canRegisterStudent())
+        {
+
+            getById("student-form").submit();
+        }
+    }
+
+    if (which === 2)
+    {
+        if (canRegisterEmployee() && isValid)
+        {
+            getById("employee-form").submit();
+        }
+    }
 }
 
 

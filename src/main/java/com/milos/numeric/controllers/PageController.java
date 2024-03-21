@@ -3,7 +3,8 @@ package com.milos.numeric.controllers;
 import com.milos.numeric.Authority;
 import com.milos.numeric.dtos.FileDto;
 import com.milos.numeric.dtos.NewPasswordDto;
-import com.milos.numeric.dtos.AddPersonalInfoDto;
+import com.milos.numeric.dtos.PersonalInfoDto;
+import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
@@ -51,6 +52,7 @@ public class PageController {
     }
 
 
+
     @GetMapping("/person/password/update/page")
     public String updatePasswordPage(Model model)
     {
@@ -70,6 +72,30 @@ public class PageController {
         modelAndView.setViewName("/pages/samples/confirmation");
 
         return modelAndView;
+    }
+
+
+    @GetMapping("/confirm-account/token-expired/page")
+    public ModelAndView tokenExpirationPage()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("error", "410");
+        modelAndView.addObject("description", "Platnosť verifikačného linku vypršala!");
+
+        modelAndView.setViewName("/pages/samples/error-status");
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/admin/material/page/error")
+    public String error(Model model)
+    {
+        model.addAttribute("error", "404");
+        model.addAttribute("description", "Nenašlo sa!");
+
+        return "pages/samples/error-status";
     }
 
 
@@ -109,32 +135,28 @@ public class PageController {
 
 
     @GetMapping("/admin/material/page")
-    public ModelAndView materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    public String materialsPage(Model model)
     {
         List<File> files = this.fileService.findAll();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("files", files);
-        modelAndView.addObject("FileDto", new FileDto());
-        modelAndView.setViewName("/pages/tables/materials");
 
-        String username = myUserDetails.getUsername();
-        Optional<Employee> optional = this.employeeService.findByUsername(username);
+        model.addAttribute("files", files);
+        model.addAttribute("FileDto", new FileDto());
 
-        if (optional.isEmpty())
+
+        Optional<Employee> optional = this.employeeService.findByAuthority(Authority.TEACHER);
+
+        if (!optional.isEmpty())
         {
-
+            return "redirect:/admin/material/page/error";
         }
 
         Employee employee = optional.get();
-        modelAndView.addObject("employee", employee);
-
+        model.addAttribute("employee", employee);
 
         List<Student> students = this.studentService.findAllByPointsAsc();
+        model.addAttribute("students", students);
 
-        modelAndView.addObject("students", students);
-
-
-        return modelAndView;
+        return "/pages/tables/materials";
     }
 
     @PostMapping("/admin/material/upload")
@@ -193,13 +215,9 @@ public class PageController {
 
 
     @GetMapping("/login")
-    public ModelAndView login(HttpServletRequest request)
+    public String login()
     {
-        HttpSession session = request.getSession();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error", session.getAttribute("error"));
-        modelAndView.setViewName("/pages/samples/sign-in");
-        return modelAndView;
+        return "/pages/samples/sign-in";
     }
 
     @GetMapping("/forget-password-page")
@@ -230,9 +248,6 @@ public class PageController {
         }
 
 
-
-
-
         Employee employee = optional.get();
 
         modelAndView.addObject("employee", employee);
@@ -248,9 +263,12 @@ public class PageController {
 
 
     @GetMapping("/sign-up-page")
-    public ModelAndView signUpPage()
+    public String signUpPage(Model model, @RequestParam(value = "error", required=false) String error)
     {
-        return new ModelAndView("/pages/samples/sign-up", "newPersonDTO", new AddPersonalInfoDto());
+        model.addAttribute("studentEmailDto",new StudentEmailDto());
+        model.addAttribute("personalInfoDto",new PersonalInfoDto());
+        model.addAttribute("error", error);
+        return "/pages/samples/sign-up";
     }
 
 //*********************************************CUSTOMIZE************************************************************************
@@ -281,6 +299,8 @@ public class PageController {
 
         return modelAndView;
     }
+
+
 
     @GetMapping("/admin/page")
     public ModelAndView adminPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
@@ -315,15 +335,6 @@ public class PageController {
 
         modelAndView.addObject("students", students);
         modelAndView.setViewName("index");
-        return modelAndView;
-    }
-
-    @GetMapping("/sign-up")
-    public ModelAndView signUp()
-    {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("newPersonDTO", new AddPersonalInfoDto());
-        modelAndView.setViewName("sign-up");
         return modelAndView;
     }
 

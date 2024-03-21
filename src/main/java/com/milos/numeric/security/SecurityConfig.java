@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -58,6 +59,7 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderH = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderI = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderJ = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderK = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
@@ -66,6 +68,7 @@ public class SecurityConfig
                         .requestMatchers(mvcMatcherBuilderF.pattern("/scss/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderG.pattern("/vendor/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderH.pattern("/vendors/**")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderK.pattern("/reg/student")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderJ.pattern("/confirm/sign-up/page"))
                         .access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == false"))
@@ -86,7 +89,9 @@ public class SecurityConfig
 
                 .permitAll())
                 .logout((logout) -> logout.logoutUrl("/logout").logoutSuccessUrl("/login"))
+                .authenticationManager(authManager(http))
                 ;
+
 
         return http.build();
     }
@@ -102,7 +107,8 @@ public class SecurityConfig
 
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception
+    {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authProvider());
@@ -125,13 +131,14 @@ public class SecurityConfig
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler()
     {
+        System.out.println(7);
         return new CustomAuthenticationFailureHandler();
     }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler()
     {
-
+        System.out.println(1);
         return new CustomAuthenticationSuccessHandler();
     }
 

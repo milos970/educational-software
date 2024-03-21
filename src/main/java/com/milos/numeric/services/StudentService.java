@@ -1,6 +1,6 @@
 package com.milos.numeric.services;
 
-import com.milos.numeric.dtos.NewStudentDto;
+import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.PersonalInfo;
@@ -9,69 +9,80 @@ import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.repositories.StudentRepository;
+import com.milos.numeric.repositories.VerificationTokenRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class StudentService
 {
     private final StudentRepository studentRepository;
     private final PersonalInfoRepository personalInfoRepository;
+
+    private final VerificationTokenRepository tokenRepository;
+
+
     private final PasswordEncoder passwordEncoder;
     private final EmailServiceImpl emailService;
 
-    private final VerificationToken verificationToken;
-
-    private PersonalInfoNewPasswordDTOMapper personalInfoNewPasswordDTOMapper;
+        private PersonalInfoNewPasswordDTOMapper personalInfoNewPasswordDTOMapper;
 
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, PersonalInfoRepository personalInfoRepository, PasswordEncoder passwordEncoder, EmailServiceImpl emailService, VerificationToken verificationToken) {
+    public StudentService(StudentRepository studentRepository, PersonalInfoRepository personalInfoRepository, VerificationTokenRepository tokenRepository, PasswordEncoder passwordEncoder, EmailServiceImpl emailService) {
         this.studentRepository = studentRepository;
         this.personalInfoRepository = personalInfoRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.verificationToken = verificationToken;
+
     }
 
-    public boolean save(NewStudentDto newStudentDto)
+
+    public boolean sendToken(String email)
     {
-        String email = newStudentDto.getEmail();
         Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(email);
 
-        if(optional.isEmpty())
+        if (optional.isEmpty())
         {
             return false;
         }
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setCode(UUID.randomUUID().toString());
 
         PersonalInfo personalInfo = optional.get();
 
-        if (personalInfo.isEnabled())
+        verificationToken.setPersonalInfo(personalInfo);
+        verificationToken.setExpirationDate("12.4");
+
+        this.tokenRepository.save(verificationToken);
+
+        try {
+            this.emailService.sendVerificationEmail(personalInfo, verificationToken);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e)
         {
-            return false;
+            throw new RuntimeException(e);
         }
 
-
-        VerificationToken verificationToken = new VerificationToken();
-
-        verificationToken.setCode("55555");
-
-        this.emailService.sendVerificationEmail(personalInfo, verificationToken);
-
-        personalInfo.setEnabled(true);
-
-        String hashedPassword = this.passwordEncoder.encode(newStudentDto.getPassword());
-        personalInfo.setPassword(hashedPassword);
-
-        Student student = new Student();
-        student.setPersonalInfo(personalInfo);
-
+        System.out.println("ODOSLANE");
         this.personalInfoRepository.save(personalInfo);
-        this.studentRepository.save(student);
+        return true;
+    }
+
+
+    public boolean save(StudentEmailDto studentEmailDto)
+    {
+
 
         return true;
     }

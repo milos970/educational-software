@@ -1,6 +1,7 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.dtos.NewStudentDto;
+import com.milos.numeric.dtos.StudentEmailDto;
+import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
 import jakarta.validation.Valid;
@@ -8,7 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 
@@ -21,6 +28,34 @@ public class StudentController {
         this.studentService = studentService;
         this.personalInfoService = personalInfoService;
     }
+
+
+    @PostMapping("/reg/student") //OK
+    public String checkIfValid(Model model, @Valid @ModelAttribute StudentEmailDto studentEmailDto, BindingResult result, RedirectAttributes redirectAttributes)
+    {
+
+        if (result.hasErrors())
+        {
+            return "redirect:/sign-up-page";
+        }
+
+
+        Optional<PersonalInfo> optional = this.personalInfoService.findByEmail(studentEmailDto.getEmail());
+
+
+        if (optional.get().isEnabled())
+        {
+            redirectAttributes.addAttribute("error", "Účet s týmto emailom je už aktívny!");
+            return "redirect:/sign-up-page";
+        }
+
+
+        this.studentService.sendToken(optional.get().getEmail());
+        return "redirect:/sign-in-page";
+
+
+    }
+
 
 
 
