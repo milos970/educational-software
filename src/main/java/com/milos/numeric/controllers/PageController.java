@@ -145,7 +145,7 @@ public class PageController {
 
         Optional<Employee> optional = this.employeeService.findByAuthority(Authority.TEACHER);
 
-        if (!optional.isEmpty())
+        if (optional.isEmpty())
         {
             return "redirect:/admin/material/page/error";
         }

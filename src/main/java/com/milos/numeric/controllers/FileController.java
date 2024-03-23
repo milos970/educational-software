@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.Optional;
 import java.util.Random;
-
-
+import com.milos.numeric.entities.File;
+import java.nio.file.Path;
 @Controller
 public class FileController
 {
@@ -40,27 +45,45 @@ public class FileController
         }
     }
 
-    @GetMapping("/admin/file/pdf")
+    @GetMapping("/admin/file")
     public ModelAndView getFiles()
     {
         return new ModelAndView("/pages/tables/materialy", "files", this.fileService.findAll());
     }
 
-    @GetMapping("/admin/file/pdf/{id}")
-    public ResponseEntity<byte[]> getSpecificFile(@PathVariable Long id)
+    @GetMapping("/admin/file/{id}")
+    public ResponseEntity<String> getSpecificFile(@PathVariable Long id)
     {
-       /* String filename = "pdf";
-        byte[] pdf = this.fileService.getFile(id).getData();
+        Optional<File> optional = this.fileService.findById(id);
+
+        if (optional.isEmpty())
+        {
+
+        }
+
+        File file = optional.get();
+        Path filePath = Paths.get(file.getPath());
+
+        byte[] fileBytes= null;
+        try {
+            fileBytes = Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        String base64EncodedFile = Base64.getEncoder().encodeToString(fileBytes);
+
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        headers.setContentType(MediaType.parseMediaType(file.getMimeType()));
 
-        headers.add("content-disposition", "inline;filename=" + filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");*/
-        return new ResponseEntity<>(HttpStatus.OK);
+        headers.add("content-disposition", "inline;filename=" + file.getName());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        return new ResponseEntity<>(base64EncodedFile, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/file/pdf/delete/{id}")
+    @DeleteMapping("/admin/file/delete/{id}")
     public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Long id)
     {
         this.fileService.remove(id);

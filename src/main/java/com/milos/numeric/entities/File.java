@@ -18,24 +18,24 @@ public class File
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
     @Size(min = 5, max = 100, message = "{validation.name.size.too_long}")
     private String path;
 
-    @Column(name = "file_name")
+    @Column(name = "name")
     @Size(min = 1, max = 15, message = "{validation.name.size.too_long}")
-    private String fileName;
+    private String name;
 
     @Column(name = "mime_type")
     private String mimeType;
 
-    @Size(min = 1, max = 100, message = "{validation.name.size.too_long}")
+    @Size(max = 100, message = "{validation.name.size.too_long}")
     private String description;
 
     @Column(name = "uploaded_by")
     private String uploadedBy;
 
     private Long size;
+
 
 
 }

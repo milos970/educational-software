@@ -1033,14 +1033,32 @@ function graph()
     let xValues = [];
     let yValues = [];
 
-    for (let i = -10; i <= 10; ++i)
-    {
-        xValues.push(i);
-        let expression = math.parse(fun);
-        yValues.push(math.evaluate(expression.toString(), { x: i }));
+    let yValues1 = [];
 
+
+
+
+
+
+    for (let i = 0; i < array.length; ++i)
+    {
+        xValues.push(parseFloat(array[i][0]));
+        yValues.push(parseFloat(array[i][1].replace(",",".")));
 
     }
+
+    for (let i = 0; i < xValues.length; ++i)
+    {
+        let expression = math.parse(fun);
+        yValues1.push(math.evaluate(expression.toString(), { x: xValues[i] }));
+    }
+
+
+
+
+
+
+
 
     $("#table tr").remove();
 
@@ -1051,28 +1069,43 @@ function graph()
 
     var data = {
         labels: xValues,
-        datasets: [{
-            label: '# of Votes',
+        datasets: [
+        {
+            label: 'line 1',
             data: yValues,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1,
-            fill: false
-        }],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 3,
+            fill: false,
+
+            pointBackgroundColor: function(context)
+            {
+                // Highlight points where x equals 0
+                return context.dataIndex === 10 ? 'blue' : 'rgb(23,99,199)';
+            },
+            // Define point border color
+            pointBorderColor: function(context) {
+                // Highlight points where x equals 0
+                return context.dataIndex === 10 ? 'blue' : 'rgb(23,99,199)';
+            },
+
+            pointRadius: function(context) {
+                // Increase the radius of highlighted points
+                return context.dataIndex === 10 ? 3 : 3; // Adjust the value as needed
+            },
+
+            showLine: false,
+        },
+            {
+    label: 'line 2',
+    data: yValues1,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(222,32,32)',
+    borderWidth: 3,
+    fill: false,
+
+    showLine: true,
+}],
         lineAtIndex: 2
     };
 
@@ -1369,8 +1402,9 @@ function leastSquares() {
 
 
 
-
-function parseCsvToArrays() {
+let array = [];
+function parseCsvToArrays()
+{
 
     var csvString = "";
     function csvToString(file, callback) {
@@ -1392,7 +1426,7 @@ function parseCsvToArrays() {
 
 
     csvToString(file, function(csvString) {
-        validateStudentsCsv($.csv.toArrays(csvString));
+        array = $.csv.toArrays(csvString);
 
     });
 
@@ -1425,7 +1459,8 @@ function parseStringCoordintatesToArrays()
 
 function validateStringCoordinates()
 {
-    const regex = /^\[\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\))*]$/;
+    const regex = /^\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)(?:,\((?:-?\d*\.?\d+),(-?\d*\.?\d+)\)){3,}$/;
+
 
     const coordinatesStringElement = getById("nodes-string-input");
     const coordinatesStringErrorHint = getById("coordinates-string-error-hint");
@@ -1446,6 +1481,12 @@ function validateStringCoordinates()
     }
 
     return validateCoordinates(parseStringCoordintatesToArrays(), 1);
+}
+
+function validateCsvCoordinates()
+{
+    parseCsvToArrays();
+    return validateCoordinates(array, 2);
 }
 
 
@@ -1548,22 +1589,15 @@ function validateCoordinates(coordinatesArrays, type)
 function logaritmic()
 {
 
-    if (!validateCoordinates(parseStringCoordintatesToArrays()))
-    {
-       return false;
-    }
 
-
-    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
     let data =[];
 
     let j = 0;
-    for (let i = 0; i < arr.length; i+=2)
+    for (let i = 0; i < array.length; i+=2)
     {
         data[j] = [2];
-        data[j][0] = arr[i];
-        data[j][1] = arr[i + 1];
-
+        data[j][0] = parseFloat(array[i][0]);
+        data[j][1] = parseFloat(array[i][1]);
         ++j;
 
     }
@@ -1625,16 +1659,15 @@ function logaritmic()
 function linear()
 {
 
-    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+
     let data =[];
 
     let j = 0;
-    for (let i = 0; i < arr.length; i+=2)
+    for (let i = 0; i < array.length; i+=2)
     {
         data[j] = [2];
-        data[j][0] = arr[i];
-        data[j][1] = arr[i + 1];
-
+        data[j][0] = parseFloat(array[i][0]);
+        data[j][1] = parseFloat(array[i][1]);
         ++j;
 
     }
@@ -1686,7 +1719,7 @@ function linear()
     fun = equation;
 
     document.getElementById("result-input").value = "f(x) = " + fun;
-    display();
+
 
 
 }
@@ -2314,7 +2347,87 @@ function isDateAfterCurrent(dateString)
 
 
 
+/////////////////////////////////////////////////////page-MATERIALS///////////////////////////////////
 
+
+function isEmpty(element, hintElement)
+{
+    if (element.length === 0)
+    {
+        hintElement.innerHTML = "Pole je prázdne!";
+    } else {
+        hintElement.innerHTML = "Pole je prázdne!";
+    }
+}
+
+
+function stringSizeInInterval(element, hintElement, min, max)
+{
+    if (element.value.length >= min && element.value.length <= max)
+    {
+        hintElement.innerHTML = "";
+    } else {
+        hintElement.innerHTML = "Dĺžka mimo intervalu!";
+    }
+}
+
+
+function numberSizeInInterval(element, hintElement)
+{
+    if (element >= min && element <= max)
+    {
+        hintElement.innerHTML = "";
+    } else {
+        hintElement.innerHTML = "Dĺžka mimo intervalu!";
+    }
+}
+
+
+function checkFileType(element, hintElement)
+{
+    const MAX_FILE_SIZE = parseInt(element.getAttribute('size'), 10);
+
+    const ALLOWED_TYPES = [
+        'application/pdf',        // PDF
+        'application/msword',     // DOC
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+        'image/png',              // PNG
+        'image/jpeg',             // JPEG
+        'image/jpg',              // JPG
+        'text/csv',               // CSV
+        'application/vnd.ms-excel', // CSV alternative (Excel)
+        'application/vnd.ms-powerpoint', // PPTX
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' // PPTX
+    ];
+
+    const file = element.files[0];
+
+    if (file.size <= MAX_FILE_SIZE)
+    {
+        hintElement.innerHTML = "";
+    } else {
+        hintElement.innerHTML = "Veľkosť súboru presahuje limit!";
+        return;
+    }
+    alert(file.type);
+
+    if (ALLOWED_TYPES.includes(file.type))
+    {
+        hintElement.innerHTML = "";
+    } else {
+        hintElement.innerHTML = "Nepodporovaný typ súboru!";
+        return;
+    }
+
+
+
+}
+
+
+function submitFile()
+{
+
+}
 
 
 

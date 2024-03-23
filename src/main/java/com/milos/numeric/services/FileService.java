@@ -12,6 +12,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,21 +36,33 @@ public class FileService
 
     public boolean save(FileDto fileDto)
     {
+        String fileName = fileDto.getData().getOriginalFilename();
+        String uri = "C:\\Users\\Milos\\Desktop\\cesta\\" + fileName;
 
-        String uri = "/src/main/resources/static/materials/numeric/" + fileDto.getName() + ".pdf";
+        Path filePath = Paths.get("C:\\Users\\Milos\\Desktop\\cesta\\" + fileName);
+
+        byte[] fileBytes= new byte[0];
         try {
-            FileUtils.writeByteArrayToFile(new java.io.File(uri), fileDto.getData().getBytes());
+            fileBytes = fileDto.getData().getBytes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+
+        try {
+            Files.write(filePath, fileBytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         File file = new File();
 
-        file.setFileName(fileDto.getName());
+        file.setName(fileDto.getName());
         file.setPath(uri);
         file.setDescription(fileDto.getDescription());
         file.setSize(fileDto.getData().getSize());
-        file.setMimeType("application/pdf");
+        file.setMimeType(fileDto.getData().getContentType());
         file.setUploadedBy("Lýdia");
         this.fileRepository.save(file);
 

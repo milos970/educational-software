@@ -304,17 +304,17 @@
             <div class="row">
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button onclick="selectNumericCategory(1)" type="button" class="btn btn-success btn-lg" style="height: 100%;"><h3 class="mb-0">Nelineárne metódy</h3></button>
+                  <button onclick="selectNumericCategory(1)" type="button" class="btn btn-success btn-lg" style="height: 100%;"><h3 class="mb-0">Nelineárne rovnice</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button onclick="selectNumericCategory(2)" type="button" class="btn btn-danger btn-lg" style="height: 100%;"><h3 class="mb-0">Integračné metódy</h3></button>
+                  <button onclick="selectNumericCategory(2)" type="button" class="btn btn-danger btn-lg" style="height: 100%;"><h3 class="mb-0">Určitý integrál</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
                 <div class="card">
-                  <button onclick="selectNumericCategory(3)" type="button" class="btn btn-behance btn-lg" style="height: 100%;"><h3 class="mb-0">Aproximačné a interpolačné metódy</h3></button>
+                  <button onclick="selectNumericCategory(3)" type="button" class="btn btn-behance btn-lg" style="height: 100%;"><h3 class="mb-0">Aproximácia a interpolácia</h3></button>
                 </div>
               </div>
               <div class="col-xl-3 col-sm-6 grid-margin stretch-card" style="display: none">
@@ -391,7 +391,7 @@
 
                         <p class="card-description"></p>
                         <div class="form-group" id="nodes-string-div">
-                            <label for="equation-input">Uzly</label>
+                            <label for="equation-input">Zadať uzly</label>
                             <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x10,y10)]" oninput="validateStringCoordinates()" >
                             <p class ="error" id="coordinates-string-error-hint"></p>
                         </div>
@@ -401,9 +401,9 @@
                             <input type="file" name="img[]" class="file-upload-default">
                             <div class="input-group col-xs-12">
                                 <input type="text"  id="text-input" class="form-control file-upload-info" disabled placeholder="Súbor s príponou .csv">
-                                <input  type="file"  id="file-input" class="form-control file-upload-info" style="display: none">
+                                <input  type="file" onchange="validateCsvCoordinates()"  id="file-input" class="form-control file-upload-info" style="display: none">
                                 <span class="input-group-append">
-                            <button onclick="insertFile()" class="file-upload-browse btn btn-primary" type="button" id="insert-file-button">Vložiť</button>
+                            <button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button" id="insert-file-button">Vložiť</button>
                           </span>
                             </div>
                             <p class ="error" id="coordinates-csv-error-hint"></p>

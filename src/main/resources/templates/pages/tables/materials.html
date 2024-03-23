@@ -18,6 +18,8 @@
     <!-- endinject -->
     <!-- Layout styles -->
       <link rel="stylesheet" href="/static/css/style.css">
+      <link rel="stylesheet" href="/static/css/my.css">
+      <link rel="stylesheet" th:href="@{/css/my.css}">
       <!-- End layout styles -->
       <link rel="shortcut icon" href="/static/images/favicon.png" />
       <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -352,23 +354,26 @@
 
                             <form th:object="${FileDto}"  class="forms-sample" action="#" th:action="@{/admin/material/upload}" method="POST"  enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label for="exampleInputName1">Názov</label>
-                                    <input th:field="*{name}" type="text" class="form-control" id="exampleInputName1" minlength="1" maxlength="15" placeholder="Maximálne 15 znakov!" >
+                                    <label for="file-name-input">Názov</label>
+                                    <input th:field="*{name}" type="text" class="form-control" id="file-name-input" minlength="1" maxlength="15" placeholder="Maximálne 15 znakov!" >
                                 </div>
 
 
                                 <div class="form-group">
                                     <label>Nahrať súbor</label>
-                                    <input th:field="*{data}" type="file" name="data" class="file-upload-default" id="file-input">
+                                    <input onchange="checkFileType(document.getElementById('file-input'), document.getElementById('file-input-error-hint'))"
+                                           th:field="*{data}" type="file" accept=".pdf, .docx, .png, .jpg, jpeg, .csv, .pptx" size="5242880"
+                                           name="data" class="file-upload-default" id="file-input">
                                     <div class="input-group col-xs-12">
-                                        <input type="text" class="form-control file-upload-info" disabled placeholder="Podporované formáty: csv, docx, pptx">
+                                        <input type="text" class="form-control file-upload-info" disabled placeholder="Podporované formáty: .pdf, .docx, .png, .jpg, jpeg, .csv, .pptx">
                                         <span class="input-group-append"><button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button">Nahrať</button></span>
                                     </div>
+                                    <p class="error" id="file-input-error-hint"></p>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleTextarea1">Popis</label>
-                                    <textarea th:field="*{description}" class="form-control" id="exampleTextarea1" rows="4" maxlength="100" placeholder="Maximálne 100 znakov!"></textarea>
+                                    <label for="description-input">Popis</label>
+                                    <textarea th:field="*{description}" class="form-control" id="description-input" rows="4" maxlength="100" placeholder="Maximálne 100 znakov!"></textarea>
                                 </div>
 
                                 <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>
@@ -397,10 +402,10 @@
                                         <td colspan="2">Žiadny dokument</td>
                                     </tr>
                                     <tr th:each="file : ${files}">
-                                        <td><span th:text="${file.fileName}"></span></td>
+                                        <td><span th:text="${file.name}"></span></td>
                                         <td><span th:text="${file.description}"></span></td>
                                         <td>
-                                            <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť</button>
+                                            <button th:attr="onclick=|openFile('${file.id}')|"  type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť</button>
                                         </td>
                                         <td>
                                             <form th:action="@{/admin/material/{id}(id=${file.id})}" th:method="delete">
@@ -464,5 +469,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
     <script src="/static/js/my/my.js"></script>
     <script th:src="@{/js/my/my.js}"></script>
+    <script src="/static/js/my/files-list.js"></script>
+    <script th:src="@{/js/my/files-list.js}"></script>
   </body>
 </html>
