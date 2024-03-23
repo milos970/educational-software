@@ -60,9 +60,8 @@ function sendMessage()
 
 
 
-    let data = {
-        senderId: idA,
-        recipientId: idB,
+    let data =
+        {
         sender: userName,
         content: content
     };

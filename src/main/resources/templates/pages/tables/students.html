@@ -54,68 +54,31 @@
                 <div class="profile-desc">
                     <div class="profile-pic">
                         <div class="count-indicator">
-                            <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                            <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                            <img class="img-xs rounded-circle" th:src="@{${imagePath}}" alt="avatar">
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal"
-                                th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
                             <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
                         </div>
-                    </div>
-                    <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
-                    <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"
-                         aria-labelledby="profile-dropdown">
-                        <a href="#" class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-dark rounded-circle">
-                                    <i class="mdi mdi-settings text-primary"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
-                            </div>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-dark rounded-circle">
-                                    <i class="mdi mdi-onepassword  text-info"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
-                            </div>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-dark rounded-circle">
-                                    <i class="mdi mdi-calendar-today text-success"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
-                            </div>
-                        </a>
                     </div>
                 </div>
             </li>
             <li class="nav-item nav-category">
                 <span class="nav-link" style="color: whitesmoke">Navigácia</span>
             </li>
+
             <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/admin/page}">
+                <a class="nav-link"  th:href="@{/admin/page}">
               <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
+                <i class="mdi mdi-laptop"></i>
               </span>
                     <span class="menu-title" style="color: whitesmoke">Numerické metódy</span>
                 </a>
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/admin/student/page}">
+                <a class="nav-link" href="" th:href="@{/admin/student/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-playlist-play"></i>
               </span>
@@ -124,11 +87,21 @@
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/admin/material/page}">
+                <a class="nav-link" href="" th:href="@{/admin/material/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
                     <span class="menu-title" style="color: whitesmoke">Materiály</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/chat/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">Správy</span>
                 </a>
             </li>
 
@@ -300,8 +273,7 @@
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                             aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
                             <h6 class="p-3 mb-0">Profile</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -311,18 +283,29 @@
                                     </div>
                                 </div>
                                 <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Settings</p>
+                                    <p class="preview-subject mb-1">Profil</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
+                            <a th:href="@{/person/password/update/page}" class="dropdown-item preview-item">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-dark rounded-circle">
+                                        <i class="mdi mdi-settings text-success"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content">
+                                    <p class="preview-subject mb-1">Zmena hesla</p>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a th:href="@{/logout}" class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-dark rounded-circle">
                                         <i class="mdi mdi-logout text-danger"></i>
                                     </div>
                                 </div>
                                 <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
+                                    <p class="preview-subject mb-1">Odhlásenie</p>
                                 </div>
                             </a>
                         </div>
@@ -373,7 +356,7 @@
                                             <td><span th:text="${student.personalInfo.name}"></span></td>
                                             <td><span th:text="${student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><span th:text="${student.personalNumber}"></span></td>
+                                            <td><span th:text="${student.personalInfo.personalNumber}"></span></td>
                                             <td><span th:text="${student.personalInfo.email}"></span></td>
                                             <td ><span th:id="'points-' + ${student.id}" th:text="${student.getPoints()}"></span></td>
                                             <td><span>

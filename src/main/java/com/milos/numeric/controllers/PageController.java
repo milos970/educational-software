@@ -40,8 +40,11 @@ public class PageController {
     private final SystemSettingsService systemSettingsService;
 
 
+    private final ChatService chatService;
+
+
     @Autowired
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, FileService fileService, SystemSettingsService systemSettingsService) {
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, FileService fileService, SystemSettingsService systemSettingsService, ChatService chatService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
@@ -49,6 +52,7 @@ public class PageController {
         this.emailService = emailService;
         this.fileService = fileService;
         this.systemSettingsService = systemSettingsService;
+        this.chatService = chatService;
     }
 
 
@@ -226,39 +230,51 @@ public class PageController {
         return "/pages/samples/forgot-password";
     }
 
-    @GetMapping("/admin/chat-page")
-    public ModelAndView chat(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    @GetMapping("/person/chat/page")
+    public String chatPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
     {
 
-        List<Student> students = this.studentService.findAll();
-        if (students.isEmpty()) {
-            System.out.println(5555555);
-        }
-
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("students",students);
-
         String username = myUserDetails.getUsername();
-        Optional<Employee> optional = this.employeeService.findByUsername(username);
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
-        if (optional.isEmpty())
-        {
+        if (optionalPersonalInfo.isEmpty()) {
 
         }
 
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
 
-        Employee employee = optional.get();
+        model.addAttribute("personalInfo",personalInfo);
 
-        modelAndView.addObject("employee", employee);
+        if (personalInfo.getAuthority() == Authority.TEACHER)
+        {
+            List<Student> students = this.studentService.findAll();
+            model.addAttribute("students",students);
+
+        } else {
+            Optional<Chat> optionalChat = this.chatService.findByOneParticipant(0L, personalInfo.getId());
+
+            if (optionalChat.isEmpty()) {
+
+            }
+
+            Chat chat = optionalChat.get();
+
+            model.addAttribute("chat", chat);
+        }
 
 
-        modelAndView.addObject("adminId", employee.getId());
 
 
+        if (personalInfo.getGender().name().equals("FEMALE"))
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
+        } else
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
+        }
 
-        modelAndView.setViewName("/pages/tables/chat");
-        return modelAndView;
+
+        return "/pages/tables/chat";
     }
 
 
@@ -302,40 +318,35 @@ public class PageController {
 
 
 
-    @GetMapping("/admin/page")
-    public ModelAndView adminPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    @GetMapping("/person/home/page")
+    public String homePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
     {
-        ModelAndView modelAndView = new ModelAndView();
         String username = myUserDetails.getUsername();
-        Optional<Employee> optional = this.employeeService.findByUsername(username);
+        Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByUsername(username);
 
-        if (optional.isEmpty())
+        if (personalInfoOptional.isEmpty())
         {
-
+            System.out.println(4545);
         }
 
-        Employee employee = optional.get();
+        PersonalInfo personalInfo = personalInfoOptional.get();
+
+
+        model.addAttribute("personalInfo",personalInfo);
 
 
 
-        modelAndView.addObject("employee", employee);
 
-        if (employee.getPersonalInfo().getGender().name().equals("FEMALE"))
+        if (personalInfo.getGender().name().equals("FEMALE"))
         {
-
-            String path = "/images/faces-clipart/female.png";
-            modelAndView.addObject("imagePath", path);
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
         } else {
-            modelAndView.addObject("imagePath", "/images/faces-clipart/male.png");
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
 
 
-        List<Student> students = this.studentService.findAllByPointsAsc();
-
-        modelAndView.addObject("students", students);
-        modelAndView.setViewName("index");
-        return modelAndView;
+        return "index";
     }
 
 

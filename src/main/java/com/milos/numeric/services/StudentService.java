@@ -45,6 +45,11 @@ public class StudentService
 
     }
 
+    public Optional<Student> findByUsername(String username)
+    {
+        return this.studentRepository.findByUsername(username);
+    }
+
 
     public boolean sendToken(String email)
     {

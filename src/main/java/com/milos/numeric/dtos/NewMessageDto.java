@@ -16,8 +16,5 @@ public class NewMessageDto
 
     private String sender;
 
-    private Long senderId;
-
-    private Long recipientId;
 
 }

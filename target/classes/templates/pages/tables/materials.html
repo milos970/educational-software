@@ -62,89 +62,64 @@
                 <a class="sidebar-brand brand-logo-mini" href="index.html"><img th:src="@{/images/logo-mini.svg}"
                                                                                 alt="logo"/></a>
           </div>
-        <ul class="nav">
-          <li class="nav-item profile">
-            <div class="profile-desc">
-                <div class="profile-pic">
-                    <div class="count-indicator">
-                        <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                        <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
-                        <span class="count bg-success"></span>
+            <ul class="nav">
+                <li class="nav-item profile">
+                    <div class="profile-desc">
+                        <div class="profile-pic">
+                            <div class="count-indicator">
+                                <img class="img-xs rounded-circle" th:src="@{${imagePath}}" alt="avatar">
+                                <span class="count bg-success"></span>
+                            </div>
+                            <div class="profile-name">
+                                <h5 class="mb-0 font-weight-normal" th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
+                                <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="profile-name">
-                        <h5 class="mb-0 font-weight-normal"
-                            th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
-                        <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
-                    </div>
-                </div>
-              <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
-              <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
-                <a href="#" class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-settings text-primary"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-onepassword  text-info"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-calendar-today text-success"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </li>
-            <li class="nav-item nav-category">
-                <span class="nav-link" style="color: whitesmoke">Navigácia</span>
-            </li>
-            <li class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/admin/page}">
-              <span class="menu-icon">
-                <i class="mdi mdi-speedometer"></i>
-              </span>
-                    <span class="menu-title" style="color: whitesmoke">Numerické metódy</span>
-                </a>
-            </li>
+                </li>
+                <li class="nav-item nav-category">
+                    <span class="nav-link" style="color: whitesmoke">Navigácia</span>
+                </li>
 
-            <li class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/admin/student/page}">
+                <li class="nav-item menu-items">
+                    <a class="nav-link"  th:href="@{/admin/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-laptop"></i>
+              </span>
+                        <span class="menu-title" style="color: whitesmoke">Numerické metódy</span>
+                    </a>
+                </li>
+
+                <li class="nav-item menu-items">
+                    <a class="nav-link" href="" th:href="@{/admin/student/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-playlist-play"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Bodovanie</span>
-                </a>
-            </li>
+                        <span class="menu-title" style="color: whitesmoke">Bodovanie</span>
+                    </a>
+                </li>
 
-            <li class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/admin/material/page}">
+                <li class="nav-item menu-items">
+                    <a class="nav-link" href="" th:href="@{/admin/material/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Materiály</span>
-                </a>
-            </li>
+                        <span class="menu-title" style="color: whitesmoke">Materiály</span>
+                    </a>
+                </li>
 
-      </nav>
+
+                <li class="nav-item menu-items">
+                    <a class="nav-link" th:href="@{/admin/chat/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
+                        <span class="menu-title" style="color: whitesmoke">Správy</span>
+                    </a>
+                </li>
+
+
+        </nav>
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_navbar.html -->
@@ -306,33 +281,42 @@
                           <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                       </div>
                   </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
-                  <h6 class="p-3 mb-0">Profile</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-settings text-success"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Settings</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-logout text-danger"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Log out</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">Advanced settings</p>
-                </div>
+                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                      <h6 class="p-3 mb-0">Profile</h6>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <div class="preview-icon bg-dark rounded-circle">
+                                  <i class="mdi mdi-settings text-success"></i>
+                              </div>
+                          </div>
+                          <div class="preview-item-content">
+                              <p class="preview-subject mb-1">Profil</p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a th:href="@{/person/password/update/page}" class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <div class="preview-icon bg-dark rounded-circle">
+                                  <i class="mdi mdi-settings text-success"></i>
+                              </div>
+                          </div>
+                          <div class="preview-item-content">
+                              <p class="preview-subject mb-1">Zmena hesla</p>
+                          </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a th:href="@{/logout}" class="dropdown-item preview-item">
+                          <div class="preview-thumbnail">
+                              <div class="preview-icon bg-dark rounded-circle">
+                                  <i class="mdi mdi-logout text-danger"></i>
+                              </div>
+                          </div>
+                          <div class="preview-item-content">
+                              <p class="preview-subject mb-1">Odhlásenie</p>
+                          </div>
+                      </a>
+                  </div>
               </li>
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">

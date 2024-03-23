@@ -1,15 +1,28 @@
 
-/*insert into personal_info (id,nam,surname,username, email, password, gender, authority, enabled) values (0,'Lýdia','Gábrišová','gabrisova',  'lydia@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','TEACHER', true);
-insert into personal_info (id,nam,surname,username, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', 'lukacik5@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', false);
-insert into personal_info (id,nam,surname,username, email, password, gender, authority, enabled) values (2,'Anna','Lukáčiková','lukacikova6', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true);
 
-insert into student (id,personal_number,points,absents,person_id) values (0,'559415',1,1,1);
-insert into student (id,personal_number,points,absents,person_id) values (1,'587123',5,0,2);
-insert into employee (id,personal_number, person_id) values (0,'646542', 0);
+
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (0,'Lýdia','Gábrišová','gabrisova', '56478', 'lydia@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','TEACHER', true);
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'lukacik5@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true);
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (2,'Anna','Lukáčiková','lukacikova6', '558123', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true);
+
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (3,'Eva','Jalova','eva', '123456', 'eva@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','STUDENT', true);
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (4,'Tomas','Tomi','tomas', '789101', 'tomas@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true);
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (5,'Peter','Pet','peter', '121314', 'peter6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', false);
+
+insert into student (id,points,absents,person_id) values (0,0,0,1);
+insert into student (id,points,absents,person_id) values (1,0,0,2);
+
+
+insert into student (id,points,absents,person_id) values (2,0,0,3);
+insert into student (id,points,absents,person_id) values (3,0,0,4);
+
+insert into employee (id, person_id) values (0, 0);
 
 insert into chat(id, person_ida, person_idb) values (0,0,1);
 
 
 insert into message(id,content, sender, chat_id, seen) values (0,'Zdravím', 'gabrisova', 0, true);
-insert into message(id,content, sender, chat_id,  seen) values (1,'Dobrý deň', 'lukacik5', 0, true);*/
+insert into message(id,content, sender, chat_id,  seen) values (1,'Dobrý deň', 'lukacik5', 0, true);
+
+
 

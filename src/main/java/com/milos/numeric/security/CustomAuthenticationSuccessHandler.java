@@ -18,15 +18,9 @@ import java.util.Collection;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    SimpleUrlAuthenticationSuccessHandler studentSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/student/page");
-    SimpleUrlAuthenticationSuccessHandler employeeSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/employee");
-    SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/admin/page");
+    SimpleUrlAuthenticationSuccessHandler personSuccessHandler =
+            new SimpleUrlAuthenticationSuccessHandler("/person/home/page");
 
-    private final SimpleUrlAuthenticationSuccessHandler activateAccount =
-            new SimpleUrlAuthenticationSuccessHandler("/confirm/sign-up/page");
 
 
 
@@ -34,36 +28,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
     {
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        if (!userDetails.isEnabled())
-        {
-            this.activateAccount.onAuthenticationSuccess(request, response, authentication);
-            return;
-        }
-
-
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            String authorityName = grantedAuthority.getAuthority();
-            if (authorityName.equals("TEACHER"))
-            {
-                this.adminSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-                return;
-            }
-
-            if (authorityName.equals("STUDENT"))
-            {
-                this.studentSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-                return;
-            }
-
-            if (authorityName.equals("EMPLOYEE"))
-            {
-                this.studentSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-                return;
-            }
-
-        }
+        this.personSuccessHandler.onAuthenticationSuccess(request, response, authentication);
     }
 }

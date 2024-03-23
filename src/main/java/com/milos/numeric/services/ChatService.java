@@ -3,9 +3,14 @@ package com.milos.numeric.services;
 import com.milos.numeric.dtos.NewMessageDto;
 import com.milos.numeric.entities.Chat;
 import com.milos.numeric.entities.Message;
+import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.mappers.MessageNewMessageDtoMapper;
 import com.milos.numeric.repositories.ChatRepository;
+import com.milos.numeric.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,12 +21,15 @@ public class ChatService
     private final ChatRepository chatRepository;
     private final MessageService messageService;
 
+    private final PersonalInfoService personalInfoService;
+
     private MessageNewMessageDtoMapper messageNewMessageDtoMapper;
 
     @Autowired
-    public ChatService(ChatRepository chatRepository, MessageService messageService) {
+    public ChatService(ChatRepository chatRepository, MessageService messageService, PersonalInfoService personalInfoService) {
         this.chatRepository = chatRepository;
         this.messageService = messageService;
+        this.personalInfoService = personalInfoService;
     }
 
     public Optional<Chat> findByOneParticipant(Long idA, Long idB)
@@ -32,9 +40,17 @@ public class ChatService
 
     public boolean saveMessage(NewMessageDto newMessageDto)
     {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
 
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(myUserDetails.getUsername());
 
-        Optional<Chat> optional = this.chatRepository.findByParticipants(newMessageDto.getRecipientId(), newMessageDto.getSenderId());
+        Optional<Chat> optional = null;
+        if (myUserDetails.getAuthority().equals("STUDENT"))
+        {
+            optional = this.chatRepository.findByParticipants(0L,optionalPersonalInfo.get().getId());
+        }
+
 
         if (optional.isEmpty())
         {
@@ -50,9 +66,10 @@ public class ChatService
         message.setSeen(false);
         message.setSender(newMessageDto.getSender());
 
+
+
         this.messageService.saveMessage(message);
 
-        System.out.println(message.getContent());
 
         return true;
     }
