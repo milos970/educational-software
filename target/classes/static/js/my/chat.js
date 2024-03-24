@@ -5,8 +5,15 @@ let userName = "";
 
 
 
-function sendMessage()
+function sendMessage(sender,receiver)
 {
+    if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
+    {
+        getById("message-input-error-hint").innerHtml = "Nevalidný výraz!";
+        return;
+    }
+
+
     const xhttp = new XMLHttpRequest();
     const element = document.getElementById("conversation");
     const inputElement = document.getElementById("message-input");
@@ -23,6 +30,7 @@ function sendMessage()
             alert("Success");
         } else {
             alert("Unsuccessfull");
+            return;
         }
 
         const lineDiv = document.createElement('div');
@@ -61,9 +69,10 @@ function sendMessage()
 
 
     let data =
-        {
-        sender: userName,
-        content: content
+    {
+        content: content,
+        senderId: sender,
+        receiverId: receiver
     };
     xhttp.send(JSON.stringify(data));
 }
@@ -72,6 +81,7 @@ function sendMessage()
 function getConversation(usrName, ida, idb)
 {
 
+    getById("conversation-div").style.display = "block";
     userName = usrName;
 
     getById("send-message-div").style.display="block";

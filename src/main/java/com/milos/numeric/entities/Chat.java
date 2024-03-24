@@ -16,23 +16,10 @@ import java.util.List;
 
 public class Chat
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @EmbeddedId
+    private ChatId chatId;
 
-
-
-    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "person_ida")
-    private PersonalInfo personalInfoA;
-
-
-    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "person_idb")
-    private PersonalInfo personalInfoB;
-
-
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Message> messages;
 
 }

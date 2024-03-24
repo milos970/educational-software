@@ -1,7 +1,8 @@
 package com.milos.numeric.services;
 
-import com.milos.numeric.dtos.NewMessageDto;
+import com.milos.numeric.dtos.MessageDto;
 import com.milos.numeric.entities.Chat;
+import com.milos.numeric.entities.ChatId;
 import com.milos.numeric.entities.Message;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.mappers.MessageNewMessageDtoMapper;
@@ -9,7 +10,6 @@ import com.milos.numeric.repositories.ChatRepository;
 import com.milos.numeric.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,25 +32,42 @@ public class ChatService
         this.personalInfoService = personalInfoService;
     }
 
-    public Optional<Chat> findByOneParticipant(Long idA, Long idB)
+    public Optional<Chat> findByChatId(Long parA, Long parB)
     {
-        return this.chatRepository.findByParticipants(idA, idB);
+        return this.chatRepository.findById(new ChatId(parA, parB));
     }
 
 
-    public boolean saveMessage(NewMessageDto newMessageDto)
+    public boolean saveMessage(MessageDto messageDto)
     {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
 
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(myUserDetails.getUsername());
+        Optional<PersonalInfo> optionalSender = this.personalInfoService.findByUsername(myUserDetails.getUsername());
 
-        Optional<Chat> optional = null;
-        if (myUserDetails.getAuthority().equals("STUDENT"))
+        PersonalInfo sender = optionalSender.get();
+
+        if (sender.getId() != messageDto.getSenderId())
         {
-            optional = this.chatRepository.findByParticipants(0L,optionalPersonalInfo.get().getId());
+            System.out.println("1");
+            return false;
         }
 
+
+        ChatId chatId = new ChatId();
+
+        if (sender.getAuthority().equals("STUDENT"))
+        {
+            chatId.setParticipantA(0L);
+            chatId.setParticipantB(sender.getId());
+        } else {
+            chatId.setParticipantA(0L);
+            chatId.setParticipantB(messageDto.getReceiverId());
+        }
+
+
+        Optional<Chat> optional = this.chatRepository.findById(new ChatId(0L, messageDto.getSenderId()));
 
         if (optional.isEmpty())
         {
@@ -58,29 +75,22 @@ public class ChatService
             return false;
         }
 
+
         Chat chat = optional.get();
 
         Message message = new Message();
         message.setChat(chat);
-        message.setContent(newMessageDto.getContent());
+        message.setContent(messageDto.getContent());
         message.setSeen(false);
-        message.setSender(newMessageDto.getSender());
 
-
-
+        message.setSenderId(messageDto.getSenderId());
+        message.setReceiverId(messageDto.getReceiverId());
         this.messageService.saveMessage(message);
 
 
         return true;
     }
 
-
-    public Optional<Chat> findById(Long id)
-    {
-
-
-        return this.chatRepository.findById(id);
-    }
 
     public boolean deleteAll()
     {

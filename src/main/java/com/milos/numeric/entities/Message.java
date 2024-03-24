@@ -1,23 +1,20 @@
 package com.milos.numeric.entities;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Message
 {
     @Id
@@ -29,16 +26,20 @@ public class Message
     @Size(max = 100, message = "{validation.name.size.too_long}")
     private String content;
 
-    private String sender;
+
+    @Column(name = "sender_id")
+    private Long senderId;
+
+
+    @Column(name = "receiver_id")
+    private Long receiverId;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id")
+    @JoinColumns({
+            @JoinColumn(name = "chat_participant_a", referencedColumnName = "participant_a"),
+            @JoinColumn(name = "chat_participant_b", referencedColumnName = "participant_b")
+    })
     private Chat chat;
 
-
     private boolean seen;
-
-
-
-
 }

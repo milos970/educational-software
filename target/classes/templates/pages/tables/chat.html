@@ -136,7 +136,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/admin/chat/page}">
               <span class="menu-icon">
-                <i class="mdi mdi-chart-bar"></i>
+                  <i class="mdi mdi-message-text"></i>
               </span>
                     <span class="menu-title" style="color: whitesmoke">Správy</span>
                 </a>
@@ -337,8 +337,8 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-5 grid-margin stretch-card">
-                        <div class="card">
+                    <div class="col-lg-5 grid-margin stretch-card"  id="conversation-div">
+                        <div class="card" >
 
                             <div class="card-body" id="conversation">
 
@@ -347,13 +347,13 @@
                                     <div th:each="message : ${chat.messages}" >
                                         <div  class="flex-container">
                                             <div class="left-item">
-                                                <div th:if="${personalInfo.username != message.sender}" th:class="left-item">
+                                                <div th:if="${personalInfo.id == message.receiverId}" th:class="left-item">
                                                     <button th:text="${message.content}" class="btn btn-light btn-rounded btn-fw"></button>
                                                 </div>
                                             </div>
 
                                             <div class="right-item">
-                                                <div th:if="${personalInfo.username == message.sender}" th:class="right-item">
+                                                <div th:if="${personalInfo.id == message.senderId}" th:class="right-item">
                                                     <button th:text="${message.content}" class="btn btn-success btn-rounded btn-fw"></button>
                                                 </div>
                                             </div>
@@ -366,11 +366,22 @@
 
                             <div id="send-message-div" class="form-group">
                                 <div class="input-group">
-                                    <input id="message-input" type="text" class="form-control" placeholder="Max počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <input id="message-input" type="text" class="form-control"
+                                           placeholder="Max. počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2" minlength="1" maxlength="100">
 
-                                    <div class="input-group-append">
-                                        <button class="btn btn-sm btn-primary" type="button" onclick="sendMessage()">Odoslať</button>
-                                    </div>
+
+                                        <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="input-group-append">
+                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}','${student.personalInfo.id}')|">Odoslať</button>
+                                        </div>
+
+
+                                        <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="input-group-append">
+                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}',0)|">Odoslať</button>
+                                        </div>
+
+
+                                    <p class="error" id="message-input-error-hint"></p>
+
                                 </div>
                             </div>
                         </div>

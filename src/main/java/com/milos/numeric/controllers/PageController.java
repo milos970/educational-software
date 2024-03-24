@@ -251,18 +251,20 @@ public class PageController {
             model.addAttribute("students",students);
 
         } else {
-            Optional<Chat> optionalChat = this.chatService.findByOneParticipant(0L, personalInfo.getId());
+
+            Optional<Chat> optionalChat = this.chatService.findByChatId(0L, personalInfo.getId() );
 
             if (optionalChat.isEmpty()) {
 
             }
 
+            if (optionalChat.get().getMessages().isEmpty()) {
+
+            }
             Chat chat = optionalChat.get();
 
             model.addAttribute("chat", chat);
         }
-
-
 
 
         if (personalInfo.getGender().name().equals("FEMALE"))

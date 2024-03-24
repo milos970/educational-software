@@ -1,7 +1,6 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.dtos.NewChatDto;
-import com.milos.numeric.dtos.NewMessageDto;
+import com.milos.numeric.dtos.MessageDto;
 import com.milos.numeric.entities.Chat;
 import com.milos.numeric.entities.Message;
 import com.milos.numeric.services.ChatService;
@@ -28,19 +27,18 @@ public class ChatController
 
 
     @PostMapping("/person/sendMessage")
-    public ResponseEntity saveMessage(@RequestBody @Valid NewMessageDto newMessageDto)
+    public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto)
     {
-        this.chatService.saveMessage(newMessageDto);
+        this.chatService.saveMessage(messageDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @GetMapping("/person/{ida}/conversation/{idb}")
     @ResponseBody
-    public List<NewMessageDto> findById(@PathVariable("ida") Long idA, @PathVariable("idb") Long idB)
+    public List<MessageDto> findById(@PathVariable("ida") Long idA, @PathVariable("idb") Long idB)
     {
-
-        Optional<Chat> optional = this.chatService.findByOneParticipant(idA, idB);
+        Optional<Chat> optional = null;
 
         if (optional.isEmpty())
         {
@@ -49,19 +47,19 @@ public class ChatController
 
         Chat chat = optional.get();
         List<Message> messages = chat.getMessages();
-        List<NewMessageDto> newMessageDtos = new LinkedList<>();
+        List<MessageDto> messageDtos = new LinkedList<>();
 
         for(Message item : messages)
         {
-            NewMessageDto messageDto = new NewMessageDto();
+            MessageDto messageDto = new MessageDto();
             messageDto.setContent(item.getContent());
-            messageDto.setSender(item.getSender());
-            System.out.println(messageDto.getSender()); newMessageDtos.add(messageDto);
+
+
         }
 
 
 
-        return newMessageDtos;
+        return messageDtos;
     }
 
 
