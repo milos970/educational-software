@@ -106,7 +106,7 @@
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link"  th:href="@{/admin/page}">
+                <a class="nav-link"  th:href="@{/person/home/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
               </span>
@@ -114,17 +114,17 @@
                 </a>
             </li>
 
-            <li class="nav-item menu-items">
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="nav-item menu-items">
                 <a class="nav-link" href="" th:href="@{/admin/student/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-playlist-play"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Bodovanie</span>
+                    <span class="menu-title" style="color: whitesmoke">Študenti</span>
                 </a>
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/admin/material/page}">
+                <a class="nav-link" href="" th:href="@{/person/material/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
@@ -134,7 +134,7 @@
 
 
             <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/admin/chat/page}">
+                <a class="nav-link" th:href="@{/person/chat/page}">
               <span class="menu-icon">
                   <i class="mdi mdi-message-text"></i>
               </span>
@@ -312,7 +312,7 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
+                            <a th:href="@{/logout}" class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-dark rounded-circle">
                                         <i class="mdi mdi-logout text-danger"></i>
@@ -371,12 +371,12 @@
 
 
                                         <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}','${student.personalInfo.id}')|">Odoslať</button>
+                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}')|">Odoslať</button>
                                         </div>
 
 
                                         <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}',0)|">Odoslať</button>
+                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}')|">Odoslať</button>
                                         </div>
 
 

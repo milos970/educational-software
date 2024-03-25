@@ -58,7 +58,7 @@
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal" th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
+                            <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
                             <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link"  th:href="@{/admin/page}">
+                <a class="nav-link"  th:href="@{/person/home/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
               </span>
@@ -77,17 +77,17 @@
                 </a>
             </li>
 
-            <li class="nav-item menu-items">
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="nav-item menu-items">
                 <a class="nav-link" href="" th:href="@{/admin/student/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-playlist-play"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Bodovanie</span>
+                    <span class="menu-title" style="color: whitesmoke">Študenti</span>
                 </a>
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/admin/material/page}">
+                <a class="nav-link" href="" th:href="@{/person/material/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
@@ -97,7 +97,7 @@
 
 
             <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/admin/chat/page}">
+                <a class="nav-link" th:href="@{/person/chat/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
@@ -266,10 +266,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
-                                <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                                 <p class="mb-0 d-none d-sm-block navbar-profile-name"
-                                   th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></p>
+                                   th:text="${personalInfo.name + ' ' + personalInfo.surname}"></p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>

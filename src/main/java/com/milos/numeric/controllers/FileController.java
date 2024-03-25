@@ -51,7 +51,7 @@ public class FileController
         return new ModelAndView("/pages/tables/materialy", "files", this.fileService.findAll());
     }
 
-    @GetMapping("/admin/file/{id}")
+    @GetMapping("/person/material/file/{id}")
     public ResponseEntity<String> getSpecificFile(@PathVariable Long id)
     {
         Optional<File> optional = this.fileService.findById(id);

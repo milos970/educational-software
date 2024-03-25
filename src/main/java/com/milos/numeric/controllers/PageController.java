@@ -111,54 +111,53 @@ public class PageController {
 
 
     @GetMapping("/admin/student/page")
-    public ModelAndView studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
+    public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
     {
-        ModelAndView modelAndView = new ModelAndView();
-
         String username = myUserDetails.getUsername();
-        Optional<Employee> optional = this.employeeService.findByUsername(username);
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
-        if (optional.isEmpty())
+        if (optionalPersonalInfo.isEmpty())
         {
-
+            return "redirect:/admin/material/page/error";
         }
 
-        Employee employee = optional.get();
-        modelAndView.addObject("employee", employee);
 
+
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        model.addAttribute("personalInfo", personalInfo);
 
         List<Student> students = this.studentService.findAllByPointsAsc();
 
-        modelAndView.addObject("students", students);
-        modelAndView.setViewName("/pages/tables/students");
-        return modelAndView;
+        model.addAttribute("students", students);
+
+        return "/pages/tables/students";
     }
 
 
 
 
 
-    @GetMapping("/admin/material/page")
-    public String materialsPage(Model model)
+    @GetMapping("/person/material/page")
+    public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails,Model model)
     {
         List<File> files = this.fileService.findAll();
 
         model.addAttribute("files", files);
         model.addAttribute("FileDto", new FileDto());
 
+        String username = myUserDetails.getUsername();
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
-        Optional<Employee> optional = this.employeeService.findByAuthority(Authority.TEACHER);
-
-        if (optional.isEmpty())
+        if (optionalPersonalInfo.isEmpty())
         {
             return "redirect:/admin/material/page/error";
         }
 
-        Employee employee = optional.get();
-        model.addAttribute("employee", employee);
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
 
-        List<Student> students = this.studentService.findAllByPointsAsc();
-        model.addAttribute("students", students);
+
+        model.addAttribute("personalInfo", personalInfo);
+
 
         return "/pages/tables/materials";
     }
@@ -171,7 +170,7 @@ public class PageController {
     }
 
 
-    @GetMapping("/admin/material/{id}")
+    @GetMapping("/person/material/{id}")
     public ResponseEntity findById(@PathVariable Long id)
     {
         Optional<File> optional = this.fileService.findById(id);
@@ -238,7 +237,7 @@ public class PageController {
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-
+                System.out.println(46565);
         }
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
@@ -247,7 +246,11 @@ public class PageController {
 
         if (personalInfo.getAuthority() == Authority.TEACHER)
         {
+
             List<Student> students = this.studentService.findAll();
+            if (students.isEmpty()) {
+                System.out.println(777);
+            }
             model.addAttribute("students",students);
 
         } else {
@@ -328,7 +331,7 @@ public class PageController {
 
         if (personalInfoOptional.isEmpty())
         {
-            System.out.println(4545);
+
         }
 
         PersonalInfo personalInfo = personalInfoOptional.get();

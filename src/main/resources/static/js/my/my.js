@@ -13,8 +13,15 @@ function getById(id)
 
 function saveToFile(inputs, array, fileName)
 {
+    let allRows =[]
 
-    const allRows = inputs.concat(array);
+    if (array === null) {
+        allRows = inputs;
+    } else {
+        allRows = inputs.concat(array);
+    }
+
+
 
     const csvContent = allRows.map(row => row.join(';')).join('\n');
 
@@ -46,10 +53,12 @@ let selectedCategory = 0;
 let selectedMethod = 0;
 function selectNumericCategory(category)
 {
+
     document.getElementById("methods-calculation-div").style.display = "block";
     document.getElementById("graph-calculation-div").style.display = "block";
     selectedCategory = category;
     setUpElements(category, 1);
+    resetRightCard();
 }
 
 function setUpElements(category, method)
@@ -77,9 +86,15 @@ function hideAllNonLinearElements()
 {
     document.getElementById("lower-bound-div").style.display="none";
     document.getElementById("upper-bound-div").style.display="none";
+    document.getElementById("lower-bound-div").value ="";
+    document.getElementById("upper-bound-div").value ="";
+
     document.getElementById("initial-value-div").style.display="none";
     document.getElementById("equation-div").style.display="none";
     document.getElementById("tolerance-div").style.display="none";
+    document.getElementById("initial-value-div").value ="";
+    document.getElementById("equation-div").value ="";
+    document.getElementById("tolerance-div").value ="";
     document.getElementById("non-linear-dropdown-div").style.display="none";
 }
 
@@ -113,8 +128,7 @@ function selectNonLinearMethod(value)
 
     const dropDownButton = document.getElementById("dropdownMenuButton1");
 
-    document.getElementById("lower-bound-input").value = "";
-    document.getElementById("upper-bound-input").value = "";
+
 
     document.getElementById("result-input").value = "";
 
@@ -248,8 +262,7 @@ function selectIntegrationMethod(value)
     const subintervalsDiv = document.getElementById("subintervals-div");
 
     document.getElementById("initial-value-input").value = "";
-    document.getElementById("lower-bound-input").value = "";
-    document.getElementById("upper-bound-input").value = "";
+
 
     document.getElementById("result-input").value = "";
 
@@ -647,7 +660,7 @@ function newtonMethod()
 
     const tolerance = toleranceValue;
     const resultElementErrorHint = getById("result-hint-error");
-    const iterations = 1000;
+    const iterations = 1000_000;
     let current = parseFloat(getById("initial-value-input").value);
 
 
@@ -1027,33 +1040,60 @@ function hideGraphTable() {
 
 
 
-
+let lineChart = null;
 function graph()
 {
+    let expression = math.parse(fun);
+
+    getById("graph-calculation-div").style.display="block";
+
+
     let xValues = [];
     let yValues = [];
 
     let yValues1 = [];
 
-
-
-
-
-
-    for (let i = 0; i < array.length; ++i)
+    if (selectedCategory === 1)
     {
-        xValues.push(parseFloat(array[i][0]));
-        yValues.push(parseFloat(array[i][1].replace(",",".")));
-
+        for (let i = -100; i <= 100; ++i)
+        {
+            xValues.push(i);
+            yValues.push(math.evaluate(expression.toString(), { x: i }));
+        }
     }
 
-    for (let i = 0; i < xValues.length; ++i)
+    if (selectedCategory === 2)
     {
-        let expression = math.parse(fun);
-        yValues1.push(math.evaluate(expression.toString(), { x: xValues[i] }));
+        for (let i = -100; i <= 100; ++i)
+        {
+            xValues.push(i);
+            yValues.push(math.evaluate(expression.toString(), { x: i }));
+        }
     }
 
 
+
+
+    if (selectedCategory === 3)
+    {
+        points.sort(function(a, b) {
+            return a[0] - b[0];
+        });
+
+        for (let i = 0; i < points.length; ++i)
+        {
+            xValues.push(points[i][0]);
+
+            yValues.push(points[i][1]);
+        }
+
+
+        for (let i = 0; i < xValues.length; ++i)
+        {
+            yValues1.push(math.evaluate(expression.toString(), { x: xValues[i] }));
+        }
+
+    }
 
 
 
@@ -1075,7 +1115,7 @@ function graph()
             data: yValues,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 3,
+            borderWidth: 2,
             fill: false,
 
             pointBackgroundColor: function(context)
@@ -1091,21 +1131,20 @@ function graph()
 
             pointRadius: function(context) {
                 // Increase the radius of highlighted points
-                return context.dataIndex === 10 ? 3 : 3; // Adjust the value as needed
+                return context.dataIndex === 10 ? 2 : 2; // Adjust the value as needed
             },
 
             showLine: false,
-        },
-            {
-    label: 'line 2',
-    data: yValues1,
+        }, {
+                label: 'line 2',
+                data: yValues1,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgb(222,32,32)',
-    borderWidth: 3,
-    fill: false,
+                borderWidth: 2,
+                fill: false,
 
-    showLine: true,
-}],
+                showLine: true,
+            }],
         lineAtIndex: 2
     };
 
@@ -1173,9 +1212,11 @@ function graph()
     }
 
 
+
+
     if ($("#lineChart").length) {
         var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
-        var lineChart = new Chart(lineChartCanvas, {
+         lineChart = new Chart(lineChartCanvas, {
             type: 'line',
             data: data,
             options: options,
@@ -1187,7 +1228,9 @@ function graph()
 
 
 
+
 }
+
 
 
 
@@ -1216,6 +1259,13 @@ function selectFunction(whichOne)
 
 function calculateApproximationMethod()
 {
+    if ( (getById("nodes-string-input").value.length === 0) && (getById("file-input").files.length === 0) ) {
+            return;
+    }
+
+    if ( (getById("nodes-string-input").value.length != 0) && (getById("file-input").files.length != 0) ) {
+        return;
+    }
 
     switch(selectedMethod) {
         case 1:
@@ -1230,14 +1280,37 @@ function calculateApproximationMethod()
     }
 }
 
+function resetRightCard()
+{
+    $("#table tr").remove(); //zmaže tabulku
+
+    if (lineChart != null)
+    {
+        lineChart.destroy(); //zmaže graf
+    }
+
+    getById("graph-calculation-div").style.display = "none";
+}
+
+let points = [];
 function lagrangeInterpolating()
 {
 
 
 
-   // let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+   let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
 
-    let arr = coor;
+   let j = 0;
+   for (let i = 0; i < arr.length; i+=2)
+   {
+       points[j] = [2];
+       points[j][0] = arr[i];
+       points[j][1] = arr[i + 1];
+       ++j;
+   }
+
+
+
     let equation = "";
     let first = true;
 
@@ -1297,9 +1370,8 @@ function lagrangeInterpolating()
 
     document.getElementById("result-input").value = "f(x) = " + fun;
 
+
     graph();
-
-
 
 }
 
@@ -1309,20 +1381,35 @@ function lagrangeInterpolating()
 
 function newtonInterpolating()
 {
-
-    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    let arr = null;
     let data =[];
 
-    let j = 0;
-    for (let i = 0; i < arr.length; i+=2)
+    if (getById("nodes-string-input").value.length !== 0)
     {
-        data[j] = [2];
-        data[j][0] = arr[i];
-        data[j][1] = arr[i + 1];
-        console.log(data[j][0] + " " + data[j][1]);
-        ++j;
+        arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
 
+        let j = 0;
+        for (let i = 0; i < arr.length; i += 2)
+        {
+            data[j] = [2];
+            data[j][0] = parseFloat(arr[i]);
+            data[j][1] = parseFloat(arr[i + 1]);
+            ++j;
+        }
     }
+
+    if (getById("file-input").files.length !== 0)
+    {
+        for (let i = 0; i < array.length; ++i)
+        {
+            data[i] = [2];
+            data[i][0] = parseFloat(array[i][0]);
+            data[i][1] = parseFloat(array[i][1].replace(",","."));
+
+        }
+    }
+
+    points = data;
 
 
 
@@ -1367,6 +1454,7 @@ function newtonInterpolating()
     fun = equation;
 
     document.getElementById("result-input").value = "f(x) = " + fun;
+    points = data;
 
     graph();
 
@@ -1429,6 +1517,11 @@ function parseCsvToArrays()
         array = $.csv.toArrays(csvString);
 
     });
+
+
+
+
+
 
 
 
@@ -1589,18 +1682,39 @@ function validateCoordinates(coordinatesArrays, type)
 function logaritmic()
 {
 
-
+    let arr = null;
     let data =[];
 
-    let j = 0;
-    for (let i = 0; i < array.length; i+=2)
+    if (getById("nodes-string-input").value.length !== 0)
     {
-        data[j] = [2];
-        data[j][0] = parseFloat(array[i][0]);
-        data[j][1] = parseFloat(array[i][1]);
-        ++j;
+        arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
 
+        let j = 0;
+        for (let i = 0; i < arr.length; i += 2)
+        {
+            data[j] = [2];
+            data[j][0] = parseFloat(arr[i]);
+            data[j][1] = parseFloat(arr[i + 1]);
+            ++j;
+        }
     }
+
+    if (getById("file-input").files.length !== 0)
+    {
+        for (let i = 0; i < array.length; ++i)
+        {
+            data[i] = [2];
+            data[i][0] = parseFloat(array[i][0]);
+            data[i][1] = parseFloat(array[i][1].replace(",","."));
+
+        }
+    }
+
+
+
+points = data;
+
+
 
     let coeficients = [];
 
@@ -1647,11 +1761,10 @@ function logaritmic()
 
     fun = equation;
 
-    document.getElementById("result-input").value = "f(x) = " + fun;
+    document.getElementById("result-input").value = "f(x) = " + fun.replace("log","ln");;
 
-    display();
-
-
+graph();
+    totalError(data);
 
 }
 
@@ -1660,17 +1773,36 @@ function linear()
 {
 
 
+    let arr = null;
     let data =[];
 
-    let j = 0;
-    for (let i = 0; i < array.length; i+=2)
+    if (getById("nodes-string-input").value.length !== 0)
     {
-        data[j] = [2];
-        data[j][0] = parseFloat(array[i][0]);
-        data[j][1] = parseFloat(array[i][1]);
-        ++j;
+        arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
 
+        let j = 0;
+        for (let i = 0; i < arr.length; i += 2)
+        {
+            data[j] = [2];
+            data[j][0] = parseFloat(arr[i]);
+            data[j][1] = parseFloat(arr[i + 1]);
+            ++j;
+        }
     }
+
+    if (getById("file-input").files.length !== 0)
+    {
+        for (let i = 0; i < array.length; ++i)
+        {
+            data[i] = [2];
+            data[i][0] = parseFloat(array[i][0]);
+            data[i][1] = parseFloat(array[i][1].replace(",","."));
+
+        }
+    }
+
+    points = data;
+
 
     let coeficients = [];
 
@@ -1683,6 +1815,8 @@ function linear()
         sum_x += (1 *data[i][0]);
     }
 
+    console.log(sum_x);
+
     coeficients.push(sum_x);
 
 
@@ -1691,6 +1825,8 @@ function linear()
     {
         sum_y += (1 *data[i][1]);
     }
+
+    console.log(sum_y);
 
     coeficients.push(sum_y);
 
@@ -1720,7 +1856,8 @@ function linear()
 
     document.getElementById("result-input").value = "f(x) = " + fun;
 
-
+    graph();
+    totalError(data);
 
 }
 
@@ -1739,15 +1876,42 @@ function cramer(option, coeficients) {
     switch (option)
     {
         case 1:
-            return "" + (A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "x";
+            return "" + (A1 / A).toFixed(8) + " +" + (A2 / A).toFixed(8) + "x";
 
         case 2:
-            return "" +(A1 / A).toFixed(3) + " +" + (A2 / A).toFixed(3) + "log(x)";
+            return "" +(A1 / A).toFixed(8) + " +" + (A2 / A).toFixed(8) + "log(x)";
 
     }
 
 
 
+}
+
+
+function totalError(data)
+{
+    let e = 0;
+    const n = data.length;
+
+    const parsedEquation = math.parse(fun);
+
+    for (let i = 0; i < n; ++i)
+    {
+        const x = data[i][0];
+        const y = data[i][1];
+
+        const fx =  math.evaluate(parsedEquation.toString(), { x: x});
+
+        e += Math.pow(fx - y,2);
+        console.log("e " + e);
+
+    }
+
+    e /=n;
+
+    e = Math.sqrt(e);
+
+    getById("result-error-input").value = e;
 }
 
 
@@ -1862,7 +2026,7 @@ function trapezoid()
     const resultInputHintError = getById("result-hint-error");
     resultInputHintError.innerHTML = "";
 
-    const iterations = 1000;
+    const iterations = 1000_000;
     const lowerBound = getById("lower-bound-input").value;
     const upperBound = getById("upper-bound-input").value;
 
@@ -1911,6 +2075,36 @@ function trapezoid()
     document.getElementById("result-input").value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
 
+    let inputs =[];
+
+    inputs[0] = [2];
+
+
+    inputs[0][0] = "Funkcia:";
+    inputs[0][1] = fun;
+
+    inputs[1] = [2];
+    inputs[1][0] = "Dolná hranica:";
+    inputs[1][1] = document.getElementById("lower-bound-input").value;
+
+
+    inputs[2] = [2];
+    inputs[2][0] = "Horná hranica:";
+    inputs[2][1] = document.getElementById("upper-bound-input").value;
+
+
+    inputs[3] = [2];
+    inputs[3][0] = "Počet dielikov:";
+    inputs[3][1] = n;
+
+
+    inputs[4] = [2];
+    inputs[4][0] = document.getElementById("result-input").value;
+
+
+
+
+    saveToFile(inputs,null, "Lichobežníková metóda");
 }
 
 function simpson()
@@ -1978,7 +2172,36 @@ function simpson()
 
     document.getElementById("result-input").value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
+    let inputs =[];
 
+    inputs[0] = [2];
+
+
+    inputs[0][0] = "Funkcia:";
+    inputs[0][1] = fun;
+
+    inputs[1] = [2];
+    inputs[1][0] = "Dolná hranica:";
+    inputs[1][1] = document.getElementById("lower-bound-input").value;
+
+
+    inputs[2] = [2];
+    inputs[2][0] = "Horná hranica:";
+    inputs[2][1] = document.getElementById("upper-bound-input").value;
+
+
+    inputs[3] = [2];
+    inputs[3][0] = "Počet dielikov:";
+    inputs[3][1] = n;
+
+
+    inputs[4] = [2];
+    inputs[4][0] = document.getElementById("result-input").value;
+
+
+
+
+    saveToFile(inputs,null, "Simpsonová metóda");
 
 }
 
@@ -2424,10 +2647,7 @@ function checkFileType(element, hintElement)
 }
 
 
-function submitFile()
-{
 
-}
 
 
 

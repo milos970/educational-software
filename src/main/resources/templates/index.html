@@ -72,7 +72,7 @@
           </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link"  th:href="@{/admin/page}">
+                <a class="nav-link"  th:href="@{/person/home/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
               </span>
@@ -90,7 +90,7 @@
           </li>
 
           <li  class="nav-item menu-items">
-            <a class="nav-link" href="" th:href="@{/admin/material/page}">
+            <a class="nav-link" href="" th:href="@{/person/material/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>
@@ -406,7 +406,7 @@
                         <p class="card-description"></p>
                         <div class="form-group" id="nodes-string-div">
                             <label for="equation-input">Zadať uzly</label>
-                            <input type="text" class="form-control" id="nodes-string-input" placeholder="[(x1,y1),(x2,y2),...,(x10,y10)]" oninput="validateStringCoordinates()" >
+                            <input type="text" class="form-control" id="nodes-string-input" placeholder="(x1,y1),(x2,y2),...,(x10,y10)" oninput="validateStringCoordinates()" >
                             <p class ="error" id="coordinates-string-error-hint"></p>
                         </div>
 
@@ -471,7 +471,7 @@
 
                         <div class="form-group" id="subintervals-div">
                             <label for="upper-bound-input">Počet dielikov*</label>
-                            <input type="number" class="form-control" id="subintervals-input" min="-99" max="100" placeholder="<-99;100>">
+                            <input type="number" class="form-control" id="subintervals-input" min="1" max="100" placeholder="<1;100>">
                             <p class ="error" id="subintervals-value-hint-error"></p>
                         </div>
 
@@ -479,13 +479,20 @@
 
                         <button onclick="calculate()"  type="button" class="btn btn-primary btn-fw">Vypočítať</button>
                         <button onclick="graph()"  type="button" class="btn btn-danger btn-fw">Graf</button>
-                        <button  type="button" class="btn btn-success btn-fw">Uložiť do súboru</button>
+
+                        <input oninput="appendResultToCsv()" type="file" hidden=""  accept="text/csv" class="form-control" id="csv-file-input" >
+                        <button onclick="openCsvInputFile()" type="button" class="btn btn-success btn-fw">Uložiť do súboru</button>
 
                         <p class ="error" id="result-hint-error"></p>
 
-                        <div class="form-group" id="result-div" > <!--style="display: none"-->
-                            <label for="upper-bound-input"></label>
+                        <div class="form-group" id="result-div" >
+                            <label for="upper-bound-input">Výsledok</label>
                             <input style="color: black" type="text" class="form-control" id="result-input" readonly>
+                        </div>
+
+                        <div class="form-group" id="result-error-div">
+                            <label for="upper-bound-input">Celková chyba</label>
+                            <input style="color: black" type="text" class="form-control" id="result-error-input" readonly>
                         </div>
 
                     </div>

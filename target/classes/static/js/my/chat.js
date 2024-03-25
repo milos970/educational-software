@@ -4,8 +4,8 @@ let idB = 0;
 let userName = "";
 
 
-
-function sendMessage(sender,receiver)
+let receiver = 0;
+function sendMessage(sender)
 {
     if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
     {
@@ -81,6 +81,7 @@ function sendMessage(sender,receiver)
 function getConversation(usrName, ida, idb)
 {
 
+    receiver = idb;
     getById("conversation-div").style.display = "block";
     userName = usrName;
 

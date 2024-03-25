@@ -75,7 +75,7 @@ function openFile(id)
 
     }
 
-    const url = "/admin/file/" + id;
+    const url = "/person/material/file/" + id;
 
     xhttp.open("GET", url, true);
     xhttp.send();
