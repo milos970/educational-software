@@ -60,6 +60,8 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderI = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderJ = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderK = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderL = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderM = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
@@ -72,7 +74,8 @@ public class SecurityConfig
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderJ.pattern("/confirm/sign-up/page"))
                         .access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == false"))
-
+                        .requestMatchers(mvcMatcherBuilderL.pattern("/create-token")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()
@@ -131,14 +134,14 @@ public class SecurityConfig
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler()
     {
-        System.out.println(7);
+
         return new CustomAuthenticationFailureHandler();
     }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler()
     {
-        System.out.println(1);
+
         return new CustomAuthenticationSuccessHandler();
     }
 

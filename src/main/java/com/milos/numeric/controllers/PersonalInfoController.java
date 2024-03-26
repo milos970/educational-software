@@ -4,10 +4,12 @@ import com.milos.numeric.Authority;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.entities.PersonalInfo;
+import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.EmployeeService;
 import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
+import com.milos.numeric.services.VerificationTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +33,47 @@ public class PersonalInfoController
 
     private final EmployeeService employeeService;
 
+    private final VerificationTokenService verificationTokenService;
+
     @Autowired
-    public PersonalInfoController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService) {
+    public PersonalInfoController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, VerificationTokenService verificationTokenService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
+        this.verificationTokenService = verificationTokenService;
+
+    }
+
+    @GetMapping("/create-token")
+    public String sendVerificationToken(@RequestParam("email")String email)
+    {
+        boolean success = this.personalInfoService.resetPassword(email);
+
+        if (!success)
+        {
+            System.out.println("NEUSPECH");
+        }
+
+
+        return "redirect:/login";
     }
 
 
+    @GetMapping("/confirm-email")
+    public void confirmEmail(@RequestParam("token")String code)
+    {
+        Optional<VerificationToken> optional = this.verificationTokenService.findByCode(code);
+
+        if (optional.isEmpty())
+        {
+            System.out.println("NEFUNGUJE");
+        }
 
 
-    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
+        System.out.println("FUNGUJE");
+    }
+
+    @GetMapping("/confirm-account")
     public ModelAndView confirmUserAccount(@RequestParam("token")String code)
     {
         boolean failure = personalInfoService.confirmEmail(code);

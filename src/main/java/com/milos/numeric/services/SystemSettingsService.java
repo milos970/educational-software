@@ -9,6 +9,7 @@ import com.milos.numeric.entities.SystemSettings;
 import com.milos.numeric.repositories.SystemSettingsRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class SystemSettingsService
     private final SystemSettingsRepository systemSettingsRepository;
 
     private final EmployeeService employeeService;
+
 
     @Autowired
     public SystemSettingsService(SystemSettingsRepository systemSettingsRepository, EmployeeService employeeService)

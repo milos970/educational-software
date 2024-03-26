@@ -20,6 +20,7 @@ import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.repositories.VerificationTokenRepository;
 import com.milos.numeric.security.PasswordGenerator;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +78,30 @@ public class PersonalInfoService
         this.passwordGenerator = passwordGenerator;
         this.verificationTokenService = verificationTokenService;
         this.tokenRepository = tokenRepository;
+    }
+
+    public boolean resetPassword(String email)
+    {
+        Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(email);
+
+        if (optional.isEmpty())
+        {
+            return false;
+        }
+
+        PersonalInfo personalInfo = optional.get();
+
+        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, "23");
+
+        try {
+            this.emailService.sendVerificationEmail(personalInfo, verificationToken);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+
     }
 
     public Optional<PersonalInfo> findByAuthority(Authority authority)

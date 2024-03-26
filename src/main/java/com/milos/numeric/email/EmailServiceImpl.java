@@ -37,7 +37,7 @@ public class EmailServiceImpl
         String senderName = "Numerika";
         String subject = "Verifikácia emailu";
         String content = "To confirm your account, please click here : "
-                +"http://localhost:8080/confirm-account?token="+token.getCode();
+                +"http://localhost:8080/confirm-email?token="+token.getCode();
 
         MimeMessage message = this.emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -45,7 +45,6 @@ public class EmailServiceImpl
         helper.setFrom(fromAddress, senderName);
         helper.setTo(toAddress);
         helper.setSubject(subject);
-
 
         helper.setText(content, true);
 

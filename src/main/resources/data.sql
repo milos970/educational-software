@@ -1,6 +1,6 @@
 
 insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (0,'Lýdia','Gábrišová','gabrisova', '56478', 'lydia@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','TEACHER', true);
-insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'lukacik5@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true);
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'justforthetest45@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true);
 insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (2,'Anna','Lukáčiková','lukacikova6', '558123', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true);
 
 insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (3,'Eva','Jalova','eva', '123456', 'eva@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','STUDENT', true);
