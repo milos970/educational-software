@@ -56,11 +56,46 @@ public class PageController {
     }
 
 
+    @GetMapping("/admin/system/page")
+    public String systemPage(Model model)
+    {
+
+
+
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByAuthority(Authority.TEACHER);
+
+        if (optionalPersonalInfo.isEmpty())
+        {
+            return "redirect:/admin/material/page/error";
+        }
+
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        model.addAttribute("personalInfo", personalInfo);
+
+        Optional<SystemSettings> optional = this.systemSettingsService.findFirst();
+
+        if (optional.isEmpty()) {
+
+        }
+
+        SystemSettings systemSettings = optional.get();
+
+
+        model.addAttribute("systemSettings", systemSettings);
+        System.out.println(55);
+        return "/pages/tables/system";
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPasswordPage(Model model)
+    {
+        model.addAttribute("newPasswordDto", new NewPasswordDto());
+        return "/pages/samples/reset-password";
+    }
 
     @GetMapping("/person/password/update/page")
     public String updatePasswordPage(Model model)
     {
-
         model.addAttribute("newPasswordDto", new NewPasswordDto());
         return "/pages/samples/change-password";
     }
@@ -191,27 +226,6 @@ public class PageController {
 
         return new ModelAndView("redirect:/admin/material/page");
     }
-
-    @GetMapping("/admin/system-page")
-    public ModelAndView systemPage()
-    {
-
-        Optional<Employee> optional = this.employeeService.findByAuthority(Authority.TEACHER);
-
-        if (optional.isEmpty())
-        {
-
-        }
-
-        Employee employee = optional.get();
-
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("employee", employee);
-        modelAndView.setViewName("/pages/tables/system");
-        return modelAndView;
-    }
-
 
 
 

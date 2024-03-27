@@ -30,10 +30,12 @@ public class CSVConverterUnregisteredPerson extends CSVConverter<PersonalInfoDto
             PersonalInfoDto person = new PersonalInfoDto();
 
             String[] rec = values[0].split(";");
-            String personalNumber = rec[0];
+            String personalNumber = rec[2];
             String name = rec[1];
-            String surname = rec[2];
+            String surname = rec[0];
             String email = rec[3];
+
+            System.out.println(email + ":" + personalNumber + ":" + name + ":" + surname);
 
             person.setPersonalNumber(personalNumber);
             person.setName(name);

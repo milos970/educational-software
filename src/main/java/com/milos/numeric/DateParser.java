@@ -22,4 +22,11 @@ public class DateParser
     {
         return localDateTime.format(dateTimeFormatter);
     }
+
+
+    public LocalDateTime formatLocalDateInFormat(LocalDateTime localDateTime)
+    {
+        String string = localDateTime.format(dateTimeFormatter);
+        return LocalDateTime.parse(string, dateTimeFormatter);
+    }
 }

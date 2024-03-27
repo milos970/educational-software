@@ -66,13 +66,13 @@
                 <div class="profile-desc">
                     <div class="profile-pic">
                         <div class="count-indicator">
-                            <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                            <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                            <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                            <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
                             <h5 class="mb-0 font-weight-normal"
-                                th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></h5>
+                                th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
                             <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
                         </div>
                     </div>
@@ -140,6 +140,20 @@
                 <i class="mdi mdi-chart-bar"></i>
               </span>
                     <span class="menu-title" style="color: whitesmoke">Materiály</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/admin/system/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-message-text">
+
+                </i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">
+                        Systém
+                    </span>
                 </a>
             </li>
 
@@ -299,10 +313,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
-                                <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                                 <p class="mb-0 d-none d-sm-block navbar-profile-name"
-                                   th:text="${employee.personalInfo.name + ' ' + employee.personalInfo.surname}"></p>
+                                   th:text="${personalInfo.name + ' ' + personalInfo.surname}"></p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -364,7 +378,7 @@
                                         <tbody>
                                         <tr>
                                             <td> Počet povolených absencii </td>
-                                            <td> 2 </td>
+                                            <td th:text="${systemSettings.allowedAbsents}">  </td>
                                             <td>
                                             <div class="input-group">
                                                 <input id="absents-input" type="number" placeholder="<1;13>" min="1" max="13"   class="form-control" aria-describedby="basic-addon2">
@@ -380,22 +394,30 @@
 
                                         <tr>
                                             <td> Nahratý súbor so študentami </td>
-                                            <td> NIE</td>
+                                            <td></td>
                                             <td>
                                                 <div class="input-group">
-                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" class="form-control" aria-describedby="basic-addon2" style="display:none;">
-                                                    <input type="text" id="text-input"    class="form-control" aria-describedby="basic-addon2">
+                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" accept="text/csv" class="form-control" aria-describedby="basic-addon2" style="display:none;">
+                                                    <input type="text" id="file-name-input"    class="form-control" aria-describedby="basic-addon2">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-sm btn-primary" onclick="clic()"   type="button">Vložiť</button>
+                                                        <button class="btn btn-sm btn-primary" onclick="clic()" type="button">Vložiť</button>
                                                     </div>
                                                 </div>
                                                 <p class="error" id="students-csv-hint-error"></p>
                                             </td>
 
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-append">
+                                                        <button  class="btn btn-sm btn-primary" onclick="uploadStudentsCsv()"   type="button">Nahrať</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+
                                         </tr>
                                         <tr>
                                             <td> Vyučujúci </td>
-                                            <td> Lýdia Gábrišová </td>
+                                            <td th:text="${systemSettings.teacher}"></td>
                                             <td>
                                                 <div class="input-group">
                                                     <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať vyučujúceho"  class="form-control" aria-label="Recipient's username"
@@ -406,9 +428,8 @@
 
                                         </tr>
                                         <tr>
-
                                             <td> Termín najbližšieho cvičenia </td>
-                                            <td> 02.03.2024 </td>
+                                            <td th:text="${systemSettings.date}"></td>
                                             <td>
                                                 <div class="input-group">
                                                     <input id="date-input"  type="text" placeholder="dd.MM.yyyy HH:mm"  class="form-control" aria-label="Recipient's username"
@@ -420,14 +441,21 @@
 
                                                 <p class="error" id="date-hint-error"></p>
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td> Počet dní do cvičenia </td>
+                                            <td th:text="${systemSettings.numberOfDays}"></td>
+                                            <td>
+
+                                            </td>
 
                                         </tr>
                                         <tr>
+                                            <td> Týždeň</td>
+                                            <td th:text="${systemSettings.schoolWeek}"></td>
+                                            <td>
 
-
-                                        </tr>
-                                        <tr>
-
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>

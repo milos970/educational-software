@@ -51,6 +51,15 @@ public class StudentService
     }
 
 
+    public boolean createStudent(PersonalInfo personalInfo)
+    {
+        Student student = new Student();
+        student.setPersonalInfo(personalInfo);
+        this.studentRepository.save(student);
+        return true;
+    }
+
+
     public boolean sendToken(String email)
     {
         Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(email);

@@ -62,6 +62,7 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderK = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderL = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderM = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderN = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
@@ -76,6 +77,7 @@ public class SecurityConfig
                         .access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == false"))
                         .requestMatchers(mvcMatcherBuilderL.pattern("/create-token")).permitAll()
                         .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()

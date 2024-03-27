@@ -18,7 +18,7 @@ public class VerificationTokenService
 {
     private final VerificationTokenRepository verificationTokenRepository;
 
-    private static final long MINUTES = 30;
+    private static final long MINUTES = 5;
 
     private final DateParser dateParser;
 
@@ -30,13 +30,13 @@ public class VerificationTokenService
         this.dateParser = dateParser;
     }
 
-    public VerificationToken createToken(PersonalInfo personalInfo, String expirationDate)
+    public VerificationToken createToken(PersonalInfo personalInfo)
     {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setPersonalInfo(personalInfo);
 
-        LocalDateTime localDateTime = dateParser.parseStringToLocalDate(expirationDate);
-        localDateTime.plusMinutes(MINUTES);
+        LocalDateTime localDateTime = LocalDateTime.now();
+        localDateTime = localDateTime.plusMinutes(MINUTES);
 
         verificationToken.setExpirationDate(dateParser.parseLocalDateToString(localDateTime));
         verificationToken.setCode(UUID.randomUUID().toString());
@@ -48,9 +48,9 @@ public class VerificationTokenService
         return true;
     }
 
-    public boolean isTokenValid(Long id)
+    public boolean isTokenValid(String code)
     {
-        Optional<VerificationToken> optional = this.verificationTokenRepository.findById(id);
+        Optional<VerificationToken> optional = this.verificationTokenRepository.findByCode(code);
 
         if (optional.isEmpty())
         {
@@ -60,12 +60,17 @@ public class VerificationTokenService
         VerificationToken verificationToken = optional.get();
         LocalDateTime expirationDate = this.dateParser.parseStringToLocalDate(verificationToken.getExpirationDate());
 
-        if (expirationDate.isAfter(LocalDateTime.now()))
+
+        LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
+        System.out.println("now: " + now);
+        System.out.println("expiration: " + expirationDate);
+        if (expirationDate.isBefore(now))
         {
+            System.out.println("Tokenu vypršal time!");
             return false;
         }
 
-        return false;
+        return true;
     }
 
     public boolean deleteByCode(String code)

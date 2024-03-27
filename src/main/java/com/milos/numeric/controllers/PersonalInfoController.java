@@ -1,6 +1,7 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
+import com.milos.numeric.dtos.CsvFileDto;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.entities.PersonalInfo;
@@ -12,6 +13,7 @@ import com.milos.numeric.services.StudentService;
 import com.milos.numeric.services.VerificationTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.apache.catalina.startup.CopyParentClassLoaderRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,17 +62,16 @@ public class PersonalInfoController
 
 
     @GetMapping("/confirm-email")
-    public void confirmEmail(@RequestParam("token")String code)
+    public String confirmEmail(@RequestParam("token")String code)
     {
-        Optional<VerificationToken> optional = this.verificationTokenService.findByCode(code);
-
-        if (optional.isEmpty())
+        if (this.verificationTokenService.isTokenValid(code))
         {
-            System.out.println("NEFUNGUJE");
+            System.out.println("FUNGUJE");
+            return "redirect:/reset-password";
+        } else {
+            return "Platnosť vypršala!";
         }
 
-
-        System.out.println("FUNGUJE");
     }
 
     @GetMapping("/confirm-account")
@@ -162,10 +163,10 @@ public class PersonalInfoController
 
 
 
-    @PostMapping("/file/upload-csv")
-    public void addCSV(@RequestParam("csv") MultipartFile file, HttpServletRequest request)
+    @PostMapping("/admin/upload/file/csv")
+    public void addStudents(@RequestParam("file") MultipartFile file)
     {
-        this.personalInfoService.createMultiple(file);
+        this.personalInfoService.createMultiplePersonsFromFile(file);
     }
 
     @PostMapping("/registrate")

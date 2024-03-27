@@ -10,16 +10,13 @@ import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.entities.Student;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.repositories.VerificationTokenRepository;
-import com.milos.numeric.security.PasswordGenerator;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,7 +50,7 @@ public class PersonalInfoService
 
     private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
-    private final PasswordGenerator passwordGenerator;
+
 
     @Autowired
     private  PasswordEncoder passwordEncoder;
@@ -70,12 +67,11 @@ public class PersonalInfoService
 
 
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, PasswordGenerator passwordGenerator, VerificationTokenService verificationTokenService, VerificationTokenRepository tokenRepository) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, VerificationTokenService verificationTokenService, VerificationTokenRepository tokenRepository) {
         this.personalInfoRepository = personalInfoRepository;
         this.studentService = studentService;
         this.employeeService = employeeService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
-        this.passwordGenerator = passwordGenerator;
         this.verificationTokenService = verificationTokenService;
         this.tokenRepository = tokenRepository;
     }
@@ -91,7 +87,7 @@ public class PersonalInfoService
 
         PersonalInfo personalInfo = optional.get();
 
-        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, "23");
+        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo);
 
         try {
             this.emailService.sendVerificationEmail(personalInfo, verificationToken);
@@ -106,6 +102,7 @@ public class PersonalInfoService
 
     public Optional<PersonalInfo> findByAuthority(Authority authority)
     {
+
         return this.personalInfoRepository.findByAuthority(authority.name());
     }
 
@@ -187,14 +184,18 @@ public class PersonalInfoService
 
     public Optional<PersonalInfo> createPerson(PersonalInfoDto personalInfoDTO)
     {
-        PersonalInfo personalInfo = personalInfoNewPersonDTOMapper.sourceToDestination(personalInfoDTO);
+        PersonalInfo personalInfo = new PersonalInfo();
+        personalInfo.setName(personalInfoDTO.getName());
+        personalInfo.setSurname(personalInfoDTO.getSurname());
+        personalInfo.setPersonalNumber(personalInfoDTO.getPersonalNumber());
+        personalInfo.setEmail(personalInfoDTO.getEmail());
 
-        String password = personalInfo.getPassword();
+        String password = personalInfoDTO.getPassword();
+
         String hashedPassword = this.passwordEncoder.encode(password);
         personalInfo.setPassword(hashedPassword);
 
-        String email = personalInfo.getEmail();
-
+        String email = personalInfoDTO.getEmail();
         String emailDomain = email.substring(email.indexOf("@"), email.length() - 1);
 
         String gender = this.determineGender(personalInfo.getName());
@@ -207,36 +208,30 @@ public class PersonalInfoService
             personalInfo.setGender(Gender.FEMALE);
         }
 
+        String username = personalInfoDTO.getEmail().substring(0,personalInfo.getEmail().indexOf("@"));
+        personalInfo.setUsername(username);
+        personalInfo.setEnabled(false);
+
         if (emailDomain.equals(Domain.TEACHER_DOMAIN.getDomain()))
         {
-            String name = personalInfo.getName().toLowerCase();
-            String surname = personalInfo.getSurname().toLowerCase();
-
-            name = removeDiacritics(name);
-            surname = removeDiacritics(surname);
-
-            personalInfo.setUsername(name + "." + surname);
-            personalInfo.setAuthority(Authority.EMPLOYEE);
-            Employee employee = new Employee();
-            employee.setPersonalInfo(personalInfo);
-            this.employeeService.save(employee);
+            personalInfo.setAuthority(Authority.TEACHER);
         } else {
-            personalInfo.setUsername(personalInfo.getEmail().substring(personalInfo.getEmail().indexOf("@")));
-            personalInfo.setAuthority(Authority.STUDENT);
-            Student student = new Student();
-            student.setPersonalInfo(personalInfo);
 
+            personalInfo.setAuthority(Authority.STUDENT);
         }
 
 
-        VerificationToken token = new VerificationToken();
-        token.setCode(UUID.randomUUID().toString());
-        token.setPersonalInfo(personalInfo);
-        personalInfo.setEnabled(false);
+        this.personalInfoRepository.save(personalInfo);
 
-        this.verificationTokenService.save(token);
+        if (personalInfo.getAuthority() == Authority.TEACHER)
+        {
+            this.employeeService.createEmployee(personalInfo);
+        }
 
-        String url = "http://localhost:8080/confirm-account?token="+token.getCode();
+        if (personalInfo.getAuthority() == Authority.STUDENT)
+        {
+            this.studentService.createStudent(personalInfo);
+        }
 
 
 
@@ -251,7 +246,7 @@ public class PersonalInfoService
         return this.personalInfoRepository.findByEmail(email);
     }
 
-    public void createMultiple(MultipartFile file)
+    public void createMultiplePersonsFromFile(MultipartFile file)
     {
         List<PersonalInfoDto> list;
         try {
@@ -269,8 +264,8 @@ public class PersonalInfoService
             personalInfoDTO.setSurname(personToValidate.getSurname());
             personalInfoDTO.setEmail(personToValidate.getEmail());
 
+            String password = UUID.randomUUID().toString();
 
-            String password = this.passwordGenerator.generate();
             personalInfoDTO.setPassword(password);
 
             this.createPerson(personalInfoDTO);

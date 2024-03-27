@@ -1,10 +1,12 @@
 package com.milos.numeric.repositories;
 
+import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +17,8 @@ public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long
 {
     public Optional<PersonalInfo> findByUsername(String username);
 
-    public Optional<PersonalInfo> findByAuthority(String authority);
+    @Query(value = "SELECT p.* FROM personal_info p  WHERE p.authority = :authority", nativeQuery = true)
+    public Optional<PersonalInfo> findByAuthority(@Param("authority")String authority);
 
     public Optional<PersonalInfo> findByEmail(String email);
 

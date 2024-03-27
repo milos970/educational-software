@@ -1512,21 +1512,24 @@ function parseCsvToArrays()
 
     const file = getById("file-input").files[0];
 
+    getFileName();
 
     csvToString(file, function(csvString) {
         array = $.csv.toArrays(csvString);
+        array = array.slice(1);
+        alert(array);
 
     });
 
+}
 
 
+function getFileName()
+{
+    const elementInputFileName = getById("file-name-input");
+    const elementInputFile = getById("file-input");
 
-
-
-
-
-
-
+    elementInputFileName.value = elementInputFile.files[0].name;
 }
 
 function parseStringCoordintatesToArrays()
@@ -2646,6 +2649,47 @@ function checkFileType(element, hintElement)
 
 }
 
+
+
+
+
+
+
+
+//////////////sendStudentsCsv//////////////////////////////////////////////
+
+function uploadStudentsCsv()
+{
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 200)
+        {
+           alert("OK");
+
+        } else {
+            alert("KO");
+        }
+
+
+    }
+
+    let url = "/admin/upload/file/csv";
+
+    xhttp.open("POST", url, true);
+
+
+    const formData = new FormData();
+    const fileInput = document.getElementById('file-input');
+
+    formData.append('file', fileInput.files[0]);
+
+
+
+    // Sending the JSON object as the request body
+    xhttp.send(formData);
+}
 
 
 

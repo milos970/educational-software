@@ -10,13 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "system_settings")
 public class SystemSettings
 {
     @Id
@@ -33,12 +32,18 @@ public class SystemSettings
     @Max(500)
     private int numberOfStudents;
 
-    @Size(min = 1, max = 13, message = "{validation.name.size.too_long}")
+    @Size(min = 1, max = 50, message = "{validation.name.size.too_long}")
     private String teacher;
 
-    @DateValid
+
     private String date;
 
+    @Column(name = "number_of_days")
+    private int numberOfDays;
 
+    @Column(name = "school_week")
+    @Min(1)
+    @Max(13)
+    private int schoolWeek;
 
 }
