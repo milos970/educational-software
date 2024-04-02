@@ -15,7 +15,7 @@ public class FileDto
     @Size(min = 1, max = 15, message = "{validation.name.size.too_long}")
     private String name;
 
-    @Size(max = 15, message = "{validation.name.size.too_long}")
+    @Size(max = 100, message = "{validation.name.size.too_long}")
     private String description;
 
     private MultipartFile data;

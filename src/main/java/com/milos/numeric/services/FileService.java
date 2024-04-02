@@ -37,9 +37,9 @@ public class FileService
     public boolean save(FileDto fileDto)
     {
         String fileName = fileDto.getData().getOriginalFilename();
-        String uri = "C:\\Users\\Milos\\Desktop\\cesta\\" + fileName;
+        String uri = "C:\\Users\\Admin\\Desktop\\cesta\\" + fileName;
 
-        Path filePath = Paths.get("C:\\Users\\Milos\\Desktop\\cesta\\" + fileName);
+        Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\cesta\\" + fileName);
 
         byte[] fileBytes= new byte[0];
         try {
@@ -56,14 +56,9 @@ public class FileService
         }
 
 
-        File file = new File();
+        File file = FileFileDtoMapper.INSTANCE.sourceToDestination(fileDto);
 
-        file.setName(fileDto.getName());
         file.setPath(uri);
-        file.setDescription(fileDto.getDescription());
-        file.setSize(fileDto.getData().getSize());
-        file.setMimeType(fileDto.getData().getContentType());
-        file.setUploadedBy("Lýdia");
         this.fileRepository.save(file);
 
 

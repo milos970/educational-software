@@ -35,6 +35,7 @@ public class FileController
     @PostMapping("/admin/file/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
 
+        System.out.println(45);
         try
         {
             this.fileService.store(file);
