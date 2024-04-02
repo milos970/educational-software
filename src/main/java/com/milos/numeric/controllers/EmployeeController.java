@@ -27,7 +27,7 @@ public class EmployeeController
     @GetMapping("/admin/employee/{username}/check-username")
     public ResponseEntity checkUsername(@PathVariable String username)
     {
-        System.out.println(username);
+
         Optional<Employee> optional = this.employeeService.findByUsername(username);
 
         if (optional.isEmpty())

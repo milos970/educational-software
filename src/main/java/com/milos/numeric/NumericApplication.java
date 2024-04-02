@@ -13,4 +13,5 @@ public class NumericApplication
 	{
 		SpringApplication.run(NumericApplication.class, args);
 	}
+
 }
