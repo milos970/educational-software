@@ -3,9 +3,7 @@ package com.milos.numeric.services;
 import com.milos.numeric.dtos.MessageDto;
 import com.milos.numeric.entities.Chat;
 import com.milos.numeric.entities.ChatId;
-import com.milos.numeric.entities.Message;
 import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.mappers.MessageNewMessageDtoMapper;
 import com.milos.numeric.repositories.ChatRepository;
 import com.milos.numeric.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +18,13 @@ public class ChatService
 {
     private final ChatRepository chatRepository;
     private final MessageService messageService;
-
     private final PersonalInfoService personalInfoService;
 
-    private MessageNewMessageDtoMapper messageNewMessageDtoMapper;
+
 
     @Autowired
-    public ChatService(ChatRepository chatRepository, MessageService messageService, PersonalInfoService personalInfoService) {
+    public ChatService(ChatRepository chatRepository, MessageService messageService, PersonalInfoService personalInfoService)
+    {
         this.chatRepository = chatRepository;
         this.messageService = messageService;
         this.personalInfoService = personalInfoService;
@@ -78,16 +76,7 @@ public class ChatService
 
         Chat chat = optional.get();
 
-        Message message = new Message();
-        message.setChat(chat);
-        message.setContent(messageDto.getContent());
-        message.setSeen(false);
-
-        message.setSenderId(messageDto.getSenderId());
-        message.setReceiverId(messageDto.getReceiverId());
-        this.messageService.saveMessage(message);
-
-
+        this.messageService.saveMessage(messageDto, chat);
         return true;
     }
 

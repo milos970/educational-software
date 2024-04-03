@@ -17,7 +17,6 @@ public class MessageDto
     @NotBlank
     private String content;
 
-
     private Long senderId;
 
 

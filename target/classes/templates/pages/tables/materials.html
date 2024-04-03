@@ -385,16 +385,14 @@
                                     <tr th:if="${#lists.isEmpty(files)}">
                                         <td colspan="2">Žiadny dokument</td>
                                     </tr>
-                                    <tr th:each="file : ${files}">
+                                    <tr th:id='${file.id}' th:each="file : ${files}">
                                         <td><span th:text="${file.name}"></span></td>
                                         <td><span th:text="${file.description}"></span></td>
                                         <td>
                                             <button th:attr="onclick=|openFile('${file.id}')|"  type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť</button>
                                         </td>
                                         <td  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                            <form th:action="@{/admin/material/{id}(id=${file.id})}" th:method="delete" >
-                                                <button type="submit" class="btn btn-danger btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť</button>
-                                            </form>
+                                            <button th:attr="onclick=|deleteFile('${file.id}')|" type="button" class="btn btn-danger btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť</button>
                                         </td>
                                     </tr>
 

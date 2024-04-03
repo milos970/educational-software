@@ -3,18 +3,15 @@ package com.milos.numeric.services;
 import com.milos.numeric.dtos.FileDto;
 import com.milos.numeric.entities.File;
 import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.mappers.FileFileDtoMapper;
+import com.milos.numeric.mappers.FileDtoMapper;
 import com.milos.numeric.repositories.FileRepository;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -25,21 +22,22 @@ public class FileService
 {
     private final FileRepository fileRepository;
 
-    private  FileFileDtoMapper fileFileDtoMapper;
+    private final FileDtoMapper fileDtoMapper;
 
 
     @Autowired
-    public FileService(FileRepository fileRepository) {
+    public FileService(FileRepository fileRepository, FileDtoMapper fileDtoMapper) {
         this.fileRepository = fileRepository;
+        this.fileDtoMapper = fileDtoMapper;
     }
 
 
     public boolean save(FileDto fileDto)
     {
         String fileName = fileDto.getData().getOriginalFilename();
-        String uri = "C:\\Users\\Admin\\Desktop\\cesta\\" + fileName;
 
-        Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\cesta\\" + fileName);
+        Path filePath = Paths.get("src", "main", "resources", "static", "materials", fileName);
+        String uri = filePath.toString();
 
         byte[] fileBytes= new byte[0];
         try {
@@ -56,7 +54,7 @@ public class FileService
         }
 
 
-        File file = FileFileDtoMapper.INSTANCE.sourceToDestination(fileDto);
+        File file = this.fileDtoMapper.sourceToDestination(fileDto);
 
         file.setPath(uri);
         this.fileRepository.save(file);

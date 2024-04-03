@@ -102,3 +102,44 @@ function deleteFile(id)
     xhttp.send();
 }
 
+
+function upload(id)
+{
+
+
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+
+        if (xhttp.status === 200) {
+
+            var decodedData = atob(xhttp.response);
+
+
+            var uint8Array = new Uint8Array(decodedData.length);
+            for (var i = 0; i < decodedData.length; i++) {
+                uint8Array[i] = decodedData.charCodeAt(i);
+            }
+
+
+            var blob = new Blob([uint8Array], { type: xhttp.getResponseHeader("Content-Type") });
+
+
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    }
+
+    const url = "/admin/file/upload/";
+
+    xhttp.open("POST", url, true);
+    xhttp.send();
+}
+
