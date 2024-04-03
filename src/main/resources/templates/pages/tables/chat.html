@@ -47,7 +47,10 @@
             overflow: auto;
             scrollbar-color: #1763c7 white;
             scrollbar-width: thin;
+
         }
+
+
         .flex-container {
             display: flex;
             justify-content: space-between; /* Items spaced between */
@@ -347,13 +350,13 @@
                                     <div th:each="message : ${chat.messages}" >
                                         <div  class="flex-container">
                                             <div class="left-item">
-                                                <div th:if="${personalInfo.id == message.receiverId}" th:class="left-item">
+                                                <div th:if="${personalInfo.username == message.receiverUsername}" th:class="left-item">
                                                     <button th:text="${message.content}" class="btn btn-light btn-rounded btn-fw"></button>
                                                 </div>
                                             </div>
 
                                             <div class="right-item">
-                                                <div th:if="${personalInfo.id == message.senderId}" th:class="right-item">
+                                                <div th:if="${personalInfo.username == message.senderUsername}" th:class="right-item">
                                                     <button th:text="${message.content}" class="btn btn-success btn-rounded btn-fw"></button>
                                                 </div>
                                             </div>
@@ -371,12 +374,12 @@
 
 
                                         <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}')|">Odoslať</button>
+                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.username}')|">Odoslať</button>
                                         </div>
 
 
                                         <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.id}')|">Odoslať</button>
+                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.username}')|">Odoslať</button>
                                         </div>
 
 
@@ -403,11 +406,10 @@
                                         <tbody>
                                         <tr th:if="${#lists.isEmpty(students)}">
                                             <td colspan="2">Žiadny študent</td>
-                                        </tr>
-                                        <tr th:each="student : ${students}">
+                                        </tr>                                        <tr th:each="student : ${students}">
                                             <td><span th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><button th:attr="onclick=|getConversation('${personalInfo.username}','${adminId}', '${student.personalInfo.id}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
+                                            <td><button th:attr="onclick=|getConversation('${personalInfo.username}','${student.personalInfo.username}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
                                         </tr>
 
                                         </tbody>

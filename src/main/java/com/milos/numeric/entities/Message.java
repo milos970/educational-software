@@ -27,12 +27,12 @@ public class Message
     private String content;
 
 
-    @Column(name = "sender_id")
-    private Long senderId;
+    @Column(name = "sender_username")
+    private String senderUsername;
 
 
-    @Column(name = "receiver_id")
-    private Long receiverId;
+    @Column(name = "receiver_username")
+    private String receiverUsername;
 
     @ManyToOne
     @JoinColumns({

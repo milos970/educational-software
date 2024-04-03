@@ -14,11 +14,10 @@ import java.io.Serializable;
 public class ChatId implements Serializable
 {
     @Column(name = "participant_a")
-    private Long participantA;
+    private String participantA;
 
     @Column(name = "participant_b")
-    private Long participantB;
-
+    private String participantB;
 
 }
 

@@ -10,6 +10,7 @@ import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
+import com.milos.numeric.entities.Chat;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
@@ -42,6 +43,8 @@ public class PersonalInfoService
 
     private final EmployeeService employeeService;
 
+    private final ChatService chatService;
+
     private PersonalInfoNewPersonDTOMapper personalInfoNewPersonDTOMapper;
 
     private PersonalInfoNewPasswordDTOMapper personalInfoNewPasswordDTOMapper;
@@ -67,10 +70,11 @@ public class PersonalInfoService
 
 
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, VerificationTokenService verificationTokenService, VerificationTokenRepository tokenRepository) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, VerificationTokenService verificationTokenService, VerificationTokenRepository tokenRepository) {
         this.personalInfoRepository = personalInfoRepository;
         this.studentService = studentService;
         this.employeeService = employeeService;
+        this.chatService = chatService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.verificationTokenService = verificationTokenService;
         this.tokenRepository = tokenRepository;
@@ -234,6 +238,7 @@ public class PersonalInfoService
         }
 
 
+        this.chatService.save("gabrisova", personalInfo.getUsername());
 
         return Optional.of(this.personalInfoRepository.save(personalInfo));
     }

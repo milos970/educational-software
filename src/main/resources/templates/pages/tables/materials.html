@@ -33,6 +33,18 @@
               overflow-y: auto; /* enable vertical scrollbar */
               border: 1px solid #ccc; /* optional: border for visualization */
           }
+
+          #conversation-div
+          {
+              width: 100%; /* Set a fixed width */
+              height: 400px;
+              overflow: auto;
+              scrollbar-color: #1763c7 white;
+              scrollbar-width: thin;
+              background-color: #495057;
+          }
+
+
           .flex-item {
               display: flex;
               justify-content: space-between;
@@ -330,24 +342,24 @@
         <div class="page-header">
     </div>
             <div class="row">
-                <div class="col-4 grid-margin stretch-card" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
+                <div class="col-4 grid-margin stretch-card"  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Nahrať materiál</h4>
                             <p class="card-description"></p>
 
-                            <form th:object="${FileDto}"  class="forms-sample" action="#" th:action="@{/admin/material/upload}" method="POST"  enctype="multipart/form-data">
+
                                 <div class="form-group">
                                     <label for="file-name-input">Názov</label>
-                                    <input th:field="*{name}" type="text" class="form-control" id="file-name-input" minlength="1" maxlength="15" placeholder="Maximálne 15 znakov!" >
+                                    <input name="name" type="text" class="form-control" id="file-name-input" minlength="1" maxlength="15" placeholder="Maximálne 15 znakov!" >
                                 </div>
 
 
                                 <div class="form-group">
                                     <label>Nahrať súbor</label>
-                                    <input onchange="checkFileType(document.getElementById('file-input'), document.getElementById('file-input-error-hint'))"
-                                           th:field="*{data}" type="file" accept=".pdf, .docx, .png, .jpg, jpeg, .csv, .pptx" size="5242880"
-                                           name="data" class="file-upload-default" id="file-input">
+                                    <input id="file-input" onchange="checkFileType(document.getElementById('file-input'), document.getElementById('file-input-error-hint'))"
+                                            type="file" accept=".pdf, .docx, .png, .jpg, jpeg, .csv, .pptx" size="5242880"
+                                           name="data" class="file-upload-default" >
                                     <div class="input-group col-xs-12">
                                         <input type="text" class="form-control file-upload-info" disabled placeholder="Podporované formáty: .pdf, .docx, .png, .jpg, jpeg, .csv, .pptx">
                                         <span class="input-group-append"><button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button">Nahrať</button></span>
@@ -356,19 +368,18 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="description-input">Popis</label>
-                                    <textarea th:field="*{description}" class="form-control" id="description-input" rows="4" maxlength="100" placeholder="Maximálne 100 znakov!"></textarea>
+                                    <label for="file-description">Popis</label>
+                                    <textarea id="file-description" name="description"  class="form-control"  rows="4" maxlength="100" placeholder="Maximálne 100 znakov!"></textarea>
                                 </div>
 
-                                <button type="submit" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>
+                            <button th:attr="onclick=|uploadFile()|" type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>
 
-                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
+                <div class="col-lg-6 grid-margin stretch-card" >
+                    <div class="card" id="conversation-div">
+                        <div class="card-body" >
                             <h4 class="card-title">Materiály</h4>
                             <div class="table-responsive">
                                 <table class="table" style="color: white">

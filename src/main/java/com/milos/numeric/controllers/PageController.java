@@ -198,10 +198,10 @@ public class PageController {
     }
 
     @PostMapping("/admin/material/upload")
-    public ModelAndView saveFile(@Valid FileDto fileDto)
+    public ResponseEntity saveFile(@Valid FileDto fileDto)
     {
-        this.fileService.save(fileDto);
-        return new ModelAndView("redirect:/admin/material/page");
+        Long id = this.fileService.save(fileDto);
+        return new ResponseEntity<>(id,HttpStatus.OK);
     }
 
 
@@ -251,7 +251,7 @@ public class PageController {
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-                System.out.println(46565);
+
         }
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
@@ -263,13 +263,13 @@ public class PageController {
 
             List<Student> students = this.studentService.findAll();
             if (students.isEmpty()) {
-                System.out.println(777);
+
             }
             model.addAttribute("students",students);
 
         } else {
 
-            Optional<Chat> optionalChat = this.chatService.findByChatId(0L, personalInfo.getId() );
+            Optional<Chat> optionalChat = this.chatService.findByChatId("gabrisova", personalInfo.getUsername());
 
             if (optionalChat.isEmpty()) {
 

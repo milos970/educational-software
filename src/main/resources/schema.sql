@@ -8,7 +8,7 @@ drop table student
 drop table personal_info*/
 
 
-delete from message
+/*delete from message
 delete from chat
 delete from verification_token
 
@@ -17,4 +17,4 @@ delete from student
 delete from personal_info
 
 
-delete from system_settings
+delete from system_settings*/

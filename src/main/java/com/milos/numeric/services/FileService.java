@@ -32,7 +32,7 @@ public class FileService
     }
 
 
-    public boolean save(FileDto fileDto)
+    public Long save(FileDto fileDto)
     {
         String fileName = fileDto.getData().getOriginalFilename();
 
@@ -59,8 +59,11 @@ public class FileService
         file.setPath(uri);
         this.fileRepository.save(file);
 
+        Optional<File> optionalFile = this.fileRepository.findTopByOrderByIdDesc();
 
-        return true;
+        System.out.println("sdafdf" + optionalFile.get().getId());
+
+        return optionalFile.get().getId();
     }
 
     public List<File> findAll()

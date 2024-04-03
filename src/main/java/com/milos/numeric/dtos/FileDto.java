@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class FileDto
 {
+
     @Column(name = "file_name")
     @Size(min = 1, max = 15, message = "{validation.name.size.too_long}")
     private String name;

@@ -4,7 +4,7 @@ let idB = 0;
 let userName = "";
 
 
-let receiver = 0;
+let receiver = "";
 function sendMessage(sender)
 {
     if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
@@ -71,19 +71,25 @@ function sendMessage(sender)
     let data =
     {
         content: content,
-        senderId: sender,
-        receiverId: receiver
+        senderUsername: sender,
+        receiverUsername: receiver
     };
     xhttp.send(JSON.stringify(data));
 }
 
 
-function getConversation(usrName, ida, idb)
+function getConversation(senderUsername,receiverUsername)
 {
 
-    receiver = idb;
+    while (document.getElementById("conversation").firstChild) {
+        document.getElementById("conversation").removeChild(document.getElementById("conversation").firstChild);
+    }
+
+    receiver = receiverUsername;
+
+
     getById("conversation-div").style.display = "block";
-    userName = usrName;
+
 
     getById("send-message-div").style.display="block";
     const xhttp = new XMLHttpRequest();
@@ -93,11 +99,12 @@ function getConversation(usrName, ida, idb)
         if (xhttp.status === 200)
         {
             const messages = JSON.parse(xhttp.response);
-
+            alert(1);
 
             const conversationDivElement = document.getElementById("conversation");
 
             messages.forEach(function(message) {
+
                 const lineDiv = document.createElement('div');
                 lineDiv.classList.add("flex-container");
 
@@ -116,7 +123,7 @@ function getConversation(usrName, ida, idb)
                 const button = document.createElement("button");
                 button.textContent = message.content;
 
-                if (message.sender === usrName) {
+                if (message.senderUsername === senderUsername) {
 
                     button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
                     innerDivLeft.style.display = "hidden";
@@ -144,17 +151,15 @@ function getConversation(usrName, ida, idb)
 
 
 
-    idA = ida;
-    idA = idb;
 
 
 
-    let url = "/person/" + idA + "/conversation/" + idB;
 
+
+    let url = "/person/conversation";
+    url += "?param1=" + encodeURIComponent(senderUsername) + "&param2=" + encodeURIComponent(receiverUsername);
     xhttp.open("GET", url, true);
 
+
     xhttp.send();
-
-
-
 }

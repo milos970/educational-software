@@ -1,0 +1,24 @@
+2024-04-03 14:09:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MESSAGE" not found; SQL statement:
+delete from message [42102-214]
+2024-04-03 14:10:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MESSAGE" not found; SQL statement:
+delete from message [42102-214]
+2024-04-03 17:22:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'justforthetest45@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true)"; SQL statement:
+*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'justforthetest45@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true) [42000-214]
+2024-04-03 17:29:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'justforthetest45@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true)"; SQL statement:
+*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (1,'Miloš','Lukáčik','lukacik5', '559415', 'justforthetest45@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE', 'STUDENT', true) [42000-214]
+2024-04-03 17:32:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (2,'Anna','Lukáčiková','lukacikova6', '558123', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true)"; SQL statement:
+*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (2,'Anna','Lukáčiková','lukacikova6', '558123', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true) [42000-214]
+2024-04-03 17:36:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (2L,'Anna','Lukáčiková','lukacikova6', '558123', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true)"; SQL statement:
+*/ insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (2L,'Anna','Lukáčiková','lukacikova6', '558123', 'lukacikova6@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', true) [42000-214]
+2024-04-03 17:39:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]*/ INSERT INTO personal_info (id, nam, surname, username, personal_number, email, password, gender, authority, enabled) VALUES (2, 'Anna', 'Luki', 'luki6', '558123', 'lukacikova6@stud.uniza.sk', '$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', TRUE)"; SQL statement:
+*/ INSERT INTO personal_info (id, nam, surname, username, personal_number, email, password, gender, authority, enabled) VALUES (2, 'Anna', 'Luki', 'luki6', '558123', 'lukacikova6@stud.uniza.sk', '$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE', 'STUDENT', TRUE) [42000-214]
+2024-04-03 17:39:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]*/ insert into system_settings(id,allowed_absents,number_of_students,teacher,date,number_of_days,school_week) values (0,2,13,'Lýdia Gabrišová','30.03.2024 14:20',10,1)"; SQL statement:
+*/ insert into system_settings(id,allowed_absents,number_of_students,teacher,date,number_of_days,school_week) values (0,2,13,'Lýdia Gabrišová','30.03.2024 14:20',10,1) [42000-214]

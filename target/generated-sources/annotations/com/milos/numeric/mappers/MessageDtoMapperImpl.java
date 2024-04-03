@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-04-03T10:58:58+0200",
+    date = "2024-04-03T20:46:34+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -22,8 +22,8 @@ public class MessageDtoMapperImpl implements MessageDtoMapper {
         Message message = new Message();
 
         message.setContent( source.getContent() );
-        message.setSenderId( source.getSenderId() );
-        message.setReceiverId( source.getReceiverId() );
+        message.setSenderUsername( source.getSenderUsername() );
+        message.setReceiverUsername( source.getReceiverUsername() );
 
         return message;
     }
@@ -37,8 +37,8 @@ public class MessageDtoMapperImpl implements MessageDtoMapper {
         MessageDto messageDto = new MessageDto();
 
         messageDto.setContent( destination.getContent() );
-        messageDto.setSenderId( destination.getSenderId() );
-        messageDto.setReceiverId( destination.getReceiverId() );
+        messageDto.setSenderUsername( destination.getSenderUsername() );
+        messageDto.setReceiverUsername( destination.getReceiverUsername() );
 
         return messageDto;
     }

@@ -12,16 +12,15 @@ import org.springframework.stereotype.Service;
 public class MessageService
 {
     private final MessageRepository messageRepository;
-    private final PersonalInfoService personalInfoService;
 
-    private MessageDtoMapper messageDtoMapper;
+    private final MessageDtoMapper messageDtoMapper;
 
 
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, PersonalInfoService personalInfoService) {
+    public MessageService(MessageRepository messageRepository, MessageDtoMapper messageDtoMapper) {
         this.messageRepository = messageRepository;
-        this.personalInfoService = personalInfoService;
+        this.messageDtoMapper = messageDtoMapper;
     }
 
 
@@ -29,6 +28,7 @@ public class MessageService
     {
         Message message = this.messageDtoMapper.sourceToDestination(messageDto);
         message.setChat(chat);
+        System.out.println("Je to v message service" + message.getContent());
         this.messageRepository.save(message);
     }
 

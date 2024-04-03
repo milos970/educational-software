@@ -103,43 +103,76 @@ function deleteFile(id)
 }
 
 
-function upload(id)
+function uploadFile()
 {
 
 
     const xhttp = new XMLHttpRequest();
 
-
     xhttp.onload = function()
     {
 
-        if (xhttp.status === 200) {
+        if (xhttp.status === 200)
+        {
 
-            var decodedData = atob(xhttp.response);
-
-
-            var uint8Array = new Uint8Array(decodedData.length);
-            for (var i = 0; i < decodedData.length; i++) {
-                uint8Array[i] = decodedData.charCodeAt(i);
-            }
+                let row = document.createElement("tr");
+                let body = document.getElementsByTagName("tbody")[0];
 
 
-            var blob = new Blob([uint8Array], { type: xhttp.getResponseHeader("Content-Type") });
+
+                row.setAttribute("id", xhttp.responseText);
 
 
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
+                var nameCell = document.createElement("td");
+                var nameSpan = document.createElement("span");
+                nameSpan.textContent = document.getElementById("file-name-input").value;
+                nameCell.appendChild(nameSpan);
 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+                var descriptionCell = document.createElement("td");
+                var descriptionSpan = document.createElement("span");
+                descriptionSpan.textContent = document.getElementById("file-description").value;
+                descriptionCell.appendChild(descriptionSpan);
+
+                var showButtonCell = document.createElement("td");
+                var showButton = document.createElement("button");
+                showButton.setAttribute("type", "button");
+                showButton.setAttribute("class", "btn btn-success btn-icon-text");
+                showButton.setAttribute("onclick", "openFile('" + xhttp.responseText + "')");
+                showButton.innerHTML = '<i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť';
+                showButtonCell.appendChild(showButton);
+
+                row.appendChild(nameCell);
+                row.appendChild(descriptionCell);
+                row.appendChild(showButtonCell);
+                body.appendChild(row);
+
+                var deleteButtonCell = document.createElement("td");
+                    var deleteButton = document.createElement("button");
+                    deleteButton.setAttribute("type", "button");
+                    deleteButton.setAttribute("class", "btn btn-danger btn-icon-text");
+                    deleteButton.setAttribute("onclick", "deleteFile('" + xhttp.responseText + "')");
+                    deleteButton.innerHTML = '<i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť';
+                    deleteButtonCell.appendChild(deleteButton);
+
+                    row.appendChild(deleteButtonCell);
+
+
+
+
         }
 
     }
 
-    const url = "/admin/file/upload/";
+    const url = "/admin/material/upload";
+
+    var formData = new FormData();
+    formData.append("name", document.getElementById("file-name-input").value);
+    formData.append("description", document.getElementById("file-description").value);
+    formData.append("data", document.getElementById("file-input").files[0]);
+
 
     xhttp.open("POST", url, true);
-    xhttp.send();
+
+    xhttp.send(formData);
 }
 

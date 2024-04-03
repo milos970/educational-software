@@ -17,8 +17,7 @@ public class MessageDto
     @NotBlank
     private String content;
 
-    private Long senderId;
+    private String senderUsername;
 
-
-    private Long receiverId;
+    private String receiverUsername;
 }

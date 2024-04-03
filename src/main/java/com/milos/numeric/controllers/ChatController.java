@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -29,16 +30,18 @@ public class ChatController
     @PostMapping("/person/sendMessage")
     public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto)
     {
+
         this.chatService.saveMessage(messageDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @GetMapping("/person/{ida}/conversation/{idb}")
+    @GetMapping("/person/conversation")
     @ResponseBody
-    public List<MessageDto> findById(@PathVariable("ida") Long idA, @PathVariable("idb") Long idB)
+    public List<MessageDto> findById(@RequestParam("param") String param)
     {
-        Optional<Chat> optional = null;
+        
+        Optional<Chat> optional = this.chatService.findByChatId(param1, param2);
 
         if (optional.isEmpty())
         {
@@ -49,11 +52,14 @@ public class ChatController
         List<Message> messages = chat.getMessages();
         List<MessageDto> messageDtos = new LinkedList<>();
 
-        for(Message item : messages)
+
+        for(int i = messages.size() - 1; i >= 0; --i)
         {
             MessageDto messageDto = new MessageDto();
-            messageDto.setContent(item.getContent());
-
+            messageDto.setContent(messages.get(i).getContent());
+            messageDto.setSenderUsername(messages.get(i).getSenderUsername());
+            messageDto.setReceiverUsername(messages.get(i).getReceiverUsername());
+            messageDtos.add(messageDto);
 
         }
 
