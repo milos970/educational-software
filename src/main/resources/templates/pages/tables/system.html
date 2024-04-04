@@ -359,7 +359,7 @@
             <div class="content-wrapper">
 
                 <div class="row">
-                    <div class="col-lg-5 grid-margin stretch-card">
+                    <div class="col-lg-7 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Systém</h4>
@@ -378,17 +378,18 @@
                                         <tbody>
                                         <tr>
                                             <td> Počet povolených absencii </td>
-                                            <td th:text="${systemSettings.allowedAbsents}">  </td>
+                                            <td id="absents-count" th:text="${systemSettings.allowedAbsents}"> </td>
                                             <td>
                                             <div class="input-group">
                                                 <input id="absents-input" type="number" placeholder="<1;13>" min="1" max="13"   class="form-control" aria-describedby="basic-addon2">
                                                 <div class="input-group-append">
-                                                    <button id="absents-button" class="btn btn-sm btn-primary" onclick="updateSystemAbsents()"   type="button">Vložiť</button>
+                                                    <button id="absents-button" class="btn btn-sm btn-primary" onclick="updateSystemAbsents()"   type="button">Zmeniť</button>
                                                 </div>
                                             </div>
                                                 <p class="error" id="absents-hint-error"></p>
 
                                             </td>
+                                            <td> </td>
 
                                         </tr>
 
@@ -409,7 +410,7 @@
                                             <td>
                                                 <div class="input-group">
                                                     <div class="input-group-append">
-                                                        <button  class="btn btn-sm btn-primary" onclick="uploadStudentsCsv()"   type="button">Nahrať</button>
+                                                        <button  class="btn btn-lg btn-primary" onclick="uploadStudentsCsv()"   type="button">Nahrať</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -417,7 +418,7 @@
                                         </tr>
                                         <tr>
                                             <td> Vyučujúci </td>
-                                            <td th:text="${systemSettings.teacher}"></td>
+                                            <td th:text="${systemSettings.getEmployee().personalInfo.name + ' ' + systemSettings.getEmployee().personalInfo.surname}"></td>
                                             <td>
                                                 <div class="input-group">
                                                     <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať vyučujúceho"  class="form-control" aria-label="Recipient's username"
@@ -425,37 +426,42 @@
                                                 </div>
                                                 <p class="error" id="username-hint-error"></p>
                                             </td>
+                                            <td><div class="input-group">
+                                                <div class="input-group-append">
+                                                    <button  class="btn btn-lg btn-primary" id="submit-button" onclick="updateTeacher()" type="button">Zmeniť</button>
+                                                </div>
+                                            </div>
+                                            </td>
 
                                         </tr>
                                         <tr>
                                             <td> Termín najbližšieho cvičenia </td>
-                                            <td th:text="${systemSettings.date}"></td>
+                                            <td id="date-value" th:text="${systemSettings.classDate}"></td>
                                             <td>
                                                 <div class="input-group">
                                                     <input id="date-input"  type="text" placeholder="dd.MM.yyyy HH:mm"  class="form-control" aria-label="Recipient's username"
                                                            aria-describedby="basic-addon2">
                                                     <div class="input-group-append">
-                                                        <button onclick="updateSystemDate()" id="date-button" class="btn btn-sm btn-primary"   type="button">Vložiť</button>
+                                                        <button onclick="updateSystemDate()" id="date-button" class="btn btn-sm btn-primary"   type="button">Zmeniť</button>
                                                     </div>
                                                 </div>
 
                                                 <p class="error" id="date-hint-error"></p>
                                             </td>
+                                            <td></td>
+
                                         </tr>
                                         <tr>
                                             <td> Počet dní do cvičenia </td>
                                             <td th:text="${systemSettings.numberOfDays}"></td>
-                                            <td>
-
-                                            </td>
-
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <td> Týždeň</td>
-                                            <td th:text="${systemSettings.schoolWeek}"></td>
-                                            <td>
-
-                                            </td>
+                                            <td th:text="${systemSettings.schoolWeek + '.'}"></td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                         </tbody>
                                     </table>

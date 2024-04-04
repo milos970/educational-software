@@ -28,25 +28,14 @@ public class EmployeeController
     public ResponseEntity checkUsername(@PathVariable String username)
     {
 
-        Optional<Employee> optional = this.employeeService.findByUsername(username);
+        boolean success = this.employeeService.existsByUsername(username);
 
-        if (optional.isEmpty())
+        if (success)
         {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        Employee employee = optional.get();
-
-        if (!employee.getPersonalInfo().isEnabled())
-        {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-
-        Long id = employee.getId();
-
-
-        return new ResponseEntity<>(id,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
 

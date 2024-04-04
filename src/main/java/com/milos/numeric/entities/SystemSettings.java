@@ -29,14 +29,16 @@ public class SystemSettings
 
     @Column(name = "number_of_students")
     @Min(0)
-    @Max(500)
+    @Max(100)
     private int numberOfStudents;
 
-    @Size(min = 1, max = 50, message = "{validation.name.size.too_long}")
-    private String teacher;
+    @OneToOne(targetEntity = Employee.class, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "employee_id")
+    private Employee employee;
 
-
-    private String date;
+    @DateValid
+    @Column(name = "class_date")
+    private String classDate;
 
     @Column(name = "number_of_days")
     private int numberOfDays;
@@ -45,5 +47,4 @@ public class SystemSettings
     @Min(1)
     @Max(13)
     private int schoolWeek;
-
 }

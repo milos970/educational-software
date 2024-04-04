@@ -59,9 +59,6 @@ public class PageController {
     @GetMapping("/admin/system/page")
     public String systemPage(Model model)
     {
-
-
-
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByAuthority(Authority.TEACHER);
 
         if (optionalPersonalInfo.isEmpty())
@@ -82,7 +79,7 @@ public class PageController {
 
 
         model.addAttribute("systemSettings", systemSettings);
-        System.out.println(55);
+
         return "/pages/tables/system";
     }
 
@@ -145,7 +142,7 @@ public class PageController {
 
 
 
-    @GetMapping("/admin/student/page")
+    @GetMapping("/admin/students/page")
     public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
     {
         String username = myUserDetails.getUsername();
@@ -166,6 +163,29 @@ public class PageController {
         model.addAttribute("students", students);
 
         return "/pages/tables/students";
+    }
+
+    @GetMapping("/admin/employees/page")
+    public String employeesPage(@AuthenticationPrincipal MyUserDetails myUserDetails,Model model)
+    {
+        String username = myUserDetails.getUsername();
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
+
+        if (optionalPersonalInfo.isEmpty())
+        {
+            return "redirect:/admin/material/page/error";
+        }
+
+
+
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        model.addAttribute("personalInfo", personalInfo);
+
+        List<Employee> employees = this.employeeService.findAll();
+
+        model.addAttribute("employees", employees);
+
+        return "/pages/tables/employees";
     }
 
 

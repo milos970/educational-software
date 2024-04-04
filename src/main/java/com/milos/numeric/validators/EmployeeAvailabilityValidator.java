@@ -1,6 +1,5 @@
 package com.milos.numeric.validators;
 
-import com.milos.numeric.Authority;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.services.EmployeeService;
 import jakarta.validation.ConstraintValidator;
@@ -9,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-public class TeacherAvailabilityValidator implements ConstraintValidator<TeacherAvailability, String>
+public class EmployeeAvailabilityValidator implements ConstraintValidator<EmployeeAvailability, String>
 {
     @Autowired
     private EmployeeService employeeService;
 
     @Override
-    public void initialize(TeacherAvailability constraintAnnotation) {
+    public void initialize(EmployeeAvailability constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
 
     }
@@ -27,6 +26,7 @@ public class TeacherAvailabilityValidator implements ConstraintValidator<Teacher
 
         if (optional.isEmpty())
         {
+            System.out.println(55555555);
             return false;
         }
 

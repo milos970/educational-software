@@ -5,7 +5,7 @@ let userName = "";
 
 
 let receiver = "";
-function sendMessage(sender)
+function sendMessage(receiver)
 {
     if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
     {
@@ -71,14 +71,13 @@ function sendMessage(sender)
     let data =
     {
         content: content,
-        senderUsername: sender,
         receiverUsername: receiver
     };
     xhttp.send(JSON.stringify(data));
 }
 
 
-function getConversation(senderUsername,receiverUsername)
+function getConversation(receiverUsername)
 {
 
     while (document.getElementById("conversation").firstChild) {
@@ -157,7 +156,7 @@ function getConversation(senderUsername,receiverUsername)
 
 
     let url = "/person/conversation";
-    url += "?param1=" + encodeURIComponent(senderUsername) + "&param2=" + encodeURIComponent(receiverUsername);
+    url += "&param=" + encodeURIComponent(receiverUsername);
     xhttp.open("GET", url, true);
 
 

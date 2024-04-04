@@ -50,7 +50,7 @@ public class SystemSettingsService
 
         SystemSettings systemSettings = optional.get();
 
-        LocalDateTime deadline = this.dateParser.parseStringToLocalDate(systemSettings.getDate());
+        LocalDateTime deadline = this.dateParser.parseStringToLocalDate(systemSettings.getClassDate());
         LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
 
         int daysDifference = (int) ChronoUnit.DAYS.between(deadline, now);
@@ -113,11 +113,13 @@ public class SystemSettingsService
 
         if (optionalSystemSettings.isEmpty())
         {
+
             return false;
         }
 
+
         SystemSettings systemSettings = optionalSystemSettings.get();
-        systemSettings.setDate(newDateDto.getDate());
+        systemSettings.setClassDate(newDateDto.getDate());
 
         this.systemSettingsRepository.save(systemSettings);
         return true;
@@ -137,32 +139,28 @@ public class SystemSettingsService
 
         String username = newTeacherDto.getUsername();
 
-        Optional<Employee> optionalEmployee = this.employeeService.findByUsername(username);
-
-        if (optionalEmployee.isEmpty())
+        if (!this.employeeService.existsByUsername(username))
         {
             return false;
         }
 
+
+        Optional<Employee> optionalEmployee = this.employeeService.findByUsername(username);
         Employee newTeacher = optionalEmployee.get();
 
 
-        Optional<Employee> optionalEmployeeTeacher = this.employeeService.findByAuthority(Authority.TEACHER);
 
-        if (optionalEmployeeTeacher.isEmpty())
-        {
-            return false;
-        }
-
-        Employee oldTeacher = optionalEmployeeTeacher.get();
+        Employee oldTeacher = systemSettings.getEmployee();
 
         oldTeacher.getPersonalInfo().setAuthority(Authority.EMPLOYEE);
 
         newTeacher.getPersonalInfo().setAuthority(Authority.TEACHER);
 
+        systemSettings.setEmployee(newTeacher);
+
         this.employeeService.save(oldTeacher);
-        this.employeeService.save(newTeacher
-        );
+        this.employeeService.save(newTeacher);
+        this.systemSettingsRepository.save(systemSettings);
         return true;
     }
 

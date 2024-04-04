@@ -82,6 +82,21 @@
               <span class="menu-title" style="color: whitesmoke">Študenti</span>
             </a>
           </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <span class="menu-icon">
+                <i class="mdi mdi-laptop"></i>
+              </span>
+                    <span class="menu-title">Používatelia</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="ui-basic">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/admin/students/page}">Študenti</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/admin/employees/page}">Zamestnanci</a></li>
+                    </ul>
+                </div>
+            </li>
 
           <li  class="nav-item menu-items">
             <a class="nav-link" href="" th:href="@{/person/material/page}">

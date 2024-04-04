@@ -406,8 +406,7 @@
                                         <tbody>
                                         <tr th:if="${#lists.isEmpty(students)}">
                                             <td colspan="2">Žiadny študent</td>
-                                        </tr>
-                                        <tr th:each="student : ${students}">
+                                        </tr>                                        <tr th:each="student : ${students}">
                                             <td><span th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
                                             <td><button th:attr="onclick=|getConversation('${personalInfo.username}','${student.personalInfo.username}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>

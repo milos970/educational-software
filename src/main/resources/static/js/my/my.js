@@ -1064,7 +1064,7 @@ function graph()
 
     if (selectedCategory === 2)
     {
-        for (let i = -100; i <= 100; ++i)
+        for (let i = -10; i <= 10; ++i)
         {
             xValues.push(i);
             yValues.push(math.evaluate(expression.toString(), { x: i }));
@@ -1107,6 +1107,17 @@ function graph()
 
 
 
+    var scatterData = []; // Initialize an empty array for the scatter data
+
+// Loop through xValues and yValues arrays to create objects with x and y properties
+    for (var i = 0; i < xValues.length; i++) {
+        scatterData.push({
+            x: xValues[i],
+            y: yValues[i]
+        });
+    }
+
+
     var data = {
         labels: xValues,
         datasets: [
@@ -1117,6 +1128,7 @@ function graph()
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 2,
             fill: false,
+            type: "line",
 
             pointBackgroundColor: function(context)
             {
@@ -1135,16 +1147,18 @@ function graph()
             },
 
             showLine: false,
-        }, {
-                label: 'line 2',
-                data: yValues1,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgb(222,32,32)',
-                borderWidth: 2,
-                fill: false,
+        },
 
-                showLine: true,
-            }],
+
+            {
+                data: scatterData,
+                pointRadius: 4,
+                borderWidth: 1,
+                borderColor: "rgba(255, 170, 0, 1)",
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                type: "scatter",
+            },
+        ],
         lineAtIndex: 2
     };
 
@@ -1211,6 +1225,27 @@ function graph()
         }
     }
 
+    var VerticalLinePlugin = {
+        afterDatasetDraw: function (chart, params) {
+            // Only draw after animation has finished and is the desired dataset
+            if(params.easingValue == 1 && params.meta.type == "scatter") {
+                var ctx = chart.ctx;
+
+                ctx.save();
+                params.meta.data.forEach(point => {
+                    var model = point._model;
+                    ctx.strokeStyle = point._options.borderColor;
+                    ctx.lineWidth = point._options.borderWidth;
+                    ctx.beginPath();
+                    ctx.moveTo(model.x, model.y);
+                    ctx.lineTo(model.x, model.y);
+                    ctx.stroke();
+                });
+                ctx.restore();
+            }
+        }
+    };
+
 
 
 
@@ -1221,7 +1256,7 @@ function graph()
             data: data,
             options: options,
             plugins:
-                [backgroundColorPlugin,pl]
+                [backgroundColorPlugin, pl, VerticalLinePlugin]
 
         });
     }
@@ -1516,8 +1551,7 @@ function parseCsvToArrays()
 
     csvToString(file, function(csvString) {
         array = $.csv.toArrays(csvString);
-        array = array.slice(1);
-        alert(array);
+
 
     });
 
@@ -2230,7 +2264,7 @@ function checkUsername(userName)
 
     if (userName.length === 0)
     {
-        getById("username-check-button").disabled = true;
+        getById("submit-button").disabled = true;
         errorHint.innerHTML = "";
         return;
     }
@@ -2242,21 +2276,14 @@ function checkUsername(userName)
     {
         if (xhttp.status === 404)
         {
-            getById("username-check-button").disabled = true;
+            getById("submit-button").disabled = true;
             errorHint.innerHTML ="Nenájdený!";
-        }
-
-
-        if (xhttp.status === 400)
-        {
-            getById("username-check-button").disabled = true;
-            errorHint.innerHTML ="Nieje aktívny!";
         }
 
 
         if (xhttp.status === 200)
         {
-            getById("username-check-button").disabled = false;
+            getById("submit-button").disabled = false;
             errorHint.innerHTML ="Nájdený!";
         }
     }
@@ -2280,19 +2307,14 @@ function clic()
 
 
 
-function validateStudentsCsv(arr) {
-
-
-    let coor = arr;
-    getById("text-input").value = getById("file-input").value.split(/(\\|\/)/g).pop();
-
-    alert(coor.length);
+function validateStudentsCsv()
+{
     const studentsCsvHintError = getById("students-csv-hint-error");
 
-
-    for (let i = 1; i < coor.length; ++i)
+    for (let i = 1; i < array.length; ++i)
     {
-        const surname = coor[i][0].trim();
+
+        let surname = array[i][0];
 
         if (surname === null || surname.length === 0)
         {
@@ -2304,19 +2326,22 @@ function validateStudentsCsv(arr) {
             studentsCsvHintError.innerHTML = "";
         }
 
+        surname = surname.trim();
 
 
         if (surname.length > 50)
         {
+
             const char = String.fromCharCode(65);
             const dig = i + 1;
             studentsCsvHintError.innerHTML = "Text je dlhší než 50 znakov!: "  + (char + dig);
+            return false;
         }else {
             studentsCsvHintError.innerHTML = "";
         }
 
 
-        const name = coor[i][1].trim();
+        let name = array[i][1];
 
         if (name === null || name.length === 0)
         {
@@ -2329,7 +2354,7 @@ function validateStudentsCsv(arr) {
             studentsCsvHintError.innerHTML = "";
         }
 
-
+        name = name.trim();
 
         if (name.length > 50)
         {
@@ -2342,7 +2367,7 @@ function validateStudentsCsv(arr) {
         }
 
 
-        const pin = coor[i][2].trim();
+        const pin = array[i][2].trim();
         const pinRegex = /^\d{6}$/;
 
         if (pin === null || pin.length === 0)
@@ -2370,7 +2395,7 @@ function validateStudentsCsv(arr) {
 
 
 
-        const email = coor[i][3].trim();
+        const email = array[i][3].trim();
         const emailRegex = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
 
         if (email === null || pin.length === 0)
@@ -2399,6 +2424,31 @@ function validateStudentsCsv(arr) {
 
     }
 
+    const emails = new Set();
+    const pins = new Set();
+
+    for (let i = 1; i < array.length; ++i)
+    {
+        emails.add(array[i][3]);
+        pins.add(array[i][2]);
+    }
+
+    if (emails.size !== array.length - 1)
+    {
+        const char = String.fromCharCode(68);
+        studentsCsvHintError.innerHTML = "Duplicitná hodnota v stlpci: "  + char;
+        return false;
+    }
+
+
+    if (pins.size !== array.length - 1)
+    {
+        const char = String.fromCharCode(67);
+        studentsCsvHintError.innerHTML = "Duplicitná hodnota v stlpci: "  + char;
+        return false;
+    }
+
+
 
     return true;
 
@@ -2414,33 +2464,47 @@ function updateSystemAbsents()
 
     if (absentsInputElement.value.length === 0)
     {
-
+        errorHint.innerHTML = "Nezadaná hodnota!";
         return;
     }
+
+
+    const absents = Number(absentsInputElement.value)
+
+    if (absents === NaN)
+    {
+        errorHint.innerHTML = "Hodnota nieje číslo!";
+        return;
+    }
+
+
+
+    if (!Number.isInteger(absents))
+    {
+        errorHint.innerHTML = "Hodnota nieje celé číslo!";
+        return;
+    }
+
+
+    if (absents <= 0 || absents > 13)
+    {
+        errorHint.innerHTML = "Hodnota mimo intervalu!";
+        return;
+    }
+
+    errorHint.innerHTML = "";
+
 
     const xhttp = new XMLHttpRequest();
 
 
     xhttp.onload = function()
     {
-        if (xhttp.status === 404)
-        {
-            absentsButton.disabled = true;
-            errorHint.innerHTML ="Nenájdený!";
-        }
-
-
-        if (xhttp.status === 400)
-        {
-            absentsButton.disabled = true;
-            errorHint.innerHTML ="Nieje aktívny!";
-        }
-
 
         if (xhttp.status === 200)
         {
-            absentsButton.disabled = false;
-            errorHint.innerHTML ="Nájdený!";
+            getById("absents-count").innerText = absents;
+            absentsInputElement.value = "";
         }
     }
 
@@ -2459,42 +2523,79 @@ function updateSystemAbsents()
     xhttp.send(JSON.stringify(data));
 }
 
-function updateSystemDate()
+function updateTeacher()
 {
-    const errorHint = getById("date-hint-error");
-    const dateInputElement = getById("date-input");
-    const dateButton = getById("date-button");
 
-    if (isDateAfterCurrent(dateInputElement.value))
-    {
-       //return;
-    }
+    const usernameInputElement = getById("username-input");
 
     const xhttp = new XMLHttpRequest();
 
 
     xhttp.onload = function()
     {
-        if (xhttp.status === 404)
+        if (xhttp.status === 404 || xhttp.status === 400)
         {
-            absentsButton.disabled = true;
-            errorHint.innerHTML ="Nenájdený!";
+            errorHint.innerHTML ="Nezmenený!";
         }
 
-
-        if (xhttp.status === 400)
-        {
-            absentsButton.disabled = true;
-            errorHint.innerHTML ="Nieje aktívny!";
-        }
 
 
         if (xhttp.status === 200)
         {
-            absentsButton.disabled = false;
-            errorHint.innerHTML ="Nájdený!";
+            usernameInputElement.value = "";
         }
     }
+
+
+    let data = {
+        username: usernameInputElement.value
+    };
+
+
+
+
+    let url = "/admin/system/update/teacher";
+
+    xhttp.open("PATCH", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    xhttp.send(JSON.stringify(data));
+}
+
+function updateSystemDate()
+{
+    const errorHint = getById("date-hint-error");
+    const dateInputElement = getById("date-input");
+    const dateButton = getById("date-button");
+
+    if (dateInputElement.value.length === 0)
+    {
+        errorHint.innerHTML = "Prázdne pole!";
+        return;
+    }
+
+
+
+    if (!validateDate(dateInputElement.value))
+    {
+       return;
+    }
+
+
+
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+
+        if (xhttp.status === 200)
+        {
+            getById("date-value").innerText =dateInputElement.value;
+            dateInputElement.value = "";
+        }
+    }
+
 
     let data = {
         date: dateInputElement.value
@@ -2513,7 +2614,7 @@ function updateSystemDate()
 
 
 
-function isDateAfterCurrent(dateString)
+function validateDate(dateString)
 {
     const dateErrorHint = getById("date-hint-error");
 
@@ -2560,10 +2661,12 @@ function isDateAfterCurrent(dateString)
 
     if (date <= currentDateTime)
     {
+
         dateErrorHint.innerHTML = "Dátum predchádza dnešný!";
         return false;
     } else {
         dateErrorHint.innerHTML = "";
+
     }
 
     return true;
@@ -2660,6 +2763,23 @@ function checkFileType(element, hintElement)
 
 function uploadStudentsCsv()
 {
+
+
+
+    if (getById("file-input").files.length === 0)
+    {
+        getById("students-csv-hint-error").innerHTML = "Poľe je prázdne!";
+        return;
+    }
+
+    if (!validateStudentsCsv()) {
+        alert(5);
+        return;
+    }
+
+    getById("students-csv-hint-error").innerHTML = "";
+
+
     const xhttp = new XMLHttpRequest();
 
     xhttp.onload = function()

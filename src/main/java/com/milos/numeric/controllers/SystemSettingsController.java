@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,13 +54,13 @@ public class SystemSettingsController
 
 
     @PatchMapping("/admin/system/update/teacher")
-    public ResponseEntity updateTeacher(@Valid NewTeacherDto newTeacherDto)
+    public ResponseEntity updateTeacher(@RequestBody @Valid NewTeacherDto newTeacherDto)
     {
         boolean success = this.systemSettingsService.updateTeacher(newTeacherDto);
 
-
         if (success)
         {
+            SecurityContextHolder.getContext().setAuthentication(null);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -67,9 +68,4 @@ public class SystemSettingsController
     }
 
 
-    /*@PatchMapping("/admin/system/update/students")
-    public ResponseEntity updateStudents(@PathVariable String username)
-    {
-
-    }*/
 }

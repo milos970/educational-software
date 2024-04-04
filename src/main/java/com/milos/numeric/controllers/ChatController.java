@@ -41,7 +41,7 @@ public class ChatController
     public List<MessageDto> findById(@RequestParam("param") String param)
     {
         
-        Optional<Chat> optional = this.chatService.findByChatId(param1, param2);
+        Optional<Chat> optional = this.chatService.findByChatId("gab", param);
 
         if (optional.isEmpty())
         {

@@ -1,6 +1,6 @@
 package com.milos.numeric.dtos;
 
-import com.milos.numeric.validators.TeacherAvailability;
+import com.milos.numeric.validators.EmployeeAvailability;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class NewTeacherDto
 {
-    @TeacherAvailability
+    @EmployeeAvailability
     private String username;
 }

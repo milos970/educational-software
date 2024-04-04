@@ -82,16 +82,16 @@ public class ChatService
 
 
 
-        Optional<Chat> optional = this.chatRepository.findById(chatId);
+        Optional<Chat> optionalChat = this.chatRepository.findById(chatId);
 
-        if (optional.isEmpty())
+        if (optionalChat.isEmpty())
         {
 
             return false;
         }
 
 
-        Chat chat = optional.get();
+        Chat chat = optionalChat.get();
         this.messageService.saveMessage(messageDto, chat);
         return true;
     }
