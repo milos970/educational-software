@@ -44,9 +44,6 @@ public class VerificationTokenService
         return verificationToken;
     }
 
-    public boolean validateTokenByCode() {
-        return true;
-    }
 
     public boolean isTokenValid(String code)
     {
@@ -62,15 +59,7 @@ public class VerificationTokenService
 
 
         LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
-        System.out.println("now: " + now);
-        System.out.println("expiration: " + expirationDate);
-        if (expirationDate.isBefore(now))
-        {
-            System.out.println("Tokenu vypršal time!");
-            return false;
-        }
-
-        return true;
+        return !expirationDate.isBefore(now);
     }
 
     public boolean deleteByCode(String code)

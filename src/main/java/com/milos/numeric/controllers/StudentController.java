@@ -29,32 +29,7 @@ public class StudentController {
     }
 
 
-    @PostMapping("/sign-up/student") //OK
-    public String checkIfValid(Model model, @Valid @ModelAttribute StudentEmailDto studentEmailDto, BindingResult result, RedirectAttributes redirectAttributes)
-    {
 
-        Optional<PersonalInfo> optional = this.personalInfoService.findByEmail(studentEmailDto.getEmail());
-
-        if (optional.isEmpty())
-        {
-
-            redirectAttributes.addAttribute("error", "Email neexistuje!");
-            return "redirect:/sign-up-page";
-        }
-
-
-        if (optional.get().isEnabled())
-        {
-            redirectAttributes.addAttribute("error", "Účet s týmto emailom je už aktívny!");
-            return "redirect:/sign-up-page";
-        }
-
-
-        this.studentService.sendToken(optional.get().getEmail());
-        return "redirect:/sign-in-page";
-
-
-    }
 
 
 

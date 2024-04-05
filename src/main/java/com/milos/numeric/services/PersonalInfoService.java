@@ -64,21 +64,20 @@ public class PersonalInfoService
     private final VerificationTokenService verificationTokenService;
 
 
-    private final VerificationTokenRepository tokenRepository;
 
 
 
 
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, VerificationTokenService verificationTokenService, VerificationTokenRepository tokenRepository) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, VerificationTokenService verificationTokenService) {
         this.personalInfoRepository = personalInfoRepository;
         this.studentService = studentService;
         this.employeeService = employeeService;
         this.chatService = chatService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.verificationTokenService = verificationTokenService;
-        this.tokenRepository = tokenRepository;
     }
+
 
     public boolean resetPassword(String email)
     {
@@ -95,44 +94,36 @@ public class PersonalInfoService
 
         try {
             this.emailService.sendVerificationEmail(personalInfo, verificationToken);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
         return true;
 
     }
 
-    public Optional<PersonalInfo> findByAuthority(Authority authority)
+    public boolean activateAccount(String email)
     {
-
-        return this.personalInfoRepository.findByAuthority(authority.name());
-    }
-
-    public boolean confirmEmail(String code)
-    {
-        Optional<VerificationToken> optional = this.tokenRepository.findByCode(code);
+        Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(email);
 
         if (optional.isEmpty())
         {
             return false;
         }
 
-        VerificationToken token = optional.get();
-
-        PersonalInfo personalInfo = token.getPersonalInfo();
-
-        if (personalInfo == null)
-        {
-            return false;
-        }
+        PersonalInfo personalInfo = optional.get();
 
         personalInfo.setEnabled(true);
-
-        this.personalInfoRepository.save(personalInfo);
-
         return true;
+    }
+
+    public Optional<PersonalInfo> findByAuthority(Authority authority)
+    {
+        return this.personalInfoRepository.findByAuthority(authority.name());
+    }
+
+    public boolean confirmEmail(String code)
+    {
+        return this.verificationTokenService.isTokenValid(code);
     }
 
 
