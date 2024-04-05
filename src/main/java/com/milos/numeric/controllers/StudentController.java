@@ -18,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Optional;
 
 @Controller
-
 public class StudentController {
     private final StudentService studentService;
     private final PersonalInfoService personalInfoService;
@@ -30,17 +29,18 @@ public class StudentController {
     }
 
 
-    @PostMapping("/reg/student") //OK
+    @PostMapping("/sign-up/student") //OK
     public String checkIfValid(Model model, @Valid @ModelAttribute StudentEmailDto studentEmailDto, BindingResult result, RedirectAttributes redirectAttributes)
     {
 
-        if (result.hasErrors())
+        Optional<PersonalInfo> optional = this.personalInfoService.findByEmail(studentEmailDto.getEmail());
+
+        if (optional.isEmpty())
         {
+
+            redirectAttributes.addAttribute("error", "Email neexistuje!");
             return "redirect:/sign-up-page";
         }
-
-
-        Optional<PersonalInfo> optional = this.personalInfoService.findByEmail(studentEmailDto.getEmail());
 
 
         if (optional.get().isEnabled())

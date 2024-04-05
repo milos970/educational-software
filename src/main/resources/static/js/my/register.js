@@ -16,7 +16,7 @@ function studentOrEmployee(who)
 
             showFormForStudent();
 
-            getById("student-form").action = "/reg/student";
+            getById("student-form").action = "/sign-up/student";
             which = 1;
             break;
         case 2:

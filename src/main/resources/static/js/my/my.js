@@ -1,25 +1,104 @@
 
 function getById(id)
 {
-    let el = document.getElementById(id);
-    if (!el)
+    const element = document.getElementById(id);
+    if (!element)
     {
         throw new ReferenceError(id + " is not defined");
     }
-    return el;
+    return element;
 }
 
+const equationInputElement = getById("equation-input");
+const functionInputElement = getById("function-input");
+const initialValueInputElement = getById("initial-value-input");
+const resultValueInputElement = getById("result-input");
+const subintervalsValueInputElement = getById("subintervals-input");
+
+const lowerValueInputElement = getById("lower-bound-input");
+const upperValueInputElement = getById("upper-bound-input");
 
 
-function saveToFile(inputs, array, fileName)
+const equationErrorHintElement = getById("equation-hint-error");
+const functionErrorHintElement = getById("function-hint-error");
+const toleranceValueErrorHintElement = getById("tolerance-value-hint-error");
+const resultValueErrorHintElement = getById("result-hint-error");
+
+
+const ITERATIONS = 1000_000;
+let tolerance = 0;
+
+
+
+
+
+
+function saveToFile()
 {
+    if (resultValueInputElement.value.length === 0)
+    {
+        return;
+    }
+
+
+
     let allRows =[]
 
-    if (array === null) {
-        allRows = inputs;
-    } else {
-        allRows = inputs.concat(array);
+    if (selectedCategory === 1)
+    {
+        allRows = inputs.concat(results);
+        switch(selectedMethod)
+        {
+            case 1:
+                fileName = "Newtonová metóda";
+
+                break;
+            case 2:
+                fileName = "Regula falsi";
+
+                break;
+            case 3:
+                fileName = "Bisekcia";
+
+                break;
+            default:
+        }
     }
+
+    if (selectedCategory === 2)
+    {
+        allRows = inputs;
+        switch(selectedMethod)
+        {
+            case 1:
+                fileName = "Lichobežníková metóda";
+                break;
+            case 2:
+                fileName = "Simpsonová metóda";
+                break;
+            default:
+        }
+    }
+
+    if (selectedCategory === 3)
+    {
+        allRows = inputs;
+        switch(selectedMethod)
+        {
+            case 1:
+                fileName = "Lichobežníková metóda";
+                break;
+            case 2:
+                fileName = "Simpsonová metóda";
+                break;
+            default:
+        }
+    }
+
+
+
+
+
 
 
 
@@ -334,7 +413,7 @@ function calculateNonLinearMethod()
 }
 
 
-let toleranceValue = -1;
+
 let round = -1;
 function selectedTolerance(value)
 {
@@ -344,23 +423,33 @@ function selectedTolerance(value)
     {
         case 1:
             dropDownButton.innerHTML = "0.001";
-            toleranceValue = 0.001;
+            tolerance = 0.001;
             round = 3;
             break;
         case 2:
             dropDownButton.innerHTML = "0.0001";
-            toleranceValue = 0.0001;
+            tolerance = 0.0001;
             round = 4;
             break;
         case 3:
             dropDownButton.innerHTML = "0.00001";
-            toleranceValue = 0.00001;
+            tolerance = 0.00001;
             round = 5;
             break;
         case 4:
             dropDownButton.innerHTML = "0.000001";
-            toleranceValue = 0.000001;
+            tolerance = 0.000001;
             round = 6;
+            break;
+        case 5:
+            dropDownButton.innerHTML = "0.0000001";
+            tolerance = 0.0000001;
+            round = 7;
+            break;
+        case 6:
+            dropDownButton.innerHTML = "0.00000001";
+            tolerance = 0.00000001;
+            round = 8;
             break;
         default:
     }
@@ -442,6 +531,8 @@ function initializeTable(data)
 
 ////////Non-linear methods//////////////////////////////////////////////////////////////////////////////////////////////
 
+let inputs = [];
+let results = [];
 function validateInitialValue()
 {
     const initialValueInput = getById("initial-value-input");
@@ -473,7 +564,7 @@ function validateToleranceValue()
 
     const toleranceValueErrorHint = getById("tolerance-value-hint-error");
 
-    if (toleranceValue === 0.001 || toleranceValue === 0.0001 || toleranceValue === 0.00001 || toleranceValue === 0.000001)
+    if (tolerance === 0.001 || tolerance === 0.0001 || tolerance === 0.00001 || tolerance === 0.000001 || tolerance === 0.0000001 || tolerance === 0.00000001)
     {
         toleranceValueErrorHint.innerHTML = "";
         return true;
@@ -504,7 +595,7 @@ function validateBounds()
         lowerBoundInputErrorHint.innerHTML = "";
     }
 
-    if (lowerBoundInput.value < -100 || lowerBoundInput.value > 99)
+    if (lowerBoundInput.value < -10 || lowerBoundInput.value > 9)
     {
 
         lowerBoundInputErrorHint.innerHTML = "Hodnota mimo intervalu!";
@@ -527,7 +618,7 @@ function validateBounds()
 
 
 
-    if (upperBoundInput.value < -99 || upperBoundInput.value > 100)
+    if (upperBoundInput.value < -9 || upperBoundInput.value > 10)
     {
         upperBoundInputErrorHint.innerHTML = "Hodnota mimo intervalu!";
         return false;
@@ -597,7 +688,7 @@ function validateEquation()
 
     if (modifiedEquation === null || modifiedEquation === "")
     {
-        equationErrorHint.innerHTML = "Prázdne pole!";
+        equationErrorHint.innerHTML = "Zadajte rovnicu v požadovanom tvare!";
         return false;
     }
 
@@ -656,12 +747,7 @@ function newtonMethod()
     }
 
 
-
-
-    const tolerance = toleranceValue;
-    const resultElementErrorHint = getById("result-hint-error");
-    const iterations = 1000_000;
-    let current = parseFloat(getById("initial-value-input").value);
+    let current = parseFloat(initialValueInputElement.value);
 
 
     const data = [];
@@ -676,9 +762,8 @@ function newtonMethod()
     const parsedEquation = math.parse(fun);
     const derivative = math.derivative(parsedEquation, 'x');
 
-    for (let i = 0; i < iterations; ++i)
+    for (let i = 0; i < ITERATIONS; ++i)
     {
-
         data[i + 1] = [3];
         data[i + 1][0] = i;
         data[i + 1][1] = current.toFixed(round);
@@ -722,7 +807,6 @@ function newtonMethod()
     const resultInput = getById("result-input");
     resultInput.value = "Vypočítaný koreň rovnice: " + current.toFixed(round);
 
-    let inputs =[];
 
     inputs[0] = [2];
 
@@ -732,7 +816,7 @@ function newtonMethod()
 
     inputs[1] = [2];
     inputs[1][0] = "Tolerancia";
-    inputs[1][1] = toleranceValue;
+    inputs[1][1] = tolerance;
 
 
     inputs[2] = [2];
@@ -748,13 +832,13 @@ function newtonMethod()
     inputs[4] = [1];
     inputs[4][0] = "";
 
+    results = data;
 
 
-    saveToFile(inputs,data, "Newtonová metóda");
+
+
 
     initializeTable(data);
-
-
 
 }
 
@@ -770,14 +854,8 @@ function bisectionMethod()
         return false;
     }
 
-    const resultInputHintError = getById("result-hint-error");
-    resultInputHintError.innerHTML = "";
 
-    const iterations = 1000;
-    const tolerance =  toleranceValue;
-
-    const lowerBound = getById("lower-bound-input").value;
-    const upperBound = getById("upper-bound-input").value;
+    resultValueErrorHintElement.innerHTML = "";
 
 
     const data = []
@@ -790,16 +868,14 @@ function bisectionMethod()
     data[0][4] = "chyba";
 
 
-    let a = parseFloat(lowerBound);
-    let b = parseFloat(upperBound);
+    let a = parseFloat(lowerValueInputElement.value);
+    let b = parseFloat(upperValueInputElement.value);
 
     let parsedEquation = math.parse(fun);
 
     let xk = 0;
-    for (let k = 1; k < iterations; ++k)
+    for (let k = 1; k < ITERATIONS; ++k)
     {
-
-
         xk = (a + b)/2;
         const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
@@ -809,7 +885,7 @@ function bisectionMethod()
 
         if (fak * fbk > 0)
         {
-            resultInputHintError.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            resultValueErrorHintElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
             return;
         }
 
@@ -840,8 +916,8 @@ function bisectionMethod()
 
     }
 
-    const resultInput = getById("result-input");
-    resultInput.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
+
+    resultValueInputElement.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -853,7 +929,7 @@ function bisectionMethod()
 
 
     inputs[0][0] = "Rovnica";
-    inputs[0][1] = document.getElementById("equation-input").value;
+    inputs[0][1] = equationInputElement.value;
 
 
     inputs[1] = [2];
@@ -863,12 +939,12 @@ function bisectionMethod()
 
     inputs[2] = [1];
     inputs[2][0] = "Dolná hranica";
-    inputs[2][1] = document.getElementById("lower-bound-input").value;
+    inputs[2][1] = lowerValueInputElement.value;
 
 
     inputs[3] = [2];
     inputs[3][0] = "Horná hranica";
-    inputs[3][1] = document.getElementById("upper-bound-input").value;
+    inputs[3][1] = upperValueInputElement.value;
 
 
     inputs[4] = [2];
@@ -881,9 +957,6 @@ function bisectionMethod()
 
 
 
-    saveToFile(inputs, data, "Bisekcia");
-
-
 }
 
 
@@ -894,16 +967,9 @@ function regulaFalsiMethod()
         return false;
     }
 
-    const resultInputHintError = getById("result-hint-error");
-    resultInputHintError.innerHTML = "";
 
-    const iterations = 1000;
-    const tolerance =  toleranceValue;
-    const lowerBound = getById("lower-bound-input").value;
-    const upperBound = getById("upper-bound-input").value;
-
-    let a = parseFloat(lowerBound);
-    let b = parseFloat(upperBound);
+    let a = parseFloat(lowerValueInputElement.value);
+    let b = parseFloat(upperValueInputElement.value);
     let prev = a;
 
 
@@ -920,7 +986,7 @@ function regulaFalsiMethod()
     data[0][4] = "chyba";
 
     let xk = 0;
-    for (let k = 1; k < iterations; ++k) {
+    for (let k = 1; k < ITERATIONS; ++k) {
 
 
         const fak = math.evaluate(parsedEquation.toString(), { x: a });
@@ -928,7 +994,7 @@ function regulaFalsiMethod()
 
         if (fak * fbk > 0)
         {
-            resultInputHintError.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            resultValueInputElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
             return;
         }
 
@@ -967,8 +1033,7 @@ function regulaFalsiMethod()
         prev = xk;
     }
 
-    const resultInput = getById("result-input");
-    resultInput.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
+    resultValueInputElement.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -980,22 +1045,22 @@ function regulaFalsiMethod()
 
 
     inputs[0][0] = "Rovnica";
-    inputs[0][1] = document.getElementById("equation-input").value;
+    inputs[0][1] = equationInputElement.value;
 
 
     inputs[1] = [2];
     inputs[1][0] = "Tolerancia";
-    inputs[1][1] = toleranceValue;
+    inputs[1][1] = tolerance;
 
 
     inputs[2] = [1];
     inputs[2][0] = "Dolná hranica";
-    inputs[2][1] = document.getElementById("lower-bound-input").value;
+    inputs[2][1] = lowerValueInputElement.value;
 
 
     inputs[3] = [2];
     inputs[3][0] = "Horná hranica";
-    inputs[3][1] = document.getElementById("upper-bound-input").value;
+    inputs[3][1] = upperValueInputElement.value;
 
 
     inputs[4] = [2];
@@ -1006,16 +1071,7 @@ function regulaFalsiMethod()
     inputs[5] = [1];
     inputs[5][0] = "";
 
-    saveToFile(inputs, data, "Regula falsi");
 
-
-}
-
-
-
-
-function simpleIterationMethod()
-{
 
 }
 
@@ -1043,7 +1099,15 @@ function hideGraphTable() {
 let lineChart = null;
 function graph()
 {
+    if (selectedCategory === 1)
+    {
+        if (!validateEquation())
+        {
+            return;
+        }
+    }
     let expression = math.parse(fun);
+    let data = [];
 
     getById("graph-calculation-div").style.display="block";
 
@@ -1055,7 +1119,7 @@ function graph()
 
     if (selectedCategory === 1)
     {
-        for (let i = -100; i <= 100; ++i)
+        for (let i = -10; i <= 10; ++i)
         {
             xValues.push(i);
             yValues.push(math.evaluate(expression.toString(), { x: i }));
@@ -1064,7 +1128,7 @@ function graph()
 
     if (selectedCategory === 2)
     {
-        for (let i = -10; i <= 10; ++i)
+        for (let i = lowerValueInputElement.value; i <= upperValueInputElement.value; ++i)
         {
             xValues.push(i);
             yValues.push(math.evaluate(expression.toString(), { x: i }));
@@ -1080,12 +1144,16 @@ function graph()
             return a[0] - b[0];
         });
 
+
+
+
         for (let i = 0; i < points.length; ++i)
         {
             xValues.push(points[i][0]);
 
             yValues.push(points[i][1]);
         }
+
 
 
         for (let i = 0; i < xValues.length; ++i)
@@ -1107,18 +1175,9 @@ function graph()
 
 
 
-    var scatterData = []; // Initialize an empty array for the scatter data
-
-// Loop through xValues and yValues arrays to create objects with x and y properties
-    for (var i = 0; i < xValues.length; i++) {
-        scatterData.push({
-            x: xValues[i],
-            y: yValues[i]
-        });
-    }
 
 
-    var data = {
+     data = {
         labels: xValues,
         datasets: [
         {
@@ -1127,18 +1186,18 @@ function graph()
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 2,
-            fill: false,
+            fill: true,
             type: "line",
 
             pointBackgroundColor: function(context)
             {
                 // Highlight points where x equals 0
-                return context.dataIndex === 10 ? 'blue' : 'rgb(23,99,199)';
+                return context.dataIndex === 10 ? 'blue' : 'blue';
             },
             // Define point border color
             pointBorderColor: function(context) {
                 // Highlight points where x equals 0
-                return context.dataIndex === 10 ? 'blue' : 'rgb(23,99,199)';
+                return context.dataIndex === 10 ? 'blue' : 'blue';
             },
 
             pointRadius: function(context) {
@@ -1146,21 +1205,30 @@ function graph()
                 return context.dataIndex === 10 ? 2 : 2; // Adjust the value as needed
             },
 
-            showLine: false,
+
         },
-
-
             {
-                data: scatterData,
-                pointRadius: 4,
-                borderWidth: 1,
-                borderColor: "rgba(255, 170, 0, 1)",
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                type: "scatter",
-            },
+                label: 'Points Only',  // Label for the dataset
+                data: yValues1,          // Y values for the points
+                backgroundColor: 'blue',  // Background color of the points
+                borderColor: 'blue',      // Border color of the points
+                borderWidth: 1,           // Border width of the points
+                pointRadius: 4,           // Radius of the points
+                type: 'scatter',          // Type of the dataset (scatter for points only)
+            }
+
+
         ],
         lineAtIndex: 2
     };
+
+
+    if (selectedCategory === 3 && selectedMethod === 3)
+    {
+        data.datasets[1].hidden = false;
+    } else {
+        data.datasets[1].hidden = true;
+    }
 
     const backgroundColorPlugin = {
         id: 'customCanvasBackgroundColor',
@@ -1225,41 +1293,24 @@ function graph()
         }
     }
 
-    var VerticalLinePlugin = {
-        afterDatasetDraw: function (chart, params) {
-            // Only draw after animation has finished and is the desired dataset
-            if(params.easingValue == 1 && params.meta.type == "scatter") {
-                var ctx = chart.ctx;
 
-                ctx.save();
-                params.meta.data.forEach(point => {
-                    var model = point._model;
-                    ctx.strokeStyle = point._options.borderColor;
-                    ctx.lineWidth = point._options.borderWidth;
-                    ctx.beginPath();
-                    ctx.moveTo(model.x, model.y);
-                    ctx.lineTo(model.x, model.y);
-                    ctx.stroke();
-                });
-                ctx.restore();
-            }
-        }
-    };
 
 
 
 
     if ($("#lineChart").length) {
-        var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
+        let lineChartCanvas = $("#lineChart").get(0).getContext("2d");
          lineChart = new Chart(lineChartCanvas, {
-            type: 'line',
             data: data,
             options: options,
             plugins:
-                [backgroundColorPlugin, pl, VerticalLinePlugin]
+                [backgroundColorPlugin, pl]
 
         });
+
     }
+
+
 
 
 
@@ -1331,8 +1382,6 @@ let points = [];
 function lagrangeInterpolating()
 {
 
-
-
    let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
 
    let j = 0;
@@ -1403,7 +1452,7 @@ function lagrangeInterpolating()
 
     fun = equation;
 
-    document.getElementById("result-input").value = "f(x) = " + fun;
+    resultValueInputElement.value = "f(x) = " + fun;
 
 
     graph();
@@ -2056,22 +2105,17 @@ function trapezoid()
 {
     if (!validateFunction() || !validateBounds() || !validateSubintervals() )
     {
-
         return false;
     }
 
-    const resultInputHintError = getById("result-hint-error");
-    resultInputHintError.innerHTML = "";
 
-    const iterations = 1000_000;
-    const lowerBound = getById("lower-bound-input").value;
-    const upperBound = getById("upper-bound-input").value;
+    resultValueErrorHintElement.innerHTML = "";
 
-    let a = parseFloat(lowerBound);
-    let b = parseFloat(upperBound);
+    let a = parseFloat(lowerValueInputElement.value);
+    let b = parseFloat(upperValueInputElement.value);
 
-    const subIntervals = getById("subintervals-input").value;
-    const n = parseFloat(subIntervals);
+
+    const n = parseFloat(subintervalsValueInputElement.value);
 
     const h = (b - a) / n;
 
@@ -2109,7 +2153,7 @@ function trapezoid()
 
     const result = sum * h/2;
 
-    document.getElementById("result-input").value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
+    resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
 
     let inputs =[];
@@ -2122,12 +2166,12 @@ function trapezoid()
 
     inputs[1] = [2];
     inputs[1][0] = "Dolná hranica:";
-    inputs[1][1] = document.getElementById("lower-bound-input").value;
+    inputs[1][1] = lowerValueInputElement.value;
 
 
     inputs[2] = [2];
     inputs[2][0] = "Horná hranica:";
-    inputs[2][1] = document.getElementById("upper-bound-input").value;
+    inputs[2][1] = upperValueInputElement.value;
 
 
     inputs[3] = [2];
@@ -2136,12 +2180,9 @@ function trapezoid()
 
 
     inputs[4] = [2];
-    inputs[4][0] = document.getElementById("result-input").value;
+    inputs[4][0] = resultValueInputElement.value;
 
 
-
-
-    saveToFile(inputs,null, "Lichobežníková metóda");
 }
 
 function simpson()
@@ -2152,18 +2193,16 @@ function simpson()
         return false;
     }
 
-    const resultInputHintError = getById("result-hint-error");
-    resultInputHintError.innerHTML = "";
 
-    const iterations = 1000;
-    const lowerBound = getById("lower-bound-input").value;
-    const upperBound = getById("upper-bound-input").value;
+    resultValueErrorHintElement.innerHTML = "";
 
-    let a = parseFloat(lowerBound);
-    let b = parseFloat(upperBound);
 
-    const subIntervals = getById("subintervals-input").value;
-    const n = parseFloat(subIntervals);
+
+    let a = parseFloat(lowerValueInputElement.value);
+    let b = parseFloat(upperValueInputElement.value);
+
+
+    const n = parseFloat(subintervalsValueInputElement.value);
 
     const h = (b - a) / n;
 
@@ -2207,7 +2246,7 @@ function simpson()
 
     const result = sum * h/3;
 
-    document.getElementById("result-input").value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
+    resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
     let inputs =[];
 
@@ -2219,12 +2258,12 @@ function simpson()
 
     inputs[1] = [2];
     inputs[1][0] = "Dolná hranica:";
-    inputs[1][1] = document.getElementById("lower-bound-input").value;
+    inputs[1][1] = lowerValueInputElement.value;
 
 
     inputs[2] = [2];
     inputs[2][0] = "Horná hranica:";
-    inputs[2][1] = document.getElementById("upper-bound-input").value;
+    inputs[2][1] = upperValueInputElement.value;
 
 
     inputs[3] = [2];
@@ -2233,12 +2272,10 @@ function simpson()
 
 
     inputs[4] = [2];
-    inputs[4][0] = document.getElementById("result-input").value;
+    inputs[4][0] = resultValueInputElement.value;
 
 
 
-
-    saveToFile(inputs,null, "Simpsonová metóda");
 
 }
 

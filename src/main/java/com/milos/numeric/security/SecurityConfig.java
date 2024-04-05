@@ -44,6 +44,7 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderL = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderM = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderN = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderO = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http
@@ -60,6 +61,7 @@ public class SecurityConfig
                         .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
                         .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
+                        .requestMatchers(mvcMatcherBuilderO.pattern("/sign-up/student")).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()
                         .requestMatchers(mvcMatcherBuilderI.pattern("/forget-password-page")).permitAll()

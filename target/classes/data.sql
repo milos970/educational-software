@@ -10,3 +10,9 @@ insert into personal_info (id,nam,surname,username, personal_number, email, pass
 values (1,'Milan','Sedlacek','sedlacek', '56278', 'sedlacek@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE','EMPLOYEE', true);
 
 insert into employee (id, person_id) values (1, 1);
+
+
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled)
+values (2,'Milos','Lukacik','lukacik', '56878', 'lukacik5@stud.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE','STUDENT', false);
+
+insert into student (id, points, absents, person_id) values (2,0,0, 0);
