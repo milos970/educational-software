@@ -26,7 +26,7 @@ public class VerificationToken
     @NotBlank
     private String expirationDate;
 
-    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "person_id")
     private PersonalInfo personalInfo;
 

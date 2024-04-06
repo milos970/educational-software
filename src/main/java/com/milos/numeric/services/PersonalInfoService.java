@@ -10,15 +10,15 @@ import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.Chat;
-import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.entities.VerificationToken;
+import com.milos.numeric.entities.*;
 import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.repositories.VerificationTokenRepository;
 import jakarta.mail.MessagingException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -43,6 +44,8 @@ public class PersonalInfoService
 
     private final EmployeeService employeeService;
 
+    private final SystemSettingsService systemSettingsService;
+
     private final ChatService chatService;
 
     private PersonalInfoNewPersonDTOMapper personalInfoNewPersonDTOMapper;
@@ -53,28 +56,26 @@ public class PersonalInfoService
 
     private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
+    private final Validator validator;
+
 
 
     @Autowired
     private  PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailServiceImpl emailService;
-
     private final VerificationTokenService verificationTokenService;
 
 
 
-
-
-
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, VerificationTokenService verificationTokenService) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, SystemSettingsService systemSettingsService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, Validator validator, VerificationTokenService verificationTokenService) {
         this.personalInfoRepository = personalInfoRepository;
         this.studentService = studentService;
         this.employeeService = employeeService;
+        this.systemSettingsService = systemSettingsService;
         this.chatService = chatService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
+        this.validator = validator;
         this.verificationTokenService = verificationTokenService;
     }
 
@@ -92,11 +93,9 @@ public class PersonalInfoService
 
         VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo);
 
-        try {
-            this.emailService.sendVerificationEmail(personalInfo, verificationToken);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        this.verificationTokenService.sendToken(verificationToken);
+
+
         return true;
 
     }
@@ -137,7 +136,6 @@ public class PersonalInfoService
 
         if (optionalPersonalInfo.isEmpty())
         {
-            System.out.println("optionalPersonalInfo.isEmpty()");
             return false;
         }
 
@@ -179,6 +177,12 @@ public class PersonalInfoService
 
     public Optional<PersonalInfo> createPerson(PersonalInfoDto personalInfoDTO)
     {
+        Set<ConstraintViolation<PersonalInfoDto>> violations = validator.validate(personalInfoDTO);
+        if (!violations.isEmpty())
+        {
+            return Optional.empty();
+        }
+
         PersonalInfo personalInfo = new PersonalInfo();
         personalInfo.setName(personalInfoDTO.getName());
         personalInfo.setSurname(personalInfoDTO.getSurname());
@@ -210,7 +214,10 @@ public class PersonalInfoService
         if (emailDomain.equals(Domain.TEACHER_DOMAIN.getDomain()))
         {
             personalInfo.setAuthority(Authority.TEACHER);
-        } else {
+        }
+
+        if (emailDomain.equals(Domain.STUDENT_DOMAIN.getDomain()))
+        {
 
             personalInfo.setAuthority(Authority.STUDENT);
         }
@@ -228,8 +235,20 @@ public class PersonalInfoService
             this.studentService.createStudent(personalInfo);
         }
 
+        Optional<SystemSettings> optionalSystemSettings= this.systemSettingsService.findFirst();
 
-        this.chatService.save("gabrisova", personalInfo.getUsername());
+        if (optionalSystemSettings.isEmpty())
+        {
+
+        }
+
+        SystemSettings systemSettings = optionalSystemSettings.get();
+
+        Employee teacher = systemSettings.getEmployee();
+
+        String fullName = teacher.getPersonalInfo().getName() + " " + teacher.getPersonalInfo().getSurname();
+
+        this.chatService.save(fullName, personalInfo.getUsername());
 
         return Optional.of(this.personalInfoRepository.save(personalInfo));
     }

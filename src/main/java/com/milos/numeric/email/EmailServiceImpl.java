@@ -31,13 +31,13 @@ public class EmailServiceImpl
         this.emailSender.send(message);
     }
 
-    public void sendVerificationEmail(PersonalInfo personalInfo, VerificationToken token) throws MessagingException, UnsupportedEncodingException {
-        String toAddress = personalInfo.getEmail();
+    public void sendVerificationEmail(VerificationToken token) throws MessagingException, UnsupportedEncodingException {
+        String toAddress = token.getPersonalInfo().getEmail();
         String fromAddress = "justforthetest45@gmail.com";
         String senderName = "Numerika";
         String subject = "Verifikácia emailu";
         String content = "To confirm your account, please click here : "
-                +"http://localhost:8080/confirm-email?token="+token.getCode();
+                +"http://localhost:8080/reset-password/page?token="+token.getCode();
 
         MimeMessage message = this.emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

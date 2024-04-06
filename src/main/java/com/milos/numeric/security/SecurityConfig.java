@@ -59,7 +59,7 @@ public class SecurityConfig
                         .access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == false"))
                         .requestMatchers(mvcMatcherBuilderL.pattern("/create-token")).permitAll()
                         .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderO.pattern("/sign-up/student")).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()

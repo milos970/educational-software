@@ -105,28 +105,39 @@ function canRegisterStudent()
 function canRegisterEmployee()
 {
     const nameInput = document.getElementById("name-input");
-    const surnameInput = document.getElementById("name-input");
+    const surnameInput = document.getElementById("surname-input");
     const passwordInput = document.getElementById("password-input");
-    const repPasswordInput = document.getElementById("password-input");
+    const repPasswordInput = document.getElementById("rep-password-input");
     const emailInput = document.getElementById("employee-email-input");
     const personalNumberInput = document.getElementById("pin-input");
 
     const nameInputErrorHint = document.getElementById("name-input-error-hint");
     const surnameInputErrorHint = document.getElementById("surname-input-error-hint");
-    const emailpasswordInputErrorHint = document.getElementById("employee-email-input-error-hint");
+    const emailInputErrorHint = document.getElementById("employee-email-input-error-hint");
     const personalNumberInputErrorHint = document.getElementById("pin-input-error-hint");
     const passwordInputErrorHint = document.getElementById("password-input-error-hint");
     const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
 
-    if (nameInput.value === "")
+    if (nameInput.value.length === 0)
     {
         nameInputErrorHint.innerHTML = "Zadajte meno!";
         return false;
-    } else {
+    } else
+    {
         nameInputErrorHint.innerHTML = "";
     }
 
-    if (surnameInput.value === "")
+
+    if (nameInput.value.length > 50)
+    {
+        nameInputErrorHint.innerHTML = "Viac než 50 znakov!";
+        return false;
+    } else
+    {
+        nameInputErrorHint.innerHTML = "";
+    }
+
+    if (surnameInput.value.length === 0)
     {
         surnameInputErrorHint.innerHTML = "Zadajte priezvisko!";
         return false;
@@ -134,7 +145,34 @@ function canRegisterEmployee()
         surnameInputErrorHint.innerHTML = "";
     }
 
-    if (personalNumberInput.value === "")
+    if (surnameInput.value.length > 50)
+    {
+        surnameInputErrorHint.innerHTML = "Viac než 50 znakov!";
+        return false;
+    } else {
+        surnameInputErrorHint.innerHTML = "";
+    }
+
+
+
+    if (emailInput.value.length === 0)
+    {
+        emailInputErrorHint.innerHTML = "Zadajte školský email!";
+        return false;
+    } else {
+        emailInputErrorHint.innerHTML = "";
+    }
+
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/;
+    if (!regexEmail.test(emailInput.value))
+    {
+        emailInputErrorHint.innerHTML = "Nevalidný školský email!";
+        return false;
+    } else {
+        emailInputErrorHint.innerHTML = "";
+    }
+
+    if (personalNumberInput.value.length === 0)
     {
         personalNumberInputErrorHint.innerHTML = "Zadajte osobné číslo!";
         return false;
@@ -142,24 +180,17 @@ function canRegisterEmployee()
         personalNumberInputErrorHint.innerHTML = "";
     }
 
-    if (emailInput.value === "")
+    const regexPin = /^\d{5}$/;
+
+    if (!regexPin.test(personalNumberInput.value))
     {
-        emailpasswordInputErrorHint.innerHTML = "Zadajte školský email!";
+        personalNumberInputErrorHint.innerHTML = "Nevalidné osobné číslo!";
         return false;
     } else {
-        emailpasswordInputErrorHint.innerHTML = "";
+        personalNumberInputErrorHint.innerHTML = "";
     }
 
-    const regexEmail = /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/;
-    if (regexEmail.test(emailInput.value))
-    {
-        emailpasswordInputErrorHint.innerHTML = "Nevalidný školský email!";
-        return false;
-    } else {
-        emailpasswordInputErrorHint.innerHTML = "";
-    }
-
-    if (passwordInput.value === "")
+    if (passwordInput.value.length === 0)
     {
         passwordInputErrorHint.innerHTML = "Zadajte heslo!";
         return false;
@@ -168,9 +199,18 @@ function canRegisterEmployee()
     }
 
 
-    if (repPasswordInput.value === "")
+    if (repPasswordInput.value.length === 0)
     {
         repPasswordInputErrorHint.innerHTML = "Znova zadajte heslo!";
+        return false;
+    }else {
+        repPasswordInputErrorHint.innerHTML = "";
+    }
+
+
+    if (repPasswordInput.value !== passwordInput.value)
+    {
+        repPasswordInputErrorHint.innerHTML = "Heslá sa nezhodujú!";
         return false;
     }else {
         repPasswordInputErrorHint.innerHTML = "";

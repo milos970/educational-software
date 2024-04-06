@@ -1,16 +1,17 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
-import com.milos.numeric.dtos.UserNameDto;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -19,10 +20,24 @@ public class EmployeeController
     private final EmployeeService employeeService;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService)
+    {
         this.employeeService = employeeService;
     }
 
+
+
+    @PostMapping("/employee/sign-up")
+    public ResponseEntity createEmployee(@PathVariable String username)
+    {
+        boolean success = this.employeeService.existsByUsername(username);
+
+        if (success) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
     @GetMapping("/admin/employee/{username}/check-username")
     public ResponseEntity checkUsername(@PathVariable String username)

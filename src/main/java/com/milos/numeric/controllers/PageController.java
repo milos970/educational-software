@@ -9,8 +9,6 @@ import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,7 +85,7 @@ public class PageController {
     public String resetPasswordPage(Model model)
     {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
-        return "/pages/samples/reset-password";
+        return "update-password";
     }
 
     @GetMapping("/person/password/update/page")

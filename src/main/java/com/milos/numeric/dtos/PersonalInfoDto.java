@@ -1,7 +1,5 @@
 package com.milos.numeric.dtos;
 
-import com.milos.numeric.validators.EmployeeEmail;
-import com.milos.numeric.validators.EmployeePersonalNumber;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

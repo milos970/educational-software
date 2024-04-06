@@ -1,12 +1,15 @@
 package com.milos.numeric.services;
 
 import com.milos.numeric.DateParser;
+import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.repositories.VerificationTokenRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
@@ -18,6 +21,8 @@ public class VerificationTokenService
 {
     private final VerificationTokenRepository verificationTokenRepository;
 
+    private final EmailServiceImpl emailService;
+
     private static final long MINUTES = 5;
 
     private final DateParser dateParser;
@@ -25,9 +30,29 @@ public class VerificationTokenService
 
 
     @Autowired
-    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository, DateParser dateParser) {
+    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository, EmailServiceImpl emailService, DateParser dateParser) {
         this.verificationTokenRepository = verificationTokenRepository;
+        this.emailService = emailService;
         this.dateParser = dateParser;
+    }
+
+
+    public Optional<VerificationToken> findByEmail(String email)
+    {
+        return this.verificationTokenRepository.findByEmail(email);
+    }
+
+    public boolean sendToken(VerificationToken verificationToken)
+    {
+        try {
+            this.emailService.sendVerificationEmail(verificationToken);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     public VerificationToken createToken(PersonalInfo personalInfo)
@@ -40,8 +65,8 @@ public class VerificationTokenService
 
         verificationToken.setExpirationDate(dateParser.parseLocalDateToString(localDateTime));
         verificationToken.setCode(UUID.randomUUID().toString());
-        this.verificationTokenRepository.save(verificationToken);
-        return verificationToken;
+
+        return this.verificationTokenRepository.save(verificationToken);
     }
 
 
@@ -66,11 +91,6 @@ public class VerificationTokenService
     {
         this.verificationTokenRepository.findByCode(code);
         return true;
-    }
-
-    public void save(VerificationToken verificationToken)
-    {
-        this.verificationTokenRepository.save(verificationToken);
     }
 
     public Optional<VerificationToken> findByCode(String code)
