@@ -3,6 +3,7 @@ package com.milos.numeric.controllers;
 import com.milos.numeric.Authority;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
+import com.milos.numeric.dtos.ResetPasswordDto;
 import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
@@ -118,7 +119,7 @@ public class PersonalInfoController
         ModelAndView model = new ModelAndView();
         model.setViewName("/pages/samples/reset-password");
         model.addObject("url", "/reset-password/?token=" + code);
-        model.addObject("newPasswordDto",new NewPasswordDto());
+        model.addObject("resetPasswordDto",new ResetPasswordDto());
         return model;
     }
 
@@ -126,17 +127,17 @@ public class PersonalInfoController
 
 
     @PatchMapping("/reset-password/")
-    public String resetPassword(@RequestParam("token")String code, @Valid @ModelAttribute NewPasswordDto newPasswordDto)
+    public String resetPassword(@RequestParam("token")String code, @Valid @ModelAttribute ResetPasswordDto resetPasswordDto)
     {
-        System.out.println("SOM TU");
+
         if (!this.verificationTokenService.isTokenValid(code))
         {
             return "redirect:/sign-up";
         }
 
         PersonalInfo personalInfo = this.verificationTokenService.findByCode(code).get().getPersonalInfo();
-        this.personalInfoService.updatePassword(personalInfo.getEmail(),newPasswordDto);
-        System.out.println("FUNGUJEEEE");
+        this.personalInfoService.resetPassword(personalInfo.getUsername(),resetPasswordDto);
+
         return "redirect:/sign-up";
     }
 

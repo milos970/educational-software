@@ -9,6 +9,7 @@ import com.milos.numeric.Gender;
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
+import com.milos.numeric.dtos.ResetPasswordDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.*;
 import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
@@ -129,6 +130,27 @@ public class PersonalInfoService
     public boolean updatePassword(String username, NewPasswordDto newPasswordDto)
     {
         String newPassword = newPasswordDto.getNewPassword();
+        String newHashedPassword = this.passwordEncoder.encode(newPassword);
+
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoRepository.findByUsername(username);
+
+
+        if (optionalPersonalInfo.isEmpty())
+        {
+            return false;
+        }
+
+        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        personalInfo.setPassword(newHashedPassword);
+
+        this.personalInfoRepository.save(personalInfo);
+        return true;
+
+    }
+
+    public boolean resetPassword(String username, ResetPasswordDto resetPasswordDto)
+    {
+        String newPassword = resetPasswordDto.getPassword();
         String newHashedPassword = this.passwordEncoder.encode(newPassword);
 
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoRepository.findByUsername(username);
