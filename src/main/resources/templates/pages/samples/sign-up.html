@@ -132,7 +132,7 @@
                           <div class="form-group" id="student-email-div">
                               <label>Školský email*</label>
                               <input  type="email" th:field="${studentEmailDto.email}" id="student-email-input" class="form-control p_input" style="color: white">
-                              <p class="error" th:if="${#fields.hasErrors('email')}"></p>
+                              <p class="error" th:if="${#fields.hasErrors('email')}">Nevalidný email!</p>
                               <p class="error" th:text="${error}"  id="student-email-input-error-hint"></p>
                           </div>
                       </form>

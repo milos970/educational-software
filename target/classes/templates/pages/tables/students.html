@@ -59,7 +59,8 @@
                         </div>
                         <div class="profile-name">
                             <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
-                            <span style="color: whitesmoke" th:text="${'Učiteľ'}"></span>
+                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Učiteľ</span>
+                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
                         </div>
                     </div>
                 </div>
@@ -77,13 +78,20 @@
                 </a>
             </li>
 
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/admin/student/page}">
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
+                <i class="mdi mdi-laptop"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Študenti</span>
+                    <span class="menu-title">Používatelia</span>
+                    <i class="menu-arrow"></i>
                 </a>
+                <div class="collapse" id="ui-basic">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/students/page}">Študenti</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/employees/page}">Zamestnanci</a></li>
+                    </ul>
+                </div>
             </li>
 
             <li class="nav-item menu-items">
@@ -96,7 +104,7 @@
             </li>
 
 
-            <li class="nav-item menu-items">
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/person/chat/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
@@ -338,7 +346,7 @@
                                             <th>Osobné číslo</th>
                                             <th>Email</th>
                                             <th>Body</th>
-                                            <th></th>
+                                            <th th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}"></th>
                                             <th>Absencie</th>
                                             <th></th>
                                             <th></th>
@@ -359,7 +367,7 @@
                                             <td><span th:text="${student.personalInfo.personalNumber}"></span></td>
                                             <td><span th:text="${student.personalInfo.email}"></span></td>
                                             <td ><span th:id="'points-' + ${student.id}" th:text="${student.getPoints()}"></span></td>
-                                            <td><span>
+                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}"><span>
                                                 <div class="input-group">
                         <input type="number" min="0" max="100"   class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
                                aria-describedby="basic-addon2">
@@ -368,7 +376,7 @@
                         </div>
                       </div></span></td>
                                             <td ><span th:id="'absents-' + ${student.id}" th:text="${student.getAbsents()}"></span></td>
-                                            <td><span> <div class="input-group">
+                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}"><span> <div class="input-group">
                         <input type="number" min="0" max="13"  class="form-control" aria-label="Recipient's username" th:id="'absents-input-' + ${student.id}"
                                aria-describedby="basic-addon2">
                         <div class="input-group-append">

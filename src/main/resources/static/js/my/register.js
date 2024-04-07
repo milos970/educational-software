@@ -360,3 +360,46 @@ function submit()
 }
 
 
+function submitChangedPassword()
+{
+    const passwordInput = document.getElementById("password-input");
+    const oldPasswordInput = document.getElementById("old-password-input");
+    const repPasswordInput = document.getElementById("rep-password-input");
+
+    const oldPasswordInputErrorHint = document.getElementById("old-password-input-error-hint");
+    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
+
+
+    if (oldPasswordInput.value.length === 0)
+    {
+        oldPasswordInputErrorHint.innerHTML = "Zadajte staré heslo!";
+        return false;
+    } else {
+        oldPasswordInputErrorHint.innerHTML = "";
+    }
+
+    if (repPasswordInput.value !== passwordInput.value)
+    {
+        repPasswordInputErrorHint.innerHTML = "Heslá sa nezhodujú!";
+        return false;
+    } else {
+        repPasswordInputErrorHint.innerHTML = "";
+    }
+
+
+    if (isValid)
+    {
+        document.getElementById("form").submit();
+    }
+
+
+
+
+
+
+
+
+
+}
+
+

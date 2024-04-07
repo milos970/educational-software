@@ -159,6 +159,7 @@ public class PersonalInfoController
     {
         if (result.hasErrors())
         {
+
             return "/pages/samples/change-password";
         }
 

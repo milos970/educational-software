@@ -48,7 +48,6 @@ public class PasswordValidValidator implements ConstraintValidator<PasswordValid
         PersonalInfo personalInfo = optionalPersonalInfo.get();
         String currentPassword = personalInfo.getPassword();
 
-
         return passwordEncoder.matches(oldPassword, currentPassword);
     }
 }

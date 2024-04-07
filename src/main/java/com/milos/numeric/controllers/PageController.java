@@ -54,16 +54,12 @@ public class PageController {
     }
 
 
-    @GetMapping("/admin/system/page")
-    public String systemPage(Model model)
+    @GetMapping("/employee/system/page")
+    public String systemPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
     {
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByAuthority(Authority.TEACHER);
+        String username = myUserDetails.getUsername();
 
-        if (optionalPersonalInfo.isEmpty())
-        {
-            return "redirect:/admin/material/page/error";
-        }
-
+        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
         PersonalInfo personalInfo = optionalPersonalInfo.get();
         model.addAttribute("personalInfo", personalInfo);
 
@@ -134,13 +130,7 @@ public class PageController {
 
 
 
-
-
-
-
-
-
-    @GetMapping("/admin/students/page")
+    @GetMapping("/employee/students/page")
     public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
     {
         String username = myUserDetails.getUsername();
@@ -160,10 +150,18 @@ public class PageController {
 
         model.addAttribute("students", students);
 
+        if (personalInfo.getGender().name().equals("FEMALE"))
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
+        } else
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
+        }
+
         return "/pages/tables/students";
     }
 
-    @GetMapping("/admin/employees/page")
+    @GetMapping("/employee/employees/page")
     public String employeesPage(@AuthenticationPrincipal MyUserDetails myUserDetails,Model model)
     {
         String username = myUserDetails.getUsername();
@@ -182,6 +180,14 @@ public class PageController {
         List<Employee> employees = this.employeeService.findAll();
 
         model.addAttribute("employees", employees);
+
+        if (personalInfo.getGender().name().equals("FEMALE"))
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
+        } else
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
+        }
 
         return "/pages/tables/employees";
     }
@@ -211,6 +217,14 @@ public class PageController {
 
         model.addAttribute("personalInfo", personalInfo);
 
+        if (personalInfo.getGender().name().equals("FEMALE"))
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
+        } else
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
+        }
+
 
         return "/pages/tables/materials";
     }
@@ -233,6 +247,8 @@ public class PageController {
         }
 
         this.fileService.remove(id);
+
+
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

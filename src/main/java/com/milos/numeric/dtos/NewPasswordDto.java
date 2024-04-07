@@ -12,7 +12,7 @@ import lombok.Setter;
 public class NewPasswordDto
 {
 
-    @PasswordValid
+    @PasswordValid(message = "Nesprávne pôvodné heslo!")
     private String oldPassword;
 
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$",

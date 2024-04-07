@@ -74,15 +74,8 @@
                 </a>
             </li>
 
-          <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="nav-item menu-items">
-            <a class="nav-link" href="" th:href="@{/admin/student/page}">
-              <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
-              </span>
-              <span class="menu-title" style="color: whitesmoke">Študenti</span>
-            </a>
-          </li>
-            <li class="nav-item menu-items">
+
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
                 <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
@@ -92,8 +85,8 @@
                 </a>
                 <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/admin/students/page}">Študenti</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/admin/employees/page}">Zamestnanci</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/students/page}">Študenti</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/employees/page}">Zamestnanci</a></li>
                     </ul>
                 </div>
             </li>
@@ -108,7 +101,7 @@
           </li>
 
 
-            <li class="nav-item menu-items">
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/person/chat/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-message-text">
@@ -122,8 +115,8 @@
             </li>
 
 
-            <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/admin/system/page}">
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/employee/system/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-message-text">
 
