@@ -68,7 +68,7 @@
             <li class="nav-item menu-items">
                 <a class="nav-link"  th:href="@{/person/home/page}">
               <span class="menu-icon">
-                <i class="mdi mdi-laptop"></i>
+                <i class="mdi mdi-function"></i>
               </span>
                     <span class="menu-title" style="color: whitesmoke">Numerické metódy</span>
                 </a>
@@ -78,7 +78,7 @@
             <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
                 <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <span class="menu-icon">
-                <i class="mdi mdi-laptop"></i>
+                <i class="mdi mdi-account-multiple"></i>
               </span>
                     <span class="menu-title">Používatelia</span>
                     <i class="menu-arrow"></i>
@@ -94,7 +94,7 @@
           <li  class="nav-item menu-items">
             <a class="nav-link" href="" th:href="@{/person/material/page}">
               <span class="menu-icon">
-                <i class="mdi mdi-chart-bar"></i>
+                <i class="mdi mdi-library-books"></i>
               </span>
               <span class="menu-title" style="color: whitesmoke">Materiály</span>
             </a>
@@ -114,11 +114,36 @@
                 </a>
             </li>
 
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/student/schedule/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-timetable">
+
+                </i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">
+                        Rozvrh
+                    </span>
+                </a>
+            </li>
+
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/student/profile/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-card-details">
+
+                </i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">
+                        Profil
+                    </span>
+                </a>
+            </li>
 
             <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/employee/system/page}">
               <span class="menu-icon">
-                <i class="mdi mdi-message-text">
+                <i class="mdi mdi-wrench">
 
                 </i>
               </span>
@@ -128,7 +153,7 @@
                 </a>
             </li>
 
-
+        </ul>
       </nav>
 
       <div class="container-fluid page-body-wrapper">
@@ -142,93 +167,6 @@
               <span class="mdi mdi-menu"></span>
             </button>
             <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item dropdown d-none d-lg-block">
-
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="createbuttonDropdown">
-                  <h6 class="p-3 mb-0">Projects</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-file-outline text-primary"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Software Development</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-web text-info"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">UI Development</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-layers text-danger"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Software Testing</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">See all projects</p>
-                </div>
-              </li>
-              <li class="nav-item nav-settings d-none d-lg-block">
-                <a class="nav-link" href="#">
-                  <i class="mdi mdi-view-grid"></i>
-                </a>
-              </li>
-              <li class="nav-item dropdown border-left">
-                <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                  <i class="mdi mdi-email"></i>
-                  <span class="count bg-success"></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                  <h6 class="p-3 mb-0">Messages</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="assets/images/faces/face4.jpg" alt="image" class="rounded-circle profile-pic">
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Mark send you a message</p>
-                      <p class="text-muted mb-0"> 1 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="assets/images/faces/face2.jpg" alt="image" class="rounded-circle profile-pic">
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Cregh send you a message</p>
-                      <p class="text-muted mb-0"> 15 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="assets/images/faces/face3.jpg" alt="image" class="rounded-circle profile-pic">
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Profile picture updated</p>
-                      <p class="text-muted mb-0"> 18 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">4 new messages</p>
-                </div>
-              </li>
               <li class="nav-item dropdown border-left">
                 <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                   <i class="mdi mdi-bell"></i>
@@ -285,18 +223,9 @@
                   </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
-                  <h6 class="p-3 mb-0">Profile</h6>
+                  <h6 class="p-3 mb-0">Profil</h6>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-settings text-success"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Profil</p>
-                    </div>
-                  </a>
+
                     <div class="dropdown-divider"></div>
                     <a th:href="@{/person/password/update/page}" class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
@@ -431,7 +360,7 @@
                             <input type="file" name="img[]" class="file-upload-default">
                             <div class="input-group col-xs-12">
                                 <input type="text"  id="text-input" class="form-control file-upload-info" disabled placeholder="Súbor s príponou .csv">
-                                <input  type="file" onchange="validateCsvCoordinates()"  id="file-input" class="form-control file-upload-info" style="display: none">
+                                <input accept="text/csv" type="file" onchange="validateCsvCoordinates()"  id="file-input" class="form-control file-upload-info" style="display: none">
                                 <span class="input-group-append">
                             <button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button" id="insert-file-button">Vložiť</button>
                           </span>
@@ -536,72 +465,17 @@
                 </div>
               </div>
             </div>
-            <!--<div class="row">
-              <div class="col-sm-4 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Školský týždeň</h5>
-                    <div class="row">
-                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
-                        <div class="d-flex d-sm-block d-md-flex align-items-center">
-                            <h2 class="mb-0">8.</h2>
-                        </div>
 
-                      </div>
-                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                        <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Nasledujúce cviko</h5>
-                    <div class="row">
-                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
-                        <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">o 5 dní</h2>
-
-                        </div>
-
-                      </div>
-                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                        <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Počet študentov</h5>
-                    <div class="row">
-                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
-                        <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">12</h2>
-
-                        </div>
-
-                      </div>
-                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                        <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>-->
 
 
 
           </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
-
-          <!-- partial -->
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Bakalárska práca</span>
+                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+                </div>
+            </footer>
         </div>
         <!-- main-panel ends -->
       </div>

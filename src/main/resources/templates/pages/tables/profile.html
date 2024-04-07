@@ -1,48 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Zamestnanci</title>
+    <title>Profil</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/static/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
-
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="/static/vendors/jvectormap/jquery-jvectormap.css">
-    <link rel="stylesheet" href="/static/vendors/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="/static/vendors/owl-carousel-2/owl.carousel.min.css">
-    <link rel="stylesheet" href="/static/vendors/owl-carousel-2/owl.theme.default.min.css">
-
-    <link rel="stylesheet" th:href="@{/vendors/jvectormap/jquery-jvectormap.css}">
-    <link rel="stylesheet" th:href="@{/vendors/flag-icon-css/css/flag-icon.min.css}">
-    <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.carousel.min.css}">
-    <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.theme.default.min.css}">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="/static/css/style.css">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="/static/images/favicon.png"/>
-
-    <link rel="stylesheet" href="/static/css/my.css">
-
+    <link rel="shortcut icon" href="/static/images/favicon.png" />
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="shortcut icon" th:href="@{/images/favicon.png}">
     <link rel="stylesheet" th:href="@{/css/my.css}">
 
-
-
+    <style>
+        .flex-container {
+            display: flex;
+            flex-direction: column; /* or row, depending on your layout */
+            max-height: 200px; /* set the maximum height for the container */
+            overflow-y: auto; /* enable vertical scrollbar */
+            border: 1px solid #ccc; /* optional: border for visualization */
+        }
+        .flex-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee; /* optional: border for visualization */
+        }
+        .left-item {
+            border-radius: 5px 0 0 5px; /* Rounded border on the left */
+            padding: 5px 10px;
+            background-color: #3682ea;
+        }
+        .right-item {
+            border-radius: 0 5px 5px 0; /* Rounded border on the right */
+            padding: 5px 10px;
+            background-color: #4bb63b; /* Optional: Background color */
+            margin-left: auto;
+        }
+    </style>
 </head>
-<body onload="selectNumericCategory(1)">
-
+<body>
 <div class="container-scroller">
-    <!-- partial:partials/_sidebar.html -->
+    <!-- partial:../../partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
             <a class="sidebar-brand brand-logo" href="index.html"><img th:src="@{/images/logo.png}" alt="logo"/></a>
@@ -54,14 +66,14 @@
                 <div class="profile-desc">
                     <div class="profile-pic">
                         <div class="count-indicator">
-                            <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                            <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                            <img th:if="${student.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                            <img th:if="${student.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Učiteľ</span>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
+                            <h5 class="mb-0 font-weight-normal" th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></h5>
+                            <span style="color: whitesmoke">Študent</span>
+
                         </div>
                     </div>
 
@@ -80,21 +92,6 @@
             </li>
 
 
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
-                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-                    <span class="menu-title">Používatelia</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="ui-basic">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/students/page}">Študenti</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/employees/page}">Zamestnanci</a></li>
-                    </ul>
-                </div>
-            </li>
 
             <li  class="nav-item menu-items">
                 <a class="nav-link" href="" th:href="@{/person/material/page}">
@@ -106,7 +103,7 @@
             </li>
 
 
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
+            <li  class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/person/chat/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-message-text">
@@ -119,26 +116,39 @@
                 </a>
             </li>
 
-
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/employee/system/page}">
+            <li  class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/student/schedule/page}">
               <span class="menu-icon">
-                <i class="mdi mdi-wrench">
+                <i class="mdi mdi-timetable">
 
                 </i>
               </span>
                     <span class="menu-title" style="color: whitesmoke">
-                        Systém
+                        Rozvrh
+                    </span>
+                </a>
+            </li>
+
+            <li class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/student/profile/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-card-details">
+
+                </i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">
+                        Profil
                     </span>
                 </a>
             </li>
 
 
+        </ul>
 
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_navbar.html -->
+        <!-- partial:../../partials/_navbar.html -->
         <nav class="navbar p-0 fixed-top d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo-mini" href="index.html"><img th:src="@{assets/images/logo-mini.svg}"
@@ -148,18 +158,21 @@
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-menu"></span>
                 </button>
+                <ul class="navbar-nav w-100">
+                    <li class="nav-item w-100">
+
+                    </li>
+                </ul>
                 <ul class="navbar-nav navbar-nav-right">
 
 
 
                     <li class="nav-item dropdown border-left">
-                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
-                           data-toggle="dropdown">
+                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                             <i class="mdi mdi-bell"></i>
                             <span class="count bg-danger"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                             aria-labelledby="notificationDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
                             <h6 class="p-3 mb-0">Notifications</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -170,8 +183,7 @@
                                 </div>
                                 <div class="preview-item-content">
                                     <p class="preview-subject mb-1">Event today</p>
-                                    <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event
-                                        today </p>
+                                    <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event today </p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -205,10 +217,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">
-                                <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                <img th:if="${student.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                <img th:if="${student.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
                                 <p class="mb-0 d-none d-sm-block navbar-profile-name"
-                                   th:text="${personalInfo.name + ' ' + personalInfo.surname}"></p>
+                                   th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></p>
                                 <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                             </div>
                         </a>
@@ -241,8 +253,7 @@
                         </div>
                     </li>
                 </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-                        data-toggle="offcanvas">
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                     <span class="mdi mdi-format-line-spacing"></span>
                 </button>
             </div>
@@ -252,65 +263,84 @@
             <div class="content-wrapper">
 
                 <div class="row">
-                    <div class="col-lg-10 grid-margin stretch-card">
+                    <div class="col-lg-7 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Zamestnanci</h4>
-                                <p class="card-description"></p>
+                                <h4 class="card-title">Moje údaje</h4>
+
                                 <div class="table-responsive">
-                                    <table style="color: whitesmoke" class="table">
+                                    <table class="table" style="color: whitesmoke">
                                         <thead>
                                         <tr>
-                                            <th>Zamestnanec</th>
-                                            <th>Meno</th>
-                                            <th>Priezvisko</th>
-                                            <th>Používateľské meno</th>
-                                            <th>Osobné číslo</th>
-                                            <th>Email</th>
                                             <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th> </th>
+                                            <th>  </th>
+
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:if="${#lists.isEmpty(employees)}">
-                                            <td colspan="2">Žiadny zamestnanec</td>
+                                        <tr>
+                                            <td>Meno a priezvisko</td>
+                                            <td> </td>
+                                            <td th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"> </td>
+                                            <td> </td>
+
                                         </tr>
-                                        <tr  th:each="employee : ${employees}">
-                                            <td class="py-1">
-                                                <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                                <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
-                                            </td>
-                                            <td><span th:text="${employee.personalInfo.name}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.surname}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.username}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.personalNumber}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.email}"></span></td>
+
+                                        <tr>
+                                            <td>Používateľské meno</td>
+                                            <td></td>
+                                            <td th:text="${student.personalInfo.username}"></td>
+                                            <td> </td>
                                         </tr>
+
+                                        <tr>
+                                            <td>Email</td>
+                                            <td></td>
+                                            <td th:text="${student.personalInfo.email}"></td>
+                                            <td> </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Osobné číslo</td>
+                                            <td></td>
+                                            <td th:text="${student.personalInfo.personalNumber}"></td>
+                                            <td> </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Dosiahnuté body</td>
+                                            <td></td>
+                                            <td th:text="${student.points}"></td>
+                                            <td> </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Počet vynechaných cvičení</td>
+                                            <td></td>
+                                            <td th:text="${student.absents}"></td>
+                                            <td> </td>
+                                        </tr>
+
+
                                         </tbody>
                                     </table>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
             </div>
-
         </div>
-
     </div>
-
+    <!-- main-panel ends -->
 </div>
-<!-- container-scroller -->
-<!-- plugins:js -->
+<!-- page-body-wrapper ends -->
+
 <script src="/static/vendors/js/vendor.bundle.base.js"></script>
 <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
-<!-- endinject -->
-<!-- Plugin js for this page -->
+
 <script src="/static/vendors/chart.js/Chart.min.js"></script>
 <script th:src="@{/vendors/chart.js/Chart.min.js}"></script>
 <script src="/static/vendors/progressbar.js/progressbar.min.js"></script>
@@ -342,14 +372,11 @@
 <script src="/static/js/chart.js"></script>
 <script th:src="@{/js/chart.js}"></script>
 
+<script src="/static/js/jquery.csv.js"></script>
+<script th:src="@{/js/jquery.csv.js}"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="/static/js/my/my.js"></script>
 <script th:src="@{/js/my/my.js}"></script>
-
-<script src="/static/js/my/students.js"></script>
-<script th:src="@{/js/my/students.js}"></script>
-
-<script src="/static/js/my/non-linear"></script>
-<script th:src="@{/js/my/non-linear.js}"></script>
 </body>
 </html>

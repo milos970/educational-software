@@ -35,10 +35,6 @@ let tolerance = 0;
 
 function saveToFile()
 {
-    if (resultValueInputElement.value.length === 0)
-    {
-        return;
-    }
 
 
 
@@ -46,6 +42,11 @@ function saveToFile()
 
     if (selectedCategory === 1)
     {
+        if (resultValueInputElement.value.length === 0)
+        {
+            return;
+        }
+
         allRows = inputs.concat(results);
         switch(selectedMethod)
         {
@@ -67,6 +68,10 @@ function saveToFile()
 
     if (selectedCategory === 2)
     {
+        if (resultValueInputElement.value.length === 0)
+        {
+            return;
+        }
         allRows = inputs;
         switch(selectedMethod)
         {
@@ -82,14 +87,32 @@ function saveToFile()
 
     if (selectedCategory === 3)
     {
-        allRows = inputs;
+
+        if (!isSelected())
+        {
+            return;
+        }
+        allRows = inputs.concat(results);
         switch(selectedMethod)
         {
             case 1:
-                fileName = "Lichobežníková metóda";
+                fileName = "Lagrangeov polynóm";
                 break;
             case 2:
-                fileName = "Simpsonová metóda";
+                fileName = "Newtonov polynom";
+                break;
+            case 3:
+                fileName = "Metóda najmenších štvorcov";
+
+                if (selectedFunction === 1)
+                {
+                    fileName = fileName + "-" + "Lineárna funkcia";
+                }
+
+                if (selectedFunction === 2)
+                {
+                    fileName = fileName + "-" + "Logaritmická funkcia";
+                }
                 break;
             default:
         }
@@ -175,6 +198,7 @@ function hideAllNonLinearElements()
     document.getElementById("equation-div").value ="";
     document.getElementById("tolerance-div").value ="";
     document.getElementById("non-linear-dropdown-div").style.display="none";
+    document.getElementById("result-error-div").style.display="none";
 }
 
 function hideAllIntegrationElements()
@@ -185,6 +209,7 @@ function hideAllIntegrationElements()
     document.getElementById("function-div").style.display="none";
 
     document.getElementById("integration-dropdown-div").style.display="none";
+    document.getElementById("result-error-div").style.display="none";
 }
 
 function hideAllApproximationElements()
@@ -194,6 +219,7 @@ function hideAllApproximationElements()
     document.getElementById("functions-dropdown-div").style.display="none";
 
     document.getElementById("approximation-dropdown-div").style.display="none";
+    document.getElementById("result-error-div").style.display="none";
 }
 
 
@@ -391,7 +417,6 @@ function calculate()
             break;
         case 3:
             calculateApproximationMethod();
-
             break;
     }
 }
@@ -480,8 +505,8 @@ function initializeTable(data)
     const graphDiv = document.getElementById("graph-div");
     graphDiv.style.display="none";
 
-    const tableDiv = document.getElementById("table-div");
-    tableDiv.classList.remove("hidden-div");
+    const tableDiv = document.getElementById("graph-calculation-div");
+    tableDiv.style.display="block";
 
     const tableElement = document.getElementById("table");
 
@@ -632,7 +657,7 @@ function validateBounds()
 
     if (upperValue <= lowerValue)
     {
-        upperBoundInputErrorHint.innerHTML = "Horná hranica je menšia/väčšia než dolná!";
+        upperBoundInputErrorHint.innerHTML = "Horná hranica je menšia než dolná!";
         return false;
     } else {
         upperBoundInputErrorHint.innerHTML = "";
@@ -739,6 +764,8 @@ function validateEquation()
     return true;
 }
 
+
+
 function newtonMethod()
 {
     if (!validateEquation() || !validateToleranceValue() || !validateInitialValue())
@@ -768,15 +795,25 @@ function newtonMethod()
         data[i + 1][0] = i;
         data[i + 1][1] = current.toFixed(round);
 
-        let fx = math.evaluate(parsedEquation.toString(), { x: current });
+        let fx = 0;
+        try
+        {
+            fx = math.evaluate(parsedEquation.toString(), { x: current });
+        }
+        catch (error) {
+            equationErrorHintElement.innerHTML = "Nedefinovaná hodnota!";
+        }
+
+
         let derFx = 0;
 
 
         try
         {
             derFx = math.evaluate(derivative.toString(), { x: current });
-        } catch (error) {
-
+        }
+        catch (error) {
+            equationErrorHintElement.innerHTML = "Nedefinovaná hodnota!";
         }
 
         if (derFx === 0)
@@ -858,7 +895,7 @@ function bisectionMethod()
     resultValueErrorHintElement.innerHTML = "";
 
 
-    const data = []
+    const data = [];
     data[0] = [5];
 
     data[0][0] = "k";
@@ -923,7 +960,7 @@ function bisectionMethod()
     initializeTable(data);
 
 
-    let inputs =[];
+    inputs =[];
 
     inputs[0] = [2];
 
@@ -934,7 +971,7 @@ function bisectionMethod()
 
     inputs[1] = [2];
     inputs[1][0] = "Tolerancia";
-    inputs[1][1] = toleranceValue;
+    inputs[1][1] = tolerance;
 
 
     inputs[2] = [1];
@@ -955,7 +992,7 @@ function bisectionMethod()
     inputs[5] = [1];
     inputs[5][0] = "";
 
-
+    results = data;
 
 }
 
@@ -994,7 +1031,8 @@ function regulaFalsiMethod()
 
         if (fak * fbk > 0)
         {
-            resultValueInputElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+
+            equationErrorHintElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
             return;
         }
 
@@ -1039,7 +1077,7 @@ function regulaFalsiMethod()
     initializeTable(data);
 
 
-    let inputs =[];
+     inputs =[];
 
     inputs[0] = [2];
 
@@ -1053,7 +1091,7 @@ function regulaFalsiMethod()
     inputs[1][1] = tolerance;
 
 
-    inputs[2] = [1];
+    inputs[2] = [2];
     inputs[2][0] = "Dolná hranica";
     inputs[2][1] = lowerValueInputElement.value;
 
@@ -1070,6 +1108,8 @@ function regulaFalsiMethod()
 
     inputs[5] = [1];
     inputs[5][0] = "";
+
+    results = data;
 
 
 
@@ -1106,8 +1146,31 @@ function graph()
             return;
         }
     }
+
+
+    if (selectedCategory === 2)
+    {
+        if (!validateFunction() || !validateBounds())
+        {
+            return;
+        }
+    }
+
+    if (selectedCategory === 3)
+    {
+        if (!isSelected() || resultValueInputElement.value.length === 0)
+        {
+            return;
+        }
+    }
+
+
+
+
     let expression = math.parse(fun);
     let data = [];
+
+
 
     getById("graph-calculation-div").style.display="block";
 
@@ -1128,7 +1191,9 @@ function graph()
 
     if (selectedCategory === 2)
     {
-        for (let i = lowerValueInputElement.value; i <= upperValueInputElement.value; ++i)
+        const lower = parseFloat(lowerValueInputElement.value);
+        const upper = parseFloat(upperValueInputElement.value);
+        for (let i = lower; i <= upper; ++i)
         {
             xValues.push(i);
             yValues.push(math.evaluate(expression.toString(), { x: i }));
@@ -1162,9 +1227,6 @@ function graph()
         }
 
     }
-
-
-
 
 
 
@@ -1210,10 +1272,10 @@ function graph()
             {
                 label: 'Points Only',  // Label for the dataset
                 data: yValues1,          // Y values for the points
-                backgroundColor: 'blue',  // Background color of the points
-                borderColor: 'blue',      // Border color of the points
-                borderWidth: 1,           // Border width of the points
-                pointRadius: 4,           // Radius of the points
+                backgroundColor: 'red',  // Background color of the points
+                borderColor: 'red',      // Border color of the points
+                borderWidth: 3,           // Border width of the points
+
                 type: 'scatter',          // Type of the dataset (scatter for points only)
             }
 
@@ -1222,10 +1284,20 @@ function graph()
         lineAtIndex: 2
     };
 
+    if (selectedCategory === 1 || selectedCategory === 3)
+    {
+        data.datasets[0].fill = false;
+    } else {
+        data.datasets[0].fill = true;
+    }
+
 
     if (selectedCategory === 3 && selectedMethod === 3)
     {
         data.datasets[1].hidden = false;
+        data.datasets[1].type = "line";
+        data.datasets[1].fill = false;
+        data.datasets[0].type = "scatter";
     } else {
         data.datasets[1].hidden = true;
     }
@@ -1343,15 +1415,37 @@ function selectFunction(whichOne)
 }
 
 
-function calculateApproximationMethod()
+let selectedApproximationInput = 0;
+function isSelected()
 {
-    if ( (getById("nodes-string-input").value.length === 0) && (getById("file-input").files.length === 0) ) {
-            return;
+    if ( (getById("nodes-string-input").value.length === 0) && (getById("file-input").files.length === 0) )
+    {
+        getById("coordinates-string-error-hint").innerHTML = "Zvoľte túto možnosť!";
+        getById("coordinates-csv-error-hint").innerHTML = "Alebo túto možnosť!";
+        return false;
     }
 
     if ( (getById("nodes-string-input").value.length != 0) && (getById("file-input").files.length != 0) ) {
-        return;
+        getById("coordinates-string-error-hint").innerHTML = "Vyberte len jednu možnosť!";
+
+        return false;
     }
+
+
+    if ( (getById("nodes-string-input").value.length !== 0) )
+    {
+        selectedApproximationInput = 1;
+    } else {
+        selectedApproximationInput = 2;
+    }
+
+    return true;
+}
+
+
+function calculateApproximationMethod()
+{
+
 
     switch(selectedMethod) {
         case 1:
@@ -1382,14 +1476,42 @@ let points = [];
 function lagrangeInterpolating()
 {
 
-   let arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    if (!isSelected())
+    {
+        return;
+    }
+
+    let arr = [];
+
+    if (selectedApproximationInput === 1 && validateStringCoordinates())
+    {
+        arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+    }
+
+    if (selectedApproximationInput === 2 && validateCsvCoordinates())
+    {
+        let j = 0;
+        for (let i = 0; i < array.length; i+=2)
+        {
+            arr[i] = array[j][0];
+            arr[i + 1] = array[j][1];
+            ++j;
+        }
+
+    }
+
+
+
+
+
 
    let j = 0;
    for (let i = 0; i < arr.length; i+=2)
    {
        points[j] = [2];
-       points[j][0] = arr[i];
-       points[j][1] = arr[i + 1];
+       points[j][0] = parseFloat(arr[i]);
+       points[j][1] = parseFloat(arr[i + 1]);
+
        ++j;
    }
 
@@ -1454,8 +1576,19 @@ function lagrangeInterpolating()
 
     resultValueInputElement.value = "f(x) = " + fun;
 
+    inputs = [];
 
-    graph();
+    inputs[0] = [2];
+    inputs[0][0] =  "f(x)";
+    inputs[0][1] =  resultValueInputElement.value;
+
+    inputs[1] = [1];
+    inputs[1][0] = "Uzly"
+
+
+    results = points;
+
+
 
 }
 
@@ -1465,35 +1598,22 @@ function lagrangeInterpolating()
 
 function newtonInterpolating()
 {
-    let arr = null;
-    let data =[];
-
-    if (getById("nodes-string-input").value.length !== 0)
+    if (!isSelected())
     {
-        arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
-
-        let j = 0;
-        for (let i = 0; i < arr.length; i += 2)
-        {
-            data[j] = [2];
-            data[j][0] = parseFloat(arr[i]);
-            data[j][1] = parseFloat(arr[i + 1]);
-            ++j;
-        }
+        return;
     }
 
-    if (getById("file-input").files.length !== 0)
-    {
-        for (let i = 0; i < array.length; ++i)
-        {
-            data[i] = [2];
-            data[i][0] = parseFloat(array[i][0]);
-            data[i][1] = parseFloat(array[i][1].replace(",","."));
 
-        }
+
+    if (selectedApproximationInput === 1 && validateStringCoordinates())
+    {
+        data = parseStringCoordintatesToArrays();
     }
 
-    points = data;
+    if (selectedApproximationInput === 2 && validateCsvCoordinates())
+    {
+        data = parseCsvToArrays();
+    }
 
 
 
@@ -1540,8 +1660,6 @@ function newtonInterpolating()
     document.getElementById("result-input").value = "f(x) = " + fun;
     points = data;
 
-    graph();
-
 
     function dividedDifference(i, j)
     {
@@ -1557,6 +1675,22 @@ function newtonInterpolating()
 
 function leastSquares() {
 
+    if (!isSelected())
+    {
+        return;
+    }
+
+
+
+    if (selectedApproximationInput === 1 && validateStringCoordinates())
+    {
+        points = parseStringCoordintatesToArrays();
+    }
+
+    if (selectedApproximationInput === 2 && validateCsvCoordinates())
+    {
+        points = parseCsvToArrays();
+    }
 
     if (selectedFunction === 1) {
 
@@ -1604,12 +1738,14 @@ function parseCsvToArrays()
 
     });
 
+    return array;
+
 }
 
 
 function getFileName()
 {
-    const elementInputFileName = getById("file-name-input");
+    const elementInputFileName = getById("text-input");
     const elementInputFile = getById("file-input");
 
     elementInputFileName.value = elementInputFile.files[0].name;
@@ -1665,6 +1801,7 @@ function validateStringCoordinates()
 function validateCsvCoordinates()
 {
     parseCsvToArrays();
+
     return validateCoordinates(array, 2);
 }
 
@@ -1695,6 +1832,7 @@ function validateCoordinates(coordinatesArrays, type)
 
     if (type === 2)
     {
+
         if (coordinatesArrays.length > 1000)
         {
             coordinatesCsvErrorHint.innerHTML = "Uzlov je viac než 1000!";
@@ -1713,27 +1851,60 @@ function validateCoordinates(coordinatesArrays, type)
 
     for (let i = 0; i < coordinatesArrays.length; ++i)
     {
-        const valueX = coordinatesArrays[i][0];
-        const valueY = coordinatesArrays[i][1];
+        let valueX = coordinatesArrays[i][0];
+        let valueY = coordinatesArrays[i][1];
 
-
-
-        if (isNaN(valueX) === true || isNaN(valueY) === true || valueX.length === 0 || valueY.length === 0)
+        if (valueX.length !== 0)
         {
-            uniques.clear();
-            uniques = null;
-
-            if (type === 1)
+            if (valueX.includes(','))
             {
-                coordinatesStringErrorHint.innerHTML = "Nevalidná hodnota vo výraze!";
-                return false;
+                valueX =  valueX.replace(',', '.');
             }
 
-            const char = String.fromCharCode(65);
-            coordinatesCsvErrorHint.innerHTML = "Nevalidná hodnota na súradnici: " + char + (i+1);
+            if (isNaN(valueX) === true)
+            {
+                uniques.clear();
+                uniques = null;
 
-            return false;
+                if (type === 1)
+                {
+                    coordinatesStringErrorHint.innerHTML = "Nevalidná hodnota vo výraze!";
+                    return false;
+                }
+
+                const char = String.fromCharCode(65);
+                coordinatesCsvErrorHint.innerHTML = "Nevalidná hodnota na súradnici: " + char + (i+1);
+
+                return false;
+            }
         }
+
+        if (valueY.length !== 0)
+        {
+            if (valueY.includes(','))
+            {
+                valueY =  valueY.replace(',', '.');
+            }
+
+            if (isNaN(valueY) === true)
+            {
+                uniques.clear();
+                uniques = null;
+
+                if (type === 1)
+                {
+                    coordinatesStringErrorHint.innerHTML = "Nevalidná hodnota vo výraze!";
+                    return false;
+                }
+
+                const char = String.fromCharCode(66);
+                coordinatesCsvErrorHint.innerHTML = "Nevalidná hodnota na súradnici: " + char + (i+1);
+
+                return false;
+            }
+        }
+
+
 
         uniques.add(valueX);
 
@@ -1757,6 +1928,8 @@ function validateCoordinates(coordinatesArrays, type)
         coordinatesStringErrorHint.innerHTML = "";
         coordinatesCsvErrorHint.innerHTML = "";
     }
+
+    array = coordinatesArrays;
 
 
     return true;
@@ -2156,7 +2329,7 @@ function trapezoid()
     resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
 
-    let inputs =[];
+     inputs =[];
 
     inputs[0] = [2];
 
@@ -2248,7 +2421,7 @@ function simpson()
 
     resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
 
-    let inputs =[];
+     inputs =[];
 
     inputs[0] = [2];
 

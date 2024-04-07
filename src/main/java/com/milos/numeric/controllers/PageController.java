@@ -53,6 +53,64 @@ public class PageController {
         this.chatService = chatService;
     }
 
+    @GetMapping("/student/schedule/page")
+    public String studentSchedulePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
+    {
+        String username = myUserDetails.getUsername();
+        Optional<Student> optionalStudent = this.studentService.findByUsername(username);
+
+        Student student = optionalStudent.get();
+
+        model.addAttribute("student", student);
+
+        if (student.getPersonalInfo().getGender().name().equals("FEMALE"))
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
+        } else
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
+        }
+
+        Optional<SystemSettings> optional = this.systemSettingsService.findFirst();
+
+        if (optional.isEmpty()) {
+
+        }
+
+        SystemSettings systemSettings = optional.get();
+
+        model.addAttribute("systemSettings", systemSettings);
+
+
+
+        return "/pages/tables/schedule";
+    }
+
+    @GetMapping("/student/profile/page")
+    public String studentProfilePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
+    {
+        String username = myUserDetails.getUsername();
+        Optional<Student> optionalStudent = this.studentService.findByUsername(username);
+
+        Student student = optionalStudent.get();
+
+        model.addAttribute("student", student);
+
+        if (student.getPersonalInfo().getGender().name().equals("FEMALE"))
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/female.png");
+        } else
+        {
+            model.addAttribute("imagePath", "/images/faces-clipart/male.png");
+        }
+
+
+
+        return "/pages/tables/profile";
+    }
+
+
+
 
     @GetMapping("/employee/system/page")
     public String systemPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
