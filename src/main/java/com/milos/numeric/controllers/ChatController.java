@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
-public class ChatController
-{
+public class ChatController {
     private final ChatService chatService;
 
     @Autowired
@@ -28,8 +26,7 @@ public class ChatController
 
 
     @PostMapping("/person/sendMessage")
-    public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto)
-    {
+    public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto) {
 
         this.chatService.saveMessage(messageDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -38,13 +35,11 @@ public class ChatController
 
     @GetMapping("/person/conversation")
     @ResponseBody
-    public List<MessageDto> findById(@RequestParam("param") String param)
-    {
-        
+    public List<MessageDto> findById(@RequestParam("param") String param) {
+
         Optional<Chat> optional = this.chatService.findByChatId("gab", param);
 
-        if (optional.isEmpty())
-        {
+        if (optional.isEmpty()) {
             System.out.println("Nenaslo");
         }
 
@@ -53,8 +48,7 @@ public class ChatController
         List<MessageDto> messageDtos = new LinkedList<>();
 
 
-        for(int i = messages.size() - 1; i >= 0; --i)
-        {
+        for (int i = messages.size() - 1; i >= 0; --i) {
             MessageDto messageDto = new MessageDto();
             messageDto.setContent(messages.get(i).getContent());
             messageDto.setSenderUsername(messages.get(i).getSenderUsername());
@@ -64,20 +58,15 @@ public class ChatController
         }
 
 
-
         return messageDtos;
     }
 
 
     @DeleteMapping("/admin/conversation")
-    public ResponseEntity deleteAll()
-    {
+    public ResponseEntity deleteAll() {
         this.chatService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 
 
 }

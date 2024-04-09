@@ -18,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +53,7 @@ public class PageController {
     }
 
     @GetMapping("/student/schedule/page")
-    public String studentSchedulePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
-    {
+    public String studentSchedulePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<Student> optionalStudent = this.studentService.findByUsername(username);
 
@@ -63,11 +61,9 @@ public class PageController {
 
         model.addAttribute("student", student);
 
-        if (student.getPersonalInfo().getGender().name().equals("FEMALE"))
-        {
+        if (student.getPersonalInfo().getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
-        } else
-        {
+        } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
@@ -82,13 +78,11 @@ public class PageController {
         model.addAttribute("systemSettings", systemSettings);
 
 
-
         return "/pages/tables/schedule";
     }
 
     @GetMapping("/student/profile/page")
-    public String studentProfilePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
-    {
+    public String studentProfilePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<Student> optionalStudent = this.studentService.findByUsername(username);
 
@@ -96,25 +90,19 @@ public class PageController {
 
         model.addAttribute("student", student);
 
-        if (student.getPersonalInfo().getGender().name().equals("FEMALE"))
-        {
+        if (student.getPersonalInfo().getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
-        } else
-        {
+        } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
-
 
 
         return "/pages/tables/profile";
     }
 
 
-
-
     @GetMapping("/employee/system/page")
-    public String systemPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
-    {
+    public String systemPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
 
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
@@ -136,24 +124,20 @@ public class PageController {
     }
 
     @GetMapping("/reset-password")
-    public String resetPasswordPage(Model model)
-    {
+    public String resetPasswordPage(Model model) {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
         return "update-password";
     }
 
     @GetMapping("/person/password/update/page")
-    public String updatePasswordPage(Model model)
-    {
+    public String updatePasswordPage(Model model) {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
         return "/pages/samples/change-password";
     }
 
 
-
     @GetMapping("/confirm/sign-up/page")
-    public ModelAndView confirmSignUpPage()
-    {
+    public ModelAndView confirmSignUpPage() {
 
         ModelAndView modelAndView = new ModelAndView();
 
@@ -164,8 +148,7 @@ public class PageController {
 
 
     @GetMapping("/confirm-account/token-expired/page")
-    public ModelAndView tokenExpirationPage()
-    {
+    public ModelAndView tokenExpirationPage() {
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("error", "410");
@@ -178,8 +161,7 @@ public class PageController {
 
 
     @GetMapping("/admin/material/page/error")
-    public String error(Model model)
-    {
+    public String error(Model model) {
         model.addAttribute("error", "404");
         model.addAttribute("description", "Nenašlo sa!");
 
@@ -187,18 +169,14 @@ public class PageController {
     }
 
 
-
     @GetMapping("/employee/students/page")
-    public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
-    {
+    public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
-        if (optionalPersonalInfo.isEmpty())
-        {
+        if (optionalPersonalInfo.isEmpty()) {
             return "redirect:/admin/material/page/error";
         }
-
 
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
@@ -208,11 +186,9 @@ public class PageController {
 
         model.addAttribute("students", students);
 
-        if (personalInfo.getGender().name().equals("FEMALE"))
-        {
+        if (personalInfo.getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
-        } else
-        {
+        } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
@@ -220,16 +196,13 @@ public class PageController {
     }
 
     @GetMapping("/employee/employees/page")
-    public String employeesPage(@AuthenticationPrincipal MyUserDetails myUserDetails,Model model)
-    {
+    public String employeesPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
-        if (optionalPersonalInfo.isEmpty())
-        {
+        if (optionalPersonalInfo.isEmpty()) {
             return "redirect:/admin/material/page/error";
         }
-
 
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
@@ -239,11 +212,9 @@ public class PageController {
 
         model.addAttribute("employees", employees);
 
-        if (personalInfo.getGender().name().equals("FEMALE"))
-        {
+        if (personalInfo.getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
-        } else
-        {
+        } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
@@ -251,12 +222,8 @@ public class PageController {
     }
 
 
-
-
-
     @GetMapping("/person/material/page")
-    public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails,Model model)
-    {
+    public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         List<File> files = this.fileService.findAll();
 
         model.addAttribute("files", files);
@@ -265,8 +232,7 @@ public class PageController {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
-        if (optionalPersonalInfo.isEmpty())
-        {
+        if (optionalPersonalInfo.isEmpty()) {
             return "redirect:/admin/material/page/error";
         }
 
@@ -275,11 +241,9 @@ public class PageController {
 
         model.addAttribute("personalInfo", personalInfo);
 
-        if (personalInfo.getGender().name().equals("FEMALE"))
-        {
+        if (personalInfo.getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
-        } else
-        {
+        } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
@@ -288,16 +252,14 @@ public class PageController {
     }
 
     @PostMapping("/admin/material/upload")
-    public ResponseEntity saveFile(@Valid FileDto fileDto)
-    {
+    public ResponseEntity saveFile(@Valid FileDto fileDto) {
         Long id = this.fileService.save(fileDto);
-        return new ResponseEntity<>(id,HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
 
     @GetMapping("/person/material/{id}")
-    public ResponseEntity findById(@PathVariable Long id)
-    {
+    public ResponseEntity findById(@PathVariable Long id) {
         Optional<File> optional = this.fileService.findById(id);
 
         if (optional.isEmpty()) {
@@ -307,37 +269,29 @@ public class PageController {
         this.fileService.remove(id);
 
 
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/material/{id}")
-    public ModelAndView remove(@PathVariable Long id)
-    {
+    public ModelAndView remove(@PathVariable Long id) {
         this.fileService.remove(id);
 
         return new ModelAndView("redirect:/admin/material/page");
     }
 
 
-
-
-
     @GetMapping("/login")
-    public String login()
-    {
+    public String login() {
         return "/pages/samples/sign-in";
     }
 
     @GetMapping("/forget-password-page")
-    public String forgetPassword()
-    {
+    public String forgetPassword() {
         return "/pages/samples/forgot-password";
     }
 
     @GetMapping("/person/chat/page")
-    public String chatPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
-    {
+    public String chatPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
 
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
@@ -348,16 +302,15 @@ public class PageController {
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
 
-        model.addAttribute("personalInfo",personalInfo);
+        model.addAttribute("personalInfo", personalInfo);
 
-        if (personalInfo.getAuthority() == Authority.TEACHER)
-        {
+        if (personalInfo.getAuthority() == Authority.TEACHER) {
 
             List<Student> students = this.studentService.findAll();
             if (students.isEmpty()) {
 
             }
-            model.addAttribute("students",students);
+            model.addAttribute("students", students);
 
         } else {
 
@@ -376,11 +329,9 @@ public class PageController {
         }
 
 
-        if (personalInfo.getGender().name().equals("FEMALE"))
-        {
+        if (personalInfo.getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
-        } else
-        {
+        } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
@@ -390,10 +341,9 @@ public class PageController {
 
 
     @GetMapping("/sign-up-page")
-    public String signUpPage(Model model, @RequestParam(value = "error", required=false) String error)
-    {
-        model.addAttribute("studentEmailDto",new StudentEmailDto());
-        model.addAttribute("personalInfoDto",new PersonalInfoDto());
+    public String signUpPage(Model model, @RequestParam(value = "error", required = false) String error) {
+        model.addAttribute("studentEmailDto", new StudentEmailDto());
+        model.addAttribute("personalInfoDto", new PersonalInfoDto());
         model.addAttribute("error", error);
         return "/pages/samples/sign-up";
     }
@@ -401,14 +351,11 @@ public class PageController {
 //*********************************************CUSTOMIZE************************************************************************
 
 
-
     //*********************************************CUSTOMIZE************************************************************************
 
 
-
     @GetMapping("/student/page")
-    public ModelAndView studentPage(@AuthenticationPrincipal MyUserDetails myUserDetails)
-    {
+    public ModelAndView studentPage(@AuthenticationPrincipal MyUserDetails myUserDetails) {
         String username = myUserDetails.getUsername();
         String name = myUserDetails.getName();
         String surname = myUserDetails.getSurname();
@@ -428,80 +375,56 @@ public class PageController {
     }
 
 
-
     @GetMapping("/person/home/page")
-    public String homePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model)
-    {
+    public String homePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByUsername(username);
 
-        if (personalInfoOptional.isEmpty())
-        {
+        if (personalInfoOptional.isEmpty()) {
 
         }
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 
 
-        model.addAttribute("personalInfo",personalInfo);
+        model.addAttribute("personalInfo", personalInfo);
 
 
-
-
-        if (personalInfo.getGender().name().equals("FEMALE"))
-        {
+        if (personalInfo.getGender().name().equals("FEMALE")) {
             model.addAttribute("imagePath", "/images/faces-clipart/female.png");
         } else {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
 
-
         return "index";
     }
 
 
-
     @GetMapping("/admin/file-list-upload")
-    public ModelAndView fileListUpload()
-    {
+    public ModelAndView fileListUpload() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("list-of-files");
         return modelAndView;
     }
 
 
-
-
     @GetMapping("/file/upload-csv-page")
-    public String uploadCSV(Model model)
-    {
-        this.emailService.sendSimpleMessage("asda","dasdas","dasdad","dasd");
+    public String uploadCSV(Model model) {
+        this.emailService.sendSimpleMessage("asda", "dasdas", "dasdad", "dasd");
         return "set-up-system";
     }
 
 
-
-
-
-
     @GetMapping("/admin/student/{id}")
-    public ModelAndView students(@PathVariable int id)
-    {
+    public ModelAndView students(@PathVariable int id) {
         Optional<PersonalInfo> optional = null;
-        PersonalInfo personalInfo = optional.get();
-        System.out.println(id);
+        PersonalInfo personalInfo = optional.get();;
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("person", personalInfo);
         modelAndView.setViewName("user-profile-admin-student");
         return modelAndView;
     }
-
-
-
-
-
-
 
 
 }

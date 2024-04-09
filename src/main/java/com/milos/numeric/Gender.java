@@ -1,7 +1,6 @@
 package com.milos.numeric;
 
-public enum Gender
-{
+public enum Gender {
     FEMALE,
     MALE;
 }

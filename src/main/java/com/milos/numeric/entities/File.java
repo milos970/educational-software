@@ -12,8 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class File
-{
+public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -35,7 +34,6 @@ public class File
     private String uploadedBy;
 
     private Long size;
-
 
 
 }

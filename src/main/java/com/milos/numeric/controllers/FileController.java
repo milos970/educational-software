@@ -1,6 +1,7 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
+import com.milos.numeric.entities.File;
 import com.milos.numeric.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -10,19 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Optional;
-import java.util.Random;
-import com.milos.numeric.entities.File;
-import java.nio.file.Path;
+
 @Controller
-public class FileController
-{
+public class FileController {
     private final FileService fileService;
     private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
 
@@ -36,8 +34,7 @@ public class FileController
     public String uploadFile(@RequestParam("file") MultipartFile file) {
 
         System.out.println(45);
-        try
-        {
+        try {
             this.fileService.store(file);
             return "redirect:/file/pdf";
         } catch (Exception e) {
@@ -46,26 +43,19 @@ public class FileController
         }
     }
 
-    @GetMapping("/admin/file")
-    public ModelAndView getFiles()
-    {
-        return new ModelAndView("/pages/tables/materialy", "files", this.fileService.findAll());
-    }
 
     @GetMapping("/person/material/file/{id}")
-    public ResponseEntity<String> getSpecificFile(@PathVariable Long id)
-    {
+    public ResponseEntity<String> getSpecificFile(@PathVariable Long id) {
         Optional<File> optional = this.fileService.findById(id);
 
-        if (optional.isEmpty())
-        {
+        if (optional.isEmpty()) {
 
         }
 
         File file = optional.get();
         Path filePath = Paths.get(file.getPath());
 
-        byte[] fileBytes= null;
+        byte[] fileBytes = null;
         try {
             fileBytes = Files.readAllBytes(filePath);
         } catch (IOException e) {
@@ -85,13 +75,10 @@ public class FileController
     }
 
     @DeleteMapping("/admin/file/delete/{id}")
-    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Long id)
-    {
+    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Long id) {
         this.fileService.remove(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 
 
 }

@@ -12,3 +12,4 @@ public class CsvFileDto
     @Size(max = 1024 * 1024, message = "File size must be less than 5MB")
     private MultipartFile file;
 }
+

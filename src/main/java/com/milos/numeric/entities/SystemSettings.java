@@ -37,8 +37,8 @@ public class SystemSettings
     private Employee employee;
 
     @DateValid
-    @Column(name = "class_date")
-    private String classDate;
+    @Column(name = "official_class_date")
+    private String officialClassDate;
 
     @Column(name = "number_of_days")
     private int numberOfDays;
@@ -47,4 +47,8 @@ public class SystemSettings
     @Min(1)
     @Max(13)
     private int schoolWeek;
+
+    @DateValid
+    @Column(name = "class_date")
+    private String classDate;
 }

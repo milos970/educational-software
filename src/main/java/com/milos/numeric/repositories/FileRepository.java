@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface FileRepository extends JpaRepository<File, Long>
-{
+public interface FileRepository extends JpaRepository<File, Long> {
     public File findByName(String name);
 
     public Optional<File> findById(Long id);

@@ -348,7 +348,7 @@
                                 <table class="table" style="color: white">
                                     <thead>
                                     <tr>
-                                        <th>Názov</th>
+                                        <th>Názov*</th>
                                         <th>Popis</th>
                                         <th></th>
                                         <th></th>
@@ -357,7 +357,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:if="${#lists.isEmpty(files)}">
-                                        <td colspan="2">Žiadny dokument</td>
+
                                     </tr>
                                     <tr th:id='${file.id}' th:each="file : ${files}">
                                         <td><span th:text="${file.name}"></span></td>

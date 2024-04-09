@@ -1,8 +1,6 @@
 package com.milos.numeric.repositories;
 
-import com.milos.numeric.Authority;
 import com.milos.numeric.entities.Employee;
-import com.milos.numeric.entities.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

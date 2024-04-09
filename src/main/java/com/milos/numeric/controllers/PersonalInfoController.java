@@ -25,12 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Controller
-public class PersonalInfoController
-{
+public class PersonalInfoController {
     private final PersonalInfoService personalInfoService;
 
     private final StudentService studentService;
@@ -48,20 +46,17 @@ public class PersonalInfoController
     }
 
     @PostMapping("/sign-up/student") //OK
-    public String checkIfValid(Model model, @Valid @ModelAttribute StudentEmailDto studentEmailDto, BindingResult result, RedirectAttributes redirectAttributes)
-    {
+    public String checkIfValid(Model model, @Valid @ModelAttribute StudentEmailDto studentEmailDto, BindingResult result, RedirectAttributes redirectAttributes) {
         Optional<PersonalInfo> optional = this.personalInfoService.findByEmail(studentEmailDto.getEmail());
 
-        if (optional.isEmpty())
-        {
+        if (optional.isEmpty()) {
             redirectAttributes.addAttribute("error", "Email neexistuje!");
             return "redirect:/sign-up-page";
         }
 
         PersonalInfo personalInfo = optional.get();
 
-        if (personalInfo.isEnabled())
-        {
+        if (personalInfo.isEnabled()) {
             redirectAttributes.addAttribute("error", "Účet s týmto emailom je už aktívny!");
             return "redirect:/sign-up-page";
         }
@@ -73,12 +68,9 @@ public class PersonalInfoController
     }
 
 
-
     @GetMapping("/active-account")//OK
-    public String activeAccount(@RequestParam("token")String code)
-    {
-        if (!this.verificationTokenService.isTokenValid(code))
-        {
+    public String activeAccount(@RequestParam("token") String code) {
+        if (!this.verificationTokenService.isTokenValid(code)) {
             return "redirect:/sign-in";
         }
 
@@ -88,15 +80,13 @@ public class PersonalInfoController
 
         PersonalInfo personalInfo = verificationToken.getPersonalInfo();
 
-        if (personalInfo.getAuthority() == Authority.EMPLOYEE)
-        {
+        if (personalInfo.getAuthority() == Authority.EMPLOYEE) {
             personalInfo.setEnabled(true);
             this.employeeService.createEmployee(personalInfo);
         }
 
 
-        if (personalInfo.getAuthority() == Authority.STUDENT)
-        {
+        if (personalInfo.getAuthority() == Authority.STUDENT) {
             personalInfo.setEnabled(true);
             this.studentService.createStudent(personalInfo);
         }
@@ -107,11 +97,9 @@ public class PersonalInfoController
 
 
     @GetMapping("/reset-password/page")
-    public ModelAndView resetPasswordPage(@RequestParam("token")String code)
-    {
+    public ModelAndView resetPasswordPage(@RequestParam("token") String code) {
 
-        if (!this.verificationTokenService.isTokenValid(code))
-        {
+        if (!this.verificationTokenService.isTokenValid(code)) {
 
         }
 
@@ -119,34 +107,28 @@ public class PersonalInfoController
         ModelAndView model = new ModelAndView();
         model.setViewName("/pages/samples/reset-password");
         model.addObject("url", "/reset-password/?token=" + code);
-        model.addObject("resetPasswordDto",new ResetPasswordDto());
+        model.addObject("resetPasswordDto", new ResetPasswordDto());
         return model;
     }
 
 
-
-
     @PatchMapping("/reset-password/")
-    public String resetPassword(@RequestParam("token")String code, @Valid @ModelAttribute ResetPasswordDto resetPasswordDto)
-    {
+    public String resetPassword(@RequestParam("token") String code, @Valid @ModelAttribute ResetPasswordDto resetPasswordDto) {
 
-        if (!this.verificationTokenService.isTokenValid(code))
-        {
+        if (!this.verificationTokenService.isTokenValid(code)) {
             return "redirect:/sign-up";
         }
 
         PersonalInfo personalInfo = this.verificationTokenService.findByCode(code).get().getPersonalInfo();
-        this.personalInfoService.resetPassword(personalInfo.getUsername(),resetPasswordDto);
+        this.personalInfoService.resetPassword(personalInfo.getUsername(), resetPasswordDto);
 
         return "redirect:/sign-up";
     }
 
 
     @GetMapping("/confirm-email")
-    public String confirmEmail(@RequestParam("token")String code)
-    {
-        if (this.verificationTokenService.isTokenValid(code))
-        {
+    public String confirmEmail(@RequestParam("token") String code) {
+        if (this.verificationTokenService.isTokenValid(code)) {
             return "redirect:/reset-password/page";
         }
 
@@ -155,10 +137,8 @@ public class PersonalInfoController
 
 
     @PostMapping("/person/password/update") //OK
-    public String updatePassword(@AuthenticationPrincipal MyUserDetails myUserDetails, @Valid @ModelAttribute("newPasswordDto") NewPasswordDto newPasswordDto, BindingResult result)
-    {
-        if (result.hasErrors())
-        {
+    public String updatePassword(@AuthenticationPrincipal MyUserDetails myUserDetails, @Valid @ModelAttribute("newPasswordDto") NewPasswordDto newPasswordDto, BindingResult result) {
+        if (result.hasErrors()) {
 
             return "/pages/samples/change-password";
         }
@@ -170,15 +150,11 @@ public class PersonalInfoController
     }
 
 
-
-
     @PostMapping("/user/create") //OK
-    public ResponseEntity createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO)
-    {
+    public ResponseEntity createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO) {
         Optional<PersonalInfo> optional = this.personalInfoService.createPerson(personalInfoDTO);
 
-        if (optional.isEmpty())
-        {
+        if (optional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -194,12 +170,10 @@ public class PersonalInfoController
 
 
     @PostMapping("/admin/upload/file/csv")//OK
-    public ResponseEntity createStudents(@RequestParam("file") MultipartFile file)
-    {
+    public ResponseEntity createStudents(@RequestParam("file") MultipartFile file) {
         this.personalInfoService.createMultiplePersonsFromFile(file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
 
 
 }

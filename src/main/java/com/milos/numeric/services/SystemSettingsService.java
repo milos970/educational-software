@@ -11,11 +11,16 @@ import com.milos.numeric.repositories.SystemSettingsRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -26,11 +31,22 @@ public class SystemSettingsService
     private final DateParser dateParser;
 
     @Autowired
+    private TaskScheduler taskScheduler;
+
+    @Autowired
     public SystemSettingsService(SystemSettingsRepository systemSettingsRepository, EmployeeService employeeService, DateParser dateParser)
     {
         this.systemSettingsRepository = systemSettingsRepository;
         this.employeeService = employeeService;
         this.dateParser = dateParser;
+    }
+
+
+
+
+    private void scheduleTask(String cronExpression) {
+        taskScheduler.schedule(() -> {
+        }, new CronTrigger(cronExpression));
     }
 
 
@@ -64,7 +80,7 @@ public class SystemSettingsService
     }
 
     @Scheduled(fixedRate = 60000)
-    public boolean incrementWeeks()
+    private boolean incrementWeeks()
     {
         Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
 
@@ -86,7 +102,7 @@ public class SystemSettingsService
         return true;
     }
 
-    
+
 
 
 
@@ -119,9 +135,39 @@ public class SystemSettingsService
             return false;
         }
 
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        Date date = null;
+        try {
+            date = inputFormat.parse(newDateDto.getDate());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        SimpleDateFormat cronFormat = new SimpleDateFormat("ss mm HH dd MM ? yyyy");
+        String cronExpression = cronFormat.format(date);
+
+        this.scheduleTask(cronExpression);
 
         SystemSettings systemSettings = optionalSystemSettings.get();
         systemSettings.setClassDate(newDateDto.getDate());
+
+        this.systemSettingsRepository.save(systemSettings);
+        return true;
+    }
+
+    public boolean updateOfficialDate(NewDateDto newDateDto)
+    {
+        Optional<SystemSettings> optionalSystemSettings = this.systemSettingsRepository.findFirst();
+
+        if (optionalSystemSettings.isEmpty())
+        {
+
+            return false;
+        }
+
+
+        SystemSettings systemSettings = optionalSystemSettings.get();
+        systemSettings.setOfficialClassDate(newDateDto.getDate());
 
         this.systemSettingsRepository.save(systemSettings);
         return true;

@@ -326,7 +326,7 @@
                                             <td th:text="${systemSettings.getEmployee().personalInfo.name + ' ' + systemSettings.getEmployee().personalInfo.surname}"></td>
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                                                 <div class="input-group">
-                                                    <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať vyučujúceho"  class="form-control" aria-label="Recipient's username"
+                                                    <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať zamestnanca"  class="form-control" aria-label="Recipient's username"
                                                            aria-describedby="basic-addon2">
                                                 </div>
                                                 <p class="error" id="username-hint-error"></p>
