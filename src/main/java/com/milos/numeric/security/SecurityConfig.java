@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
@@ -26,11 +28,11 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig
 {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-
         MvcRequestMatcher.Builder mvcMatcherBuilderA = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderB = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderC = new MvcRequestMatcher.Builder(introspector);
@@ -47,7 +49,7 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderO = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
-        http
+        http.csrf(Customizer.withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers(mvcMatcherBuilderA.pattern("/css/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderB.pattern("/js/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderF.pattern("/scss/**")).permitAll()
@@ -77,12 +79,13 @@ public class SecurityConfig
 
                 .permitAll())
                 .logout((logout) -> logout.logoutUrl("/logout").logoutSuccessUrl("/login"))
-                .authenticationManager(authManager(http))
-                ;
+                .authenticationManager(authManager(http));
 
 
         return http.build();
     }
+
+
 
 
     @Bean
@@ -119,7 +122,6 @@ public class SecurityConfig
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler()
     {
-
         return new CustomAuthenticationFailureHandler();
     }
 
@@ -128,6 +130,8 @@ public class SecurityConfig
     {
         return new CustomAuthenticationSuccessHandler();
     }
+
+
 
 
 }

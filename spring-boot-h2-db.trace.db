@@ -4789,3 +4789,9 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295)
 	at com.milos.numeric.NumericApplication.main(NumericApplication.java:14)
+2024-04-10 20:30:03 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "drop table personal_info[*]*/"; SQL statement:
+drop table personal_info*/ [42000-214]
+2024-04-10 20:30:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSONAL_INFO" not found; SQL statement:
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (0,'Lýdia','Gábrišová','lydia.gabrisova', '56478', 'lydia.gabrisova@fri.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','TEACHER', true) [42102-214]

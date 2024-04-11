@@ -14,6 +14,7 @@ import org.springframework.cglib.core.Local;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.ScheduledFuture;
 
 @Service
 public class SystemSettingsService
@@ -30,8 +32,8 @@ public class SystemSettingsService
     private final EmployeeService employeeService;
     private final DateParser dateParser;
 
-    @Autowired
-    private TaskScheduler taskScheduler;
+
+
 
     @Autowired
     public SystemSettingsService(SystemSettingsRepository systemSettingsRepository, EmployeeService employeeService, DateParser dateParser)
@@ -43,10 +45,30 @@ public class SystemSettingsService
 
 
 
+    @Scheduled(cron = "0 35 22 * * *")
+    public void addWeek()
+    {
 
-    private void scheduleTask(String cronExpression) {
-        taskScheduler.schedule(() -> {
-        }, new CronTrigger(cronExpression));
+        Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
+
+        if (optional.isEmpty())
+        {
+
+        }
+
+        SystemSettings systemSettings = optional.get();
+
+        LocalDateTime classDate = this.dateParser.parseStringToLocalDate(systemSettings.getClassDate());
+
+        LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
+
+        if (classDate.getDayOfMonth() == now.getDayOfMonth() && classDate.getMonth() == now.getMonth())
+        {
+            systemSettings.setClassDate(this.dateParser.parseLocalDateToString(classDate.plusWeeks(1)));
+            this.systemSettingsRepository.save(systemSettings);
+        }
+        this.incrementDays();
+
     }
 
 
@@ -54,9 +76,10 @@ public class SystemSettingsService
         return this.systemSettingsRepository.findFirst();
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 0 0 * * *")
     public boolean incrementDays()
     {
+
         Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
 
         if (optional.isEmpty())
@@ -79,7 +102,7 @@ public class SystemSettingsService
         return true;
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 0 0 * * SUN")
     private boolean incrementWeeks()
     {
         Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
@@ -143,10 +166,6 @@ public class SystemSettingsService
             throw new RuntimeException(e);
         }
 
-        SimpleDateFormat cronFormat = new SimpleDateFormat("ss mm HH dd MM ? yyyy");
-        String cronExpression = cronFormat.format(date);
-
-        this.scheduleTask(cronExpression);
 
         SystemSettings systemSettings = optionalSystemSettings.get();
         systemSettings.setClassDate(newDateDto.getDate());
@@ -155,23 +174,6 @@ public class SystemSettingsService
         return true;
     }
 
-    public boolean updateOfficialDate(NewDateDto newDateDto)
-    {
-        Optional<SystemSettings> optionalSystemSettings = this.systemSettingsRepository.findFirst();
-
-        if (optionalSystemSettings.isEmpty())
-        {
-
-            return false;
-        }
-
-
-        SystemSettings systemSettings = optionalSystemSettings.get();
-        systemSettings.setOfficialClassDate(newDateDto.getDate());
-
-        this.systemSettingsRepository.save(systemSettings);
-        return true;
-    }
 
 
     public boolean updateTeacher(NewTeacherDto newTeacherDto)

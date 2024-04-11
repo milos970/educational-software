@@ -1,0 +1,8 @@
+﻿Rovnica;2x + 1 = 0
+Tolerancia;0.000001
+Počiatočná aproximácia;2
+Vypočítaný koreň rovnice;-0.500000
+
+k;x;Chyba
+0;2.000000;2.500000
+1;-0.500000;0.000000

@@ -1392,11 +1392,6 @@ function graph()
 
 
 
-function clickOnInput() {
-    const element = document.getElementById("file-input");
-
-    element.click();
-}
 
 
 /////////////////////////////////////////Aproximation & interpolation///////////////////////////////////////////////////////////////
@@ -2668,6 +2663,7 @@ function validateStudentsCsv()
 
 function updateSystemAbsents()
 {
+    alert(45);
     const errorHint = getById("absents-hint-error");
     const absentsInputElement = getById("absents-input");
     const absentsButton = getById("absents-button");
@@ -2891,12 +2887,15 @@ function validateDate(dateString)
 
 function isEmpty(element, hintElement)
 {
-    if (element.length === 0)
+    if (element.value.length === 0)
     {
         hintElement.innerHTML = "Pole je prázdne!";
+        return true;
     } else {
-        hintElement.innerHTML = "Pole je prázdne!";
+        hintElement.innerHTML = "";
     }
+
+    return false;
 }
 
 
@@ -2924,6 +2923,10 @@ function numberSizeInInterval(element, hintElement)
 
 function checkFileType(element, hintElement)
 {
+    if (!element.files[0])
+    {
+        hintElement.innerHTML = "Vložte súbor!";
+    }
     const MAX_FILE_SIZE = parseInt(element.getAttribute('size'), 10);
 
     const ALLOWED_TYPES = [
@@ -2946,20 +2949,20 @@ function checkFileType(element, hintElement)
         hintElement.innerHTML = "";
     } else {
         hintElement.innerHTML = "Veľkosť súboru presahuje limit!";
-        return;
+        return false;
     }
-    alert(file.type);
+
 
     if (ALLOWED_TYPES.includes(file.type))
     {
         hintElement.innerHTML = "";
     } else {
         hintElement.innerHTML = "Nepodporovaný typ súboru!";
-        return;
+        return false;
     }
 
 
-
+return true;
 }
 
 
@@ -2973,9 +2976,6 @@ function checkFileType(element, hintElement)
 
 function uploadStudentsCsv()
 {
-
-
-
     if (getById("file-input").files.length === 0)
     {
         getById("students-csv-hint-error").innerHTML = "Poľe je prázdne!";
@@ -3022,12 +3022,245 @@ function uploadStudentsCsv()
 }
 
 
+function setFileName()
+{
+    const inputFileNameElement = getById("text-input");
+    const inputFileElement = getById("file-input");
+
+    inputFileNameElement.value = inputFileElement.files[0].name;
+}
 
 
 
 
 
 
+
+$(function() {
+    var Accordion = function(el, multiple) {
+        this.el = el || {};
+        this.multiple = multiple || false;
+
+        var links = this.el.find('.link');
+
+        links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+    }
+
+    Accordion.prototype.dropdown = function(e) {
+        var $el = e.data.el;
+        $this = $(this),
+            $next = $this.next();
+
+        $next.slideToggle();
+        $this.parent().toggleClass('open');
+
+        if (!e.data.multiple) {
+            $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+        };
+    }
+
+    var accordion = new Accordion($('#accordion'), false);
+});
+
+
+
+
+
+function openFile(name)
+{
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+
+        if (xhttp.status === 200) {
+
+            let decodedData = atob(xhttp.response);
+            let uint8Array = new Uint8Array(decodedData.length);
+
+            for (var i = 0; i < decodedData.length; i++) {
+                uint8Array[i] = decodedData.charCodeAt(i);
+            }
+
+            let blob = new Blob([uint8Array], { type: xhttp.getResponseHeader("Content-Type") });
+            let link = document.createElement('a');
+
+            link.href = window.URL.createObjectURL(blob);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+
+    }
+
+    const url = "/person/material/file/" + name;
+
+    xhttp.open("GET", url, true);
+    xhttp.send();
+}
+
+function checkFile(name)
+{
+    let exists = false;
+    const xhttp = new XMLHttpRequest();
+
+
+    xhttp.onload = function()
+    {
+        const inputNameErrorHint = getById("name-input-error-hint");
+
+        if (xhttp.status === 200)
+        {
+            inputNameErrorHint.innerHTML = "Súbor s týmto názvom už existuje!";
+            exists = true;
+
+        } else {
+            inputNameErrorHint.innerHTML = "";
+            exists = falses;
+        }
+
+    }
+
+    const url = "/person/material/file/check-name/" + name;
+
+    xhttp.open("GET", url, false);
+    xhttp.send();
+
+    return exists;
+}
+
+function deleteFile(name)
+{
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function()
+    {
+
+        const element = document.getElementById(name);
+        element.remove();
+
+    }
+
+    const url = "/admin/file/delete/" + name;
+
+    xhttp.open("DELETE", url, true);
+    xhttp.send();
+}
+
+
+function uploadFile()
+{
+
+
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function()
+    {
+
+        if (xhttp.status === 200)
+        {
+
+            let row = document.createElement("tr");
+            let body = document.getElementsByTagName("tbody")[0];
+
+
+
+            row.setAttribute("id", getById("name-input").value);
+
+
+            var nameCell = document.createElement("td");
+            var nameSpan = document.createElement("span");
+            nameSpan.textContent = document.getElementById("name-input").value;
+            nameCell.appendChild(nameSpan);
+
+            var descriptionCell = document.createElement("td");
+            var descriptionSpan = document.createElement("span");
+            descriptionSpan.textContent = document.getElementById("file-description").value;
+            descriptionCell.appendChild(descriptionSpan);
+
+            var showButtonCell = document.createElement("td");
+            var showButton = document.createElement("button");
+            showButton.setAttribute("type", "button");
+            showButton.setAttribute("class", "btn btn-success btn-icon-text");
+            showButton.setAttribute("onclick", "openFile('" + xhttp.responseText + "')");
+            showButton.innerHTML = '<i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť';
+            showButtonCell.appendChild(showButton);
+
+            row.appendChild(nameCell);
+            row.appendChild(descriptionCell);
+            row.appendChild(showButtonCell);
+            body.appendChild(row);
+
+            let deleteButtonCell = document.createElement("td");
+            var deleteButton = document.createElement("button");
+            deleteButton.setAttribute("type", "button");
+            deleteButton.setAttribute("class", "btn btn-danger btn-icon-text");
+            deleteButton.setAttribute("onclick", "deleteFile('" + xhttp.responseText + "')");
+            deleteButton.innerHTML = '<i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť';
+            deleteButtonCell.appendChild(deleteButton);
+
+            row.appendChild(deleteButtonCell);
+
+
+
+
+        }
+
+    }
+
+    const url = "/admin/material/upload";
+
+    let formData = new FormData();
+    formData.append("name", document.getElementById("name-input").value);
+    formData.append("description", document.getElementById("file-description").value);
+    formData.append("data", document.getElementById("file-input").files[0]);
+
+
+    xhttp.open("POST", url, true);
+
+    xhttp.send(formData);
+}
+
+
+function canSubmit()
+{
+    const nameInputElement = getById("name-input");
+    const nameInputErrorHint = getById("name-input-error-hint");
+
+    const fileInputElement = getById("file-input");
+    const fileInputElementErrorHint = getById("file-input-error-hint");
+
+
+    if (isEmpty(nameInputElement, nameInputErrorHint))
+    {
+        return ;
+    }
+
+    if (checkFile(nameInputElement.value))
+    {
+        alert("EXISTUJE");
+        return;
+    } else {
+        alert("NEEXISTUJE");
+    }
+
+
+    if (checkFileType(fileInputElement, fileInputElementErrorHint))
+    {
+
+        uploadFile();
+    }
+}
+
+
+function clickOnInput() {
+    const element = document.getElementById("file-input");
+
+    element.click();
+}
 
 
 

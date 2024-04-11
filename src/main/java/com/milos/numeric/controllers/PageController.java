@@ -226,6 +226,8 @@ public class PageController {
     public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         List<File> files = this.fileService.findAll();
 
+
+
         model.addAttribute("files", files);
         model.addAttribute("FileDto", new FileDto());
 
@@ -258,26 +260,6 @@ public class PageController {
     }
 
 
-    @GetMapping("/person/material/{id}")
-    public ResponseEntity findById(@PathVariable Long id) {
-        Optional<File> optional = this.fileService.findById(id);
-
-        if (optional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        this.fileService.remove(id);
-
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/admin/material/{id}")
-    public ModelAndView remove(@PathVariable Long id) {
-        this.fileService.remove(id);
-
-        return new ModelAndView("redirect:/admin/material/page");
-    }
 
 
     @GetMapping("/login")

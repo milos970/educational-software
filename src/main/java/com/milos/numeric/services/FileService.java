@@ -32,22 +32,36 @@ public class FileService
     }
 
 
+    public boolean existsByName(String name)
+    {
+        return this.fileRepository.existsByName(name);
+    }
+
+    public Optional<File> findByName(String name)
+    {
+        return this.fileRepository.findByName(name);
+    }
+
+
     public Long save(FileDto fileDto)
     {
+
         String fileName = fileDto.getData().getOriginalFilename();
 
         Path filePath = Paths.get("src", "main", "resources", "static", "materials", fileName);
         String uri = filePath.toString();
 
         byte[] fileBytes= new byte[0];
-        try {
+        try
+        {
             fileBytes = fileDto.getData().getBytes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
 
-        try {
+        try
+        {
             Files.write(filePath, fileBytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -57,13 +71,10 @@ public class FileService
         File file = this.fileDtoMapper.sourceToDestination(fileDto);
 
         file.setPath(uri);
-        this.fileRepository.save(file);
+        File entity = this.fileRepository.save(file);
 
-        Optional<File> optionalFile = this.fileRepository.findTopByOrderByIdDesc();
-
-        System.out.println("sdafdf" + optionalFile.get().getId());
-
-        return optionalFile.get().getId();
+        entity.setName(entity.getName() + ":" + entity.getId());
+        return entity.getId();
     }
 
     public List<File> findAll()
@@ -86,22 +97,24 @@ public class FileService
     }
 
 
-    public List<PersonalInfo> convert(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-
-        return null;
-    }
-
-    public Object getFile(Long id) {
-        return null;
-    }
 
 
 
-
-    public void remove(Long id)
+    public boolean delete(String name)
     {
-        this.fileRepository.deleteById(id);
+        Optional<File> optional = this.fileRepository.findByName(name);
+
+        if (optional.isEmpty())
+        {
+            return false;
+        }
+
+        String filePath = optional.get().getPath();
+        java.io.File fileToDelete = new java.io.File(filePath);
+        fileToDelete.delete();
+
+        this.fileRepository.deleteById(optional.get().getId());
+        return true;
+
     }
 }

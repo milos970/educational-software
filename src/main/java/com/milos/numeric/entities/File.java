@@ -1,11 +1,13 @@
 package com.milos.numeric.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Getter
@@ -18,6 +20,7 @@ public class File {
     private Long id;
 
     @Size(min = 5, max = 100, message = "{validation.name.size.too_long}")
+    @Column(unique = true)
     private String path;
 
     @Column(name = "name")
@@ -32,6 +35,7 @@ public class File {
 
     @Column(name = "uploaded_by")
     private String uploadedBy;
+
 
     private Long size;
 

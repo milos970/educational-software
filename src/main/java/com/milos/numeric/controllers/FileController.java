@@ -33,7 +33,7 @@ public class FileController {
     @PostMapping("/admin/file/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
 
-        System.out.println(45);
+
         try {
             this.fileService.store(file);
             return "redirect:/file/pdf";
@@ -43,10 +43,24 @@ public class FileController {
         }
     }
 
+    @GetMapping("/person/material/file/check-name/{name}")
+    public ResponseEntity<String> existsByName(@PathVariable String name)
+    {
+        if (this.fileService.existsByName(name))
+        {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
-    @GetMapping("/person/material/file/{id}")
-    public ResponseEntity<String> getSpecificFile(@PathVariable Long id) {
-        Optional<File> optional = this.fileService.findById(id);
+
+
+
+    @GetMapping("/person/material/file/{name}")
+    public ResponseEntity<String> getSpecificFile(@PathVariable String name) {
+        System.out.println(123);
+        Optional<File> optional = this.fileService.findByName(name);
 
         if (optional.isEmpty()) {
 
@@ -74,9 +88,9 @@ public class FileController {
         return new ResponseEntity<>(base64EncodedFile, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/file/delete/{id}")
-    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable Long id) {
-        this.fileService.remove(id);
+    @DeleteMapping("/admin/file/delete/{name}")
+    public ResponseEntity<byte[]> removeSpecificFile(@PathVariable String name) {
+        this.fileService.delete(name);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
