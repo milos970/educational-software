@@ -23,11 +23,6 @@ public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long
     @Query(value = "SELECT * FROM personal_info p WHERE p.email =:email and p.enabled = false", nativeQuery = true)
     public Optional<PersonalInfo> findNotEnabled(String email);
 
-
-
-        /*@Query(value = "SELECT * FROM Person u WHERE u.authority <> ADMIN", nativeQuery = true)
-        public List<Person> findAllExceptAdmin();
-    */
     @Override
     List<PersonalInfo> findAll(Sort sort);
 }

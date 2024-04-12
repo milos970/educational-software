@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.milos.numeric.Authority;
 import com.milos.numeric.Domain;
 import com.milos.numeric.Gender;
+import com.milos.numeric.TokenType;
 import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
@@ -59,6 +60,8 @@ public class PersonalInfoService
 
     private final Validator validator;
 
+    private final EmailServiceImpl emailService;
+
 
 
     @Autowired
@@ -69,7 +72,7 @@ public class PersonalInfoService
 
 
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, SystemSettingsService systemSettingsService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, Validator validator, VerificationTokenService verificationTokenService) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, SystemSettingsService systemSettingsService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, Validator validator, EmailServiceImpl emailService, VerificationTokenService verificationTokenService) {
         this.personalInfoRepository = personalInfoRepository;
         this.studentService = studentService;
         this.employeeService = employeeService;
@@ -77,7 +80,36 @@ public class PersonalInfoService
         this.chatService = chatService;
         this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.validator = validator;
+        this.emailService = emailService;
         this.verificationTokenService = verificationTokenService;
+    }
+
+    public boolean generatePassword(String username)
+    {
+        Optional<PersonalInfo> optional = this.personalInfoRepository.findByUsername(username);
+
+        if (optional.isEmpty())
+        {
+            return false;
+        }
+
+        PersonalInfo personalInfo = optional.get();
+
+        String generatedPassword = "Heslisko@256";
+        String hashedPassword = this.passwordEncoder.encode(generatedPassword);
+        personalInfo.setPassword(hashedPassword);
+
+        try {
+            this.emailService.sendPassword(personalInfo.getEmail(),generatedPassword);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        this.personalInfoRepository.save(personalInfo);
+        return true;
     }
 
 
@@ -92,7 +124,7 @@ public class PersonalInfoService
 
         PersonalInfo personalInfo = optional.get();
 
-        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo);
+        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.RESET_PASSWORD);
 
         this.verificationTokenService.sendToken(verificationToken);
 

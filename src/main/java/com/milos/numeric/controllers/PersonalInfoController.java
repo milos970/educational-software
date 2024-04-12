@@ -1,6 +1,7 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
+import com.milos.numeric.TokenType;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.dtos.ResetPasswordDto;
@@ -22,10 +23,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class PersonalInfoController {
@@ -61,7 +62,7 @@ public class PersonalInfoController {
             return "redirect:/sign-up-page";
         }
 
-        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo);
+        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
 
         this.verificationTokenService.sendToken(verificationToken);
         return "redirect:/sign-in-page";
@@ -69,11 +70,8 @@ public class PersonalInfoController {
 
 
     @GetMapping("/active-account")//OK
-    public String activeAccount(@RequestParam("token") String code) {
-        if (!this.verificationTokenService.isTokenValid(code)) {
-            return "redirect:/sign-in";
-        }
-
+    public String activeAccount(@RequestParam("token") String code)
+    {
         Optional<VerificationToken> optionalVerificationToken = this.verificationTokenService.findByCode(code);
 
         VerificationToken verificationToken = optionalVerificationToken.get();
@@ -83,36 +81,21 @@ public class PersonalInfoController {
         if (personalInfo.getAuthority() == Authority.EMPLOYEE) {
             personalInfo.setEnabled(true);
             this.employeeService.createEmployee(personalInfo);
-        }
 
-
-        if (personalInfo.getAuthority() == Authority.STUDENT) {
+            return "redirect:/sign-in";
+        } else
+        {
             personalInfo.setEnabled(true);
             this.studentService.createStudent(personalInfo);
+
+            return "redirect:/sign-in";
         }
 
-
-        return "redirect:/sign-in";
     }
 
 
-    @GetMapping("/reset-password/page")
-    public ModelAndView resetPasswordPage(@RequestParam("token") String code) {
 
-        if (!this.verificationTokenService.isTokenValid(code)) {
-
-        }
-
-
-        ModelAndView model = new ModelAndView();
-        model.setViewName("/pages/samples/reset-password");
-        model.addObject("url", "/reset-password/?token=" + code);
-        model.addObject("resetPasswordDto", new ResetPasswordDto());
-        return model;
-    }
-
-
-    @PatchMapping("/reset-password/")
+    @PatchMapping("/reset-password")
     public String resetPassword(@RequestParam("token") String code, @Valid @ModelAttribute ResetPasswordDto resetPasswordDto) {
 
         if (!this.verificationTokenService.isTokenValid(code)) {
@@ -126,10 +109,28 @@ public class PersonalInfoController {
     }
 
 
-    @GetMapping("/confirm-email")
-    public String confirmEmail(@RequestParam("token") String code) {
+    @GetMapping("/confirm-email")//OK
+    public String confirmEmail(@RequestParam("token") String code)
+    {
         if (this.verificationTokenService.isTokenValid(code)) {
             return "redirect:/reset-password/page";
+        }
+
+        Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByCode(code);
+
+        VerificationToken verificationToken = verificationTokenOptional.get();
+
+
+        if (verificationToken.getTokenType() == TokenType.ACTIVATE_ACCOUNT)
+        {
+            return "redirect:/activate-account?token=" + verificationTokenOptional.get().getCode();
+        }
+
+        if (verificationToken.getTokenType() == TokenType.RESET_PASSWORD)
+        {
+            PersonalInfo personalInfo = verificationToken.getPersonalInfo();
+            this.personalInfoService.generatePassword(personalInfo.getUsername());
+            return "redirect:/sign-in";
         }
 
         return "redirect:/sign-in";
@@ -160,7 +161,7 @@ public class PersonalInfoController {
 
         PersonalInfo personalInfo = optional.get();
 
-        VerificationToken token = this.verificationTokenService.createToken(personalInfo);
+        VerificationToken token = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
 
         this.verificationTokenService.sendToken(token);
 

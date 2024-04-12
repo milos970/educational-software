@@ -1,5 +1,6 @@
 package com.milos.numeric.entities;
 
+import com.milos.numeric.TokenType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,8 @@ public class VerificationToken
     @JoinColumn(nullable = false, name = "person_id")
     private PersonalInfo personalInfo;
 
-
-
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
 
 
 

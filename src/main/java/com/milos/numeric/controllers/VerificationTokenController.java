@@ -1,5 +1,6 @@
 package com.milos.numeric.controllers;
 
+import com.milos.numeric.TokenType;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.services.PersonalInfoService;
@@ -23,8 +24,10 @@ public class VerificationTokenController {
     }
 
 
-    @GetMapping("/create-token")
-    public String sendToken(@RequestParam("email") String email) {
+
+
+    @GetMapping("/activate-account/create-token")
+    public String createTokenForActivateAccount(@RequestParam("email") String email) {
 
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
@@ -37,14 +40,44 @@ public class VerificationTokenController {
 
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByEmail(email);
 
-        if (verificationTokenOptional.isPresent()) {
+        if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.ACTIVATE_ACCOUNT) {
             return "redirect:/sign-in";
         }
 
-        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo);
+        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
         this.verificationTokenService.sendToken(verificationToken);
 
 
         return "redirect:/sign-in";
     }
+
+    @GetMapping("/reset-password/create-token")
+    public String createTokenForResetPassword(@RequestParam("email") String email) {
+
+        Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
+
+        if (personalInfoOptional.isEmpty()) {
+
+            return "redirect:/sign-in";
+        }
+
+        PersonalInfo personalInfo = personalInfoOptional.get();
+
+        Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByEmail(email);
+
+        if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.RESET_PASSWORD)
+        {
+            if (this.verificationTokenService.isTokenValid(verificationTokenOptional.get().getCode()))
+            {
+                return "redirect:/sign-in";
+            }
+
+        }
+
+        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.RESET_PASSWORD);
+        this.verificationTokenService.sendToken(verificationToken);
+
+        return "redirect:/sign-in";
+    }
+
 }

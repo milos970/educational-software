@@ -1,6 +1,7 @@
 package com.milos.numeric.services;
 
 import com.milos.numeric.DateParser;
+import com.milos.numeric.TokenType;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
@@ -55,7 +56,7 @@ public class VerificationTokenService
         return true;
     }
 
-    public VerificationToken createToken(PersonalInfo personalInfo)
+    public VerificationToken createToken(PersonalInfo personalInfo, TokenType tokenType)
     {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setPersonalInfo(personalInfo);
@@ -65,6 +66,7 @@ public class VerificationTokenService
 
         verificationToken.setExpirationDate(dateParser.parseLocalDateToString(localDateTime));
         verificationToken.setCode(UUID.randomUUID().toString());
+        verificationToken.setTokenType(tokenType);
 
         return this.verificationTokenRepository.save(verificationToken);
     }

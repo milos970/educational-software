@@ -31,9 +31,28 @@ public class EmailServiceImpl
         this.emailSender.send(message);
     }
 
+    public void sendPassword(String email, String password) throws MessagingException, UnsupportedEncodingException {
+        String toAddress = email;
+        String fromAddress = "numerika2024@gmail.com";
+        String senderName = "Numerika";
+        String subject = "Obnova hesla";
+        String content = "Vaše vygenerované heslo: " + password + ". Prosím po prihlásení si ho zmente!";
+
+        MimeMessage message = this.emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        helper.setText(content, true);
+
+        this.emailSender.send(message);
+    }
+
     public void sendVerificationEmail(VerificationToken token) throws MessagingException, UnsupportedEncodingException {
         String toAddress = token.getPersonalInfo().getEmail();
-        String fromAddress = "justforthetest45@gmail.com";
+        String fromAddress = "numerika2024@gmail.com";
         String senderName = "Numerika";
         String subject = "Verifikácia emailu";
         String content = "To confirm your account, please click here : "
