@@ -3066,7 +3066,7 @@ $(function() {
 
 
 
-function openFile(name)
+function openFile(id)
 {
     const xhttp = new XMLHttpRequest();
 
@@ -3096,7 +3096,7 @@ function openFile(name)
 
     }
 
-    const url = "/person/material/file/" + name;
+    const url = "/person/material/" + id;
 
     xhttp.open("GET", url, true);
     xhttp.send();
@@ -3119,12 +3119,12 @@ function checkFile(name)
 
         } else {
             inputNameErrorHint.innerHTML = "";
-            exists = falses;
+            exists = false;
         }
 
     }
 
-    const url = "/person/material/file/check-name/" + name;
+    const url = "/admin/material/check-by-name/" + name;
 
     xhttp.open("GET", url, false);
     xhttp.send();
@@ -3132,19 +3132,19 @@ function checkFile(name)
     return exists;
 }
 
-function deleteFile(name)
+function deleteFile(id)
 {
     const xhttp = new XMLHttpRequest();
 
     xhttp.onload = function()
     {
 
-        const element = document.getElementById(name);
+        const element = document.getElementById(id);
         element.remove();
 
     }
 
-    const url = "/admin/file/delete/" + name;
+    const url = "/admin/material/delete/" + id;
 
     xhttp.open("DELETE", url, true);
     xhttp.send();

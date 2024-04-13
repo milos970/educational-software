@@ -25,4 +25,5 @@ public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long
 
     @Override
     List<PersonalInfo> findAll(Sort sort);
+
 }

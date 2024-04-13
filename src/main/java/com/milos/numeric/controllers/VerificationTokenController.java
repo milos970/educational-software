@@ -53,13 +53,15 @@ public class VerificationTokenController {
 
     @GetMapping("/reset-password/create-token")
     public String createTokenForResetPassword(@RequestParam("email") String email) {
-
+        System.out.println(45445);
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
         if (personalInfoOptional.isEmpty()) {
 
             return "redirect:/sign-in";
         }
+
+
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 

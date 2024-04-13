@@ -1,7 +1,7 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
-import com.milos.numeric.dtos.FileDto;
+import com.milos.numeric.dtos.MaterialDto;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.dtos.StudentEmailDto;
@@ -32,7 +32,7 @@ public class PageController {
 
     private final EmailServiceImpl emailService;
 
-    private final FileService fileService;
+    private final MaterialService materialService;
 
     private final SystemSettingsService systemSettingsService;
 
@@ -41,13 +41,13 @@ public class PageController {
 
 
     @Autowired
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, FileService fileService, SystemSettingsService systemSettingsService, ChatService chatService) {
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailServiceImpl emailService, MaterialService materialService, SystemSettingsService systemSettingsService, ChatService chatService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
 
         this.emailService = emailService;
-        this.fileService = fileService;
+        this.materialService = materialService;
         this.systemSettingsService = systemSettingsService;
         this.chatService = chatService;
     }
@@ -224,12 +224,13 @@ public class PageController {
 
     @GetMapping("/person/material/page")
     public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        List<File> files = this.fileService.findAll();
+        List<Material> materials = this.materialService.findAll();
 
+        if (materials.isEmpty()) {
 
+        }
 
-        model.addAttribute("files", files);
-        model.addAttribute("FileDto", new FileDto());
+        model.addAttribute("materials", materials);
 
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
@@ -253,11 +254,7 @@ public class PageController {
         return "/pages/tables/materials";
     }
 
-    @PostMapping("/admin/material/upload")
-    public ResponseEntity saveFile(@Valid FileDto fileDto) {
-        Long id = this.fileService.save(fileDto);
-        return new ResponseEntity<>(id, HttpStatus.OK);
-    }
+
 
 
 

@@ -95,24 +95,15 @@ public class PersonalInfoController {
 
 
 
-    @PatchMapping("/reset-password")
-    public String resetPassword(@RequestParam("token") String code, @Valid @ModelAttribute ResetPasswordDto resetPasswordDto) {
 
-        if (!this.verificationTokenService.isTokenValid(code)) {
-            return "redirect:/sign-up";
-        }
-
-        PersonalInfo personalInfo = this.verificationTokenService.findByCode(code).get().getPersonalInfo();
-        this.personalInfoService.resetPassword(personalInfo.getUsername(), resetPasswordDto);
-
-        return "redirect:/sign-up";
-    }
 
 
     @GetMapping("/confirm-email")//OK
     public String confirmEmail(@RequestParam("token") String code)
     {
-        if (this.verificationTokenService.isTokenValid(code)) {
+
+        if (!this.verificationTokenService.isTokenValid(code)) {
+            System.out.println("PRAZDNE");
             return "redirect:/reset-password/page";
         }
 
@@ -123,11 +114,13 @@ public class PersonalInfoController {
 
         if (verificationToken.getTokenType() == TokenType.ACTIVATE_ACCOUNT)
         {
+            System.out.println("ACTIVATE");
             return "redirect:/activate-account?token=" + verificationTokenOptional.get().getCode();
         }
 
         if (verificationToken.getTokenType() == TokenType.RESET_PASSWORD)
         {
+            System.out.println("RESET");
             PersonalInfo personalInfo = verificationToken.getPersonalInfo();
             this.personalInfoService.generatePassword(personalInfo.getUsername());
             return "redirect:/sign-in";

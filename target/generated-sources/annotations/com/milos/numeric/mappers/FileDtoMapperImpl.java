@@ -1,47 +1,47 @@
 package com.milos.numeric.mappers;
 
-import com.milos.numeric.dtos.FileDto;
-import com.milos.numeric.entities.File;
+import com.milos.numeric.dtos.MaterialDto;
+import com.milos.numeric.entities.Material;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-04-11T22:11:59+0200",
+    date = "2024-04-13T19:53:47+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class FileDtoMapperImpl implements FileDtoMapper {
 
     @Override
-    public File sourceToDestination(FileDto source) {
+    public Material sourceToDestination(MaterialDto source) {
         if ( source == null ) {
             return null;
         }
 
-        File file = new File();
+        Material material = new Material();
 
-        file.setName( source.getName() );
-        file.setDescription( source.getDescription() );
+        material.setName( source.getName() );
+        material.setDescription( source.getDescription() );
 
-        file.setUploadedBy( "gabrisova.lydia" );
-        file.setSize( source.getData().getSize() );
-        file.setMimeType( source.getData().getContentType() );
+        material.setUploadedBy( "gabrisova.lydia" );
+        material.setSize( source.getData().getSize() );
+        material.setMimeType( source.getData().getContentType() );
 
-        return file;
+        return material;
     }
 
     @Override
-    public FileDto destinationToSource(File destination) {
+    public MaterialDto destinationToSource(Material destination) {
         if ( destination == null ) {
             return null;
         }
 
-        FileDto fileDto = new FileDto();
+        MaterialDto materialDto = new MaterialDto();
 
-        fileDto.setName( destination.getName() );
-        fileDto.setDescription( destination.getDescription() );
+        materialDto.setName( destination.getName() );
+        materialDto.setDescription( destination.getDescription() );
 
-        return fileDto;
+        return materialDto;
     }
 }
