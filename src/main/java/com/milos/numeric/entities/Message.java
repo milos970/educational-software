@@ -13,22 +13,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank
-    @Size(min = 1, message = "{validation.name.size.too_short}")
-    @Size(max = 100, message = "{validation.name.size.too_long}")
+    @Size(min = 1, message = "{message.content.length.min}")
+    @Size(max = 100, message = "{message.content.length.max}")
     private String content;
 
-
+    @NotBlank(message = "{message.sender.username}")
     @Column(name = "sender_username")
     private String senderUsername;
 
-
+    @NotBlank(message = "{message.receiver.username}")
     @Column(name = "receiver_username")
     private String receiverUsername;
 
@@ -39,5 +38,4 @@ public class Message {
     })
     private Chat chat;
 
-    private boolean seen;
 }

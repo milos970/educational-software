@@ -18,7 +18,7 @@ public class Employee
     private Long id;
 
 
-    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "person_id")
     private PersonalInfo personalInfo;
 

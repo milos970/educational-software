@@ -19,12 +19,12 @@ public class Student
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Min(0)
-    @Max(100)
+    @Min(value = 0, message = "Value is less than 0!")
+    @Max(value = 100, message = "Value is more than 100!")
     private int points;
 
-    @Min(0)
-    @Max(13)
+    @Min(value = 0, message = "Value is less than 0!")
+    @Max(value = 13, message = "Value is more than 13!")
     private int absents;
 
     @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)

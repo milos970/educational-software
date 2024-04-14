@@ -3,7 +3,6 @@ package com.milos.numeric.services;
 import com.milos.numeric.Authority;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.entities.Student;
 import com.milos.numeric.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -9,10 +9,7 @@ import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.security.MyUserDetails;
-import com.milos.numeric.services.EmployeeService;
-import com.milos.numeric.services.PersonalInfoService;
-import com.milos.numeric.services.StudentService;
-import com.milos.numeric.services.VerificationTokenService;
+import com.milos.numeric.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,13 +33,16 @@ public class PersonalInfoController {
 
     private final EmployeeService employeeService;
 
+    private final ChatService chatService;
+
     private final VerificationTokenService verificationTokenService;
 
     @Autowired
-    public PersonalInfoController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, VerificationTokenService verificationTokenService) {
+    public PersonalInfoController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, ChatService chatService, VerificationTokenService verificationTokenService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
+        this.chatService = chatService;
         this.verificationTokenService = verificationTokenService;
     }
 
@@ -101,9 +101,8 @@ public class PersonalInfoController {
     @GetMapping("/confirm-email")//OK
     public String confirmEmail(@RequestParam("token") String code)
     {
-
-        if (!this.verificationTokenService.isTokenValid(code)) {
-            System.out.println("PRAZDNE");
+        if (!this.verificationTokenService.isTokenValid(code))
+        {
             return "redirect:/reset-password/page";
         }
 
@@ -111,17 +110,28 @@ public class PersonalInfoController {
 
         VerificationToken verificationToken = verificationTokenOptional.get();
 
+        PersonalInfo personalInfo = verificationToken.getPersonalInfo();
 
         if (verificationToken.getTokenType() == TokenType.ACTIVATE_ACCOUNT)
         {
-            System.out.println("ACTIVATE");
-            return "redirect:/activate-account?token=" + verificationTokenOptional.get().getCode();
+            if (personalInfo.getAuthority() == Authority.EMPLOYEE)
+            {
+                this.employeeService.createEmployee(personalInfo);
+            }
+
+            if (personalInfo.getAuthority() == Authority.STUDENT)
+            {
+                this.studentService.createStudent(personalInfo);
+
+                Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByAuthority(Authority.TEACHER);
+                this.chatService.create(personalInfo.getUsername(), personalInfoOptional.get().getUsername());
+                this.personalInfoService.generatePassword(personalInfo.getUsername());
+            }
+            return "redirect:/sign-in";
         }
 
         if (verificationToken.getTokenType() == TokenType.RESET_PASSWORD)
         {
-            System.out.println("RESET");
-            PersonalInfo personalInfo = verificationToken.getPersonalInfo();
             this.personalInfoService.generatePassword(personalInfo.getUsername());
             return "redirect:/sign-in";
         }
@@ -144,7 +154,7 @@ public class PersonalInfoController {
     }
 
 
-    @PostMapping("/user/create") //OK
+    @PostMapping("/person/create") //OK
     public ResponseEntity createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO) {
         Optional<PersonalInfo> optional = this.personalInfoService.createPerson(personalInfoDTO);
 

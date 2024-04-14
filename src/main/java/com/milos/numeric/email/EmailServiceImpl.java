@@ -1,6 +1,5 @@
 package com.milos.numeric.email;
 
-import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -16,6 +15,8 @@ import java.io.UnsupportedEncodingException;
 public class EmailServiceImpl
 {
     private final JavaMailSender emailSender;
+    private final static String FROM = "numerika2024@gmail.com";
+    private final static String SENDER_NAME = "Numerika";
 
     @Autowired
     public EmailServiceImpl(JavaMailSender emailSender) {
@@ -33,10 +34,10 @@ public class EmailServiceImpl
 
     public void sendPassword(String email, String password) throws MessagingException, UnsupportedEncodingException {
         String toAddress = email;
-        String fromAddress = "numerika2024@gmail.com";
-        String senderName = "Numerika";
-        String subject = "Obnova hesla";
-        String content = "Vaše vygenerované heslo: " + password + ". Prosím po prihlásení si ho zmente!";
+        String fromAddress = FROM;
+        String senderName = SENDER_NAME;
+        String subject = "Obnovenie hesla";
+        String content = "Vaše nové vygenerované heslo: " + password + ". Po prihlásení si ho zmente!";
 
         MimeMessage message = this.emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -52,10 +53,10 @@ public class EmailServiceImpl
 
     public void sendVerificationEmail(VerificationToken token) throws MessagingException, UnsupportedEncodingException {
         String toAddress = token.getPersonalInfo().getEmail();
-        String fromAddress = "numerika2024@gmail.com";
-        String senderName = "Numerika";
+        String fromAddress = FROM;
+        String senderName = SENDER_NAME;
         String subject = "Verifikácia emailu";
-        String content = "To confirm your account, please click here : "
+        String content = "Pre verifikovanie emailu kliknite na následujúci link: "
                 +"http://localhost:8080/confirm-email?token="+token.getCode();
 
         MimeMessage message = this.emailSender.createMimeMessage();

@@ -7,7 +7,6 @@ import com.milos.numeric.Authority;
 import com.milos.numeric.Domain;
 import com.milos.numeric.Gender;
 import com.milos.numeric.TokenType;
-import com.milos.numeric.converters.CSVConverterUnregisteredPerson;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.dtos.ResetPasswordDto;
@@ -17,7 +16,8 @@ import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
-import com.milos.numeric.repositories.VerificationTokenRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import jakarta.mail.MessagingException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -29,12 +29,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -42,13 +41,7 @@ public class PersonalInfoService
 {
     private final PersonalInfoRepository personalInfoRepository;
 
-    private final StudentService studentService;
-
-    private final EmployeeService employeeService;
-
     private final SystemSettingsService systemSettingsService;
-
-    private final ChatService chatService;
 
     private PersonalInfoNewPersonDTOMapper personalInfoNewPersonDTOMapper;
 
@@ -56,31 +49,26 @@ public class PersonalInfoService
 
     private PersonalInfoNewAuthorityDTOMapper personalInfoNewAuthorityDTOMapper;
 
-    private final CSVConverterUnregisteredPerson csvConverterUnregisteredPerson;
-
     private final Validator validator;
 
     private final EmailServiceImpl emailService;
 
 
 
-    @Autowired
-    private  PasswordEncoder passwordEncoder;
+
+    private final  PasswordEncoder passwordEncoder;
 
     private final VerificationTokenService verificationTokenService;
 
 
 
     @Autowired
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, StudentService studentService, EmployeeService employeeService, SystemSettingsService systemSettingsService, ChatService chatService, CSVConverterUnregisteredPerson csvConverterUnregisteredPerson, Validator validator, EmailServiceImpl emailService, VerificationTokenService verificationTokenService) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, SystemSettingsService systemSettingsService, Validator validator, EmailServiceImpl emailService, PasswordEncoder passwordEncoder, VerificationTokenService verificationTokenService) {
         this.personalInfoRepository = personalInfoRepository;
-        this.studentService = studentService;
-        this.employeeService = employeeService;
         this.systemSettingsService = systemSettingsService;
-        this.chatService = chatService;
-        this.csvConverterUnregisteredPerson = csvConverterUnregisteredPerson;
         this.validator = validator;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
         this.verificationTokenService = verificationTokenService;
     }
 
@@ -90,13 +78,12 @@ public class PersonalInfoService
 
         if (optional.isEmpty())
         {
-            System.out.println(5656);
             return false;
         }
 
         PersonalInfo personalInfo = optional.get();
 
-        String generatedPassword = "Heslisko@256";
+        String generatedPassword = UUID.randomUUID() + "M#1";
         String hashedPassword = this.passwordEncoder.encode(generatedPassword);
         personalInfo.setPassword(hashedPassword);
 
@@ -113,51 +100,6 @@ public class PersonalInfoService
         return true;
     }
 
-
-    public boolean resetPassword(String email)
-    {
-        Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(email);
-
-        if (optional.isEmpty())
-        {
-            return false;
-        }
-
-        PersonalInfo personalInfo = optional.get();
-
-        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.RESET_PASSWORD);
-
-        this.verificationTokenService.sendToken(verificationToken);
-
-
-        return true;
-
-    }
-
-    public boolean activateAccount(String email)
-    {
-        Optional<PersonalInfo> optional = this.personalInfoRepository.findByEmail(email);
-
-        if (optional.isEmpty())
-        {
-            return false;
-        }
-
-        PersonalInfo personalInfo = optional.get();
-
-        personalInfo.setEnabled(true);
-        return true;
-    }
-
-    public Optional<PersonalInfo> findByAuthority(Authority authority)
-    {
-        return this.personalInfoRepository.findByAuthority(authority.name());
-    }
-
-    public boolean confirmEmail(String code)
-    {
-        return this.verificationTokenService.isTokenValid(code);
-    }
 
 
     public boolean updatePassword(String username, NewPasswordDto newPasswordDto)
@@ -181,37 +123,27 @@ public class PersonalInfoService
 
     }
 
-    public boolean resetPassword(String username, ResetPasswordDto resetPasswordDto)
-    {
-        String newPassword = resetPasswordDto.getPassword();
-        String newHashedPassword = this.passwordEncoder.encode(newPassword);
 
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoRepository.findByUsername(username);
-
-
-        if (optionalPersonalInfo.isEmpty())
-        {
-            return false;
-        }
-
-        PersonalInfo personalInfo = optionalPersonalInfo.get();
-        personalInfo.setPassword(newHashedPassword);
-
-        this.personalInfoRepository.save(personalInfo);
-        return true;
-
-    }
-
-    private static String removeDiacritics(String input)
+    /*private static String removeDiacritics(String input)
     {
         String normalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalizedString).replaceAll("");
+    }*/
+
+    public Optional<PersonalInfo> findByAuthority(Authority authority)
+    {
+        return this.personalInfoRepository.findByAuthority(authority.name());
     }
 
     public Optional<PersonalInfo> findByUsername(String username)
     {
         return this.personalInfoRepository.findByUsername(username);
+    }
+
+    public Optional<PersonalInfo> findByEmail(String email)
+    {
+        return this.personalInfoRepository.findByEmail(email);
     }
 
     private String determineGender(@PathVariable String name) {
@@ -237,6 +169,7 @@ public class PersonalInfoService
         {
             return Optional.empty();
         }
+
 
         PersonalInfo personalInfo = new PersonalInfo();
         personalInfo.setName(personalInfoDTO.getName());
@@ -280,15 +213,7 @@ public class PersonalInfoService
 
         this.personalInfoRepository.save(personalInfo);
 
-        if (personalInfo.getAuthority() == Authority.TEACHER)
-        {
-            this.employeeService.createEmployee(personalInfo);
-        }
 
-        if (personalInfo.getAuthority() == Authority.STUDENT)
-        {
-            this.studentService.createStudent(personalInfo);
-        }
 
         Optional<SystemSettings> optionalSystemSettings= this.systemSettingsService.findFirst();
 
@@ -303,7 +228,6 @@ public class PersonalInfoService
 
         String fullName = teacher.getPersonalInfo().getName() + " " + teacher.getPersonalInfo().getSurname();
 
-        this.chatService.save(fullName, personalInfo.getUsername());
 
         return Optional.of(this.personalInfoRepository.save(personalInfo));
     }
@@ -311,36 +235,48 @@ public class PersonalInfoService
 
 
 
-    public Optional<PersonalInfo> findByEmail(String email)
-    {
-        return this.personalInfoRepository.findByEmail(email);
-    }
 
-    public void createMultiplePersonsFromFile(MultipartFile file)
+
+    public boolean createMultiplePersonsFromFile(MultipartFile file)
     {
-        List<PersonalInfoDto> list;
+        List<PersonalInfoDto> list = new LinkedList<>();
+
+        Reader reader = null;
         try {
-            list = this.csvConverterUnregisteredPerson.convert(file);
+            reader = new InputStreamReader(file.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
 
-        for (PersonalInfoDto personToValidate : list)
+        String[] values = null;
+        while (true)
         {
-            PersonalInfoDto personalInfoDTO = new PersonalInfoDto();
+            try {
+                if (!((values = csvReader.readNext()) != null)) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            PersonalInfoDto person = new PersonalInfoDto();
 
-            personalInfoDTO.setPersonalNumber(personToValidate.getPersonalNumber());
-            personalInfoDTO.setName(personToValidate.getName());
-            personalInfoDTO.setSurname(personToValidate.getSurname());
-            personalInfoDTO.setEmail(personToValidate.getEmail());
+            String[] rec = values[0].split(";");
+            String personalNumber = rec[2];
+            String name = rec[1];
+            String surname = rec[0];
+            String email = rec[3];
 
-            String password = UUID.randomUUID().toString();
+            System.out.println(email + ":" + personalNumber + ":" + name + ":" + surname);
 
-            personalInfoDTO.setPassword(password);
-
-            this.createPerson(personalInfoDTO);
+            person.setPersonalNumber(personalNumber);
+            person.setName(name);
+            person.setSurname(surname);
+            person.setEmail(email);
+            person.setPassword(UUID.randomUUID() + "M#1");
+            this.createPerson(person);
         }
 
+
+        return true;
     }
 
 }

@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface DateValid
 {
 
-    String message() default "must be any of enum {enumClass}";
+    String message() default "Date is not valid!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

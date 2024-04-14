@@ -47,11 +47,11 @@ public class DateValidValidator implements ConstraintValidator<DateValid, String
 
         if (receivedDate.isAfter(now))
         {
-            System.out.println("OK!");
+
             return true;
         }
 
-        System.out.println("NOT!");
+
         return false;
     }
 }

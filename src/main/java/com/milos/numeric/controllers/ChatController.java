@@ -25,11 +25,18 @@ public class ChatController {
     }
 
 
-    @PostMapping("/person/sendMessage")
-    public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto) {
+    @PostMapping("/person/message")
+    public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto)
+    {
+        if (this.chatService.saveMessage(messageDto))
+        {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        this.chatService.saveMessage(messageDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 
@@ -38,14 +45,11 @@ public class ChatController {
     public List<MessageDto> findById(@RequestParam("param") String param) {
 
         Optional<Chat> optional = this.chatService.findByChatId("gab", param);
+        List<MessageDto> messageDtos = new LinkedList<>();
 
-        if (optional.isEmpty()) {
-            System.out.println("Nenaslo");
-        }
 
         Chat chat = optional.get();
         List<Message> messages = chat.getMessages();
-        List<MessageDto> messageDtos = new LinkedList<>();
 
 
         for (int i = messages.size() - 1; i >= 0; --i) {
@@ -63,9 +67,16 @@ public class ChatController {
 
 
     @DeleteMapping("/admin/conversation")
-    public ResponseEntity deleteAll() {
-        this.chatService.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity deleteAll()
+    {
+        if (this.chatService.deleteAll())
+        {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 

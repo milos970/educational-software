@@ -7,6 +7,7 @@ import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,22 +27,30 @@ public class VerificationTokenController {
 
 
 
-    @GetMapping("/activate-account/create-token")
-    public String createTokenForActivateAccount(@RequestParam("email") String email) {
+
+    @GetMapping("/create-token/activate-account")
+    public String createTokenForActivateAccount(@RequestParam("email") String email, Model model) {
 
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
         if (personalInfoOptional.isEmpty()) {
-
-            return "redirect:/sign-in";
+            model.addAttribute("error", "Zadaný email neexistuje!");
+            return "/pages/samples/sign-up";
         }
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 
+        if (personalInfo.isEnabled())
+        {
+            model.addAttribute("error", "Účet s týmto emailom je už aktívny!");
+            return "/pages/samples/sign-up";
+        }
+
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByEmail(email);
 
         if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.ACTIVATE_ACCOUNT) {
-            return "redirect:/sign-in";
+            model.addAttribute("error", "Na zadaný email už bol zaslaný aktivačný link!");
+            return "/pages/samples/sign-up";
         }
 
         VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
@@ -51,35 +60,41 @@ public class VerificationTokenController {
         return "redirect:/sign-in";
     }
 
-    @GetMapping("/reset-password/create-token")
-    public String createTokenForResetPassword(@RequestParam("email") String email) {
-        System.out.println(45445);
+    @GetMapping("/create-token/reset-password")
+    public String createTokenForResetPassword(@RequestParam("email") String email, Model model)
+    {
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
-        if (personalInfoOptional.isEmpty()) {
-
-            return "redirect:/sign-in";
+        if (personalInfoOptional.isEmpty())
+        {
+            model.addAttribute("error", "Zadaný email neexistuje!");
+            return "/pages/samples/forgot-password";
         }
 
 
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 
+        if (!personalInfo.isEnabled())
+        {
+            model.addAttribute("error", "Účet s týmto emailom je nieje aktívny!");
+            return "/pages/samples/sign-up";
+        }
+
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByEmail(email);
 
         if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.RESET_PASSWORD)
         {
-            if (this.verificationTokenService.isTokenValid(verificationTokenOptional.get().getCode()))
-            {
-                return "redirect:/sign-in";
-            }
+            model.addAttribute("error", "Token pre zadaný email už bol zaslaný!");
+            return "/pages/samples/forgot-password";
 
         }
 
         VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.RESET_PASSWORD);
         this.verificationTokenService.sendToken(verificationToken);
 
-        return "redirect:/sign-in";
+        model.addAttribute("success", "Verifikačný link bol odoslaný.");
+        return "/pages/samples/forgot-password";
     }
 
 }

@@ -4,7 +4,6 @@ import com.milos.numeric.validators.DateValid;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +22,13 @@ public class SystemSettings
     private Long id;
 
     @Column(name = "allowed_absents")
-    @Min(0)
-    @Max(13)
+    @Min(value = 0, message = "Value is less than 0!")
+    @Max(value = 13, message = "Value is more than 13!")
     private int allowedAbsents;
 
     @Column(name = "number_of_students")
-    @Min(0)
-    @Max(100)
+    @Min(value = 0, message = "Value is less than 0!")
+    @Max(value = 100, message = "Value is more than 100!")
     private int numberOfStudents;
 
     @OneToOne(targetEntity = Employee.class, fetch = FetchType.LAZY)
@@ -41,11 +40,13 @@ public class SystemSettings
     private String classDate;
 
     @Column(name = "number_of_days")
+    @Min(value = 0, message = "Value is less than 0!")
+    @Max(value = 365, message = "Value is more than 365!")
     private int numberOfDays;
 
     @Column(name = "school_week")
-    @Min(1)
-    @Max(13)
+    @Min(value = 1, message = "Value is less than 1!")
+    @Max(value = 13, message = "Value is more than 13!")
     private int schoolWeek;
 
 

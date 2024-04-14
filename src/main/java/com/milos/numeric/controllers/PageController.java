@@ -266,6 +266,7 @@ public class PageController {
 
     @GetMapping("/forget-password-page")
     public String forgetPassword() {
+
         return "/pages/samples/forgot-password";
     }
 
@@ -327,10 +328,6 @@ public class PageController {
         return "/pages/samples/sign-up";
     }
 
-//*********************************************CUSTOMIZE************************************************************************
-
-
-    //*********************************************CUSTOMIZE************************************************************************
 
 
     @GetMapping("/student/page")

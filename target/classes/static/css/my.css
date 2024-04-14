@@ -2,6 +2,9 @@
     color: red;
 }
 
+.success {
+    color: #54c543;
+}
 
 .dropdown a:hover
 {

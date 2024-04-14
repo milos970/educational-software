@@ -1,6 +1,7 @@
 package com.milos.numeric.entities;
 
 import com.milos.numeric.TokenType;
+import com.milos.numeric.validators.DateValid;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,9 @@ public class VerificationToken
     @NotBlank
     private String code;
 
-    @Column(name = "expiration_date")
     @NotBlank
+    @DateValid
+    @Column(name = "expiration_date")
     private String expirationDate;
 
     @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
@@ -33,6 +35,7 @@ public class VerificationToken
 
     @Enumerated(EnumType.STRING)
     private TokenType tokenType;
+
 
 
 

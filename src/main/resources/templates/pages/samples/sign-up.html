@@ -128,11 +128,11 @@
 
 
                   <div id="student-form-div">
-                      <form id="student-form" action="" th:object="${studentEmailDto}" method="POST">
+                      <form id="student-form" action="/activate-account/create-token"  method="GET">
                           <div class="form-group" id="student-email-div">
                               <label>Školský email*</label>
-                              <input  type="email" th:field="${studentEmailDto.email}" id="student-email-input" class="form-control p_input" style="color: white">
-                              <p class="error" th:if="${#fields.hasErrors('email')}">Nevalidný email!</p>
+                              <input  type="email" name="email"  id="student-email-input" class="form-control p_input" style="color: white">
+                              <p class="success" th:text="${success}"></p>
                               <p class="error" th:text="${error}"  id="student-email-input-error-hint"></p>
                           </div>
                       </form>

@@ -8,13 +8,8 @@ import com.milos.numeric.dtos.NewTeacherDto;
 import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.SystemSettings;
 import com.milos.numeric.repositories.SystemSettingsRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -23,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.ScheduledFuture;
 
 @Service
 public class SystemSettingsService
@@ -35,6 +29,8 @@ public class SystemSettingsService
 
 
 
+
+
     @Autowired
     public SystemSettingsService(SystemSettingsRepository systemSettingsRepository, EmployeeService employeeService, DateParser dateParser)
     {
@@ -42,6 +38,7 @@ public class SystemSettingsService
         this.employeeService = employeeService;
         this.dateParser = dateParser;
     }
+
 
 
 

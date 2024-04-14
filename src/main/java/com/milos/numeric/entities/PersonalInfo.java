@@ -23,23 +23,23 @@ public class PersonalInfo
 
     @NotBlank
     @Column(name = "nam") //zmenit!!!!!
-    @Size(min = 1, message = "{validation.name.size.too_short}")
-    @Size(max = 50, message = "{validation.name.size.too_long}")
+    @Size(min = 1, message = "PersonalInfo name is less than 1 character long!")
+    @Size(max = 50, message = "PersonalInfo name is more than 50 characters long!")
     private String name;
 
     @NotBlank
-    @Size(min = 1, message = "{validation.name.size.too_short}")
-    @Size(max = 50, message = "{validation.name.size.too_long}")
+    @Size(min = 1, message = "PersonalInfo surname is less than 1 character long!")
+    @Size(max = 50, message = "PersonalInfo surname is more than 50 characters long!")
     private String surname;
 
     @NotBlank
     @Column(unique = true)
-    @Size(min = 1, message = "{validation.name.size.too_short}")
-    @Size(max = 50, message = "{validation.name.size.too_long}")
+    @Size(min = 1, message = "PersonalInfo username is less than 1 character long!")
+    @Size(max = 50, message = "PersonalInfo username is more than 50 characters long!")
     private String username;
 
     @Column(unique = true, name = "personal_number")
-    @Size(min = 5, max = 6, message = "{validation.name.size.too_long}")
+    @Size(min = 5, max = 6, message = "PersonalInfo pin length is not between 5 and 6 characters!")
     private String personalNumber;
 
     @Email

@@ -16,12 +16,12 @@ function studentOrEmployee(who)
 
             showFormForStudent();
 
-            getById("student-form").action = "/sign-up/student";
+            getById("student-form").action = "/activate-account/create-token";
             which = 1;
             break;
         case 2:
             showFormForEmployee();
-            getById("employee-form").action = "/sign-up/employee";
+            getById("employee-form").action = "/activate-account/create-token";
             which = 2;
             break;
         default:
