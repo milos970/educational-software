@@ -774,6 +774,8 @@ function newtonMethod()
     }
 
 
+
+
     let current = parseFloat(initialValueInputElement.value);
 
 
@@ -787,10 +789,12 @@ function newtonMethod()
     data[0][2] = "Chyba";
 
     const parsedEquation = math.parse(fun);
+
     const derivative = math.derivative(parsedEquation, 'x');
 
     for (let i = 0; i < ITERATIONS; ++i)
     {
+
         data[i + 1] = [3];
         data[i + 1][0] = i;
         data[i + 1][1] = current.toFixed(round);
@@ -798,9 +802,11 @@ function newtonMethod()
         let fx = 0;
         try
         {
+
             fx = math.evaluate(parsedEquation.toString(), { x: current });
         }
         catch (error) {
+
             equationErrorHintElement.innerHTML = "Nedefinovaná hodnota!";
         }
 
@@ -813,6 +819,7 @@ function newtonMethod()
             derFx = math.evaluate(derivative.toString(), { x: current });
         }
         catch (error) {
+
             equationErrorHintElement.innerHTML = "Nedefinovaná hodnota!";
         }
 
@@ -922,7 +929,7 @@ function bisectionMethod()
 
         if (fak * fbk > 0)
         {
-            resultValueErrorHintElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
             return;
         }
 
@@ -1032,7 +1039,7 @@ function regulaFalsiMethod()
         if (fak * fbk > 0)
         {
 
-            equationErrorHintElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
             return;
         }
 
@@ -1619,13 +1626,14 @@ function newtonInterpolating()
     {
         let cislo = dividedDifference(0,i);
 
+
         if (i == 0)
         {
             if (cislo < 0)
             {
-                equation += "- " + (Number.isInteger(1 * cislo) ? ((-1) * cislo): ((-1) * cislo.toFixed(3)));
+                equation += "- " + (Number.isInteger(1 * cislo) ? ((-1) * cislo): ((-1) * cislo));
             } else {
-                equation += (Number.isInteger(1 * cislo) ? ( 1 * cislo): (1 * cislo).toFixed(3));
+                equation += (Number.isInteger(1 * cislo) ? ( 1 * cislo): (1 * cislo));
 
             }
             continue;
@@ -1801,6 +1809,22 @@ function validateCsvCoordinates()
 }
 
 
+function checkIfValueIsInteger(value)
+{
+
+
+    if (/^\d+$/.test(value) || /^\-\d+$/.test(value))
+    {
+
+        return true;
+    } else {
+
+        return false;
+    }
+
+}
+
+
 
 
 function validateCoordinates(coordinatesArrays, type)
@@ -1814,6 +1838,7 @@ function validateCoordinates(coordinatesArrays, type)
 
     if (type === 1)
     {
+
         if (coordinatesArrays.length > 10)
         {
             coordinatesStringErrorHint.innerHTML = "Uzlov je viac než 10!";
@@ -1821,6 +1846,18 @@ function validateCoordinates(coordinatesArrays, type)
         } else {
             coordinatesStringErrorHint.innerHTML = "";
         }
+
+
+        for (let i = 0; i < coordinatesArrays.length; ++i)
+        {
+            if (!checkIfValueIsInteger(coordinatesArrays[i][0]))
+            {
+                coordinatesStringErrorHint.innerHTML = "Hodnoty x musia byť celé čísla!";
+                return;
+            }
+        }
+
+
 
     }
 
@@ -2321,7 +2358,7 @@ function trapezoid()
 
     const result = sum * h/2;
 
-    resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
+    resultValueInputElement.value = "Hodnota určitého integrálu: " + result.toFixed(6);
 
 
      inputs =[];
@@ -2414,7 +2451,7 @@ function simpson()
 
     const result = sum * h/3;
 
-    resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
+    resultValueInputElement.value = "Hodnota určitého integrálu: " + result.toFixed(6);
 
      inputs =[];
 
@@ -2663,7 +2700,6 @@ function validateStudentsCsv()
 
 function updateSystemAbsents()
 {
-    alert(45);
     const errorHint = getById("absents-hint-error");
     const absentsInputElement = getById("absents-input");
     const absentsButton = getById("absents-button");

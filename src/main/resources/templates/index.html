@@ -390,23 +390,23 @@
                                 <div class="form-group" id="nodes-string-div">
                                     <label for="equation-input">Zadať uzly</label>
                                     <input type="text" class="form-control" id="nodes-string-input"
-                                           placeholder="(x1,y1),(x2,y2),...,(x10,y10)"
+                                           placeholder="(x1,y1),(x2,y2),...,(x10,y10), xi ∈ N, yi ∈ R"
                                            oninput="validateStringCoordinates()">
                                     <p class="error" id="coordinates-string-error-hint"></p>
                                 </div>
 
                                 <div class="form-group" id="nodes-csv-div">
                                     <label>Súbor</label>
-                                    <input type="material" name="img[]" class="material-upload-default">
+                                    <input type="file" name="img[]" class="file-upload-default">
                                     <div class="input-group col-xs-12">
-                                        <input type="text" id="text-input" class="form-control material-upload-info"
+                                        <input type="text" id="text-input" class="form-control file-upload-info"
                                                disabled placeholder="Súbor s príponou .csv">
-                                        <input accept="text/csv" type="material" onchange="validateCsvCoordinates()"
-                                               id="material-input" class="form-control material-upload-info"
+                                        <input accept="text/csv" type="file" onchange="validateCsvCoordinates()"
+                                               id="file-input" class="form-control file-upload-info"
                                                style="display: none">
                                         <span class="input-group-append">
-                            <button onclick="clickOnInput()" class="material-upload-browse btn btn-primary" type="button"
-                                    id="insert-material-button">Vložiť</button>
+                            <button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button"
+                                    id="insert-file-button">Vložiť</button>
                           </span>
                                     </div>
                                     <p class="error" id="coordinates-csv-error-hint"></p>
@@ -506,7 +506,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
+                    <div class="col-md-8 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
                         <div class="card">
                             <div class="card-body" id="table-div">
                                 <h4 class="card-title"></h4>
@@ -572,8 +572,7 @@
 <script th:src="@{/js/dashboard.js}"></script>
 
 
-<script src="/static/js/chart.js"></script>
-<script th:src="@{/js/chart.js}"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="/static/js/my/my.js"></script>

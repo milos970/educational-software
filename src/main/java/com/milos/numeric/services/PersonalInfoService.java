@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.milos.numeric.Authority;
 import com.milos.numeric.Domain;
 import com.milos.numeric.Gender;
-import com.milos.numeric.TokenType;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
-import com.milos.numeric.dtos.ResetPasswordDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.*;
+import com.milos.numeric.entities.Employee;
+import com.milos.numeric.entities.PersonalInfo;
+import com.milos.numeric.entities.SystemSettings;
 import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
@@ -32,9 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.text.Normalizer;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Service
 public class PersonalInfoService
