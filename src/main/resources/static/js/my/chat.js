@@ -5,14 +5,25 @@ let userName = "";
 
 
 let receiver = "";
-function sendMessage()
+function sendMessage(senderUsername,receiverUsername)
 {
-    alert(45);
+
     if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
     {
         getById("message-input-error-hint").innerHtml = "Nevalidný výraz!";
         return;
     }
+
+    if (receiverUsername === 'null') {
+        receiverUsername = receiver;
+    } else {
+        receiver = receiverUsername;
+    }
+
+
+
+
+
 
 
     const xhttp = new XMLHttpRequest();
@@ -73,7 +84,8 @@ function sendMessage()
     let data =
     {
         content: content,
-        receiverUsername: receiver
+        senderUsername: senderUsername,
+        receiverUsername: receiverUsername
     };
     xhttp.send(JSON.stringify(data));
 }

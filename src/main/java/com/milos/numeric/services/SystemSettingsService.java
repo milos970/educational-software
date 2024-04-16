@@ -24,6 +24,7 @@ public class SystemSettingsService
 {
     private final SystemSettingsRepository systemSettingsRepository;
     private final EmployeeService employeeService;
+
     private final DateParser dateParser;
 
 
@@ -41,32 +42,6 @@ public class SystemSettingsService
 
 
 
-
-    @Scheduled(cron = "0 35 22 * * *")
-    public void addWeek()
-    {
-
-        Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
-
-        if (optional.isEmpty())
-        {
-
-        }
-
-        SystemSettings systemSettings = optional.get();
-
-        LocalDateTime classDate = this.dateParser.parseStringToLocalDate(systemSettings.getClassDate());
-
-        LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
-
-        if (classDate.getDayOfMonth() == now.getDayOfMonth() && classDate.getMonth() == now.getMonth())
-        {
-            systemSettings.setClassDate(this.dateParser.parseLocalDateToString(classDate.plusWeeks(1)));
-            this.systemSettingsRepository.save(systemSettings);
-        }
-        this.incrementDays();
-
-    }
 
 
     public Optional<SystemSettings> findFirst() {
@@ -93,29 +68,6 @@ public class SystemSettingsService
 
         daysDifference = Math.abs(daysDifference);
         systemSettings.setNumberOfDays(daysDifference);
-
-        this.systemSettingsRepository.save(systemSettings);
-
-        return true;
-    }
-
-    @Scheduled(cron = "0 0 0 * * SUN")
-    private boolean incrementWeeks()
-    {
-        Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
-
-        if (optional.isEmpty())
-        {
-            return false;
-        }
-
-        SystemSettings systemSettings = optional.get();
-
-        int nthWeek = systemSettings.getSchoolWeek();
-
-        nthWeek = (nthWeek + 1 ) % 14;
-
-        systemSettings.setSchoolWeek(nthWeek);
 
         this.systemSettingsRepository.save(systemSettings);
 

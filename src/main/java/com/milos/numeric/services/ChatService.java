@@ -66,7 +66,7 @@ public class ChatService
         }
 
 
-
+        System.out.println(1);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -83,9 +83,12 @@ public class ChatService
 
         if (this.personalInfoService.findAuthorityByUsername(username).get() == Authority.STUDENT)
         {
-            chatId.setParticipantA(username);
+
+
             Optional<String> optionalUsername = this.personalInfoService.findUsernameByAuthorityTeacher();
-            chatId.setParticipantB(optionalUsername.get());
+            chatId.setParticipantA(optionalUsername.get());
+            chatId.setParticipantB(username);
+
         }
 
 
@@ -93,7 +96,7 @@ public class ChatService
 
         if (optionalChat.isEmpty())
         {
-
+            System.out.println(3);
             return false;
         }
 

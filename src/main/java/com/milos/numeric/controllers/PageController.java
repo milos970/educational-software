@@ -119,6 +119,7 @@ public class PageController {
 
 
         model.addAttribute("systemSettings", systemSettings);
+        model.addAttribute("students", this.studentService.findAll());
 
         return "/pages/tables/system";
     }
@@ -277,25 +278,29 @@ public class PageController {
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-
+            System.out.println(4);
         }
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
 
         model.addAttribute("personalInfo", personalInfo);
 
+
+
         if (personalInfo.getAuthority() == Authority.TEACHER) {
+
 
             List<Student> students = this.studentService.findAll();
             if (students.isEmpty()) {
 
             }
             model.addAttribute("students", students);
+            model.addAttribute("lastStudentName", students.getLast().getPersonalInfo().getUsername());
 
         } else {
 
-            Optional<Chat> optionalChat = this.chatService.findByChatId("gabrisova", personalInfo.getUsername());
-
+            Optional<Chat> optionalChat = this.chatService.findByChatId(this.personalInfoService.findUsernameByAuthorityTeacher().get(), personalInfo.getUsername());
+            model.addAttribute("teacher", this.personalInfoService.findUsernameByAuthorityTeacher().get());
             if (optionalChat.isEmpty()) {
 
             }

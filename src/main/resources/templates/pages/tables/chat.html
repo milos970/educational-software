@@ -305,7 +305,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-5 grid-margin stretch-card"  id="conversation-div">
+                    <div class="col-lg-7 grid-margin stretch-card"  id="conversation-div">
                         <div class="card" >
 
                             <div class="card-body" id="conversation">
@@ -338,9 +338,13 @@
                                            placeholder="Max. počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2" minlength="1" maxlength="100">
 
 
-                                        <div class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" onclick="sendMessage()">Odoslať</button>
-                                        </div>
+                                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.username}','${teacher}')|">Odoslať</button>
+                                    </div>
+
+                                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="input-group-append">
+                                        <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.username}','null')|">Odoslať</button>
+                                    </div>
 
                                     <p class="error" id="message-input-error-hint"></p>
 

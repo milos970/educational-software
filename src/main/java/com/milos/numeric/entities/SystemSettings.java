@@ -44,10 +44,7 @@ public class SystemSettings
     @Max(value = 365, message = "Value is more than 365!")
     private int numberOfDays;
 
-    @Column(name = "school_week")
-    @Min(value = 1, message = "Value is less than 1!")
-    @Max(value = 13, message = "Value is more than 13!")
-    private int schoolWeek;
+
 
 
 }

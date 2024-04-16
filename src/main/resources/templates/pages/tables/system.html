@@ -300,7 +300,14 @@
 
                                         <tr>
                                             <td> Nahratý súbor so študentami </td>
-                                            <td></td>
+                                            <div th:if="${students.size() == 0}">
+                                                <td>Nie</td>
+                                            </div>
+
+                                            <div th:if="${students.size() != 0}">
+                                                <td>Ano</td>
+                                            </div>
+
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                                                 <div class="input-group">
                                                     <input id="material-input" onchange="parseCsvToArrays()" type="material" accept="text/csv" class="form-control" aria-describedby="basic-addon2" style="display:none;">
@@ -358,17 +365,12 @@
 
                                         </tr>
                                         <tr>
-                                            <td> Počet dní do cvičenia </td>
+                                            <td> Počet dní do konca semestra </td>
                                             <td th:text="${systemSettings.numberOfDays}"></td>
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td> Týždeň</td>
-                                            <td th:text="${systemSettings.schoolWeek + '.'}"></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+
                                         </tbody>
                                     </table>
                                 </div>
