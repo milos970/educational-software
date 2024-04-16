@@ -370,7 +370,6 @@
                                 </div>
 
 
-                                <p class="card-description"></p>
                                 <div class="form-group" id="equation-div">
                                     <label for="equation-input">Rovnica*</label>
                                     <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0"
@@ -379,37 +378,36 @@
                                 </div>
 
                                 <div class="form-group" id="function-div">
-                                    <label for="equation-input">Funkcia*</label>
+                                    <label for="function-input" >Funkcia*</label>
                                     <input type="text" class="form-control" id="function-input" placeholder="f(x)"
                                            oninput="validateFunction()">
                                     <p class="error" id="function-hint-error"></p>
                                 </div>
 
 
-                                <p class="card-description"></p>
                                 <div class="form-group" id="nodes-string-div">
-                                    <label for="equation-input">Zadať uzly</label>
+                                    <label for="nodes-string-input">Zadať uzly</label>
                                     <input type="text" class="form-control" id="nodes-string-input"
-                                           placeholder="(x1,y1),(x2,y2),...,(x10,y10)"
+                                           placeholder="(x1,y1),(x2,y2),...,(x100,y100), xi ∈ N, yi ∈ R"
                                            oninput="validateStringCoordinates()">
-                                    <p class="error" id="coordinates-string-error-hint"></p>
+                                    <p class="error" id="nodes-string-error-hint"></p>
                                 </div>
 
                                 <div class="form-group" id="nodes-csv-div">
-                                    <label>Súbor</label>
-                                    <input type="material" name="img[]" class="material-upload-default">
+                                    <label for="nodes-string-input">Súbor</label>
+                                    <input type="file" name="img[]" class="file-upload-default">
                                     <div class="input-group col-xs-12">
-                                        <input type="text" id="text-input" class="form-control material-upload-info"
+                                        <input type="text" id="text-input" class="form-control file-upload-info"
                                                disabled placeholder="Súbor s príponou .csv">
-                                        <input accept="text/csv" type="material" onchange="validateCsvCoordinates()"
-                                               id="material-input" class="form-control material-upload-info"
+                                        <input accept="text/csv" type="file" onchange="validateCsvCoordinates()"
+                                               id="file-input" class="form-control file-upload-info"
                                                style="display: none">
                                         <span class="input-group-append">
-                            <button onclick="clickOnInput()" class="material-upload-browse btn btn-primary" type="button"
-                                    id="insert-material-button">Vložiť</button>
+                            <button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button"
+                                    id="insert-file-button">Vložiť</button>
                           </span>
                                     </div>
-                                    <p class="error" id="coordinates-csv-error-hint"></p>
+                                    <p class="error" id="nodes-csv-error-hint"></p>
                                 </div>
 
                                 <div class="form-group" id="functions-dropdown-div">
@@ -431,18 +429,18 @@
                                 <div class="form-group" id="tolerance-div">
                                     <div class="dropdown">
                                         <button class="btn btn-outline-primary dropdown-toggle" type="button"
-                                                id="dropdownMenuOutlineButton1" data-toggle="dropdown"
+                                                id="tolerance-button" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">Tolerancia*
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
-                                            <a class="dropdown-item" onclick="selectedTolerance(1)" href="#">0.001</a>
-                                            <a class="dropdown-item" onclick="selectedTolerance(2)" href="#">0.0001</a>
-                                            <a class="dropdown-item" onclick="selectedTolerance(3)" href="#">0.00001</a>
-                                            <a class="dropdown-item" onclick="selectedTolerance(4)"
+                                            <a class="dropdown-item" onclick="selectTolerance(1)" href="#">0.001</a>
+                                            <a class="dropdown-item" onclick="selectTolerance(2)" href="#">0.0001</a>
+                                            <a class="dropdown-item" onclick="selectTolerance(3)" href="#">0.00001</a>
+                                            <a class="dropdown-item" onclick="selectTolerance(4)"
                                                href="#">0.000001</a>
-                                            <a class="dropdown-item" onclick="selectedTolerance(5)"
+                                            <a class="dropdown-item" onclick="selectTolerance(5)"
                                                href="#">0.0000001</a>
-                                            <a class="dropdown-item" onclick="selectedTolerance(6)"
+                                            <a class="dropdown-item" onclick="selectTolerance(6)"
                                                href="#">0.00000001</a>
                                         </div>
                                     </div>
@@ -472,41 +470,34 @@
                                 </div>
 
                                 <div class="form-group" id="subintervals-div">
-                                    <label for="upper-bound-input">Počet dielikov*</label>
+                                    <label for="subintervals-input">Počet dielikov*</label>
                                     <input type="number" class="form-control" id="subintervals-input" min="1" max="100"
                                            placeholder="<1;100>">
                                     <p class="error" id="subintervals-value-hint-error"></p>
                                 </div>
 
 
-                                <button onclick="calculate()" type="button" class="btn btn-primary btn-fw">Vypočítať
-                                </button>
+                                <button onclick="calculate()" type="button" class="btn btn-primary btn-fw">Vypočítať</button>
                                 <button onclick="graph()" type="button" class="btn btn-danger btn-fw">Graf</button>
 
-                                <input oninput="appendResultToCsv()" type="material" hidden="" accept="text/csv"
-                                       class="form-control" id="csv-material-input">
+                                <input oninput="appendResultToCsv()" type="file" hidden="" accept="text/csv"
+                                       class="form-control" id="csv-file-input">
                                 <button onclick="saveToFile()" type="button" class="btn btn-success btn-fw">Uložiť do
                                     súboru
                                 </button>
 
-                                <p class="error" id="result-hint-error"></p>
 
                                 <div class="form-group" id="result-div">
                                     <label for="upper-bound-input">Výsledok</label>
                                     <input style="color: black" type="text" class="form-control" id="result-input"
                                            readonly>
-                                </div>
-
-                                <div class="form-group" id="result-error-div">
-                                    <label for="upper-bound-input">Celková chyba</label>
-                                    <input style="color: black" type="text" class="form-control" id="result-error-input"
-                                           readonly>
+                                    <p class="error" id="result-value-hint-error"></p>
                                 </div>
 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
+                    <div class="col-md-8 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
                         <div class="card">
                             <div class="card-body" id="table-div">
                                 <h4 class="card-title"></h4>
@@ -572,15 +563,12 @@
 <script th:src="@{/js/dashboard.js}"></script>
 
 
-<script src="/static/js/chart.js"></script>
-<script th:src="@{/js/chart.js}"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
 <script src="/static/js/my/my.js"></script>
 <script th:src="@{/js/my/my.js}"></script>
 
-<script src="/static/js/my/non-linear"></script>
-<script th:src="@{/js/my/non-linear.js}"></script>
 
 <script src="/static/js/jquery.csv.js"></script>
 <script th:src="@{/js/jquery.csv.js}"></script>

@@ -5557,3 +5557,6 @@ SELECT COUNT(m.id) FROM material m  WHERE SUBSTRING_INDEX(m.name, ':', 1) = name
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-04-16 20:02:03 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSONAL_INFO" not found; SQL statement:
+insert into personal_info (id,nam,surname,username, personal_number, email, password, gender, authority, enabled) values (0,'Lýdia','Gábrišová','lydia.gabrisova', '56478', 'lydia.gabrisova@fri.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','TEACHER', true) [42102-214]

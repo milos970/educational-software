@@ -4,7 +4,7 @@ function getById(id)
     const element = document.getElementById(id);
     if (!element)
     {
-        throw new ReferenceError(id + " is not defined");
+        throw new ReferenceError(id + " is not defined!");
     }
     return element;
 }
@@ -22,11 +22,16 @@ const upperValueInputElement = getById("upper-bound-input");
 const equationErrorHintElement = getById("equation-hint-error");
 const functionErrorHintElement = getById("function-hint-error");
 const toleranceValueErrorHintElement = getById("tolerance-value-hint-error");
-const resultValueErrorHintElement = getById("result-hint-error");
+const resultValueErrorHintElement = getById("result-value-hint-error");
 
 
-const ITERATIONS = 1000_000;
-let tolerance = 0;
+const ITERATIONS = 1000_000; //tu nastaviť počet iterácii
+let tolerance = 0; //tolerancia sa udáva programovo
+const X_MIN_VALUE = 1000;
+const X_MAX_VALUE = 100_000;
+const NODES_NUMBER = 100;
+
+const LOWER_BOUNDS =
 
 
 
@@ -35,9 +40,6 @@ let tolerance = 0;
 
 function saveToFile()
 {
-
-
-
     let allRows =[]
 
     if (selectedCategory === 1)
@@ -99,7 +101,7 @@ function saveToFile()
                 fileName = "Lagrangeov polynóm";
                 break;
             case 2:
-                fileName = "Newtonov polynom";
+                fileName = "Newtonov polynóm";
                 break;
             case 3:
                 fileName = "Metóda najmenších štvorcov";
@@ -117,12 +119,6 @@ function saveToFile()
             default:
         }
     }
-
-
-
-
-
-
 
 
     const csvContent = allRows.map(row => row.join(';')).join('\n');
@@ -198,7 +194,7 @@ function hideAllNonLinearElements()
     document.getElementById("equation-div").value ="";
     document.getElementById("tolerance-div").value ="";
     document.getElementById("non-linear-dropdown-div").style.display="none";
-    document.getElementById("result-error-div").style.display="none";
+
 }
 
 function hideAllIntegrationElements()
@@ -209,7 +205,7 @@ function hideAllIntegrationElements()
     document.getElementById("function-div").style.display="none";
 
     document.getElementById("integration-dropdown-div").style.display="none";
-    document.getElementById("result-error-div").style.display="none";
+
 }
 
 function hideAllApproximationElements()
@@ -219,7 +215,7 @@ function hideAllApproximationElements()
     document.getElementById("functions-dropdown-div").style.display="none";
 
     document.getElementById("approximation-dropdown-div").style.display="none";
-    document.getElementById("result-error-div").style.display="none";
+
 }
 
 
@@ -440,7 +436,7 @@ function calculateNonLinearMethod()
 
 
 let round = -1;
-function selectedTolerance(value)
+function selectTolerance(value)
 {
     const dropDownButton = getById("dropdownMenuOutlineButton1");
 
@@ -483,18 +479,19 @@ function selectedTolerance(value)
 
 }
 
-function validateInitialValue()
-{
-    const initialValueInput = document.getElementById("initial-value-input");
-    const initalValueHintError = document.getElementById("initial-value-hint-error");
 
-    if (initialValueInput.value < -100 || initialValueInput.value > 100)
+function isValueInInterval(element,min,max, elementErrorHint)
+{
+    if (element.value < min || element.value > max)
     {
-        initalValueHintError.innerHTML = "Hodnota mimo intervalu!";
+        elementErrorHint.innerHTML = "Hodnota mimo intervalu!";
+        return false;
     } else {
-        initalValueHintError.innerHTML = "";
+        elementErrorHint.innerHTML = "";
+        return true;
     }
 }
+
 
 
 
@@ -558,30 +555,7 @@ function initializeTable(data)
 
 let inputs = [];
 let results = [];
-function validateInitialValue()
-{
-    const initialValueInput = getById("initial-value-input");
-    const initialValueErrorHint = getById("initial-value-hint-error");
 
-    if (initialValueInput.value.length !== 0)
-    {
-        initialValueErrorHint.innerHTML = "";
-    } else
-    {
-        initialValueErrorHint.innerHTML = "Prázdne pole!";
-        return false;
-    }
-
-    if (initialValueInput.value >= -100 && initialValueInput.value <= 100)
-    {
-        initialValueErrorHint.innerHTML = "";
-        return true;
-    } else
-    {
-        initialValueErrorHint.innerHTML = "Hodnota mimo intervalu!";
-        return false;
-    }
-}
 
 
 function validateToleranceValue()
@@ -774,6 +748,8 @@ function newtonMethod()
     }
 
 
+
+
     let current = parseFloat(initialValueInputElement.value);
 
 
@@ -787,10 +763,12 @@ function newtonMethod()
     data[0][2] = "Chyba";
 
     const parsedEquation = math.parse(fun);
+
     const derivative = math.derivative(parsedEquation, 'x');
 
     for (let i = 0; i < ITERATIONS; ++i)
     {
+
         data[i + 1] = [3];
         data[i + 1][0] = i;
         data[i + 1][1] = current.toFixed(round);
@@ -798,10 +776,12 @@ function newtonMethod()
         let fx = 0;
         try
         {
+
             fx = math.evaluate(parsedEquation.toString(), { x: current });
         }
         catch (error) {
-            equationErrorHintElement.innerHTML = "Nedefinovaná hodnota!";
+
+            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
         }
 
 
@@ -813,7 +793,8 @@ function newtonMethod()
             derFx = math.evaluate(derivative.toString(), { x: current });
         }
         catch (error) {
-            equationErrorHintElement.innerHTML = "Nedefinovaná hodnota!";
+
+            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
         }
 
         if (derFx === 0)
@@ -842,7 +823,7 @@ function newtonMethod()
 
 
     const resultInput = getById("result-input");
-    resultInput.value = "Vypočítaný koreň rovnice: " + current.toFixed(round);
+    resultInput.value = "Hodnota koreňa rovnice: " + current.toFixed(round);
 
 
     inputs[0] = [2];
@@ -862,7 +843,7 @@ function newtonMethod()
 
 
     inputs[3] = [2];
-    inputs[3][0] = "Vypočítaný koreň rovnice"
+    inputs[3][0] = "Hodnota koreňa rovnice"
     inputs[3][1] = current.toFixed(round);
 
 
@@ -922,7 +903,7 @@ function bisectionMethod()
 
         if (fak * fbk > 0)
         {
-            resultValueErrorHintElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
             return;
         }
 
@@ -954,7 +935,7 @@ function bisectionMethod()
     }
 
 
-    resultValueInputElement.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
+    resultValueInputElement.value = "Hodnota koreňa rovnice: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -985,7 +966,7 @@ function bisectionMethod()
 
 
     inputs[4] = [2];
-    inputs[4][0] = "Vypočítaný koreň rovnice"
+    inputs[4][0] = "Hodnota koreňa rovnice"
     inputs[4][1] = xk.toFixed(round);
 
 
@@ -1032,7 +1013,7 @@ function regulaFalsiMethod()
         if (fak * fbk > 0)
         {
 
-            equationErrorHintElement.innerHTML = "Funkcia nieje spojitá na danom intervale!";
+            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
             return;
         }
 
@@ -1071,7 +1052,7 @@ function regulaFalsiMethod()
         prev = xk;
     }
 
-    resultValueInputElement.value = "Vypočítaný koreň rovnice: " + xk.toFixed(round);
+    resultValueInputElement.value = "Hodnota koreňa rovnice: " + xk.toFixed(round);
 
     $("#table tr").remove();
     initializeTable(data);
@@ -1102,7 +1083,7 @@ function regulaFalsiMethod()
 
 
     inputs[4] = [2];
-    inputs[4][0] = "Vypočítaný koreň rovnice"
+    inputs[4][0] = "Hodnota koreňa rovnice"
     inputs[4][1] = xk.toFixed(round);
 
 
@@ -1164,6 +1145,10 @@ function graph()
         }
     }
 
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+
 
 
 
@@ -1178,6 +1163,7 @@ function graph()
     let xValues = [];
     let yValues = [];
 
+    let xValues1 = []
     let yValues1 = [];
 
     if (selectedCategory === 1)
@@ -1191,14 +1177,20 @@ function graph()
 
     if (selectedCategory === 2)
     {
-        const lower = parseFloat(lowerValueInputElement.value);
-        const upper = parseFloat(upperValueInputElement.value);
-        for (let i = lower; i <= upper; ++i)
+        let lower = parseFloat(lowerValueInputElement.value);
+        let upper = parseFloat(upperValueInputElement.value);
+
+
+
+
+        for (let i = -10; i <= 10; i+=0.01)
         {
-            xValues.push(i);
-            yValues.push(math.evaluate(expression.toString(), { x: i }));
-        }
+            let value = parseFloat(i.toFixed(2));
+            xValues.push(value);
+        }   yValues.push(math.evaluate(expression.toString(), { x: value }));
+
     }
+
 
 
 
@@ -1209,24 +1201,25 @@ function graph()
             return a[0] - b[0];
         });
 
-
+        for (let i = -10; i <= 10; i+=0.01)
+        {
+            let value = parseFloat(i.toFixed(2));
+            xValues.push(value);
+           yValues.push(math.evaluate(expression.toString(), { x: value }));
+        }
 
 
         for (let i = 0; i < points.length; ++i)
         {
-            xValues.push(points[i][0]);
+            xValues1.push(points[i][0]);
+            yValues1.push(points[i][1]);
 
-            yValues.push(points[i][1]);
-        }
-
-
-
-        for (let i = 0; i < xValues.length; ++i)
-        {
-            yValues1.push(math.evaluate(expression.toString(), { x: xValues[i] }));
         }
 
     }
+
+
+
 
 
 
@@ -1239,45 +1232,57 @@ function graph()
 
 
 
+
+
+
      data = {
         labels: xValues,
         datasets: [
         {
-            label: 'line 1',
+            label: 'Funkcia',
             data: yValues,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 2,
+            backgroundColor: 'red',
+            borderColor: 'red',
+            borderWidth: 3,
             fill: true,
             type: "line",
 
-            pointBackgroundColor: function(context)
-            {
-                // Highlight points where x equals 0
-                return context.dataIndex === 10 ? 'blue' : 'blue';
-            },
-            // Define point border color
-            pointBorderColor: function(context) {
-                // Highlight points where x equals 0
-                return context.dataIndex === 10 ? 'blue' : 'blue';
-            },
-
-            pointRadius: function(context) {
-                // Increase the radius of highlighted points
-                return context.dataIndex === 10 ? 2 : 2; // Adjust the value as needed
-            },
-
-
         },
             {
-                label: 'Points Only',  // Label for the dataset
-                data: yValues1,          // Y values for the points
-                backgroundColor: 'red',  // Background color of the points
-                borderColor: 'red',      // Border color of the points
-                borderWidth: 3,           // Border width of the points
+                label: 'Zadané body',  // Label for the dataset
+                data: yValues1,     // Y values for the points
+                backgroundColor: 'blue',  // Background color of the points
+                borderColor: 'blue',      // Border color of the points
+                borderWidth: 2,           // Border width of the points
 
                 type: 'scatter',          // Type of the dataset (scatter for points only)
-            }
+                pointBackgroundColor: function(context)
+                {
+
+                    var xValue = context.chart.data.labels[context.dataIndex];
+
+                    return xValues.includes(xValue) ? 'blue' : 'red';
+                },
+
+                pointBorderColor: function(context) {
+                    var xValue = context.chart.data.labels[context.dataIndex];
+
+                    return xValues.includes(xValue) ? 'blue' : 'red';
+                },
+
+                pointRadius: function(context) {
+                    return 2;
+                },
+                data: xValues.map(function(x) {
+                    // Map each x-value to the corresponding y-value if available
+                    // If y-value doesn't exist for x, you can set it to null
+                    var index = xValues1.indexOf(x);
+                    return index !== -1 ? yValues1[index] : null;
+                })
+
+            },
+
+
 
 
         ],
@@ -1295,9 +1300,10 @@ function graph()
     if (selectedCategory === 3 && selectedMethod === 3)
     {
         data.datasets[1].hidden = false;
-        data.datasets[1].type = "line";
-        data.datasets[1].fill = false;
-        data.datasets[0].type = "scatter";
+        data.datasets[0].hidden = false;
+        data.datasets[0].type = "line";
+        data.datasets[0].fill = false;
+        data.datasets[1].type = "scatter";
     } else {
         data.datasets[1].hidden = true;
     }
@@ -1311,12 +1317,28 @@ function graph()
         }
     };
 
+    const xSet = new Set();
+
+    for (let i = -10; i <= 10; ++i)
+    {
+        xSet.add(i);
+    }
+
+    const ySet = new Set();
+
+    for (let i = -1000; i <= 1000; i += 10)
+    {
+        ySet.add(i);
+    }
+
     var options = {
+
         scales: {
             yAxes: [{
                 ticks: {
                    beginAtZero: true,
                     fontColor: "#000000",
+
                 },
                 gridLines: {
                     zeroLineWidth: 3,
@@ -1328,16 +1350,56 @@ function graph()
                 ticks: {
                     beginAtZero: true,
                     fontColor: "#000000",
+                    autoSkip : false,
+                    callback: function(value, index, values)
+                    {
+                        if (xSet.has(value)) {
+                            return value;
+                        } else {
+                            return null;
+                        }
+
+                    }
+
+
+
+                    },
+                gridLines: {
+                    
+                    zeroLineColor: "#2C292E",
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    fontColor: "#000000",
+                    autoSkip : false,
+                    callback: function(value, index, values)
+                    {
+                        if (ySet.has(value)) {
+                            return value;
+                        } else {
+                            return null;
+                        }
+
+                    }
+
+
 
                 },
                 gridLines: {
-                    
+
                     zeroLineColor: "#2C292E",
                 }
             }]
         },
         legend: {
-            display: false
+            display: true, // Set to true to display the legend
+            position: 'top', // Position of the legend: 'top', 'bottom', 'left', 'right'
+            labels: {
+                fontColor: 'black', // Color of the legend labels
+                fontSize: 14 // Font size of the legend labels
+            }
         },
         elements: {
             point: {
@@ -1364,6 +1426,8 @@ function graph()
             ctx.restore();
         }
     }
+
+
 
 
 
@@ -1415,13 +1479,13 @@ function isSelected()
 {
     if ( (getById("nodes-string-input").value.length === 0) && (getById("file-input").files.length === 0) )
     {
-        getById("coordinates-string-error-hint").innerHTML = "Zvoľte túto možnosť!";
-        getById("coordinates-csv-error-hint").innerHTML = "Alebo túto možnosť!";
+        getById("nodes-string-error-hint").innerHTML = "Zvoľte túto možnosť!";
+        getById("nodes-csv-error-hint").innerHTML = "Alebo túto možnosť!";
         return false;
     }
 
     if ( (getById("nodes-string-input").value.length != 0) && (getById("file-input").files.length != 0) ) {
-        getById("coordinates-string-error-hint").innerHTML = "Vyberte len jednu možnosť!";
+        getById("nodes-string-error-hint").innerHTML = "Vyberte len jednu možnosť!";
 
         return false;
     }
@@ -1619,13 +1683,14 @@ function newtonInterpolating()
     {
         let cislo = dividedDifference(0,i);
 
+
         if (i == 0)
         {
             if (cislo < 0)
             {
-                equation += "- " + (Number.isInteger(1 * cislo) ? ((-1) * cislo): ((-1) * cislo.toFixed(3)));
+                equation += "- " + (Number.isInteger(1 * cislo) ? ((-1) * cislo): ((-1) * cislo));
             } else {
-                equation += (Number.isInteger(1 * cislo) ? ( 1 * cislo): (1 * cislo).toFixed(3));
+                equation += (Number.isInteger(1 * cislo) ? ( 1 * cislo): (1 * cislo));
 
             }
             continue;
@@ -1773,7 +1838,7 @@ function validateStringCoordinates()
 
 
     const coordinatesStringElement = getById("nodes-string-input");
-    const coordinatesStringErrorHint = getById("coordinates-string-error-hint");
+    const coordinatesStringErrorHint = getById("nodes-string-error-hint");
 
     if (coordinatesStringElement.value.length === 0)
     {
@@ -1790,14 +1855,29 @@ function validateStringCoordinates()
         return false;
     }
 
-    return validateCoordinates(parseStringCoordintatesToArrays(), 1);
+    return validateNodes(parseStringCoordintatesToArrays());
 }
 
 function validateCsvCoordinates()
 {
     parseCsvToArrays();
+    return validateNodes(array);
+}
 
-    return validateCoordinates(array, 2);
+
+function checkIfValueIsInteger(value)//OK
+{
+
+
+    if (/^\d+$/.test(value) || /^\-\d+$/.test(value))
+    {
+
+        return true;
+    } else {
+
+        return false;
+    }
+
 }
 
 
@@ -1806,37 +1886,7 @@ function validateCsvCoordinates()
 function validateCoordinates(coordinatesArrays, type)
 {
 
-    const coordinatesCsvErrorHint = getById("coordinates-csv-error-hint");
-    const coordinatesStringErrorHint = getById("coordinates-string-error-hint");
 
-
-
-
-    if (type === 1)
-    {
-        if (coordinatesArrays.length > 10)
-        {
-            coordinatesStringErrorHint.innerHTML = "Uzlov je viac než 10!";
-            return false;
-        } else {
-            coordinatesStringErrorHint.innerHTML = "";
-        }
-
-    }
-
-
-    if (type === 2)
-    {
-
-        if (coordinatesArrays.length > 1000)
-        {
-            coordinatesCsvErrorHint.innerHTML = "Uzlov je viac než 1000!";
-            return false;
-        } else {
-            coordinatesCsvErrorHint.innerHTML = "";
-        }
-
-    }
 
 
 
@@ -1905,26 +1955,6 @@ function validateCoordinates(coordinatesArrays, type)
 
     }
 
-
-    if (coordinatesArrays.length !== uniques.size)
-    {
-        if (type === 1) {
-            coordinatesStringErrorHint.innerHTML = "Duplikát X!";
-        }
-
-        if (type === 2) {
-            coordinatesCsvErrorHint.innerHTML = "Duplikát X!";
-        }
-
-        return false;
-    }
-    else
-    {
-        coordinatesStringErrorHint.innerHTML = "";
-        coordinatesCsvErrorHint.innerHTML = "";
-    }
-
-    array = coordinatesArrays;
 
 
     return true;
@@ -2142,31 +2172,6 @@ function cramer(option, coeficients) {
 }
 
 
-function totalError(data)
-{
-    let e = 0;
-    const n = data.length;
-
-    const parsedEquation = math.parse(fun);
-
-    for (let i = 0; i < n; ++i)
-    {
-        const x = data[i][0];
-        const y = data[i][1];
-
-        const fx =  math.evaluate(parsedEquation.toString(), { x: x});
-
-        e += Math.pow(fx - y,2);
-        console.log("e " + e);
-
-    }
-
-    e /=n;
-
-    e = Math.sqrt(e);
-
-    getById("result-error-input").value = e;
-}
 
 
 function spline()
@@ -2210,6 +2215,90 @@ function spline()
     {
         console.log(Sx[i]);
     }
+
+
+}
+
+
+function validateNodes(array)
+{
+    if (array.length === 0)
+    {
+        return false;
+    }
+
+    if (array.length < 4)
+    {
+        return false;
+    }
+
+    for (let i = 0; i < array.length; ++i)
+    {
+        if (!checkIfValueIsInteger(array[i][0])) //je každá x hodnota celé číslo?
+        {
+
+            return false;
+        }
+    }
+
+    for (let i = 0; i < array.length; ++i)
+    {
+        if (isNaN(array[i][1]))
+        {
+            return false;
+        }
+
+        if (array[i][1].includes(','))
+        {
+            array[i][1] =  array[i][1].replace(',', '.');
+        }
+    }
+
+
+    const set = new Set();
+
+    for (let i = 0; i < array.length; ++i)
+    {
+
+        set.add(array[i][0]);
+    }
+
+
+
+
+    if (array.length !== set.size) //nenáchadzajú sa x duplicity?
+    {
+        set.clear();
+        return false;
+    }
+
+
+    array.sort(function(a, b) { //usporiada 2d pole vzostupne
+        return a[0] - b[0];
+    });
+
+    const minValue = parseInt(array[0][0]);
+    const maxValue = parseInt(array[array.length - 1][0]);
+
+    if (minValue > X_MIN_VALUE)
+    {
+        return false;
+    }
+
+
+    if (maxValue > X_MAX_VALUE)
+    {
+        return false;
+    }
+
+
+    if (maxValue - minValue > NODES_NUMBER)
+    {
+        return false;
+    }
+
+
+    return true;
 
 
 }
@@ -2321,7 +2410,7 @@ function trapezoid()
 
     const result = sum * h/2;
 
-    resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
+    resultValueInputElement.value = "Hodnota určitého integrálu: " + result.toFixed(6);
 
 
      inputs =[];
@@ -2414,7 +2503,7 @@ function simpson()
 
     const result = sum * h/3;
 
-    resultValueInputElement.value = "Hodnota aproximačného integrálu: " + result.toFixed(6);
+    resultValueInputElement.value = "Hodnota určitého integrálu: " + result.toFixed(6);
 
      inputs =[];
 
@@ -2663,7 +2752,6 @@ function validateStudentsCsv()
 
 function updateSystemAbsents()
 {
-    alert(45);
     const errorHint = getById("absents-hint-error");
     const absentsInputElement = getById("absents-input");
     const absentsButton = getById("absents-button");

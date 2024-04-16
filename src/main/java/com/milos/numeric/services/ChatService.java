@@ -14,6 +14,7 @@ import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,18 +26,18 @@ public class ChatService
     private final MessageService messageService;
 
     private final Validator validator;
-
-    private final PersonalInfoRepository personalInfoRepository;
+    private final PersonalInfoService personalInfoService;
 
 
 
     @Autowired
-    public ChatService(ChatRepository chatRepository, MessageService messageService, Validator validator, PersonalInfoRepository personalInfoRepository)
+    public ChatService(ChatRepository chatRepository, MessageService messageService, Validator validator, PersonalInfoService personalInfoService)
     {
         this.chatRepository = chatRepository;
         this.messageService = messageService;
         this.validator = validator;
-        this.personalInfoRepository = personalInfoRepository;
+        this.personalInfoService = personalInfoService;
+
     }
 
 
@@ -48,6 +49,7 @@ public class ChatService
         this.chatRepository.save(chat);
         return true;
     }
+
 
     public Optional<Chat> findByChatId(String usernameA, String usernameB)
     {
@@ -63,28 +65,27 @@ public class ChatService
             return false;
         }
 
+
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        Optional<PersonalInfo> optional = this.personalInfoRepository.findByUsername(authentication.getName());
-
-        if (optional.isEmpty()) {
-            return false;
-        }
-
+        String username = userDetails.getUsername();
         ChatId chatId = new ChatId();
 
-        PersonalInfo personalInfo = optional.get();
 
-        if (personalInfo.getAuthority() == Authority.TEACHER)
+
+        if (this.personalInfoService.findAuthorityByUsername(username).get() == Authority.TEACHER)
         {
-            chatId.setParticipantA(authentication.getName());
+            chatId.setParticipantA(username);
             chatId.setParticipantB(messageDto.getReceiverUsername());
         }
 
-        if (personalInfo.getAuthority() == Authority.STUDENT)
+        if (this.personalInfoService.findAuthorityByUsername(username).get() == Authority.STUDENT)
         {
-            chatId.setParticipantA(authentication.getName());
-            chatId.setParticipantB("gabrisova");
+            chatId.setParticipantA(username);
+            Optional<String> optionalUsername = this.personalInfoService.findUsernameByAuthorityTeacher();
+            chatId.setParticipantB(optionalUsername.get());
         }
 
 
@@ -96,8 +97,10 @@ public class ChatService
             return false;
         }
 
+        messageDto.setSenderUsername(username);
 
         Chat chat = optionalChat.get();
+
         this.messageService.saveMessage(messageDto, chat);
         return true;
     }

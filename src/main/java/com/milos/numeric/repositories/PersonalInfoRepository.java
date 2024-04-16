@@ -18,6 +18,13 @@ public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long
     @Query(value = "SELECT p.* FROM personal_info p  WHERE p.authority = :authority", nativeQuery = true)
     public Optional<PersonalInfo> findByAuthority(@Param("authority")String authority);
 
+
+    @Query(value = "SELECT p.username FROM personal_info p  WHERE p.authority = :authority", nativeQuery = true)
+    public Optional<String> findUsernameByAuthority(@Param("authority")String authority);
+
+    @Query(value = "SELECT p.authority FROM personal_info p  WHERE p.username = :username", nativeQuery = true)
+    public Optional<String> findAuthorityByUsername(@Param("username")String username);
+
     public Optional<PersonalInfo> findByEmail(String email);
 
     @Query(value = "SELECT * FROM personal_info p WHERE p.email =:email and p.enabled = false", nativeQuery = true)

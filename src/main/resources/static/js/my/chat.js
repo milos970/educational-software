@@ -5,8 +5,9 @@ let userName = "";
 
 
 let receiver = "";
-function sendMessage(receiver)
+function sendMessage()
 {
+    alert(45);
     if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
     {
         getById("message-input-error-hint").innerHtml = "Nevalidný výraz!";
@@ -61,13 +62,14 @@ function sendMessage(receiver)
 
     }
 
-    let url = "/person/sendMessage";
+    let url = "/person/message";
 
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
 
+    alert(5);
     let data =
     {
         content: content,
@@ -91,14 +93,19 @@ function getConversation(receiverUsername)
 
 
     getById("send-message-div").style.display="block";
-    const xhttp = new XMLHttpRequest();
 
-    xhttp.onload = function()
-    {
-        if (xhttp.status === 200)
-        {
-            const messages = JSON.parse(xhttp.response);
-            alert(1);
+
+
+
+    $.ajax({
+        url: '/person/conversation',
+        method: 'GET',
+        data: { receiver: receiver },
+        dataType: 'json',
+        success: function(response) {
+            alert(response);
+            const messages = response;
+
 
             const conversationDivElement = document.getElementById("conversation");
 
@@ -122,7 +129,7 @@ function getConversation(receiverUsername)
                 const button = document.createElement("button");
                 button.textContent = message.content;
 
-                if (message.senderUsername === senderUsername) {
+                if (message.senderUsername !== receiver) {
 
                     button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
                     innerDivLeft.style.display = "hidden";
@@ -138,14 +145,12 @@ function getConversation(receiverUsername)
             })
             let scrollDiv = getById("conversation");
             scrollDiv.scrollTop = scrollDiv.scrollHeight;
-        } else {
-            alert("Unsuccessfull");
+        },
+        error: function(xhr, status, error) {
+            // Handle error
+            console.error(xhr.responseText);
         }
-
-
-
-    }
-
+    });
 
 
 
@@ -155,10 +160,7 @@ function getConversation(receiverUsername)
 
 
 
-    let url = "/person/conversation";
-    url += "&param=" + encodeURIComponent(receiverUsername);
-    xhttp.open("GET", url, true);
 
 
-    xhttp.send();
+
 }

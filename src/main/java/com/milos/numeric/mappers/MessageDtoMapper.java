@@ -11,7 +11,6 @@ public interface MessageDtoMapper
 {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "chat", ignore = true)
-    @Mapping(target = "seen", ignore = true)
     Message sourceToDestination(MessageDto source);
     MessageDto destinationToSource(Message destination);
 }

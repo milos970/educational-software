@@ -338,15 +338,9 @@
                                            placeholder="Max. počet znakov: 100" aria-label="Recipient's username" aria-describedby="basic-addon2" minlength="1" maxlength="100">
 
 
-                                        <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.username}')|">Odoslať</button>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-sm btn-primary" type="button" onclick="sendMessage()">Odoslať</button>
                                         </div>
-
-
-                                        <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="input-group-append">
-                                            <button class="btn btn-sm btn-primary" type="button" th:attr="onclick=|sendMessage('${personalInfo.username}')|">Odoslať</button>
-                                        </div>
-
 
                                     <p class="error" id="message-input-error-hint"></p>
 
@@ -374,7 +368,7 @@
                                         </tr>                                        <tr th:each="student : ${students}">
                                             <td><span th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><button th:attr="onclick=|getConversation('${personalInfo.username}','${student.personalInfo.username}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
+                                            <td><button th:attr="onclick=|getConversation('${student.personalInfo.username}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
                                         </tr>
 
                                         </tbody>
@@ -427,8 +421,6 @@
 <script th:src="@{/js/dashboard.js}"></script>
 <!-- End custom js for this page -->
 
-<script src="/static/js/my/chart.js"></script>
-<script th:src="@{/js/my/chart.js}"></script>
 
 <script src="/static/js/my/chat.js"></script>
 <script th:src="@{/js/my/chat.js}"></script>
@@ -437,7 +429,6 @@
 <script src="/static/js/my/my.js"></script>
 <script th:src="@{/js/my/my.js}"></script>
 
-<script src="/static/js/my/non-linear"></script>
-<script th:src="@{/js/my/non-linear.js}"></script>
+
 </body>
 </html>

@@ -70,6 +70,18 @@ public class PersonalInfoService
         this.verificationTokenService = verificationTokenService;
     }
 
+    public Optional<String> findUsernameByAuthorityTeacher()//OK
+    {
+        return this.personalInfoRepository.findUsernameByAuthority(Authority.TEACHER.name());
+    }
+
+    public Optional<Authority> findAuthorityByUsername(String username)//OK
+    {
+        Optional<String> optional = this.personalInfoRepository.findAuthorityByUsername(username);
+        return Optional.of(Authority.valueOf(optional.get()));
+    }
+
+
     public boolean generatePassword(String username)
     {
         Optional<PersonalInfo> optional = this.personalInfoRepository.findByUsername(username);

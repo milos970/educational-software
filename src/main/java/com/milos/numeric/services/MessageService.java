@@ -27,8 +27,8 @@ public class MessageService
     public void saveMessage(MessageDto messageDto, Chat chat)
     {
         Message message = this.messageDtoMapper.sourceToDestination(messageDto);
+        message.setSenderUsername(messageDto.getSenderUsername());
         message.setChat(chat);
-        System.out.println("Je to v message service" + message.getContent());
         this.messageRepository.save(message);
     }
 
