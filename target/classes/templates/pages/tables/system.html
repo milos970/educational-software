@@ -310,8 +310,8 @@
 
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                                                 <div class="input-group">
-                                                    <input id="material-input" onchange="parseCsvToArrays()" type="material" accept="text/csv" class="form-control" aria-describedby="basic-addon2" style="display:none;">
-                                                    <input type="text" id="material-name-input"    class="form-control" aria-describedby="basic-addon2">
+                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" accept="text/csv" class="form-control" aria-describedby="basic-addon2" style="display:none;">
+                                                    <input type="text" id="text-name-input"    class="form-control" aria-describedby="basic-addon2">
                                                     <div class="input-group-append">
                                                         <button class="btn btn-sm btn-primary" onclick="clic()" type="button">Vložiť</button>
                                                     </div>
@@ -365,7 +365,7 @@
 
                                         </tr>
                                         <tr>
-                                            <td> Počet dní do konca semestra </td>
+                                            <td> Počet dní do začiatku cvičenia</td>
                                             <td th:text="${systemSettings.numberOfDays}"></td>
                                             <td></td>
                                             <td></td>

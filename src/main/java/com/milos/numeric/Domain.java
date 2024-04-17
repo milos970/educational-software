@@ -1,7 +1,7 @@
 package com.milos.numeric;
 
 public enum Domain {
-    TEACHER_DOMAIN("fri.uniza.sk"),
+    EMPLOYEE_DOMAIN("fri.uniza.sk"),
     STUDENT_DOMAIN("stud.uniza.sk");
     private final String domain;
 

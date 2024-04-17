@@ -48,7 +48,7 @@ public class SystemSettingsService
         return this.systemSettingsRepository.findFirst();
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 * * * * *")
     public boolean incrementDays()
     {
 
@@ -64,7 +64,8 @@ public class SystemSettingsService
         LocalDateTime deadline = this.dateParser.parseStringToLocalDate(systemSettings.getClassDate());
         LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
 
-        int daysDifference = (int) ChronoUnit.DAYS.between(deadline, now);
+        int daysDifference = Math.abs((int) ChronoUnit.DAYS.between(deadline, now));
+        System.out.println(daysDifference);
 
         daysDifference = Math.abs(daysDifference);
         systemSettings.setNumberOfDays(daysDifference);

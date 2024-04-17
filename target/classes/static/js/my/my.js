@@ -1768,10 +1768,10 @@ function leastSquares() {
 
 
 
-let array = [];
+var array = [];
+
 function parseCsvToArrays()
 {
-
     var csvString = "";
     function csvToString(file, callback) {
         let reader = new FileReader();
@@ -1793,19 +1793,18 @@ function parseCsvToArrays()
     getFileName();
 
     csvToString(file, function(csvString) {
-        array = $.csv.toArrays(csvString);
+        this.array = $.csv.toArrays(csvString);
 
 
     });
 
-    return array;
 
 }
 
 
 function getFileName()
 {
-    const elementInputFileName = getById("text-input");
+    const elementInputFileName = getById("text-name-input");
     const elementInputFile = getById("file-input");
 
     elementInputFileName.value = elementInputFile.files[0].name;
@@ -2605,10 +2604,12 @@ function validateStudentsCsv()
 {
     const studentsCsvHintError = getById("students-csv-hint-error");
 
-    for (let i = 1; i < array.length; ++i)
+
+
+    for (let i = 1; i < this.array.length; ++i)
     {
 
-        let surname = array[i][0];
+        let surname = this.array[i][0];
 
         if (surname === null || surname.length === 0)
         {
@@ -2661,7 +2662,7 @@ function validateStudentsCsv()
         }
 
 
-        const pin = array[i][2].trim();
+        const pin = this.array[i][2].trim();
         const pinRegex = /^\d{6}$/;
 
         if (pin === null || pin.length === 0)
@@ -2689,7 +2690,7 @@ function validateStudentsCsv()
 
 
 
-        const email = array[i][3].trim();
+        const email = this.array[i][3].trim();
         const emailRegex = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
 
         if (email === null || pin.length === 0)
@@ -2721,13 +2722,13 @@ function validateStudentsCsv()
     const emails = new Set();
     const pins = new Set();
 
-    for (let i = 1; i < array.length; ++i)
+    for (let i = 1; i < this.array.length; ++i)
     {
-        emails.add(array[i][3]);
-        pins.add(array[i][2]);
+        emails.add(this.array[i][3]);
+        pins.add(this.array[i][2]);
     }
 
-    if (emails.size !== array.length - 1)
+    if (emails.size !== this.array.length - 1)
     {
         const char = String.fromCharCode(68);
         studentsCsvHintError.innerHTML = "Duplicitná hodnota v stlpci: "  + char;
@@ -2735,7 +2736,7 @@ function validateStudentsCsv()
     }
 
 
-    if (pins.size !== array.length - 1)
+    if (pins.size !== this.array.length - 1)
     {
         const char = String.fromCharCode(67);
         studentsCsvHintError.innerHTML = "Duplicitná hodnota v stlpci: "  + char;
@@ -3064,14 +3065,17 @@ return true;
 
 function uploadStudentsCsv()
 {
+
     if (getById("file-input").files.length === 0)
     {
         getById("students-csv-hint-error").innerHTML = "Poľe je prázdne!";
         return;
     }
 
-    if (!validateStudentsCsv()) {
-        alert(5);
+
+
+    if (!validateStudentsCsv())
+    {
         return;
     }
 
@@ -3105,7 +3109,7 @@ function uploadStudentsCsv()
 
 
 
-    // Sending the JSON object as the request body
+
     xhttp.send(formData);
 }
 

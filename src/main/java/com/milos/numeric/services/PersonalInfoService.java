@@ -9,9 +9,9 @@ import com.milos.numeric.Gender;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
-import com.milos.numeric.entities.Employee;
+
 import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.entities.SystemSettings;
+
 import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
@@ -174,6 +174,7 @@ public class PersonalInfoService
 
     public Optional<PersonalInfo> createPerson(PersonalInfoDto personalInfoDTO)
     {
+
         Set<ConstraintViolation<PersonalInfoDto>> violations = validator.validate(personalInfoDTO);
         if (!violations.isEmpty())
         {
@@ -193,7 +194,7 @@ public class PersonalInfoService
         personalInfo.setPassword(hashedPassword);
 
         String email = personalInfoDTO.getEmail();
-        String emailDomain = email.substring(email.indexOf("@"), email.length() - 1);
+        String emailDomain = email.substring(email.indexOf("@") + 1, email.length());
 
         String gender = this.determineGender(personalInfo.getName());
 
@@ -205,11 +206,13 @@ public class PersonalInfoService
             personalInfo.setGender(Gender.FEMALE);
         }
 
+
         String username = personalInfoDTO.getEmail().substring(0,personalInfo.getEmail().indexOf("@"));
         personalInfo.setUsername(username);
         personalInfo.setEnabled(false);
 
-        if (emailDomain.equals(Domain.TEACHER_DOMAIN.getDomain()))
+
+        if (emailDomain.equals(Domain.EMPLOYEE_DOMAIN.getDomain()))
         {
             personalInfo.setAuthority(Authority.TEACHER);
         }
@@ -221,26 +224,12 @@ public class PersonalInfoService
         }
 
 
-        this.personalInfoRepository.save(personalInfo);
-
-
-
-        Optional<SystemSettings> optionalSystemSettings= this.systemSettingsService.findFirst();
-
-        if (optionalSystemSettings.isEmpty())
-        {
-
-        }
-
-        SystemSettings systemSettings = optionalSystemSettings.get();
-
-        Employee teacher = systemSettings.getEmployee();
-
-        String fullName = teacher.getPersonalInfo().getName() + " " + teacher.getPersonalInfo().getSurname();
-
 
         return Optional.of(this.personalInfoRepository.save(personalInfo));
     }
+
+
+
 
 
 
@@ -275,7 +264,6 @@ public class PersonalInfoService
             String surname = rec[0];
             String email = rec[3];
 
-            System.out.println(email + ":" + personalNumber + ":" + name + ":" + surname);
 
             person.setPersonalNumber(personalNumber);
             person.setName(name);

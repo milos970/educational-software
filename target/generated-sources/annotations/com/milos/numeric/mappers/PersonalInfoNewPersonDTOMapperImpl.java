@@ -6,7 +6,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-04-11T22:11:59+0200",
+    date = "2024-04-17T11:10:42+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 public class PersonalInfoNewPersonDTOMapperImpl implements PersonalInfoNewPersonDTOMapper {
@@ -21,7 +21,6 @@ public class PersonalInfoNewPersonDTOMapperImpl implements PersonalInfoNewPerson
 
         personalInfo.setName( source.getName() );
         personalInfo.setSurname( source.getSurname() );
-        personalInfo.setUsername( source.getUsername() );
         personalInfo.setPersonalNumber( source.getPersonalNumber() );
         personalInfo.setEmail( source.getEmail() );
         personalInfo.setPassword( source.getPassword() );
@@ -39,7 +38,6 @@ public class PersonalInfoNewPersonDTOMapperImpl implements PersonalInfoNewPerson
 
         personalInfoDto.setName( destination.getName() );
         personalInfoDto.setSurname( destination.getSurname() );
-        personalInfoDto.setUsername( destination.getUsername() );
         personalInfoDto.setPersonalNumber( destination.getPersonalNumber() );
         personalInfoDto.setEmail( destination.getEmail() );
         personalInfoDto.setPassword( destination.getPassword() );

@@ -26,10 +26,6 @@ public class SystemSettings
     @Max(value = 13, message = "Value is more than 13!")
     private int allowedAbsents;
 
-    @Column(name = "number_of_students")
-    @Min(value = 0, message = "Value is less than 0!")
-    @Max(value = 100, message = "Value is more than 100!")
-    private int numberOfStudents;
 
     @OneToOne(targetEntity = Employee.class, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "employee_id")

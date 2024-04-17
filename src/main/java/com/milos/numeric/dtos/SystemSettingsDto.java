@@ -3,7 +3,6 @@ package com.milos.numeric.dtos;
 import com.milos.numeric.validators.DateValid;
 import com.milos.numeric.validators.EmployeeAvailability;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,8 +22,6 @@ public class SystemSettingsDto
     @EmployeeAvailability
     private String employee;
 
-    @Nullable
-    private String students;
 
     @Nullable
     @Min(0)

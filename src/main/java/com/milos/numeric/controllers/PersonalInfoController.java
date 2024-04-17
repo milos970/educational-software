@@ -175,6 +175,7 @@ public class PersonalInfoController {
 
     @PostMapping("/admin/upload/file/csv")//OK
     public ResponseEntity createStudents(@RequestParam("file") MultipartFile file) {
+        System.out.println(123);
         this.personalInfoService.createMultiplePersonsFromFile(file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
