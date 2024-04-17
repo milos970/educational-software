@@ -31,17 +31,13 @@ public class ChatController {
     @PostMapping("/person/message")
     public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto)
     {
-
-
         if (this.chatService.saveMessage(messageDto))
         {
             return new ResponseEntity<>(HttpStatus.OK);
         } else
         {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
 
@@ -49,25 +45,12 @@ public class ChatController {
     @ResponseBody
     public List<MessageDto> findById(@RequestParam("receiver") String receiver) {
 
-
         Optional<Chat> optional = this.chatService.findByChatId(this.personalInfoService.findUsernameByAuthorityTeacher().get(), receiver);
         List<MessageDto> messageDtos = new LinkedList<>();
 
-
         Chat chat = optional.get();
 
-
-
-
-
-
-
         List<Message> messages = chat.getMessages();
-
-        if (messages.isEmpty()) {
-
-        }
-
 
         for (int i = messages.size() - 1; i >= 0; --i) {
             MessageDto messageDto = new MessageDto();
@@ -76,10 +59,7 @@ public class ChatController {
             messageDto.setReceiverUsername(messages.get(i).getReceiverUsername());
             messageDto.setSenderUsername(messages.get(i).getSenderUsername());
             messageDtos.add(messageDto);
-
-
         }
-
 
         return messageDtos;
     }

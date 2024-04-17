@@ -1,5 +1,5 @@
 
-function getById(id)
+function getById(id) //OK
 {
     const element = document.getElementById(id);
     if (!element)
@@ -14,16 +14,19 @@ const functionInputElement = getById("function-input");
 const initialValueInputElement = getById("initial-value-input");
 const resultValueInputElement = getById("result-input");
 const subintervalsValueInputElement = getById("subintervals-input");
-
 const lowerValueInputElement = getById("lower-bound-input");
 const upperValueInputElement = getById("upper-bound-input");
-
+const stringNodesInputElement = getById("nodes-string-input");
+const csvNodesInputElement = getById("nodes-csv-input");
 
 const equationErrorHintElement = getById("equation-hint-error");
 const functionErrorHintElement = getById("function-hint-error");
 const toleranceValueErrorHintElement = getById("tolerance-value-hint-error");
 const resultValueErrorHintElement = getById("result-value-hint-error");
-
+const initialValueErrorHintElement = getById("initial-value-hint-error");
+const subintervalsErrorHint = getById("subintervals-value-hint-error");
+const stringNodesInputElement = getById("nodes-string-hint-error");
+const csvNodesInputElement = getById("nodes-csv-hint-error");
 
 const ITERATIONS = 1000_000; //tu nastaviť počet iterácii
 let tolerance = 0; //tolerancia sa udáva programovo
@@ -35,8 +38,8 @@ const NODES_NUMBER = 100;
 const MIN_INITIAL_VALUE = -10;
 const MAX_INITIAL_VALUE = 10;
 
-
-
+const LOWER_BOUNDS = -10;
+const UPPER_BOUNDS = 10;
 
 
 
@@ -197,7 +200,6 @@ function hideAllNonLinearElements()
     document.getElementById("equation-div").value ="";
     document.getElementById("tolerance-div").value ="";
     document.getElementById("non-linear-dropdown-div").style.display="none";
-
 }
 
 function hideAllIntegrationElements()
@@ -206,9 +208,7 @@ function hideAllIntegrationElements()
     document.getElementById("upper-bound-div").style.display="none";
     document.getElementById("subintervals-div").style.display="none";
     document.getElementById("function-div").style.display="none";
-
     document.getElementById("integration-dropdown-div").style.display="none";
-
 }
 
 function hideAllApproximationElements()
@@ -216,9 +216,7 @@ function hideAllApproximationElements()
     document.getElementById("nodes-string-div").style.display="none";
     document.getElementById("nodes-csv-div").style.display="none";
     document.getElementById("functions-dropdown-div").style.display="none";
-
     document.getElementById("approximation-dropdown-div").style.display="none";
-
 }
 
 
@@ -388,21 +386,6 @@ function selectIntegrationMethod(value)
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function calculate()
@@ -648,34 +631,25 @@ function validateBounds() //OK
 
 function validateFunction()
 {
-    const functionInput = getById("function-input");
-    const functionErrorHint = getById("function-hint-error");
-
-
-    if (functionInput.value.length === 0)
+    if (functionInputElement.value.length === 0)
     {
-        functionErrorHint.innerHTML = "Nezadaný výraz!";
+        functionErrorHintElement.innerHTML = "Nezadaný výraz!";
         return false;
     } else {
-        functionErrorHint.innerHTML = "";
+        functionErrorHintElement.innerHTML = "";
     }
-
-
 
     try
     {
-        let expression = math.parse(functionInput.value);
+        let expression = math.parse(functionInputElement.value);
         math.evaluate(expression.toString(), { x: 0 });
     } catch (error)
     {
-        functionErrorHint.innerHTML = "Nevalidný výraz!";
+        functionErrorHintElement.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
-
-
-    fun = functionInput.value;
-
+    fun = functionInputElement.value;
 
     return true;
 }
@@ -683,14 +657,12 @@ function validateFunction()
 
 function validateEquation()
 {
-    const equationInput = getById("equation-input");
-    let modifiedEquation = equationInput.value;
-    const equationErrorHint = getById("equation-hint-error");
 
+    let modifiedEquation = equationInputElement.value;
 
     if (modifiedEquation === null || modifiedEquation === "")
     {
-        equationErrorHint.innerHTML = "Zadajte rovnicu v požadovanom tvare!";
+        equationErrorHintElement.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
@@ -700,7 +672,7 @@ function validateEquation()
 
     if (modifiedEquation.indexOf("x") === -1)
     {
-        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        equationErrorHintElement.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
@@ -708,13 +680,13 @@ function validateEquation()
 
     if (modifiedEquation.charAt(modifiedEquation.length - 1) !== "0")
     {
-        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        equationErrorHintElement.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
     if (!modifiedEquation.includes("="))
     {
-        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        equationErrorHintElement.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
@@ -729,29 +701,27 @@ function validateEquation()
         math.evaluate(expression.toString(), { x: 0 });
     } catch (error)
     {
-        equationErrorHint.innerHTML = "Nevalidný výraz!";
+        equationErrorHintElement.innerHTML = "Nevalidný výraz!";
         return false;
     }
 
-    equationErrorHint.innerHTML = "";
+    equationErrorHintElement.innerHTML = "";
 
     fun = modifiedEquation;
-
 
     return true;
 }
 
 function validateInitialValue()
 {
-    const initialValueInputElement = getById("initial-value-input");
-    const initialValueErrorHint = getById("initial-value-hint-error");
 
-    if (isEmpty(initialValueInputElement, initialValueErrorHint))
+
+    if (isEmpty(initialValueInputElement, initialValueErrorHintElement))
     {
         return false;
     }
 
-    if (!isValueInInterval(initialValueInputElement, MIN_INITIAL_VALUE, MAX_INITIAL_VALUE,initialValueErrorHint))
+    if (!isValueInInterval(initialValueInputElement, MIN_INITIAL_VALUE, MAX_INITIAL_VALUE,initialValueErrorHintElement))
     {
         return false;
     }
@@ -768,9 +738,6 @@ function newtonMethod()
     {
         return false;
     }
-
-
-
 
     let current = parseFloat(initialValueInputElement.value);
 
@@ -842,8 +809,6 @@ function newtonMethod()
     $("#table tr").remove();
 
 
-
-
     const resultInput = getById("result-input");
     resultInput.value = "Hodnota koreňa rovnice: " + current.toFixed(round);
 
@@ -873,9 +838,6 @@ function newtonMethod()
     inputs[4][0] = "";
 
     results = data;
-
-
-
 
 
     initializeTable(data);
@@ -1583,10 +1545,6 @@ function lagrangeInterpolating()
     }
 
 
-
-
-
-
    let j = 0;
    for (let i = 0; i < arr.length; i+=2)
    {
@@ -1684,8 +1642,6 @@ function newtonInterpolating()
     {
         return;
     }
-
-
 
     if (selectedApproximationInput === 1 && validateStringCoordinates())
     {
@@ -1907,10 +1863,6 @@ function checkIfValueIsInteger(value)//OK
 function validateCoordinates(coordinatesArrays, type)
 {
 
-
-
-
-
     let uniques = new Set();
 
 
@@ -2069,7 +2021,7 @@ points = data;
     document.getElementById("result-input").value = "f(x) = " + fun.replace("log","ln");;
 
 graph();
-    totalError(data);
+
 
 }
 
@@ -2162,7 +2114,7 @@ function linear()
     document.getElementById("result-input").value = "f(x) = " + fun;
 
     graph();
-    totalError(data);
+
 
 }
 
@@ -2188,54 +2140,6 @@ function cramer(option, coeficients) {
 
     }
 
-
-
-}
-
-
-
-
-function spline()
-{
-    if ( !isValid())
-    {
-        return;
-    }
-
-    let dk = [];
-
-    for (let i = 0; i < data.length - 1; ++i)
-    {
-        dk[i] = (data[i + 1][1] - data[i][1]) / (data[i + 1][0] - data[i][0]);
-    }
-
-
-
-    let Sx = [data.length - 1];
-
-    for (let i = 0; i < data.length - 1; ++i)
-    {
-        Sx[i] = "";
-        Sx[i] += data[i][1];
-        if (dk[i] > 0)
-        {
-            Sx[i] += "+";
-        }
-        Sx[i] += dk[i];
-
-        if (data[i][0] > 0)
-        {
-            Sx[i] += "(x-" + data[i][0]+ ")";
-        } else
-        {
-            Sx[i] += "(x+" + ((-1) * data[i][0]) + ")";
-        }
-    }
-
-    for(var i = 0; i < Sx.length; i++)
-    {
-        console.log(Sx[i]);
-    }
 
 
 }
@@ -2348,17 +2252,14 @@ function validateNodes(array)
 
 function validateSubintervals()
 {
-    const subIntervalsInputElement = getById("subintervals-input");
-    const subIntervalsInputErrorHint = getById("subintervals-value-hint-error");
 
-
-    if (subIntervalsInputElement.value.length === 0)
+    if (subintervalsValueInputElement.value.length === 0)
     {
-        subIntervalsInputErrorHint.innerHTML = "Prázdne pole!"
+        subintervalsErrorHint.innerHTML = "Prázdne pole!"
         return false;
     }else
     {
-        subIntervalsInputErrorHint.innerHTML = "";
+        subintervalsErrorHint.innerHTML = "";
     }
 
 
@@ -2370,18 +2271,18 @@ function validateSubintervals()
 
     if (!isPositiveInteger(subIntervalsInputElement.value))
     {
-        subIntervalsInputErrorHint.innerHTML = "Nevalidná hodnota!"
+        subintervalsErrorHint.innerHTML = "Nevalidná hodnota!"
         return false;
     }else {
-        subIntervalsInputErrorHint.innerHTML = "";
+        subintervalsErrorHint.innerHTML = "";
     }
 
-    if (subIntervalsInputElement.value  <= 0 || subIntervalsInputElement.value > 100)
+    if (subintervalsValueInputElement.value  <= 0 || subintervalsValueInputElement.value > 100)
     {
-        subIntervalsInputErrorHint.innerHTML = "Hodnota mimo intervalu!"
+        subintervalsErrorHint.innerHTML = "Hodnota mimo intervalu!"
         return false;
     } else {
-        subIntervalsInputErrorHint.innerHTML = "";
+        subintervalsErrorHint.innerHTML = "";
     }
 
     return true;
@@ -3276,8 +3177,6 @@ function deleteFile(id)
 
 function uploadFile()
 {
-
-
     const xhttp = new XMLHttpRequest();
 
     xhttp.onload = function()
@@ -3386,5 +3285,657 @@ function clickOnInput() {
 }
 
 
+
+
+
+let idA = 0;
+let idB = 0;
+let userName = "";
+
+
+let receiver = "";
+function sendMessage(senderUsername,receiverUsername)
+{
+
+    if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
+    {
+        getById("message-input-error-hint").innerHtml = "Nevalidný výraz!";
+        return;
+    }
+
+    if (receiverUsername === 'null') {
+        receiverUsername = receiver;
+    } else {
+        receiver = receiverUsername;
+    }
+
+
+
+
+
+
+
+    const xhttp = new XMLHttpRequest();
+    const element = document.getElementById("conversation");
+    const inputElement = document.getElementById("message-input");
+
+    const content = getById("message-input").value;
+
+    let scrollDiv = getById("conversation");
+    scrollDiv.scrollTop = scrollDiv.scrollHeight;
+
+
+    getById("message-input").value = "";
+    xhttp.onload = function() {
+        if (xhttp.status === 200) {
+            alert("Success");
+        } else {
+            alert("Unsuccessfull");
+            return;
+        }
+
+        const lineDiv = document.createElement('div');
+        lineDiv.classList.add("flex-container");
+
+        const innerDivLeft = document.createElement('div');
+        innerDivLeft.classList.add("left-item");
+
+        const button = document.createElement("button");
+        button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
+
+
+
+        const innerDivRight = document.createElement('div');
+        innerDivRight.classList.add("right-item");
+
+        innerDivRight.appendChild(button);
+        lineDiv.appendChild(innerDivLeft);
+        lineDiv.appendChild(innerDivRight);
+
+
+        element.appendChild(lineDiv);
+
+
+        innerDivLeft.style.display = "hidden";
+        button.textContent = content;
+
+
+    }
+
+    let url = "/person/message";
+
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+
+
+    alert(5);
+    let data =
+        {
+            content: content,
+            senderUsername: senderUsername,
+            receiverUsername: receiverUsername
+        };
+    xhttp.send(JSON.stringify(data));
+}
+
+
+function getConversation(receiverUsername)
+{
+
+    while (document.getElementById("conversation").firstChild) {
+        document.getElementById("conversation").removeChild(document.getElementById("conversation").firstChild);
+    }
+
+    receiver = receiverUsername;
+
+
+    getById("conversation-div").style.display = "block";
+
+
+    getById("send-message-div").style.display="block";
+
+
+
+
+    $.ajax({
+        url: '/person/conversation',
+        method: 'GET',
+        data: { receiver: receiver },
+        dataType: 'json',
+        success: function(response) {
+            alert(response);
+            const messages = response;
+
+
+            const conversationDivElement = document.getElementById("conversation");
+
+            messages.forEach(function(message) {
+
+                const lineDiv = document.createElement('div');
+                lineDiv.classList.add("flex-container");
+
+                const innerDivLeft = document.createElement('div');
+                innerDivLeft.classList.add("left-item");
+
+                const innerDivRight = document.createElement('div');
+                innerDivRight.classList.add("right-item");
+
+
+                lineDiv.appendChild(innerDivLeft);
+                lineDiv.appendChild(innerDivRight);
+
+                conversationDivElement.insertBefore(lineDiv, conversationDivElement.lastChild);
+
+                const button = document.createElement("button");
+                button.textContent = message.content;
+
+                if (message.senderUsername !== receiver) {
+
+                    button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
+                    innerDivLeft.style.display = "hidden";
+                    innerDivRight.appendChild(button);
+                    //innerDivRight.innerHTML = message.content;
+
+                } else {
+                    innerDivRight.style.display = "hidden";
+                    button.classList.add("btn", "btn-light", "btn-rounded", "btn-fw");
+                    innerDivLeft.appendChild(button);
+                    //innerDivLeft.innerHTML = message.content;
+                }
+            })
+            let scrollDiv = getById("conversation");
+            scrollDiv.scrollTop = scrollDiv.scrollHeight;
+        },
+        error: function(xhr, status, error) {
+            // Handle error
+            console.error(xhr.responseText);
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+function sendPoints(id)
+{
+    const xhttp = new XMLHttpRequest();
+
+    const points = document.getElementById("points-input-" + id);
+
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 200)
+        {
+            let tablePoints = document.getElementById('points-' + id);
+
+            let num = (Number.parseInt(points.value) + Number.parseInt(tablePoints.innerText));
+            tablePoints.innerText = num;
+            points.value ="";
+
+        } else {
+            alert("Unsuccessfull");
+            points.value ="";
+        }
+
+
+    }
+
+    let url = "/admin/student/" + id + "/points/" + points.value;
+
+    xhttp.open("PATCH", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+
+    xhttp.send();
+}
+
+
+function sendAbsents(id)
+{
+    const xhttp = new XMLHttpRequest();
+
+    const absents = document.getElementById("absents-input-" + id);
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 200)
+        {
+            let tableAbsents = document.getElementById('absents-' + id);
+
+            let num = (Number.parseInt(absents.value) + Number.parseInt(tableAbsents.innerText));
+            tableAbsents.innerText = num;
+            absents.value ="";
+
+        } else {
+            alert("Unsuccessfull");
+            absents.value ="";
+        }
+
+
+    }
+
+    let url = "/admin/student/" + id + "/absents/" + absents.value;
+
+    xhttp.open("PATCH", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+
+    xhttp.send();
+}
+
+
+
+
+
+
+
+function initializeSignUpPage()
+{
+    studentOrEmployee(1);
+}
+
+
+let which = 0;
+function studentOrEmployee(who)
+{
+
+    switch (who)
+    {
+        case 1:
+
+            showFormForStudent();
+
+            getById("student-form").action = "/activate-account/create-token";
+            which = 1;
+            break;
+        case 2:
+            showFormForEmployee();
+            getById("employee-form").action = "/activate-account/create-token";
+            which = 2;
+            break;
+        default:
+
+    }
+}
+
+
+
+function showFormForStudent()
+{
+    /*const elementsToHide = ["name-div", "pin-div", "surname-div", "password-div", "rep-password-div", "preconditions-div"];
+
+    elementsToHide.forEach((item) => {
+        document.getElementById(item).style.display="none";
+    });
+
+    const elementsToShow = ["email-div"];
+
+    elementsToShow.forEach((item) => {
+        document.getElementById(item).style.display="block";
+    });*/
+
+
+    document.getElementById("student-form-div").style.display="block";
+    document.getElementById("employee-form-div").style.display="none";
+}
+
+
+function showFormForEmployee()
+{
+    /*const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div", "preconditions-div"];
+
+    elementsToShow.forEach((item) => {
+        document.getElementById(item).style.display="block";
+    });
+*/
+
+    document.getElementById("employee-form-div").style.display="block";
+    document.getElementById("student-form-div").style.display="none";
+
+}
+
+
+
+
+
+
+
+
+function canRegisterStudent()
+{
+    const emailInput = document.getElementById("student-email-input");
+    const emailpasswordInputErrorHint = document.getElementById("student-email-input-error-hint");
+
+
+
+    if (emailInput.value === "")
+    {
+        emailpasswordInputErrorHint.innerHTML = "Zadajte školský email!";
+        return false;
+    } else {
+        emailpasswordInputErrorHint.innerHTML = "";
+    }
+
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
+    if (regexEmail.test(emailInput.value))
+    {
+        emailpasswordInputErrorHint.innerHTML = "";
+    } else {
+        emailpasswordInputErrorHint.innerHTML = "Nevalidný školský email!";
+        return false;
+
+    }
+
+
+    return true;
+}
+
+
+function canRegisterEmployee()
+{
+    const nameInput = document.getElementById("name-input");
+    const surnameInput = document.getElementById("surname-input");
+    const passwordInput = document.getElementById("password-input");
+    const repPasswordInput = document.getElementById("rep-password-input");
+    const emailInput = document.getElementById("employee-email-input");
+    const personalNumberInput = document.getElementById("pin-input");
+
+    const nameInputErrorHint = document.getElementById("name-input-error-hint");
+    const surnameInputErrorHint = document.getElementById("surname-input-error-hint");
+    const emailInputErrorHint = document.getElementById("employee-email-input-error-hint");
+    const personalNumberInputErrorHint = document.getElementById("pin-input-error-hint");
+    const passwordInputErrorHint = document.getElementById("password-input-error-hint");
+    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
+
+    if (nameInput.value.length === 0)
+    {
+        nameInputErrorHint.innerHTML = "Zadajte meno!";
+        return false;
+    } else
+    {
+        nameInputErrorHint.innerHTML = "";
+    }
+
+
+    if (nameInput.value.length > 50)
+    {
+        nameInputErrorHint.innerHTML = "Viac než 50 znakov!";
+        return false;
+    } else
+    {
+        nameInputErrorHint.innerHTML = "";
+    }
+
+    if (surnameInput.value.length === 0)
+    {
+        surnameInputErrorHint.innerHTML = "Zadajte priezvisko!";
+        return false;
+    } else {
+        surnameInputErrorHint.innerHTML = "";
+    }
+
+    if (surnameInput.value.length > 50)
+    {
+        surnameInputErrorHint.innerHTML = "Viac než 50 znakov!";
+        return false;
+    } else {
+        surnameInputErrorHint.innerHTML = "";
+    }
+
+
+
+    if (emailInput.value.length === 0)
+    {
+        emailInputErrorHint.innerHTML = "Zadajte školský email!";
+        return false;
+    } else {
+        emailInputErrorHint.innerHTML = "";
+    }
+
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/;
+    if (!regexEmail.test(emailInput.value))
+    {
+        emailInputErrorHint.innerHTML = "Nevalidný školský email!";
+        return false;
+    } else {
+        emailInputErrorHint.innerHTML = "";
+    }
+
+    if (personalNumberInput.value.length === 0)
+    {
+        personalNumberInputErrorHint.innerHTML = "Zadajte osobné číslo!";
+        return false;
+    } else {
+        personalNumberInputErrorHint.innerHTML = "";
+    }
+
+    const regexPin = /^\d{5}$/;
+
+    if (!regexPin.test(personalNumberInput.value))
+    {
+        personalNumberInputErrorHint.innerHTML = "Nevalidné osobné číslo!";
+        return false;
+    } else {
+        personalNumberInputErrorHint.innerHTML = "";
+    }
+
+    if (passwordInput.value.length === 0)
+    {
+        passwordInputErrorHint.innerHTML = "Zadajte heslo!";
+        return false;
+    }else {
+        passwordInputErrorHint.innerHTML = "";
+    }
+
+
+    if (repPasswordInput.value.length === 0)
+    {
+        repPasswordInputErrorHint.innerHTML = "Znova zadajte heslo!";
+        return false;
+    }else {
+        repPasswordInputErrorHint.innerHTML = "";
+    }
+
+
+    if (repPasswordInput.value !== passwordInput.value)
+    {
+        repPasswordInputErrorHint.innerHTML = "Heslá sa nezhodujú!";
+        return false;
+    }else {
+        repPasswordInputErrorHint.innerHTML = "";
+    }
+
+    return true;
+}
+
+
+//https://stackoverflow.com/questions/10610249/prevent-checkbox-from-ticking-checking-completely
+
+$('input[type="checkbox"]').click(function(event) {
+    var $checkbox = $(this);
+
+    // Ensures this code runs AFTER the browser handles click however it wants.
+    setTimeout(function() {
+        $checkbox.removeAttr('checked');
+    }, 0);
+
+    event.preventDefault();
+    event.stopPropagation();
+});
+
+////////////////////
+
+let isValid = false;
+
+function validatePassword()
+{
+    const regexUpperCase = /[A-Z]/g;
+    const regexLowerCase = /[a-z]/g;
+    const regexNumber = /[0-9]/g;
+    const regexSpecialCharacter = /[?.:!@#$%^&*()_-]/g;
+
+    const passwordInput = document.getElementById("password-input");
+
+    const upperCaseHint = document.getElementById("upper-case-checkbox-div");
+    const lowerCaseHint = document.getElementById("lower-case-checkbox-div");
+    const specialCharacterHint = document.getElementById("special-char-checkbox-div");
+    const oneNumberHint = document.getElementById("number-checkbox-div");
+    const minCharacters = document.getElementById("min-chars-checkbox-div");
+    const maxCharacters = document.getElementById("max-chars-checkbox-div");
+
+
+
+
+    isValid = true;
+
+    if (passwordInput.value.match(regexUpperCase)) {
+        upperCaseHint.classList.remove("form-check-danger");
+        upperCaseHint.classList.add("form-check-success");
+        upperCaseHint.getElementsByTagName("input")[0].checked = true;
+
+    } else {
+        upperCaseHint.classList.remove("form-check-success");
+        upperCaseHint.classList.add("form-check-danger");
+        upperCaseHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+
+    }
+
+
+    if (passwordInput.value.match(regexLowerCase)) {
+        lowerCaseHint.classList.remove("form-check-danger");
+        lowerCaseHint.classList.add("form-check-success");
+        lowerCaseHint.getElementsByTagName("input")[0].checked = true;
+    } else {
+        lowerCaseHint.classList.remove("form-check-success");
+        lowerCaseHint.classList.add("form-check-danger");
+        lowerCaseHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+
+    }
+
+    if (passwordInput.value.match(regexNumber)) {
+        oneNumberHint.classList.remove("form-check-danger");
+        oneNumberHint.classList.add("form-check-success");
+        oneNumberHint.getElementsByTagName("input")[0].checked = true;
+    } else {
+        oneNumberHint.classList.remove("form-check-success");
+        oneNumberHint.classList.add("form-check-danger");
+        oneNumberHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+    }
+
+    if (passwordInput.value.match(regexSpecialCharacter)) {
+        specialCharacterHint.classList.remove("form-check-danger");
+        specialCharacterHint.classList.add("form-check-success");
+        specialCharacterHint.getElementsByTagName("input")[0].checked = true;
+    } else {
+        specialCharacterHint.classList.remove("form-check-success");
+        specialCharacterHint.classList.add("form-check-danger");
+        specialCharacterHint.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+    }
+
+
+    if (passwordInput.value.length >= 8) {
+        minCharacters.classList.remove("form-check-danger");
+        minCharacters.classList.add("form-check-success");
+        minCharacters.getElementsByTagName("input")[0].checked = true;
+    } else {
+        minCharacters.classList.remove("form-check-success");
+        minCharacters.classList.add("form-check-danger");
+        minCharacters.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+    }
+
+    if (passwordInput.value.length <= 64) {
+        maxCharacters.classList.remove("form-check-danger");
+        maxCharacters.classList.add("form-check-success");
+        maxCharacters.getElementsByTagName("input")[0].checked = true;
+
+    } else {
+        maxCharacters.classList.remove("form-check-success");
+        maxCharacters.classList.add("form-check-danger");
+        maxCharacters.getElementsByTagName("input")[0].checked = false;
+        isValid = false;
+    }
+
+    return isValid;
+
+}
+
+
+function submit()
+{
+
+
+    if (which === 1)
+    {
+
+        if (canRegisterStudent())
+        {
+
+            getById("student-form").submit();
+        }
+    }
+
+    if (which === 2)
+    {
+        if (canRegisterEmployee() && isValid)
+        {
+            getById("employee-form").submit();
+        }
+    }
+}
+
+
+function submitChangedPassword()
+{
+    const passwordInput = document.getElementById("password-input");
+    const oldPasswordInput = document.getElementById("old-password-input");
+    const repPasswordInput = document.getElementById("rep-password-input");
+
+    const oldPasswordInputErrorHint = document.getElementById("old-password-input-error-hint");
+    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
+
+
+    if (oldPasswordInput.value.length === 0)
+    {
+        oldPasswordInputErrorHint.innerHTML = "Zadajte staré heslo!";
+        return false;
+    } else {
+        oldPasswordInputErrorHint.innerHTML = "";
+    }
+
+    if (repPasswordInput.value !== passwordInput.value)
+    {
+        repPasswordInputErrorHint.innerHTML = "Heslá sa nezhodujú!";
+        return false;
+    } else {
+        repPasswordInputErrorHint.innerHTML = "";
+    }
+
+
+    if (isValid)
+    {
+        document.getElementById("form").submit();
+    }
+
+
+}
 
 

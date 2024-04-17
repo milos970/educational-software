@@ -393,7 +393,7 @@
                                     <input type="text" class="form-control" id="nodes-string-input"
                                            placeholder="(x1,y1),(x2,y2),...,(x100,y100)"
                                            oninput="validateStringCoordinates()">
-                                    <p class="error" id="nodes-string-error-hint"></p>
+                                    <p class="error" id="nodes-string-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="nodes-csv-div">
@@ -410,7 +410,7 @@
                                     id="insert-file-button">Vložiť</button>
                           </span>
                                     </div>
-                                    <p class="error" id="nodes-csv-error-hint"></p>
+                                    <p class="error" id="nodes-csv-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="functions-dropdown-div">
@@ -554,12 +554,16 @@
 
 <script src="/static/js/off-canvas.js"></script>
 <script th:src="@{/js/off-canvas.js}"></script>
+
 <script src="/static/js/hoverable-collapse.js"></script>
 <script th:src="@{/js/hoverable-collapse.js}"></script>
+
 <script src="/static/js/misc.js"></script>
 <script th:src="@{/js/misc.js}"></script>
+
 <script src="/static/js/settings.js"></script>
 <script th:src="@{/js/settings.js}"></script>
+
 <script src="/static/js/todolist.js"></script>
 <script th:src="@{/js/todolist.js}"></script>
 
