@@ -66,7 +66,7 @@ public class ChatService
         }
 
 
-        System.out.println(1);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -96,7 +96,6 @@ public class ChatService
 
         if (optionalChat.isEmpty())
         {
-            System.out.println(3);
             return false;
         }
 

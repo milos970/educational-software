@@ -33,8 +33,7 @@ public class DateValidValidator implements ConstraintValidator<DateValid, String
             receivedDate = LocalDateTime.parse(value, dateTimeFormatter);
 
         } catch (DateTimeParseException e) {
-            // Throw invalid date message
-            System.out.println("Exception was thrown");
+
             return false;
         }
 

@@ -33,10 +33,18 @@ public class VerificationTokenController {
 
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
-        if (personalInfoOptional.isEmpty()) {
-            model.addAttribute("error", "Zadaný email neexistuje!");
+        if (personalInfoOptional.isPresent() && personalInfoOptional.get().isEnabled()) {
+            model.addAttribute("error", "Účet s daným emailom už je aktívne!");
             return "/pages/samples/sign-up";
         }
+
+
+        if (personalInfoOptional.isPresent()) {
+            model.addAttribute("error", "Neaktivovaný účet!");
+            return "/pages/samples/sign-up";
+        }
+
+
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 

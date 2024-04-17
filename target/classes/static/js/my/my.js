@@ -29,9 +29,12 @@ const ITERATIONS = 1000_000; //tu nastaviť počet iterácii
 let tolerance = 0; //tolerancia sa udáva programovo
 const X_MIN_VALUE = 1000;
 const X_MAX_VALUE = 100_000;
+
 const NODES_NUMBER = 100;
 
-const LOWER_BOUNDS =
+const MIN_INITIAL_VALUE = -10;
+const MAX_INITIAL_VALUE = 10;
+
 
 
 
@@ -558,7 +561,7 @@ let results = [];
 
 
 
-function validateToleranceValue()
+function validateToleranceValue() //OK
 {
 
     const toleranceValueErrorHint = getById("tolerance-value-hint-error");
@@ -576,7 +579,7 @@ function validateToleranceValue()
 }
 
 
-function validateBounds()
+function validateBounds() //OK
 {
     const lowerBoundInput = getById("lower-bound-input");
     const upperBoundInput = getById("upper-bound-input");
@@ -586,7 +589,7 @@ function validateBounds()
 
     if (lowerBoundInput.value.length === 0)
     {
-        lowerBoundInputErrorHint.innerHTML = "Prázdne pole!";
+        lowerBoundInputErrorHint.innerHTML = "Nezadaná hodnota!";
 
         return false;
     } else {
@@ -608,7 +611,7 @@ function validateBounds()
 
     if (upperBoundInput.value.length === 0)
     {
-        upperBoundInputErrorHint.innerHTML = "Prázdne pole!";
+        upperBoundInputErrorHint.innerHTML = "Nezadaná hodnota!";
         return false;
     } else {
         upperBoundInputErrorHint.innerHTML = "";
@@ -651,7 +654,7 @@ function validateFunction()
 
     if (functionInput.value.length === 0)
     {
-        functionErrorHint.innerHTML = "Prázdne pole!";
+        functionErrorHint.innerHTML = "Nezadaný výraz!";
         return false;
     } else {
         functionErrorHint.innerHTML = "";
@@ -733,6 +736,25 @@ function validateEquation()
     equationErrorHint.innerHTML = "";
 
     fun = modifiedEquation;
+
+
+    return true;
+}
+
+function validateInitialValue()
+{
+    const initialValueInputElement = getById("initial-value-input");
+    const initialValueErrorHint = getById("initial-value-hint-error");
+
+    if (isEmpty(initialValueInputElement, initialValueErrorHint))
+    {
+        return false;
+    }
+
+    if (!isValueInInterval(initialValueInputElement, MIN_INITIAL_VALUE, MAX_INITIAL_VALUE,initialValueErrorHint))
+    {
+        return false;
+    }
 
 
     return true;
@@ -1180,14 +1202,18 @@ function graph()
         let lower = parseFloat(lowerValueInputElement.value);
         let upper = parseFloat(upperValueInputElement.value);
 
+        lower = parseFloat(lower.toFixed(2));
+        upper = parseFloat(upper.toFixed(2));
 
 
-
-        for (let i = -10; i <= 10; i+=0.01)
+        for (let i = lower; i <= upper; i+=0.01)
         {
             let value = parseFloat(i.toFixed(2));
+            console.log(value);
             xValues.push(value);
-        }   yValues.push(math.evaluate(expression.toString(), { x: value }));
+            yValues.push(math.evaluate(expression.toString(), { x: value }));
+
+        }
 
     }
 
@@ -1249,11 +1275,11 @@ function graph()
 
         },
             {
-                label: 'Zadané body',  // Label for the dataset
+
                 data: yValues1,     // Y values for the points
                 backgroundColor: 'blue',  // Background color of the points
                 borderColor: 'blue',      // Border color of the points
-                borderWidth: 2,           // Border width of the points
+                borderWidth: 3,           // Border width of the points
 
                 type: 'scatter',          // Type of the dataset (scatter for points only)
                 pointBackgroundColor: function(context)
@@ -1365,7 +1391,7 @@ function graph()
 
                     },
                 gridLines: {
-                    
+
                     zeroLineColor: "#2C292E",
                 }
             }],
@@ -1393,18 +1419,14 @@ function graph()
                 }
             }]
         },
-        legend: {
-            display: true, // Set to true to display the legend
-            position: 'top', // Position of the legend: 'top', 'bottom', 'left', 'right'
-            labels: {
-                fontColor: 'black', // Color of the legend labels
-                fontSize: 14 // Font size of the legend labels
-            }
-        },
+
         elements: {
             point: {
                 radius: 0
             }
+        },
+        legend: {
+            display: false
         }
     };
 
@@ -1540,6 +1562,7 @@ function lagrangeInterpolating()
         return;
     }
 
+
     let arr = [];
 
     if (selectedApproximationInput === 1 && validateStringCoordinates())
@@ -1671,7 +1694,9 @@ function newtonInterpolating()
 
     if (selectedApproximationInput === 2 && validateCsvCoordinates())
     {
-        data = parseCsvToArrays();
+        parseCsvToArrays();
+        data = array;
+       
     }
 
 
@@ -1804,7 +1829,7 @@ function parseCsvToArrays()
 
 function getFileName()
 {
-    const elementInputFileName = getById("text-name-input");
+    const elementInputFileName = getById("text-input");
     const elementInputFile = getById("file-input");
 
     elementInputFileName.value = elementInputFile.files[0].name;
@@ -1841,7 +1866,7 @@ function validateStringCoordinates()
 
     if (coordinatesStringElement.value.length === 0)
     {
-        coordinatesStringErrorHint.innerHTML = "Prázdne pole!";
+        coordinatesStringErrorHint.innerHTML = "Zadajte body!";
         return false;
     }
 
@@ -1866,17 +1891,14 @@ function validateCsvCoordinates()
 
 function checkIfValueIsInteger(value)//OK
 {
+    const regex = /^\d+(\.\d{1,2})?$/;
 
-
-    if (/^\d+$/.test(value) || /^\-\d+$/.test(value))
+    if (!regex.test(value.toString()))
     {
-
-        return true;
-    } else {
-
         return false;
     }
 
+    return true;
 }
 
 
@@ -2228,17 +2250,11 @@ function validateNodes(array)
 
     if (array.length < 4)
     {
+        document.getElementById("nodes-string-error-hint").innerHTML = "Zadajte aspoň 4 body!"
         return false;
     }
 
-    for (let i = 0; i < array.length; ++i)
-    {
-        if (!checkIfValueIsInteger(array[i][0])) //je každá x hodnota celé číslo?
-        {
 
-            return false;
-        }
-    }
 
     for (let i = 0; i < array.length; ++i)
     {
@@ -2250,6 +2266,17 @@ function validateNodes(array)
         if (array[i][1].includes(','))
         {
             array[i][1] =  array[i][1].replace(',', '.');
+        }
+    }
+
+
+    for (let i = 0; i < array.length; ++i)
+    {
+
+        if (!checkIfValueIsInteger(array[i][0])) //je každá x hodnota celé číslo?
+        {
+            document.getElementById("nodes-string-error-hint").innerHTML = "Hodnota x musí mať max 2 desatinné miesta!"
+            return false;
         }
     }
 
@@ -2268,6 +2295,7 @@ function validateNodes(array)
     if (array.length !== set.size) //nenáchadzajú sa x duplicity?
     {
         set.clear();
+        document.getElementById("nodes-string-error-hint").innerHTML = "Duplikát hodnoty x!"
         return false;
     }
 
@@ -2281,18 +2309,21 @@ function validateNodes(array)
 
     if (minValue > X_MIN_VALUE)
     {
+        document.getElementById("nodes-string-error-hint").innerHTML = "Min hodnota x musí byť aspoň " + X_MIN_VALUE + "!";
         return false;
     }
 
 
     if (maxValue > X_MAX_VALUE)
     {
+        document.getElementById("nodes-string-error-hint").innerHTML = "Max hodnota x musí byť najviac " + X_MAX_VALUE + "!";
         return false;
     }
 
 
     if (maxValue - minValue > NODES_NUMBER)
     {
+        document.getElementById("nodes-string-error-hint").innerHTML = "Počet bodov musí byť najviac " + NODES_NUMBER + "!";
         return false;
     }
 

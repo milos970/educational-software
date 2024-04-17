@@ -21,12 +21,11 @@ public class EmployeeService
     }
 
 
-    public boolean createEmployee(PersonalInfo personalInfo)
+    public void createEmployee(PersonalInfo personalInfo)
     {
         Employee employee = new Employee();
         employee.setPersonalInfo(personalInfo);
         this.employeeRepository.save(employee);
-        return true;
     }
     public Optional<Employee> findById(Long id)
     {
@@ -42,10 +41,6 @@ public class EmployeeService
         return this.employeeRepository.findByUsername(username);
     }
 
-    public Optional<Employee> findByAuthority(Authority authority)
-    {
-        return this.employeeRepository.findByAuthority(authority.name());
-    }
 
     public List<Employee> findAll()
     {

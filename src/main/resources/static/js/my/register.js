@@ -353,7 +353,7 @@ function submit()
     if (which === 2)
     {
         if (canRegisterEmployee() && isValid)
-        {
+        {alert(5);
             getById("employee-form").submit();
         }
     }

@@ -9,11 +9,9 @@ import com.milos.numeric.repositories.VerificationTokenRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +22,7 @@ public class VerificationTokenService
 
     private final EmailServiceImpl emailService;
 
-    private static final long MINUTES = 5;
+    private static final long MINUTES = 10; //čas do expirácie tokenu
 
     private final DateParser dateParser;
 
@@ -43,17 +41,14 @@ public class VerificationTokenService
         return this.verificationTokenRepository.findByEmail(email);
     }
 
-    public boolean sendToken(VerificationToken verificationToken)
+    public void sendToken(VerificationToken verificationToken)
     {
         try {
             this.emailService.sendVerificationEmail(verificationToken);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
-        return true;
     }
 
     public VerificationToken createToken(PersonalInfo personalInfo, TokenType tokenType)
@@ -93,6 +88,16 @@ public class VerificationTokenService
     {
         this.verificationTokenRepository.findByCode(code);
         return true;
+    }
+
+
+    public long count() {
+        return this.verificationTokenRepository.count();
+    }
+
+    public List<VerificationToken> findAll()
+    {
+        return this.verificationTokenRepository.findAll();
     }
 
     public Optional<VerificationToken> findByCode(String code)

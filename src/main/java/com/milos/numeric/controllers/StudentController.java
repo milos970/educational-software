@@ -1,6 +1,5 @@
 package com.milos.numeric.controllers;
 
-import com.milos.numeric.services.PersonalInfoService;
 import com.milos.numeric.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class StudentController {
     private final StudentService studentService;
-    private final PersonalInfoService personalInfoService;
+
 
     @Autowired
-    public StudentController(StudentService studentService, PersonalInfoService personalInfoService) {
+    public StudentController(StudentService studentService) {
         this.studentService = studentService;
-        this.personalInfoService = personalInfoService;
     }
 
 

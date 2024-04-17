@@ -33,8 +33,8 @@ public class MaterialController {
 
 
     @PostMapping("/admin/material/upload")
-    public ResponseEntity saveFile(@Valid MaterialDto materialDto) {
-        System.out.println(4578);
+    public ResponseEntity saveFile(@Valid MaterialDto materialDto)
+    {
         Long id = this.materialService.save(materialDto);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }

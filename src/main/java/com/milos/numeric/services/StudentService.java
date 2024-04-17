@@ -1,30 +1,17 @@
 package com.milos.numeric.services;
 
-import com.milos.numeric.DateParser;
-import com.milos.numeric.dtos.StudentEmailDto;
-import com.milos.numeric.dtos.NewPasswordDto;
-import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.Student;
-import com.milos.numeric.entities.VerificationToken;
-import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
-import com.milos.numeric.repositories.PersonalInfoRepository;
 import com.milos.numeric.repositories.StudentRepository;
-import com.milos.numeric.repositories.VerificationTokenRepository;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class StudentService
 {
-
      private final StudentRepository studentRepository;
 
     @Autowired
@@ -38,12 +25,11 @@ public class StudentService
     }
 
 
-    public boolean createStudent(PersonalInfo personalInfo)
+    public void createStudent(PersonalInfo personalInfo)
     {
         Student student = new Student();
         student.setPersonalInfo(personalInfo);
         this.studentRepository.save(student);
-        return true;
     }
 
 

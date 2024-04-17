@@ -4,7 +4,6 @@ import com.milos.numeric.Authority;
 import com.milos.numeric.TokenType;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
-import com.milos.numeric.dtos.ResetPasswordDto;
 import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
@@ -23,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class PersonalInfoController {
@@ -155,27 +153,29 @@ public class PersonalInfoController {
 
 
     @PostMapping("/person/create") //OK
-    public ResponseEntity createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO) {
-        Optional<PersonalInfo> optional = this.personalInfoService.createPerson(personalInfoDTO);
+    public String createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO, Model model)
+    {
+        System.out.println(4);
+        Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(personalInfoDTO.getEmail());
 
-        if (optional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (personalInfoOptional.isPresent())
+        {
+            model.addAttribute("error", "Účet s daným mailom už existuje!");
+            return "redirect:/sign-in";
         }
 
-        PersonalInfo personalInfo = optional.get();
+        Optional<PersonalInfo> personalInfo = this.personalInfoService.createPerson(personalInfoDTO);
 
-        VerificationToken token = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
+        this.verificationTokenService.createToken(personalInfo.get(), TokenType.ACTIVATE_ACCOUNT);
 
-        this.verificationTokenService.sendToken(token);
-
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        model.addAttribute("success", "Na zadaný mail bol odoslaný verifikačný email!");
+        return "redirect:/sign-in";
     }
 
 
     @PostMapping("/admin/upload/file/csv")//OK
-    public ResponseEntity createStudents(@RequestParam("file") MultipartFile file) {
-        System.out.println(123);
+    public ResponseEntity createStudents(@RequestParam("file") MultipartFile file)
+    {
         this.personalInfoService.createMultiplePersonsFromFile(file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

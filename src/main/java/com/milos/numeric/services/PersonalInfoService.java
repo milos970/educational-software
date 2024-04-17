@@ -51,9 +51,6 @@ public class PersonalInfoService
 
     private final EmailServiceImpl emailService;
 
-
-
-
     private final  PasswordEncoder passwordEncoder;
 
     private final VerificationTokenService verificationTokenService;
@@ -82,6 +79,8 @@ public class PersonalInfoService
     }
 
 
+
+
     public boolean generatePassword(String username)
     {
         Optional<PersonalInfo> optional = this.personalInfoRepository.findByUsername(username);
@@ -99,9 +98,7 @@ public class PersonalInfoService
 
         try {
             this.emailService.sendPassword(personalInfo.getEmail(),generatedPassword);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
@@ -134,13 +131,6 @@ public class PersonalInfoService
     }
 
 
-    /*private static String removeDiacritics(String input)
-    {
-        String normalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(normalizedString).replaceAll("");
-    }*/
-
     public Optional<PersonalInfo> findByAuthority(Authority authority)
     {
         return this.personalInfoRepository.findByAuthority(authority.name());
@@ -156,6 +146,10 @@ public class PersonalInfoService
         return this.personalInfoRepository.findByEmail(email);
     }
 
+
+    /*
+    Zisti na zaklade pravdepodobnosti podla mena pohlavie.
+     */
     private String determineGender(@PathVariable String name) {
         String uri = "https://api.genderize.io?name=" + name;
         RestTemplate restTemplate = new RestTemplate();
@@ -194,7 +188,7 @@ public class PersonalInfoService
         personalInfo.setPassword(hashedPassword);
 
         String email = personalInfoDTO.getEmail();
-        String emailDomain = email.substring(email.indexOf("@") + 1, email.length());
+        String emailDomain = email.substring(email.indexOf("@") + 1);
 
         String gender = this.determineGender(personalInfo.getName());
 
@@ -212,9 +206,9 @@ public class PersonalInfoService
         personalInfo.setEnabled(false);
 
 
-        if (emailDomain.equals(Domain.EMPLOYEE_DOMAIN.getDomain()))
+        if (emailDomain.equals("@gmail.com"))
         {
-            personalInfo.setAuthority(Authority.TEACHER);
+            personalInfo.setAuthority(Authority.EMPLOYEE);
         }
 
         if (emailDomain.equals(Domain.STUDENT_DOMAIN.getDomain()))
@@ -252,7 +246,7 @@ public class PersonalInfoService
         while (true)
         {
             try {
-                if (!((values = csvReader.readNext()) != null)) break;
+                if ((values = csvReader.readNext()) == null) break;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

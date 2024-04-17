@@ -371,6 +371,7 @@
 
 
                                 <div class="form-group" id="equation-div">
+                                    <p></p>
                                     <label for="equation-input">Rovnica*</label>
                                     <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0"
                                            oninput="validateEquation()">
@@ -378,6 +379,7 @@
                                 </div>
 
                                 <div class="form-group" id="function-div">
+                                    <p></p>
                                     <label for="function-input" >Funkcia*</label>
                                     <input type="text" class="form-control" id="function-input" placeholder="f(x)"
                                            oninput="validateFunction()">
@@ -386,11 +388,12 @@
 
 
                                 <div class="form-group" id="nodes-string-div">
+                                    <p></p>
                                     <label for="nodes-string-input">Zadať uzly</label>
                                     <input type="text" class="form-control" id="nodes-string-input"
-                                           placeholder="(x1,y1),(x2,y2),...,(x100,y100), xi ∈ N, yi ∈ R"
+                                           placeholder="(x1,y1),(x2,y2),...,(x100,y100)"
                                            oninput="validateStringCoordinates()">
-                                    <p class="error" id="nodes-string-error-hint"></p>
+                                    <p class="error" id="nodes-string-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="nodes-csv-div">
@@ -407,7 +410,7 @@
                                     id="insert-file-button">Vložiť</button>
                           </span>
                                     </div>
-                                    <p class="error" id="nodes-csv-error-hint"></p>
+                                    <p class="error" id="nodes-csv-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="functions-dropdown-div">
@@ -429,7 +432,7 @@
                                 <div class="form-group" id="tolerance-div">
                                     <div class="dropdown">
                                         <button class="btn btn-outline-primary dropdown-toggle" type="button"
-                                                id="tolerance-button" data-toggle="dropdown"
+                                                id="dropdownMenuOutlineButton1" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">Tolerancia*
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
@@ -488,6 +491,7 @@
 
 
                                 <div class="form-group" id="result-div">
+                                    <p></p>
                                     <label for="upper-bound-input">Výsledok</label>
                                     <input style="color: black" type="text" class="form-control" id="result-input"
                                            readonly>
@@ -550,12 +554,16 @@
 
 <script src="/static/js/off-canvas.js"></script>
 <script th:src="@{/js/off-canvas.js}"></script>
+
 <script src="/static/js/hoverable-collapse.js"></script>
 <script th:src="@{/js/hoverable-collapse.js}"></script>
+
 <script src="/static/js/misc.js"></script>
 <script th:src="@{/js/misc.js}"></script>
+
 <script src="/static/js/settings.js"></script>
 <script th:src="@{/js/settings.js}"></script>
+
 <script src="/static/js/todolist.js"></script>
 <script th:src="@{/js/todolist.js}"></script>
 

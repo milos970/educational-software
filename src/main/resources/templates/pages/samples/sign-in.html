@@ -47,6 +47,7 @@
                   <div class="form-group d-flex align-items-center justify-content-between">
                     <a th:href="@{/forget-password-page}" class="forgot-pass">Zabudnuté heslo</a>
                   </div>
+                    <p  class="success" th:text="${success}"></p>
                   <div class="text-center">
                     <button type="submit" id="submit-button" class="btn btn-primary btn-block enter-btn" onclick="canSubmit()">Prihlásiť</button>
                   </div>

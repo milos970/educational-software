@@ -26,7 +26,6 @@ public class EmployeeAvailabilityValidator implements ConstraintValidator<Employ
 
         if (optional.isEmpty())
         {
-            System.out.println(55555555);
             return false;
         }
 

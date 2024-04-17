@@ -261,7 +261,7 @@ public class PageController {
 
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
         return "/pages/samples/sign-in";
     }
 
@@ -278,7 +278,7 @@ public class PageController {
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-            System.out.println(4);
+
         }
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
