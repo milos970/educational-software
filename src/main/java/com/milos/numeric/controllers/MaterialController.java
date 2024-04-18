@@ -39,7 +39,7 @@ public class MaterialController {
 
         if (material!= null)
         {
-            System.out.println("OK");
+            System.out.println(material.getId());
             return new ResponseEntity<>(material.getId(), HttpStatus.OK);
         } else
         {

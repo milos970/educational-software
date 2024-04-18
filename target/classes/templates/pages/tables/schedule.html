@@ -264,42 +264,32 @@
 
                 <div class="row">
                     <div class="col-lg-7 grid-margin stretch-card">
-                        <div class="card">
+                        <div style="background-color: #6c757d" class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Moje údaje</h4>
 
                                 <div class="table-responsive">
-                                    <table class="table" style="color: whitesmoke">
+                                    <table class="table table-dark" style="color: whitesmoke">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th> </th>
-                                            <th>  </th>
 
-                                        </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                             <td>Nasledujúce cvičenie</td>
-                                            <td> </td>
+
                                             <td th:text="${systemSettings.classDate}"> </td>
-                                            <td> </td>
+
 
                                         </tr>
 
                                         <tr>
                                             <td>Počet dní do cvičenia</td>
-                                            <td></td>
+
                                             <td th:text="${systemSettings.numberOfDays}"></td>
-                                            <td> </td>
+
                                         </tr>
 
-                                        <tr>
-                                            <td>Školský týždeň</td>
-                                            <td></td>
-                                            <td th:text="${systemSettings.schoolWeek}"></td>
-                                            <td> </td>
-                                        </tr>
+
 
 
 

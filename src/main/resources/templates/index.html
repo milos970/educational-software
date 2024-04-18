@@ -73,7 +73,7 @@
               <span class="menu-icon">
                 <i class="mdi mdi-function"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Numerické metódy</span>
+                    <span class="menu-title" style="color: whitesmoke">Numerické kategórie</span>
                 </a>
             </li>
 
@@ -393,7 +393,7 @@
                                     <input type="text" class="form-control" id="nodes-string-input"
                                            placeholder="(x1,y1),(x2,y2),...,(x100,y100)"
                                            oninput="validateStringCoordinates()">
-                                    <p class="error" id="nodes-string-hint-error"></p>
+                                    <p class="error" id="nodes-string-error-hint"></p>
                                 </div>
 
                                 <div class="form-group" id="nodes-csv-div">
@@ -410,7 +410,7 @@
                                     id="insert-file-button">Vložiť</button>
                           </span>
                                     </div>
-                                    <p class="error" id="nodes-csv-hint-error"></p>
+                                    <p class="error" id="nodes-csv-error-hint"></p>
                                 </div>
 
                                 <div class="form-group" id="functions-dropdown-div">
@@ -459,14 +459,14 @@
 
 
                                 <div class="form-group" id="lower-bound-div">
-                                    <label for="lower-bound-input"><h5>Dolná hranica*</h5></label>
+                                    <label for="lower-bound-input"><h5>Dolná hranica intervalu*</h5></label>
                                     <input type="number" class="form-control" id="lower-bound-input" min="-10" max="9"
                                            placeholder="<-10;9>">
                                     <p class="error" id="lower-bound-value-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="upper-bound-div">
-                                    <label for="upper-bound-input"><h5>Horná hranica*</h5></label>
+                                    <label for="upper-bound-input"><h5>Horná hranica intervalu*</h5></label>
                                     <input type="number" class="form-control" id="upper-bound-input" min="-9" max="10"
                                            placeholder="<-9;10>">
                                     <p class="error" id="upper-bound-value-hint-error"></p>

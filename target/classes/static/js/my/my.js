@@ -803,7 +803,7 @@ function newtonMethod()
         }
         catch (error) {
 
-            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
+            equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
         }
 
 
@@ -816,12 +816,12 @@ function newtonMethod()
         }
         catch (error) {
 
-            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
+            equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
         }
 
         if (derFx === 0)
         {
-
+            equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
             return;
         }
 
@@ -925,7 +925,7 @@ function bisectionMethod()
 
         if (fak * fbk > 0)
         {
-            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
 
@@ -1035,7 +1035,7 @@ function regulaFalsiMethod()
         if (fak * fbk > 0)
         {
 
-            equationErrorHintElement.innerHTML = "Riešenie sa nenašlo!";
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
 
@@ -1862,7 +1862,7 @@ function validateStringCoordinates()
 
 
     const coordinatesStringElement = getById("nodes-string-input");
-    const coordinatesStringErrorHint = getById("nodes-string-hint-error");
+    const coordinatesStringErrorHint = getById("nodes-string-error-hint");
 
     if (coordinatesStringElement.value.length === 0)
     {
