@@ -265,24 +265,21 @@
 
                 <div class="row">
                     <div class="col-lg-7 grid-margin stretch-card">
-                        <div class="card">
+                        <div style="background-color: #6c757d" class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Systém</h4>
+                                <h4 class="card-title">Nastavenie systému</h4>
 
 
                                 <div class="table-responsive">
-                                    <table class="table" style="color: whitesmoke">
+                                    <table class="table table-dark" style="color: whitesmoke">
                                         <thead>
                                         <tr>
-                                            <th> </th>
-                                            <th> </th>
-                                            <th>  </th>
 
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td> Počet povolených absencii </td>
+                                            <td> <h5>Počet povolených absencii</h5> </td>
                                             <td id="absents-count" th:text="${systemSettings.allowedAbsents}"> </td>
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                                             <div class="input-group">
@@ -295,11 +292,12 @@
 
                                             </td>
                                             <td> </td>
-
+                                            <td> </td>
+                                            <td> </td>
                                         </tr>
 
                                         <tr>
-                                            <td> Nahratí študenti </td>
+                                            <td> <h5>Počet študentov*</h5> </td>
                                             <div th:if="${students.size() == 0}">
                                                 <td>Nie</td>
                                             </div>
@@ -331,10 +329,12 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            <td> </td>
+                                            <td> </td>
 
                                         </tr>
                                         <tr>
-                                            <td> Vyučujúci </td>
+                                            <td> <h5>Vyučujúci</h5> </td>
                                             <td th:text="${systemSettings.getEmployee().personalInfo.name + ' ' + systemSettings.getEmployee().personalInfo.surname}"></td>
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                                                 <div class="input-group">
@@ -351,10 +351,12 @@
                                                 </div>
                                             </div>
                                             </td>
-
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
                                         </tr>
                                         <tr>
-                                            <td> Termín najbližšieho cvičenia </td>
+                                            <td> <h5>Termín najbližšieho cvičenia</h5> </td>
                                             <td id="date-value" th:text="${systemSettings.classDate}"></td>
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                                                 <div class="input-group">
@@ -368,13 +370,19 @@
                                                 <p class="error" id="date-hint-error"></p>
                                             </td>
                                             <td></td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
 
                                         </tr>
                                         <tr>
-                                            <td> Počet dní do začiatku cvičenia</td>
+                                            <td><h5>Počet dní do začiatku cvičenia</h5></td>
                                             <td th:text="${systemSettings.numberOfDays}"></td>
                                             <td></td>
                                             <td></td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
                                         </tr>
 
                                         </tbody>

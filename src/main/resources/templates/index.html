@@ -318,7 +318,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 grid-margin stretch-card" style="display: none" id="methods-calculation-div">
-                        <div class="card">
+                        <div  class="card">
                             <div class="card-body">
                                 <div class="dropdown" id="non-linear-dropdown-div">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
@@ -372,7 +372,7 @@
 
                                 <div class="form-group" id="equation-div">
                                     <p></p>
-                                    <label for="equation-input">Rovnica*</label>
+                                    <label for="equation-input"><h5>Rovnica*</h5></label>
                                     <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0"
                                            oninput="validateEquation()">
                                     <p class="error" id="equation-hint-error"></p>
@@ -380,7 +380,7 @@
 
                                 <div class="form-group" id="function-div">
                                     <p></p>
-                                    <label for="function-input" >Funkcia*</label>
+                                    <label for="function-input" ><h5>Funkcia*</h5></label>
                                     <input type="text" class="form-control" id="function-input" placeholder="f(x)"
                                            oninput="validateFunction()">
                                     <p class="error" id="function-hint-error"></p>
@@ -389,7 +389,7 @@
 
                                 <div class="form-group" id="nodes-string-div">
                                     <p></p>
-                                    <label for="nodes-string-input">Zadať uzly</label>
+                                    <label for="nodes-string-input"><h5>Uzly</h5></label>
                                     <input type="text" class="form-control" id="nodes-string-input"
                                            placeholder="(x1,y1),(x2,y2),...,(x100,y100)"
                                            oninput="validateStringCoordinates()">
@@ -397,7 +397,7 @@
                                 </div>
 
                                 <div class="form-group" id="nodes-csv-div">
-                                    <label for="nodes-string-input">Súbor</label>
+                                    <label for="nodes-string-input"><h5>Súbor</h5></label>
                                     <input type="file" name="img[]" class="file-upload-default">
                                     <div class="input-group col-xs-12">
                                         <input type="text" id="text-input" class="form-control file-upload-info"
@@ -451,7 +451,7 @@
                                 </div>
 
                                 <div class="form-group" id="initial-value-div">
-                                    <label for="initial-value-input">Počiatočná aproximácia*</label>
+                                    <label for="initial-value-input"><h5>Počiatočná aproximácia*</h5></label>
                                     <input type="number" class="form-control" id="initial-value-input"
                                            placeholder="<-10;10>" min="-10" max="10">
                                     <p class="error" id="initial-value-hint-error"></p>
@@ -459,21 +459,21 @@
 
 
                                 <div class="form-group" id="lower-bound-div">
-                                    <label for="lower-bound-input">Dolná hranica*</label>
+                                    <label for="lower-bound-input"><h5>Dolná hranica*</h5></label>
                                     <input type="number" class="form-control" id="lower-bound-input" min="-10" max="9"
                                            placeholder="<-10;9>">
                                     <p class="error" id="lower-bound-value-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="upper-bound-div">
-                                    <label for="upper-bound-input">Horná hranica*</label>
+                                    <label for="upper-bound-input"><h5>Horná hranica*</h5></label>
                                     <input type="number" class="form-control" id="upper-bound-input" min="-9" max="10"
                                            placeholder="<-9;10>">
                                     <p class="error" id="upper-bound-value-hint-error"></p>
                                 </div>
 
                                 <div class="form-group" id="subintervals-div">
-                                    <label for="subintervals-input">Počet dielikov*</label>
+                                    <label for="subintervals-input"><h5>Počet dielikov*</h5></label>
                                     <input type="number" class="form-control" id="subintervals-input" min="1" max="100"
                                            placeholder="<1;100>">
                                     <p class="error" id="subintervals-value-hint-error"></p>
@@ -492,7 +492,7 @@
 
                                 <div class="form-group" id="result-div">
                                     <p></p>
-                                    <label for="upper-bound-input">Výsledok</label>
+                                    <label for="upper-bound-input"><h5>Výsledok</h5></label>
                                     <input style="color: black" type="text" class="form-control" id="result-input"
                                            readonly>
                                     <p class="error" id="result-value-hint-error"></p>
@@ -502,7 +502,7 @@
                         </div>
                     </div>
                     <div class="col-md-8 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
-                        <div class="card">
+                        <div style="background-color: #6c757d" class="card">
                             <div class="card-body" id="table-div">
                                 <h4 class="card-title"></h4>
 
@@ -511,7 +511,7 @@
                                 </div>
 
                                 <div class="table-responsive table-bordered">
-                                    <table class="table table-info" style="color: white" id="table">
+                                    <table class="table table-dark" style="color: white" id="table">
                                         <tbody>
                                         </tbody>
                                     </table>

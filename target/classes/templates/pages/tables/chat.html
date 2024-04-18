@@ -305,7 +305,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-7 grid-margin stretch-card"  id="conversation-div">
+                    <div class="col-lg-8 grid-margin stretch-card"  id="conversation-div">
                         <div class="card" >
 
                             <div class="card-body" id="conversation">
@@ -354,16 +354,16 @@
                     </div>
 
 
-                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="col-6 grid-margin">
-                        <div class="card">
+                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="col-8 grid-margin">
+                        <div style="background-color: #6c757d" class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Študenti</h4>
                                 <div class="table-responsive">
-                                    <table class="table" style="color: whitesmoke">
+                                    <table class="table table-dark" style="color: whitesmoke">
                                         <thead>
                                         <tr>
-                                            <th>Celé meno</th>
-                                            <th>Používateľské meno</th>
+                                            <th style="color: whitesmoke">Celé meno</th>
+                                            <th style="color: whitesmoke">Používateľské meno</th>
                                         </tr>
                                         </thead>
                                         <tbody>

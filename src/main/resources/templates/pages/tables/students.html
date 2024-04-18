@@ -252,25 +252,25 @@
 
                 <div class="row">
                     <div class="col-lg-10 grid-margin stretch-card">
-                        <div class="card">
+                        <div style="background-color: #6c757d" class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Študenti</h4>
+                                <h4 class="card-title">Zoznam študentov</h4>
                                 <p class="card-description"></p>
                                 <div class="table-responsive">
-                                    <table style="color: whitesmoke" class="table">
+                                    <table style="color: whitesmoke" class="table table-dark">
                                         <thead>
-                                        <tr>
-                                            <th>Študent</th>
-                                            <th>Meno</th>
-                                            <th>Priezvisko</th>
-                                            <th>Používateľské meno</th>
-                                            <th>Osobné číslo</th>
-                                            <th>Email</th>
-                                            <th>Body</th>
-                                            <th th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}"></th>
-                                            <th>Absencie</th>
-                                            <th></th>
-                                            <th></th>
+                                        <tr >
+                                            <th style="color: whitesmoke">Študent</th>
+                                            <th style="color: whitesmoke">Meno</th>
+                                            <th style="color: whitesmoke">Priezvisko</th>
+                                            <th style="color: whitesmoke">Používateľské meno</th>
+                                            <th style="color: whitesmoke">Osobné číslo</th>
+                                            <th style="color: whitesmoke">Email</th>
+                                            <th style="color: whitesmoke">Body</th>
+                                            <th style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}"></th>
+                                            <th style="color: whitesmoke">Absencie</th>
+                                            <th style="color: whitesmoke"></th>
+                                            <th style="color: whitesmoke"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -304,6 +304,7 @@
                             <button class="btn btn-sm btn-primary" th:attr="onclick=|sendAbsents('${student.id}')|"  type="button">Pridať</button>
                         </div>
                       </div></span></td>
+                                            <td></td>
                                         </tr>
                                         </tbody>
                                     </table>

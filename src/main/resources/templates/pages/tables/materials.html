@@ -311,14 +311,14 @@
                                 <h4 class="card-title">Nahrať materiál</h4>
                                 <p class="card-description"></p>
                                 <div class="form-group">
-                                    <label for="name-input">Názov súboru*</label>
+                                    <label for="name-input"><h5>Názov materiálu*</h5></label>
                                     <input name="name" type="text" class="form-control" id="name-input" minlength="1" maxlength="15" placeholder="Počet znakov v rozsahu 1-15!" >
                                     <p class="error" id="name-input-error-hint"></p>
                                 </div>
 
 
                                 <div class="form-group">
-                                    <label>Súbor*</label>
+                                    <label><h5>Súbor*</h5></label>
                                     <input id="file-input"
                                            type="file" accept=".pdf, .docx, .png, .jpg, jpeg, .csv, .pptx" size="5242880"
                                            name="data" class="file-upload-default" onchange="setFileName()">
@@ -330,7 +330,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="file-description">Popis súboru</label>
+                                    <label for="file-description"><h5>Popis</h5></label>
                                     <textarea id="file-description" name="description"  class="form-control"  rows="4" maxlength="50" placeholder="Maximálne 100 znakov!"></textarea>
                                 </div>
 
@@ -340,15 +340,15 @@
                         </div>
                     </div>
                     <div class="col-lg-7 grid-margin stretch-card" >
-                        <div class="card" id="conversation-div">
-                            <div class="card-body" >
+                        <div  class="card" id="conversation-div">
+                            <div  class="card-body" >
                                 <h4 class="card-title">Materiály</h4>
                                 <div class="table-responsive">
-                                    <table class="table" style="color: white">
+                                    <table  class="table table-dark" style="color: white">
                                         <thead>
                                         <tr>
-                                            <th>Názov</th>
-                                            <th>Popis</th>
+                                            <th style="color: white;">Názov</th>
+                                            <th style="color: white">Popis</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -358,16 +358,22 @@
                                         <tr th:if="${#lists.isEmpty(materials)}">
 
                                         </tr>
-                                        <tr th:id='${material.id}' th:each="material : ${materials}">
-                                            <td><span th:text="${material.name}"></span></td>
-                                            <td><span th:text="${material.description}"></span></td>
+                                        <tr  th:id='${material.id}' th:each="material : ${materials}">
+                                            <td><span  th:text="${material.name}"></span></td>
+                                            <td><span  th:text="${material.description}"></span></td>
                                             <td>
-                                                <button th:attr="onclick=|openFile('${material.id}')|"  type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť</button>
+                                                <button th:attr="onclick=|openFile('${material.id}')|"  type="button" class="btn btn-success btn-fw">Zobziť</button>
                                             </td>
                                             <td  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <button th:attr="onclick=|deleteFile('${material.id}')|" type="button" class="btn btn-danger btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť</button>
+                                                <button th:attr="onclick=|deleteFile('${material.id}')|" type="button"  class="btn btn-danger btn-fw">Odstrániť</button>
                                             </td>
+                                            <td>
+
+                                            </td>
+
                                         </tr>
+
+
 
                                         </tbody>
                                     </table>

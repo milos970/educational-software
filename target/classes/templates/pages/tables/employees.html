@@ -253,23 +253,22 @@
 
                 <div class="row">
                     <div class="col-lg-10 grid-margin stretch-card">
-                        <div class="card">
+                        <div style="background-color: #6c757d" class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Zamestnanci</h4>
+                                <h4 class="card-title">Zoznam zamestnancov</h4>
                                 <p class="card-description"></p>
                                 <div class="table-responsive">
-                                    <table style="color: whitesmoke" class="table">
+                                    <table style="color: whitesmoke" class="table table-dark">
                                         <thead>
                                         <tr>
-                                            <th>Zamestnanec</th>
-                                            <th>Meno</th>
-                                            <th>Priezvisko</th>
-                                            <th>Používateľské meno</th>
-                                            <th>Osobné číslo</th>
-                                            <th>Email</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th style="color: whitesmoke">Zamestnanec</th>
+                                            <th style="color: whitesmoke">Meno</th>
+                                            <th style="color: whitesmoke">Priezvisko</th>
+                                            <th style="color: whitesmoke">Používateľské meno</th>
+                                            <th style="color: whitesmoke">Osobné číslo</th>
+                                            <th style="color: whitesmoke">Email</th>
+                                            <th style="color: whitesmoke"></th>
+
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -286,6 +285,8 @@
                                             <td><span th:text="${employee.personalInfo.username}"></span></td>
                                             <td><span th:text="${employee.personalInfo.personalNumber}"></span></td>
                                             <td><span th:text="${employee.personalInfo.email}"></span></td>
+                                            <td></td>
+
                                         </tr>
                                         </tbody>
                                     </table>

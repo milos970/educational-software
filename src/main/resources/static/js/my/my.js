@@ -3254,9 +3254,9 @@ function uploadFile()
             var showButtonCell = document.createElement("td");
             var showButton = document.createElement("button");
             showButton.setAttribute("type", "button");
-            showButton.setAttribute("class", "btn btn-success btn-icon-text");
+            showButton.setAttribute("class", "btn btn-success btn-fw");
             showButton.setAttribute("onclick", "openFile('" + xhttp.responseText + "')");
-            showButton.innerHTML = '<i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť';
+            showButton.innerHTML = 'Zobraziť';
             showButtonCell.appendChild(showButton);
 
             row.appendChild(nameCell);
@@ -3267,12 +3267,13 @@ function uploadFile()
             let deleteButtonCell = document.createElement("td");
             var deleteButton = document.createElement("button");
             deleteButton.setAttribute("type", "button");
-            deleteButton.setAttribute("class", "btn btn-danger btn-icon-text");
+            deleteButton.setAttribute("class", "btn btn-danger btn-fw");
             deleteButton.setAttribute("onclick", "deleteFile('" + xhttp.responseText + "')");
-            deleteButton.innerHTML = '<i class="mdi mdi-upload btn-icon-prepend"></i>Odstrániť';
+            deleteButton.innerHTML = 'Odstrániť';
             deleteButtonCell.appendChild(deleteButton);
 
             row.appendChild(deleteButtonCell);
+            row.appendChild(document.createElement("td"))
 
 
         } else {
