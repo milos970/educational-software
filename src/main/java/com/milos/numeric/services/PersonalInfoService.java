@@ -165,6 +165,18 @@ public class PersonalInfoService
         return newNode.get("gender").asText();
     }
 
+    public void activate(PersonalInfo personalInfo)
+    {
+        personalInfo.setEnabled(true);
+        this.personalInfoRepository.save(personalInfo);
+
+    }
+
+    public void delete(PersonalInfo personalInfo)
+    {
+        this.personalInfoRepository.delete(personalInfo);
+    }
+
 
     public Optional<PersonalInfo> createPerson(PersonalInfoDto personalInfoDTO)
     {
@@ -206,7 +218,7 @@ public class PersonalInfoService
         personalInfo.setEnabled(false);
 
 
-        if (emailDomain.equals("@gmail.com"))
+        if (emailDomain.equals("gmail.com"))
         {
             personalInfo.setAuthority(Authority.EMPLOYEE);
         }

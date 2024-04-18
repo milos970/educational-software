@@ -84,10 +84,9 @@ public class VerificationTokenService
         return !expirationDate.isBefore(now);
     }
 
-    public boolean deleteByCode(String code)
+    public void delete(VerificationToken token)
     {
-        this.verificationTokenRepository.findByCode(code);
-        return true;
+        this.verificationTokenRepository.delete(token);
     }
 
 

@@ -52,7 +52,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="disableButton()">
 <div class="container-scroller">
     <!-- partial:../../partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -308,12 +308,17 @@
                                                 <td>Ano</td>
                                             </div>
 
+
+
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <div class="input-group">
-                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" accept="text/csv" class="form-control" aria-describedby="basic-addon2" style="display:none;">
-                                                    <input type="text" id="text-name-input"    class="form-control" aria-describedby="basic-addon2">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-sm btn-primary" onclick="clic()" type="button">Vložiť</button>
+                                                <div class="form-group">
+                                                    <label></label>
+                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" accept="text/csv" class="file-upload-default">
+                                                    <div class="input-group col-xs-12">
+                                                        <input id="text-input" type="text" class="form-control file-upload-info" disabled placeholder="CSV súbor">
+                                                        <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-primary" onclick="clic()" type="button">Vložiť</button>
+                          </span>
                                                     </div>
                                                 </div>
                                                 <p class="error" id="students-csv-hint-error"></p>
@@ -336,6 +341,7 @@
                                                     <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať zamestnanca"  class="form-control" aria-label="Recipient's username"
                                                            aria-describedby="basic-addon2">
                                                 </div>
+                                                <p></p>
                                                 <p class="error" id="username-hint-error"></p>
                                             </td>
                                             <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
@@ -358,7 +364,7 @@
                                                         <button onclick="updateSystemDate()" id="date-button" class="btn btn-sm btn-primary"   type="button">Zmeniť</button>
                                                     </div>
                                                 </div>
-
+                                                <p></p>
                                                 <p class="error" id="date-hint-error"></p>
                                             </td>
                                             <td></td>

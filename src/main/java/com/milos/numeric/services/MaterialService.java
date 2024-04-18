@@ -29,19 +29,11 @@ public class MaterialService
     }
 
 
-    public boolean existsByName(String name)
-    {
-        return this.materialRepository.countByName(name) > 0;
-    }
 
-
-
-    public Long save(MaterialDto materialDto)
+    public Material save(MaterialDto materialDto)
     {
 
-        String fileName = materialDto.getData().getOriginalFilename();
-
-        Path filePath = Paths.get("src", "main", "resources", "static", "materials", fileName);
+        Path filePath = Paths.get("src", "main", "resources", "static", "materials", materialDto.getName());
         String uri = filePath.toString();
 
         byte[] fileBytes= new byte[0];
@@ -64,11 +56,17 @@ public class MaterialService
         Material material = this.fileDtoMapper.sourceToDestination(materialDto);
 
         material.setPath(uri);
-        Material entity = this.materialRepository.save(material);
 
-        entity.setName(entity.getName() + ":" + entity.getId());
-        this.materialRepository.save(entity);
-        return entity.getId();
+
+        try
+        {
+            Material savedMaterial = this.materialRepository.save(material);
+            return savedMaterial;
+        } catch (Exception e)
+        {
+            return null;
+        }
+
     }
 
     public List<Material> findAll()

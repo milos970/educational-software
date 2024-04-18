@@ -35,19 +35,18 @@ public class MaterialController {
     @PostMapping("/admin/material/upload")
     public ResponseEntity saveFile(@Valid MaterialDto materialDto)
     {
-        Long id = this.materialService.save(materialDto);
-        return new ResponseEntity<>(id, HttpStatus.OK);
-    }
+        Material material = this.materialService.save(materialDto);
 
-    @GetMapping("/admin/material/check-by-name/{name}") //OK
-    public ResponseEntity<String> existsByName(@PathVariable String name)
-    {
-        if (this.materialService.existsByName(name))
+        if (material!= null)
         {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
+            System.out.println("OK");
+            return new ResponseEntity<>(material.getId(), HttpStatus.OK);
+        } else
+        {
+            System.out.println("KO");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
     }
 
 

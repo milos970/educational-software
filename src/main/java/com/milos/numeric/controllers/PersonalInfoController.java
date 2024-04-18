@@ -12,6 +12,7 @@ import com.milos.numeric.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Controller
@@ -99,28 +102,37 @@ public class PersonalInfoController {
     @GetMapping("/confirm-email")//OK
     public String confirmEmail(@RequestParam("token") String code)
     {
-        if (!this.verificationTokenService.isTokenValid(code))
-        {
-            return "redirect:/reset-password/page";
-        }
 
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByCode(code);
+
+        if (verificationTokenOptional.isEmpty())
+        {
+
+        }
 
         VerificationToken verificationToken = verificationTokenOptional.get();
 
         PersonalInfo personalInfo = verificationToken.getPersonalInfo();
+
+        if (!this.verificationTokenService.isTokenValid(code))
+        {
+            this.verificationTokenService.delete(verificationToken);
+            this.personalInfoService.delete(personalInfo);
+        }
+
 
         if (verificationToken.getTokenType() == TokenType.ACTIVATE_ACCOUNT)
         {
             if (personalInfo.getAuthority() == Authority.EMPLOYEE)
             {
                 this.employeeService.createEmployee(personalInfo);
+                this.personalInfoService.activate(personalInfo);
             }
 
             if (personalInfo.getAuthority() == Authority.STUDENT)
             {
                 this.studentService.createStudent(personalInfo);
-
+                this.personalInfoService.activate(personalInfo);
                 Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByAuthority(Authority.TEACHER);
                 this.chatService.create(personalInfo.getUsername(), personalInfoOptional.get().getUsername());
                 this.personalInfoService.generatePassword(personalInfo.getUsername());
@@ -152,24 +164,24 @@ public class PersonalInfoController {
     }
 
 
-    @PostMapping("/person/create") //OK
-    public String createUser(@Valid @RequestBody PersonalInfoDto personalInfoDTO, Model model)
+    @PostMapping(value = "/person/create") //OK
+    public String createUser(@Valid @ModelAttribute PersonalInfoDto personalInfoDTO, Model model)
     {
-        System.out.println(4);
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(personalInfoDTO.getEmail());
 
         if (personalInfoOptional.isPresent())
         {
-            model.addAttribute("error", "Účet s daným mailom už existuje!");
-            return "redirect:/sign-in";
+            return "redirect:/sign-up-page?error=" + URLEncoder.encode("Účet s daným emailom už existuje!", StandardCharsets.UTF_8);
+
         }
 
         Optional<PersonalInfo> personalInfo = this.personalInfoService.createPerson(personalInfoDTO);
 
-        this.verificationTokenService.createToken(personalInfo.get(), TokenType.ACTIVATE_ACCOUNT);
+        VerificationToken token = this.verificationTokenService.createToken(personalInfo.get(), TokenType.ACTIVATE_ACCOUNT);
+        this.verificationTokenService.sendToken(token);
 
         model.addAttribute("success", "Na zadaný mail bol odoslaný verifikačný email!");
-        return "redirect:/sign-in";
+        return "redirect:/login";
     }
 
 

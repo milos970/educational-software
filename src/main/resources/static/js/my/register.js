@@ -22,6 +22,7 @@ function studentOrEmployee(who)
         case 2:
             showFormForEmployee();
             getById("employee-form").action = "/person/create";
+            alert(2);
             which = 2;
             break;
         default:
@@ -389,6 +390,7 @@ function submitChangedPassword()
 
     if (isValid)
     {
+        alert(2);
         document.getElementById("form").submit();
     }
 

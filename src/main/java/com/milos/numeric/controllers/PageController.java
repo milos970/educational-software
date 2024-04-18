@@ -242,7 +242,6 @@ public class PageController {
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
 
-
         model.addAttribute("personalInfo", personalInfo);
 
         if (personalInfo.getGender().name().equals("FEMALE")) {
@@ -261,7 +260,7 @@ public class PageController {
 
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login() {
         return "/pages/samples/sign-in";
     }
 

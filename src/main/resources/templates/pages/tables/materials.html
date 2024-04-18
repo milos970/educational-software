@@ -67,7 +67,7 @@
 </head>
 <body>
 <div class="container-scroller">
-    <!-- partial:../../partials/_sidebar.html -->
+
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
             <a class="sidebar-brand brand-logo" href="index.html"><img th:src="@{/images/logo.png}" alt="logo"/></a>
@@ -187,9 +187,9 @@
 
         </ul>
     </nav>
-    <!-- partial -->
+
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:../../partials/_navbar.html -->
+
         <nav class="navbar p-0 fixed-top d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo-mini" href="index.html"><img th:src="@{assets/images/logo-mini.svg}"
@@ -305,43 +305,41 @@
                 <div class="page-header">
                 </div>
                 <div class="row">
-                    <div class="col-4 grid-margin stretch-card"  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
+                    <div class="col-5 grid-margin stretch-card"  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Nahrať materiál</h4>
                                 <p class="card-description"></p>
-
-
                                 <div class="form-group">
-                                    <label for="name-input">Názov súboru</label>
+                                    <label for="name-input">Názov súboru*</label>
                                     <input name="name" type="text" class="form-control" id="name-input" minlength="1" maxlength="15" placeholder="Počet znakov v rozsahu 1-15!" >
                                     <p class="error" id="name-input-error-hint"></p>
                                 </div>
 
 
                                 <div class="form-group">
-                                    <label>Vložiť súbor</label>
+                                    <label>Súbor*</label>
                                     <input id="file-input"
                                            type="file" accept=".pdf, .docx, .png, .jpg, jpeg, .csv, .pptx" size="5242880"
                                            name="data" class="file-upload-default" onchange="setFileName()">
                                     <div class="input-group col-xs-12">
-                                        <input id="text-input" type="text" class="form-control file-upload-info" disabled placeholder="Podporované typy: pdf, docx, png, jpg, jpeg, csv, pptx">
-                                        <span class="input-group-append"><button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button">Nahrať</button></span>
+                                        <input id="text-input" type="text" class="form-control file-upload-info" disabled placeholder="Podporované typy: pdf, docx, png, jpg, jpeg, csv, pptx.">
+                                        <span class="input-group-append"><button onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button">Vložiť</button></span>
                                     </div>
                                     <p class="error" id="file-input-error-hint"></p>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="file-description">Popis súboru</label>
-                                    <textarea id="file-description" name="description"  class="form-control"  rows="4" maxlength="100" placeholder="Maximálne 100 znakov!"></textarea>
+                                    <textarea id="file-description" name="description"  class="form-control"  rows="4" maxlength="50" placeholder="Maximálne 100 znakov!"></textarea>
                                 </div>
 
-                                <button onclick="canSubmit()" type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>
+                                <button id="submit-button" onclick="canSubmit()" type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Odoslať</button>
 
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 grid-margin stretch-card" >
+                    <div class="col-lg-7 grid-margin stretch-card" >
                         <div class="card" id="conversation-div">
                             <div class="card-body" >
                                 <h4 class="card-title">Materiály</h4>
@@ -361,7 +359,7 @@
 
                                         </tr>
                                         <tr th:id='${material.id}' th:each="material : ${materials}">
-                                            <td><span th:text="${#strings.substring(material.name, 0, material.name.indexOf(':'))}"></span></td>
+                                            <td><span th:text="${material.name}"></span></td>
                                             <td><span th:text="${material.description}"></span></td>
                                             <td>
                                                 <button th:attr="onclick=|openFile('${material.id}')|"  type="button" class="btn btn-success btn-icon-text"><i class="mdi mdi-upload btn-icon-prepend"></i>Zobraziť</button>
@@ -384,9 +382,9 @@
             </div>
         </div>
     </div>
-    <!-- main-panel ends -->
+
 </div>
-<!-- page-body-wrapper ends -->
+
 
 <script src="/static/vendors/js/vendor.bundle.base.js"></script>
 <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
@@ -401,8 +399,6 @@
 <script th:src="@{/vendors/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
 <script src="/static/vendors/owl-carousel-2/owl.carousel.min.js"></script>
 <script th:src="@{/vendors/owl-carousel-2/owl.carousel.min.js}"></script>
-<!-- End plugin js for this page -->
-<!-- inject:js -->
 <script src="/static/js/off-canvas.js"></script>
 <script th:src="@{/js/off-canvas.js}"></script>
 <script src="/static/js/hoverable-collapse.js"></script>
@@ -413,12 +409,8 @@
 <script th:src="@{/js/settings.js}"></script>
 <script src="/static/js/todolist.js"></script>
 <script th:src="@{/js/todolist.js}"></script>
-<!-- endinject -->
-<!-- Custom js for this page -->
 <script src="/static/js/dashboard.js"></script>
 <script th:src="@{/js/dashboard.js}"></script>
-<!-- End custom js for this page -->
-
 <script src="/static/js/chart.js"></script>
 <script th:src="@{/js/chart.js}"></script>
 

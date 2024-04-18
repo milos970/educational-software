@@ -1862,7 +1862,7 @@ function validateStringCoordinates()
 
 
     const coordinatesStringElement = getById("nodes-string-input");
-    const coordinatesStringErrorHint = getById("nodes-string-error-hint");
+    const coordinatesStringErrorHint = getById("nodes-string-hint-error");
 
     if (coordinatesStringElement.value.length === 0)
     {
@@ -2635,8 +2635,6 @@ function validateStudentsCsv()
 {
     const studentsCsvHintError = getById("students-csv-hint-error");
 
-
-
     for (let i = 1; i < this.array.length; ++i)
     {
 
@@ -2706,8 +2704,6 @@ function validateStudentsCsv()
             studentsCsvHintError.innerHTML = "";
         }
 
-
-
         if (!pinRegex.test(pin))
         {
             const char = String.fromCharCode(67);
@@ -2762,7 +2758,7 @@ function validateStudentsCsv()
     if (emails.size !== this.array.length - 1)
     {
         const char = String.fromCharCode(68);
-        studentsCsvHintError.innerHTML = "Duplicitná hodnota v stlpci: "  + char;
+        studentsCsvHintError.innerHTML = "Duplikát v stlpci: "  + char;
         return false;
     }
 
@@ -2770,15 +2766,11 @@ function validateStudentsCsv()
     if (pins.size !== this.array.length - 1)
     {
         const char = String.fromCharCode(67);
-        studentsCsvHintError.innerHTML = "Duplicitná hodnota v stlpci: "  + char;
+        studentsCsvHintError.innerHTML = "Duplikát v stlpci: "  + char;
         return false;
     }
 
-
-
     return true;
-
-
 }
 
 
@@ -2877,9 +2869,6 @@ function updateTeacher()
         username: usernameInputElement.value
     };
 
-
-
-
     let url = "/admin/system/update/teacher";
 
     xhttp.open("PATCH", url, true);
@@ -2892,22 +2881,17 @@ function updateSystemDate()
 {
     const errorHint = getById("date-hint-error");
     const dateInputElement = getById("date-input");
-    const dateButton = getById("date-button");
 
     if (dateInputElement.value.length === 0)
     {
-        errorHint.innerHTML = "Prázdne pole!";
+        errorHint.innerHTML = "Nezadaný dátum!";
         return;
     }
-
-
 
     if (!validateDate(dateInputElement.value))
     {
        return;
     }
-
-
 
     const xhttp = new XMLHttpRequest();
 
@@ -2926,8 +2910,6 @@ function updateSystemDate()
     let data = {
         date: dateInputElement.value
     };
-
-
 
 
     let url = "/admin/system/update/date";
@@ -2954,15 +2936,15 @@ function validateDate(dateString)
     }
 
 
-    // Parse the date string into a Date object
-    var parts = dateString.split(' ');
-    var dateParts = parts[0].split('.');
-    var timeParts = parts[1].split(':');
-    var year = parseInt(dateParts[2], 10);
-    var month = parseInt(dateParts[1], 10) - 1; // Months are zero-based
-    var day = parseInt(dateParts[0], 10);
-    var hours = parseInt(timeParts[0], 10);
-    var minutes = parseInt(timeParts[1], 10);
+
+    let parts = dateString.split(' ');
+    let dateParts = parts[0].split('.');
+    let timeParts = parts[1].split(':');
+    let year = parseInt(dateParts[2], 10);
+    let month = parseInt(dateParts[1], 10) - 1;
+    let day = parseInt(dateParts[0], 10);
+    let hours = parseInt(timeParts[0], 10);
+    let minutes = parseInt(timeParts[1], 10);
 
 
     const date = new Date(year, month, day, hours, minutes);
@@ -3068,7 +3050,7 @@ function checkFileType(element, hintElement)
     {
         hintElement.innerHTML = "";
     } else {
-        hintElement.innerHTML = "Veľkosť súboru presahuje limit!";
+        hintElement.innerHTML = "Maximálna veľkosť súboru: 5MB";
         return false;
     }
 
@@ -3087,7 +3069,9 @@ return true;
 
 
 
-
+function disableButton() {
+    getById("submit-button").disabled = true;
+}
 
 
 
@@ -3099,11 +3083,9 @@ function uploadStudentsCsv()
 
     if (getById("file-input").files.length === 0)
     {
-        getById("students-csv-hint-error").innerHTML = "Poľe je prázdne!";
+        getById("students-csv-hint-error").innerHTML = "Nevybratý súbor!";
         return;
     }
-
-
 
     if (!validateStudentsCsv())
     {
@@ -3132,14 +3114,10 @@ function uploadStudentsCsv()
 
     xhttp.open("POST", url, true);
 
-
     const formData = new FormData();
     const fileInput = document.getElementById('file-input');
 
     formData.append('file', fileInput.files[0]);
-
-
-
 
     xhttp.send(formData);
 }
@@ -3152,10 +3130,6 @@ function setFileName()
 
     inputFileNameElement.value = inputFileElement.files[0].name;
 }
-
-
-
-
 
 
 
@@ -3185,6 +3159,9 @@ $(function() {
     var accordion = new Accordion($('#accordion'), false);
 });
 
+
+
+//////////////////////////////////////////////MATERIALY/////////////////////////////////////////////////////////////////
 
 
 
@@ -3225,35 +3202,7 @@ function openFile(id)
     xhttp.send();
 }
 
-function checkFile(name)
-{
-    let exists = false;
-    const xhttp = new XMLHttpRequest();
 
-
-    xhttp.onload = function()
-    {
-        const inputNameErrorHint = getById("name-input-error-hint");
-
-        if (xhttp.status === 200)
-        {
-            inputNameErrorHint.innerHTML = "Súbor s týmto názvom už existuje!";
-            exists = true;
-
-        } else {
-            inputNameErrorHint.innerHTML = "";
-            exists = false;
-        }
-
-    }
-
-    const url = "/admin/material/check-by-name/" + name;
-
-    xhttp.open("GET", url, false);
-    xhttp.send();
-
-    return exists;
-}
 
 function deleteFile(id)
 {
@@ -3276,8 +3225,6 @@ function deleteFile(id)
 
 function uploadFile()
 {
-
-
     const xhttp = new XMLHttpRequest();
 
     xhttp.onload = function()
@@ -3328,8 +3275,8 @@ function uploadFile()
             row.appendChild(deleteButtonCell);
 
 
-
-
+        } else {
+            getById("name-input-error-hint").innerHTML = "Materiál s týmto názvom existuje!";
         }
 
     }
@@ -3362,18 +3309,8 @@ function canSubmit()
         return ;
     }
 
-    if (checkFile(nameInputElement.value))
-    {
-        alert("EXISTUJE");
-        return;
-    } else {
-        alert("NEEXISTUJE");
-    }
-
-
     if (checkFileType(fileInputElement, fileInputElementErrorHint))
     {
-
         uploadFile();
     }
 }
