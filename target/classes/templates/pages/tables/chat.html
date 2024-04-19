@@ -359,7 +359,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Študenti</h4>
                                 <div class="table-responsive">
-                                    <table class="table table-dark" style="color: whitesmoke">
+                                    <table id="table" class="table table-dark" style="color: whitesmoke">
                                         <thead>
                                         <tr>
                                             <th style="color: whitesmoke">Celé meno</th>
@@ -369,12 +369,12 @@
                                         <tbody>
                                         <tr th:if="${#lists.isEmpty(students)}">
                                             <td colspan="2">Žiadny študent</td>
-                                        </tr>                                        <tr th:each="student : ${students}">
+                                        </tr>
+                                        <tr th:id="${student.id}" th:each="student : ${students}">
                                             <td><span th:text="${student.personalInfo.name + ' ' + student.personalInfo.surname}"></span></td>
                                             <td><span th:text="${student.personalInfo.username}"></span></td>
-                                            <td><button th:attr="onclick=|getConversation('${student.personalInfo.username}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
+                                            <td><button th:attr="onclick=|getConversation('${student.personalInfo.username}', '${student.id}')|"  type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu</button></td>
                                         </tr>
-
                                         </tbody>
                                     </table>
                                 </div>

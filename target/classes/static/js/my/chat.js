@@ -91,7 +91,8 @@ function sendMessage(senderUsername,receiverUsername)
 }
 
 
-function getConversation(receiverUsername)
+var lastId = -1;
+function getConversation(receiverUsername, id)
 {
 
     while (document.getElementById("conversation").firstChild) {
@@ -106,6 +107,21 @@ function getConversation(receiverUsername)
 
     getById("send-message-div").style.display="block";
 
+
+
+
+
+
+
+    if (lastId === -1)
+    {
+        lastId = id;
+        document.getElementById(id).style.backgroundColor="green";
+    } else {
+        document.getElementById(lastId).style.backgroundColor="";
+        lastId = id;
+        document.getElementById(id).style.backgroundColor="green";
+    }
 
 
 

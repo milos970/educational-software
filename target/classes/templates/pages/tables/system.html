@@ -264,132 +264,93 @@
             <div class="content-wrapper">
 
                 <div class="row">
-                    <div class="col-lg-7 grid-margin stretch-card">
-                        <div style="background-color: #6c757d" class="card">
+                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="col-md-5 grid-margin stretch-card">
+                        <div  class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Nastavenie systému</h4>
-
-
+                                <p class="card-description"></p>
+                                <form class="forms-sample">
+                                    <div class="form-group">
+                                        <label>Počet povolených absencii</label>
+                                        <div class="input-group col-xs-12">
+                                            <input id="absents-input" type="number" class="form-control file-upload-info"  placeholder="<1;13>">
+                                            <span class="input-group-append"><button id="absents-button" onclick="updateSystemAbsents()" class="file-upload-browse btn btn-primary" type="button">Zmeniť</button></span>
+                                        </div>
+                                        <p class="error" id="absents-hint-error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nahratí študenti</label>
+                                        <input id="file-input" onchange="parseCsvToArrays()" type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input id="text-input" type="text" class="form-control file-upload-info" disabled placeholder="Typ súboru: CSV">
+                                            <span class="input-group-append"><button onclick="clic()" class="file-upload-browse btn btn-primary" type="button">Vložiť</button></span>
+                                            <span class="input-group-append"><button onclick="uploadStudentsCsv()" class="file-upload-browse btn btn-success" type="button">Odoslať</button></span>
+                                        </div>
+                                        <p class="error" id="students-csv-hint-error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Vyučujúci</label>
+                                        <div class="input-group col-xs-12">
+                                            <input id="username-input" oninput="checkUsername(this.value)" type="text" class="form-control file-upload-info"  placeholder="Vyhľadať zamestnanca">
+                                            <span class="input-group-append"><button id="submit-button" class="file-upload-browse btn btn-primary" type="button">Zmeniť</button></span>
+                                        </div>
+                                        <p class="error" id="username-hint-error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Termín najbližšieho cvičenia</label>
+                                        <div class="input-group col-xs-12">
+                                            <input id="date-input" type="text" class="form-control file-upload-info" placeholder="dd.MM.yyyy hh:mm">
+                                            <span class="input-group-append"><button onclick="updateSystemDate()" class="file-upload-browse btn btn-primary" type="button">Zmeniť</button></span>
+                                        </div>
+                                        <p class="error" id="date-hint-error"></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Údaje systému</h4>
+                                <p class="card-description"></p>
                                 <div class="table-responsive">
-                                    <table class="table table-dark" style="color: whitesmoke">
+                                    <table class="table">
                                         <thead>
                                         <tr>
+                                            <th></th>
+                                            <th></th>
+
 
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td> <h5>Počet povolených absencii</h5> </td>
-                                            <td id="absents-count" th:text="${systemSettings.allowedAbsents}"> </td>
-                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                            <div class="input-group">
-                                                <input id="absents-input" type="number" placeholder="<1;13>" min="1" max="13"   class="form-control" aria-describedby="basic-addon2">
-                                                <div class="input-group-append">
-                                                    <button id="absents-button" class="btn btn-sm btn-primary" onclick="updateSystemAbsents()"   type="button">Zmeniť</button>
-                                                </div>
-                                            </div>
-                                                <p class="error" id="absents-hint-error"></p>
-
-                                            </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td> <h5>Počet študentov*</h5> </td>
-                                            <div th:if="${students.size() == 0}">
-                                                <td>Nie</td>
-                                            </div>
-
-                                            <div th:if="${students.size() != 0}">
-                                                <td>Ano</td>
-                                            </div>
-
-
-
-                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <div class="form-group">
-                                                    <label></label>
-                                                    <input id="file-input" onchange="parseCsvToArrays()" type="file" accept="text/csv" class="file-upload-default">
-                                                    <div class="input-group col-xs-12">
-                                                        <input id="text-input" type="text" class="form-control file-upload-info" disabled placeholder="CSV súbor">
-                                                        <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-primary" onclick="clic()" type="button">Vložiť</button>
-                          </span>
-                                                    </div>
-                                                </div>
-                                                <p class="error" id="students-csv-hint-error"></p>
-                                            </td>
-
-                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <div class="input-group">
-                                                    <div class="input-group-append">
-                                                        <button  class="btn btn-lg btn-primary" onclick="uploadStudentsCsv()"   type="button">Nahrať</button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td> </td>
-                                            <td> </td>
-
+                                            <td style="color: whitesmoke">Počet povolených absencii</td>
+                                            <td><label id="absents-count" th:text="${systemSettings.allowedAbsents}" class="badge badge-danger">10</label></td>
                                         </tr>
                                         <tr>
-                                            <td> <h5>Vyučujúci</h5> </td>
-                                            <td th:text="${systemSettings.getEmployee().personalInfo.name + ' ' + systemSettings.getEmployee().personalInfo.surname}"></td>
-                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <div class="input-group">
-                                                    <input  id="username-input" oninput="checkUsername(this.value)" type="text" placeholder="Vyhľadať zamestnanca"  class="form-control" aria-label="Recipient's username"
-                                                           aria-describedby="basic-addon2">
-                                                </div>
-                                                <p></p>
-                                                <p class="error" id="username-hint-error"></p>
-                                            </td>
-                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <div class="input-group">
-                                                <div class="input-group-append">
-                                                    <button  class="btn btn-lg btn-primary" id="submit-button" onclick="updateTeacher()" type="button">Zmeniť</button>
-                                                </div>
-                                            </div>
-                                            </td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
+                                            <td style="color: whitesmoke">Počet študentov</td>
+                                            <td><label  class="badge badge-warning">25</label></td>
                                         </tr>
                                         <tr>
-                                            <td> <h5>Termín najbližšieho cvičenia</h5> </td>
-                                            <td id="date-value" th:text="${systemSettings.classDate}"></td>
-                                            <td th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">
-                                                <div class="input-group">
-                                                    <input id="date-input"  type="text" placeholder="dd.MM.yyyy HH:mm"  class="form-control" aria-label="Recipient's username"
-                                                           aria-describedby="basic-addon2">
-                                                    <div class="input-group-append">
-                                                        <button onclick="updateSystemDate()" id="date-button" class="btn btn-sm btn-primary"   type="button">Zmeniť</button>
-                                                    </div>
-                                                </div>
-                                                <p></p>
-                                                <p class="error" id="date-hint-error"></p>
-                                            </td>
-                                            <td></td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-
+                                            <td style="color: whitesmoke">Vyučujúci</td>
+                                            <td><label th:text="${systemSettings.getEmployee().personalInfo.name + ' ' + systemSettings.getEmployee().personalInfo.surname}" class="badge badge-info"></label></td>
                                         </tr>
                                         <tr>
-                                            <td><h5>Počet dní do začiatku cvičenia</h5></td>
-                                            <td th:text="${systemSettings.numberOfDays}"></td>
+                                            <td style="color: whitesmoke">Termín najbližšieho cvičenia</td>
+                                            <td><label id="date-value" th:text="${systemSettings.classDate}" class="badge badge-success">14.5.2024 14:15</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: whitesmoke">Počet dní do cvičenia</td>
+                                            <td><label  th:text="${systemSettings.numberOfDays}" class="badge badge-warning">14</label></td>
+                                        </tr>
+                                        <tr>
                                             <td></td>
                                             <td></td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
                                         </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>

@@ -788,8 +788,9 @@ function newtonMethod()
 
     const derivative = math.derivative(parsedEquation, 'x');
 
-    for (let i = 0; i < ITERATIONS; ++i)
+    for (let i = 0; i < 1000; ++i)
     {
+
 
         data[i + 1] = [3];
         data[i + 1][0] = i;
@@ -798,7 +799,6 @@ function newtonMethod()
         let fx = 0;
         try
         {
-
             fx = math.evaluate(parsedEquation.toString(), { x: current });
         }
         catch (error) {
@@ -3353,5 +3353,4 @@ function deleteEmployee(id)
 
     xhttp.send();
 }
-
 
