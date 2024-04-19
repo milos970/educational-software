@@ -53,6 +53,11 @@ public class EmployeeService
     }
 
 
+    public void deleteById(Long id)
+    {
+        this.employeeRepository.deleteById(id);
+    }
+
 
 
 

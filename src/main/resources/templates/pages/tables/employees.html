@@ -134,7 +134,7 @@
             </li>
 
 
-
+</ul>
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
@@ -275,19 +275,23 @@
                                         <tr th:if="${#lists.isEmpty(employees)}">
                                             <td colspan="2">Žiadny zamestnanec</td>
                                         </tr>
-                                        <tr  th:each="employee : ${employees}">
-                                            <td class="py-1">
-                                                <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                                <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
-                                            </td>
-                                            <td><span th:text="${employee.personalInfo.name}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.surname}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.username}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.personalNumber}"></span></td>
-                                            <td><span th:text="${employee.personalInfo.email}"></span></td>
-                                            <td></td>
+                                        <tr th:id='${employee.id}'  th:each="employee : ${employees}">
+
+                                                <td class="py-1">
+                                                    <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                                    <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                                </td>
+                                                <td><span th:text="${employee.personalInfo.name}"></span></td>
+                                                <td><span th:text="${employee.personalInfo.surname}"></span></td>
+                                                <td><span th:text="${employee.personalInfo.username}"></span></td>
+                                                <td><span th:text="${employee.personalInfo.personalNumber}"></span></td>
+                                                <td><span th:text="${employee.personalInfo.email}"></span></td>
+                                                <td><button th:if="${employee.personalInfo.authority != T(com.milos.numeric.Authority).TEACHER }"  type="button" th:attr="onclick=|deleteEmployee('${employee.id}')|" class="btn btn-danger btn-rounded btn-fw">Odstrániť</button></td>
+
+
 
                                         </tr>
+
                                         </tbody>
                                     </table>
                                 </div>

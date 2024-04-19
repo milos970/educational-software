@@ -27,7 +27,7 @@ public class Student
     @Max(value = 13, message = "Value is more than 13!")
     private int absents;
 
-    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(nullable = false, name = "person_id")
     private PersonalInfo personalInfo;
 

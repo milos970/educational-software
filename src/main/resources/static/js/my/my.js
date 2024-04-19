@@ -3323,6 +3323,35 @@ function clickOnInput() {
     element.click();
 }
 
+function deleteEmployee(id)
+{
+    const xhttp = new XMLHttpRequest();
 
+    alert(id);
+
+    xhttp.onload = function()
+    {
+        if (xhttp.status === 200)
+        {
+            alert(id);
+            let row = document.getElementById(id);
+
+            row.remove();
+
+        } else {
+            alert("Unsuccessfull");
+            points.value ="";
+        }
+
+
+    }
+
+    let url = "/admin/employee/" + id + "/delete";
+
+    xhttp.open("DELETE", url, false);
+    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhttp.send();
+}
 
 
