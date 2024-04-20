@@ -59,6 +59,8 @@ public class ChatController {
             messageDto.setReceiverUsername(messages.get(i).getReceiverUsername());
             messageDto.setSenderUsername(messages.get(i).getSenderUsername());
             messageDtos.add(messageDto);
+
+            System.out.println(messageDto.getContent());
         }
 
         return messageDtos;

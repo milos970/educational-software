@@ -23,7 +23,7 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="/static/images/favicon.png" />
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="shortcut icon" th:href="@{/images/favicon.png}">
+    <link rel="shortcut icon" th:href="@{/images/mini-logo.png}">
 
     <style>
         .flex-container {
@@ -70,8 +70,8 @@
 
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" href="index.html"><img th:src="@{/images/logo.png}" alt="logo"/></a>
-            <a class="sidebar-brand brand-logo-mini" href="index.html"><img th:src="@{/images/logo-mini.svg}"
+            <a class="sidebar-brand brand-logo" th:href="@{/person/home/page}"><img th:src="@{/images/logo.png}" alt="logo"/></a>
+            <a class="sidebar-brand brand-logo-mini" th:href="@{/person/home/page}"><img th:src="@{/images/mini-logo.png}"
                                                                             alt="logo"/></a>
         </div>
         <ul class="nav">
@@ -100,7 +100,7 @@
               <span class="menu-icon">
                 <i class="mdi mdi-function"></i>
               </span>
-                    <span class="menu-title" style="color: whitesmoke">Numerické metódy</span>
+                    <span class="menu-title" style="color: whitesmoke">Numerické kategórie</span>
                 </a>
             </li>
 
@@ -206,55 +206,6 @@
                 </ul>
                 <ul class="navbar-nav navbar-nav-right">
 
-
-
-                    <li class="nav-item dropdown border-left">
-                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                            <i class="mdi mdi-bell"></i>
-                            <span class="count bg-danger"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                            <h6 class="p-3 mb-0">Notifications</h6>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <div class="preview-icon bg-dark rounded-circle">
-                                        <i class="mdi mdi-calendar text-success"></i>
-                                    </div>
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Event today</p>
-                                    <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event today </p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <div class="preview-icon bg-dark rounded-circle">
-                                        <i class="mdi mdi-settings text-danger"></i>
-                                    </div>
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Settings</p>
-                                    <p class="text-muted ellipsis mb-0"> Update dashboard </p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <div class="preview-icon bg-dark rounded-circle">
-                                        <i class="mdi mdi-link-variant text-warning"></i>
-                                    </div>
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Launch Admin</p>
-                                    <p class="text-muted ellipsis mb-0"> New admin wow! </p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <p class="p-3 mb-0 text-center">See all notifications</p>
-                        </div>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                             <div class="navbar-profile">

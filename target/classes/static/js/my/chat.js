@@ -130,8 +130,8 @@ function getConversation(receiverUsername, id)
         method: 'GET',
         data: { receiver: receiver },
         dataType: 'json',
+        async: false,
         success: function(response) {
-            alert(response);
             const messages = response;
 
 
@@ -152,23 +152,33 @@ function getConversation(receiverUsername, id)
                 lineDiv.appendChild(innerDivLeft);
                 lineDiv.appendChild(innerDivRight);
 
-                conversationDivElement.insertBefore(lineDiv, conversationDivElement.lastChild);
+                if (conversationDivElement.querySelector("div"))
+                {
+
+                    conversationDivElement.insertBefore(lineDiv, conversationDivElement.firstChild);
+
+                } else {
+                    conversationDivElement.appendChild(lineDiv);
+
+                }
+
 
                 const button = document.createElement("button");
                 button.textContent = message.content;
+
 
                 if (message.senderUsername !== receiver) {
 
                     button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
                     innerDivLeft.style.display = "hidden";
                     innerDivRight.appendChild(button);
-                    //innerDivRight.innerHTML = message.content;
 
                 } else {
+
                     innerDivRight.style.display = "hidden";
                     button.classList.add("btn", "btn-light", "btn-rounded", "btn-fw");
                     innerDivLeft.appendChild(button);
-                    //innerDivLeft.innerHTML = message.content;
+
                 }
             })
             let scrollDiv = getById("conversation");
