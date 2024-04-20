@@ -20,17 +20,6 @@ public class EmployeeController {
     }
 
 
-    @PostMapping("/employee/sign-up")
-    public ResponseEntity createEmployee(@PathVariable String username) {
-        boolean success = this.employeeService.existsByUsername(username);
-
-        if (success) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
     @GetMapping("/admin/employee/{username}/check-username")
     public ResponseEntity checkUsername(@PathVariable String username) {
 
@@ -64,7 +53,6 @@ public class EmployeeController {
     public ResponseEntity deleteEmployee(@PathVariable Long id)
     {
         this.employeeService.deleteById(id);
-        System.out.println(123);
         return new ResponseEntity<>(id, HttpStatus.OK);
 
     }

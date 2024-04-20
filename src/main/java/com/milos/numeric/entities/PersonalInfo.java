@@ -22,7 +22,7 @@ public class PersonalInfo
     private Long id;
 
     @NotBlank
-    @Column(name = "nam") //zmenit!!!!!
+    @Column(name = "\"name\"")
     @Size(min = 1, message = "PersonalInfo name is less than 1 character long!")
     @Size(max = 50, message = "PersonalInfo name is more than 50 characters long!")
     private String name;

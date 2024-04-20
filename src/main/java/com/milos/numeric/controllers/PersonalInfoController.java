@@ -4,7 +4,6 @@ import com.milos.numeric.Authority;
 import com.milos.numeric.TokenType;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
-import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
 import com.milos.numeric.security.MyUserDetails;
@@ -12,7 +11,6 @@ import com.milos.numeric.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -20,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -45,28 +42,6 @@ public class PersonalInfoController {
         this.employeeService = employeeService;
         this.chatService = chatService;
         this.verificationTokenService = verificationTokenService;
-    }
-
-    @PostMapping("/sign-up/student") //OK
-    public String checkIfValid(Model model, @Valid @ModelAttribute StudentEmailDto studentEmailDto, BindingResult result, RedirectAttributes redirectAttributes) {
-        Optional<PersonalInfo> optional = this.personalInfoService.findByEmail(studentEmailDto.getEmail());
-
-        if (optional.isEmpty()) {
-            redirectAttributes.addAttribute("error", "Email neexistuje!");
-            return "redirect:/sign-up-page";
-        }
-
-        PersonalInfo personalInfo = optional.get();
-
-        if (personalInfo.isEnabled()) {
-            redirectAttributes.addAttribute("error", "Účet s týmto emailom je už aktívny!");
-            return "redirect:/sign-up-page";
-        }
-
-        VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
-
-        this.verificationTokenService.sendToken(verificationToken);
-        return "redirect:/sign-in-page";
     }
 
 

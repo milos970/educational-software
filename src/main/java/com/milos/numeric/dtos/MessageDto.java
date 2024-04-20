@@ -11,14 +11,13 @@ import lombok.Setter;
 public class MessageDto
 {
     @NotBlank
-    @Size(min = 1, message = "{message.content.length.min}")
-    @Size(max = 100, message = "{message.content.length.max}")
+    @Size(min = 1, message = "Počet znakov musí býť aspoň 1!")
+    @Size(max = 100, message = "Počet znakov musí byť najviac 100!")
     private String content;
 
 
-    @NotBlank(message = "{message.receiver.username}")
+    @NotBlank(message = "Používateľské meno odosielateľa nesmie byť prázdne!")
     private String receiverUsername;
-
 
     private String senderUsername;
 }

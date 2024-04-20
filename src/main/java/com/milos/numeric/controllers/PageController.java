@@ -1,24 +1,21 @@
 package com.milos.numeric.controllers;
 
 import com.milos.numeric.Authority;
-import com.milos.numeric.dtos.MaterialDto;
 import com.milos.numeric.dtos.NewPasswordDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
-import com.milos.numeric.dtos.StudentEmailDto;
 import com.milos.numeric.email.EmailServiceImpl;
 import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.*;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +27,6 @@ public class PageController {
 
     private final EmployeeService employeeService;
 
-
     private final EmailServiceImpl emailService;
 
     private final MaterialService materialService;
@@ -38,9 +34,8 @@ public class PageController {
     private final SystemSettingsService systemSettingsService;
 
 
+
     private final ChatService chatService;
-
-
 
 
     @Autowired
@@ -48,7 +43,6 @@ public class PageController {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
-
         this.emailService = emailService;
         this.materialService = materialService;
         this.systemSettingsService = systemSettingsService;
@@ -151,26 +145,6 @@ public class PageController {
     }
 
 
-    @GetMapping("/confirm-account/token-expired/page")
-    public ModelAndView tokenExpirationPage() {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("error", "410");
-        modelAndView.addObject("description", "Platnosť verifikačného linku vypršala!");
-
-        modelAndView.setViewName("/pages/samples/error-status");
-
-        return modelAndView;
-    }
-
-
-    @GetMapping("/admin/material/page/error")
-    public String error(Model model) {
-        model.addAttribute("error", "404");
-        model.addAttribute("description", "Nenašlo sa!");
-
-        return "pages/samples/error-status";
-    }
 
 
     @GetMapping("/employee/students/page")
@@ -259,17 +233,15 @@ public class PageController {
 
 
 
-
-
-
     @GetMapping("/login")
-    public String login() {
+    public String login()
+    {
         return "/pages/samples/sign-in";
     }
 
     @GetMapping("/forget-password-page")
-    public String forgetPassword() {
-
+    public String forgetPassword()
+    {
         return "/pages/samples/forgot-password";
     }
 
@@ -336,26 +308,6 @@ public class PageController {
 
 
 
-    @GetMapping("/student/page")
-    public ModelAndView studentPage(@AuthenticationPrincipal MyUserDetails myUserDetails) {
-        String username = myUserDetails.getUsername();
-        String name = myUserDetails.getName();
-        String surname = myUserDetails.getSurname();
-
-        String authority = myUserDetails.getAuthority();
-        String email = myUserDetails.getEmail();
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("fullName", name + " " + surname);
-
-        modelAndView.addObject("email", email);
-        modelAndView.addObject("authority", authority);
-        modelAndView.setViewName("user-profile");
-
-        return modelAndView;
-    }
-
 
     @GetMapping("/person/home/page")
     public String homePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
@@ -384,31 +336,6 @@ public class PageController {
         return "index";
     }
 
-
-    @GetMapping("/admin/file-list-upload")
-    public ModelAndView fileListUpload() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("list-of-files");
-        return modelAndView;
-    }
-
-
-    @GetMapping("/file/upload-csv-page")
-    public String uploadCSV(Model model) {
-        this.emailService.sendSimpleMessage("asda", "dasdas", "dasdad", "dasd");
-        return "set-up-system";
-    }
-
-
-    @GetMapping("/admin/student/{id}")
-    public ModelAndView students(@PathVariable int id) {
-        Optional<PersonalInfo> optional = null;
-        PersonalInfo personalInfo = optional.get();;
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("person", personalInfo);
-        modelAndView.setViewName("user-profile-admin-student");
-        return modelAndView;
-    }
 
 
 }

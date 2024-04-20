@@ -5,6 +5,7 @@ import com.milos.numeric.dtos.MessageDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.entities.Chat;
 import com.milos.numeric.entities.ChatId;
+import com.milos.numeric.entities.Message;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.repositories.ChatRepository;
 import com.milos.numeric.repositories.PersonalInfoRepository;
@@ -105,6 +106,26 @@ public class ChatService
 
         this.messageService.saveMessage(messageDto, chat);
         return true;
+    }
+
+
+    public List<MessageDto> getAllMessages(Chat chat)
+    {
+        List<MessageDto> messageDtos = new LinkedList<>();
+
+        List<Message> messages = chat.getMessages();
+
+        for (int i = messages.size() - 1; i >= 0; --i) {
+            MessageDto messageDto = new MessageDto();
+            messageDto.setContent(messages.get(i).getContent());
+
+            messageDto.setReceiverUsername(messages.get(i).getReceiverUsername());
+            messageDto.setSenderUsername(messages.get(i).getSenderUsername());
+            messageDtos.add(messageDto);
+
+        }
+
+        return messageDtos;
     }
 
 

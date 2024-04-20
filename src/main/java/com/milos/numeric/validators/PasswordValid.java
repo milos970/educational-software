@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PasswordValid
 {
 
-    String message() default "must be any of enum {enumClass}";
+    String message() default "Nesprávne pôvodné heslo!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

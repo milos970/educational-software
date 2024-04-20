@@ -21,7 +21,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface StudentEmail
 {
 
-    String message() default "must be any of enum {enumClass}";
+    String message() default "Email nieje validný školský typ!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

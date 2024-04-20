@@ -17,7 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
@@ -46,8 +45,6 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderL = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderM = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderN = new MvcRequestMatcher.Builder(introspector);
-        MvcRequestMatcher.Builder mvcMatcherBuilderO = new MvcRequestMatcher.Builder(introspector);
-        MvcRequestMatcher.Builder mvcMatcherBuilderP = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http.csrf(Customizer.withDefaults())
@@ -64,11 +61,9 @@ public class SecurityConfig
                         .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
                         .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
-                        .requestMatchers(mvcMatcherBuilderO.pattern("/sign-up/student")).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()
                         .requestMatchers(mvcMatcherBuilderI.pattern("/forget-password-page")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderP.pattern("/person/create")).permitAll()
                         .requestMatchers(mvcMatcherAdmin.pattern("/employee/**")).access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == true and hasAnyAuthority('TEACHER', 'EMPLOYEE')"))
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == true and hasAuthority('STUDENT')"))
                         .anyRequest().authenticated()

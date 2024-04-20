@@ -19,15 +19,15 @@ public class Message {
     private Long id;
 
     @NotBlank
-    @Size(min = 1, message = "{message.content.length.min}")
-    @Size(max = 100, message = "{message.content.length.max}")
+    @Size(min = 1, message = "Počet znakov musí býť aspoň 1!")
+    @Size(max = 100, message = "Počet znakov musí byť najviac 100!")
     private String content;
 
-    @NotBlank(message = "{message.sender.username}")
+    @NotBlank(message = "Používateľské meno odosielateľa nesmie byť prázdne!")
     @Column(name = "sender_username")
     private String senderUsername;
 
-    @NotBlank(message = "{message.receiver.username}")
+    @NotBlank(message = "Používateľské meno prijímateľa nesmie byť prázdne!")
     @Column(name = "receiver_username")
     private String receiverUsername;
 

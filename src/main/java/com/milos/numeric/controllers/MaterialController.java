@@ -3,6 +3,7 @@ package com.milos.numeric.controllers;
 import com.milos.numeric.dtos.MaterialDto;
 import com.milos.numeric.entities.Material;
 import com.milos.numeric.services.MaterialService;
+import com.milos.numeric.validators.MaterialSizeValid;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -39,12 +40,10 @@ public class MaterialController {
 
         if (material!= null)
         {
-            System.out.println(material.getId());
             return new ResponseEntity<>(material.getId(), HttpStatus.OK);
         } else
         {
-            System.out.println("KO");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

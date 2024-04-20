@@ -26,14 +26,9 @@ public class VerificationTokenController {
     }
 
 
-
-
-
     @GetMapping("/create-token/activate-account")
-    public String createTokenForActivateAccount(@RequestParam("email") String email, Model model) {
-
-        System.out.println(1);
-
+    public String createTokenForActivateAccount(@RequestParam("email") String email, Model model)
+    {
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
         if (personalInfoOptional.isPresent() && personalInfoOptional.get().isEnabled()) {

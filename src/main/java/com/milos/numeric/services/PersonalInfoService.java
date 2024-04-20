@@ -12,7 +12,6 @@ import com.milos.numeric.email.EmailServiceImpl;
 
 import com.milos.numeric.entities.PersonalInfo;
 
-import com.milos.numeric.mappers.PersonalInfoNewAuthorityDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
@@ -41,11 +40,7 @@ public class PersonalInfoService
 
     private final SystemSettingsService systemSettingsService;
 
-    private PersonalInfoNewPersonDTOMapper personalInfoNewPersonDTOMapper;
 
-    private PersonalInfoNewPasswordDTOMapper personalInfoNewPasswordDTOMapper;
-
-    private PersonalInfoNewAuthorityDTOMapper personalInfoNewAuthorityDTOMapper;
 
     private final Validator validator;
 

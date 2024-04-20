@@ -3051,7 +3051,7 @@ function checkFileType(element, hintElement)
         hintElement.innerHTML = "";
     } else {
         hintElement.innerHTML = "Maximálna veľkosť súboru: 5MB";
-        return false;
+        //return false;
     }
 
 
@@ -3060,7 +3060,7 @@ function checkFileType(element, hintElement)
         hintElement.innerHTML = "";
     } else {
         hintElement.innerHTML = "Nepodporovaný typ súboru!";
-        return false;
+        //return false;
     }
 
 
