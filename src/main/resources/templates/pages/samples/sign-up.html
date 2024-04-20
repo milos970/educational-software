@@ -46,7 +46,7 @@
                     </div>
 
                   <div id="employee-form-div">
-                      <form id="employee-form" action="" th:object="${personalInfoDto}" method="POST">
+                      <form id="employee-form" action="/create-token/activate-account" th:object="${personalInfoDto}" method="POST">
 
                           <div class="form-group" id="name-div" >
                               <label>Meno*</label>
@@ -129,7 +129,7 @@
 
 
                   <div id="student-form-div">
-                      <form id="student-form" action="/activate-account/create-token"  method="GET">
+                      <form id="student-form" action="/create-token/activate-account"  method="GET">
                           <div class="form-group" id="student-email-div">
                               <label>Školský email*</label>
                               <input  type="email" name="email"  id="student-email-input" class="form-control p_input" style="color: white">

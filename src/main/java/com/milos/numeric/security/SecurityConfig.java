@@ -60,7 +60,7 @@ public class SecurityConfig
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderJ.pattern("/confirm/sign-up/page"))
                         .access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == false"))
-                        .requestMatchers(mvcMatcherBuilderL.pattern("/create-token")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderL.pattern("/create-token/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
                         .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()

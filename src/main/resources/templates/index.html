@@ -69,7 +69,7 @@
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/person/home/page}">
+                <a class="nav-link" th:href="@{'//' + ${ipAddress} + ':' + ${port} + '/person/home/page'}">
               <span class="menu-icon">
                 <i class="mdi mdi-function"></i>
               </span>
@@ -92,14 +92,14 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link" href=""
                                                 th:href="@{/employee/students/page}">Študenti</a></li>
-                        <li class="nav-item"><a class="nav-link" href="" th:href="@{/employee/employees/page}">Zamestnanci</a>
+                        <li class="nav-item"><a class="nav-link" href="" th:href="@{'/employee/employees/page'}">Zamestnanci</a>
                         </li>
                     </ul>
                 </div>
             </li>
 
             <li class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/person/material/page}">
+                <a class="nav-link" href="" th:href="@{'/person/material/page'}">
               <span class="menu-icon">
                 <i class="mdi mdi-library-books"></i>
               </span>
@@ -110,7 +110,7 @@
 
             <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}"
                 class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/person/chat/page}">
+                <a class="nav-link" th:href="@{'/person/chat/page'}">
               <span class="menu-icon">
                 <i class="mdi mdi-message-text">
 
@@ -123,7 +123,7 @@
             </li>
 
             <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/student/schedule/page}">
+                <a class="nav-link" th:href="@{'/student/schedule/page'}">
               <span class="menu-icon">
                 <i class="mdi mdi-timetable">
 
@@ -136,7 +136,7 @@
             </li>
 
             <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/student/profile/page}">
+                <a class="nav-link" th:href="@{'/student/profile/page'}">
               <span class="menu-icon">
                 <i class="mdi mdi-account-card-details">
 
@@ -150,7 +150,7 @@
 
             <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}"
                 class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/employee/system/page}">
+                <a class="nav-link" th:href="@{'/employee/system/page'}">
               <span class="menu-icon">
                 <i class="mdi mdi-wrench">
 
@@ -193,7 +193,7 @@
                             <div class="dropdown-divider"></div>
 
                             <div class="dropdown-divider"></div>
-                            <a th:href="@{/person/password/update/page}" class="dropdown-item preview-item">
+                            <a th:href="@{'/person/password/update/page'}" class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-dark rounded-circle">
                                         <i class="mdi mdi-settings text-success"></i>
@@ -204,7 +204,7 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a th:href="@{/logout}" class="dropdown-item preview-item">
+                            <a th:href="@{'/logout'}" class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-dark rounded-circle">
                                         <i class="mdi mdi-logout text-danger"></i>

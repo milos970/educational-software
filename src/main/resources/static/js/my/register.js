@@ -16,7 +16,7 @@ function studentOrEmployee(who)
 
             showFormForStudent();
 
-            getById("student-form").action = "/activate-account/create-token";
+
             which = 1;
             break;
         case 2:

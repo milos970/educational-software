@@ -4,6 +4,7 @@ import com.milos.numeric.entities.VerificationToken;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,6 +18,12 @@ public class EmailServiceImpl
     private final JavaMailSender emailSender;
     private final static String FROM = "numerika2024@gmail.com";
     private final static String SENDER_NAME = "Numerika";
+
+
+    @Value("${server.ip}")
+    private String serverIp;
+    @Value("${server.port}")
+    private String serverPort;
 
     @Autowired
     public EmailServiceImpl(JavaMailSender emailSender) {
@@ -57,7 +64,7 @@ public class EmailServiceImpl
         String senderName = SENDER_NAME;
         String subject = "Verifikácia emailu";
         String content = "Pre verifikovanie emailu kliknite na následujúci link: "
-                +"http://localhost:8080/confirm-email?token="+token.getCode();
+                +serverIp + ":" + serverPort + "/confirm-email?token="+token.getCode();
 
         MimeMessage message = this.emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

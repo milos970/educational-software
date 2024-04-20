@@ -11,6 +11,7 @@ import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +39,8 @@ public class PageController {
 
 
     private final ChatService chatService;
+
+
 
 
     @Autowired
@@ -326,7 +329,6 @@ public class PageController {
 
     @GetMapping("/sign-up-page")
     public String signUpPage(Model model, @RequestParam(value = "error", required = false) String error) {
-        model.addAttribute("studentEmailDto", new StudentEmailDto());
         model.addAttribute("personalInfoDto", new PersonalInfoDto());
         model.addAttribute("error", error);
         return "/pages/samples/sign-up";
@@ -368,6 +370,8 @@ public class PageController {
 
 
         model.addAttribute("personalInfo", personalInfo);
+        model.addAttribute("ipAddress", "sdf");
+        model.addAttribute("port", "sfd");
 
 
         if (personalInfo.getGender().name().equals("FEMALE")) {
