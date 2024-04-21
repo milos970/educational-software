@@ -25,7 +25,7 @@ const toleranceValueErrorHintElement = getById("tolerance-value-hint-error");
 const resultValueErrorHintElement = getById("result-value-hint-error");
 
 
-const ITERATIONS = 1000_000; //tu nastaviť počet iterácii
+const ITERATIONS = 1000; //tu nastaviť počet iterácii
 let tolerance = 0; //tolerancia sa udáva programovo
 const X_MIN_VALUE = 1000;
 const X_MAX_VALUE = 100_000;
@@ -788,7 +788,7 @@ function newtonMethod()
 
     const derivative = math.derivative(parsedEquation, 'x');
 
-    for (let i = 0; i < 1000; ++i)
+    for (let i = 0; i < ITERATIONS; ++i)
     {
 
 
@@ -806,9 +806,7 @@ function newtonMethod()
             equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
         }
 
-
         let derFx = 0;
-
 
         try
         {
@@ -824,6 +822,18 @@ function newtonMethod()
             equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
             return;
         }
+
+        if (fx === 0)
+        {
+            let next = current - (fx / derFx);
+            let error = Math.abs(next - current);
+            data[i + 1][2] = error.toFixed(round);
+            break;
+        }
+
+
+
+
 
         let next = current - (fx / derFx);
         let error = Math.abs(next - current);
@@ -908,36 +918,96 @@ function bisectionMethod()
     data[0][4] = "chyba";
 
 
-    let a = parseFloat(lowerValueInputElement.value);
-    let b = parseFloat(upperValueInputElement.value);
+    let a = roundNumber(lowerValueInputElement.value, round);
+    let b = roundNumber(upperValueInputElement.value, round);
+
 
     let parsedEquation = math.parse(fun);
 
+
     let xk = 0;
+
+
     for (let k = 1; k < ITERATIONS; ++k)
     {
         xk = (a + b)/2;
-        const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
 
-        const fak = math.evaluate(parsedEquation.toString(), { x: a });
-
-        const fbk = math.evaluate(parsedEquation.toString(), { x: b });
-
-        if (fak * fbk > 0)
+        if (isNaN(xk))
         {
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
 
+        xk = roundNumber(xk,round);
+
+
+         let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+
+         let fak = math.evaluate(parsedEquation.toString(), { x: a });
+
+         let fbk = math.evaluate(parsedEquation.toString(), { x: b });
+
+        if (isNaN(fxk) || isNaN(fak) || isNaN(fbk))
+        {
+            alert(2);
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
+
+        fxk = roundNumber(fxk, round);
+        fak = roundNumber(fak, round);
+        fbk = roundNumber(fbk, round);
+
+
+
+
+
+
+        if (fak * fbk > 0)
+        {
+            alert(3);
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
+
+
+
+
+        let diff = (b - a) / 2;
+
+        if (isNaN(diff))
+        {
+            alert(4);
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
+
+        diff = roundNumber(diff, round);
+
         data[k] = [5];
 
         data[k][0] = k - 1;
-        data[k][1] = a.toFixed(round);
-        data[k][2] = b.toFixed(round);
-        data[k][3] = xk.toFixed(round);
-        data[k][4] = ((b - a) / 2).toFixed(round);
+        data[k][1] = a;
+        data[k][2] = b;
+        data[k][3] = xk;
+        data[k][4] = diff;
 
-        if ((b - a) / 2 <= tolerance)
+
+        if (fak === 0)
+        {
+            xk = fak;
+            data[k][4] = 0;
+            break;
+        }
+
+        if (fbk === 0)
+        {
+            xk = fbk;
+            data[k][4] = 0;
+            break;
+        }
+
+        if (diff <= tolerance)
         {
             break;
         }
@@ -946,18 +1016,17 @@ function bisectionMethod()
             break;
         }
 
+
         if (fak * fxk < 0) {
             b = xk;
-        }
-
-        if (fbk * fxk < 0) {
+        } else {
             a = xk;
         }
 
     }
 
 
-    resultValueInputElement.value = "Hodnota koreňa rovnice: " + xk.toFixed(round);
+    resultValueInputElement.value = "Hodnota koreňa rovnice: " + xk;
 
     $("#table tr").remove();
     initializeTable(data);
@@ -999,6 +1068,29 @@ function bisectionMethod()
 
 }
 
+function roundNumber(number, round)
+{
+    const dataType = typeof number;
+    let result = undefined;
+
+    if (dataType === "string")
+    {
+        result = parseFloat(number).toFixed(round);
+        result = parseFloat(result);
+    }
+
+    if (dataType === "number")
+    {
+        result = parseFloat(number.toFixed(round));
+    }
+
+
+
+    return result;
+
+
+}
+
 
 function regulaFalsiMethod()
 {
@@ -1008,11 +1100,10 @@ function regulaFalsiMethod()
     }
 
 
-    let a = parseFloat(lowerValueInputElement.value);
-    let b = parseFloat(upperValueInputElement.value);
+    let a = roundNumber(lowerValueInputElement.value, round);
+    let b = roundNumber(upperValueInputElement.value, round);
+
     let prev = a;
-
-
 
     let parsedEquation = math.parse(fun);
 
@@ -1029,27 +1120,93 @@ function regulaFalsiMethod()
     for (let k = 1; k < ITERATIONS; ++k) {
 
 
-        const fak = math.evaluate(parsedEquation.toString(), { x: a });
-        const fbk = math.evaluate(parsedEquation.toString(), { x: b });
+        let fak = math.evaluate(parsedEquation.toString(), { x: a });
+        let fbk = math.evaluate(parsedEquation.toString(), { x: b });
+
+
+        if (isNaN(fak) || isNaN(fbk))
+        {
+            alert(1);
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
+
+        fak = roundNumber(fak, round);
+        fbk = roundNumber(fbk, round);
+
+
 
         if (fak * fbk > 0)
         {
+            alert(2);
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
 
+        xk = (a * fbk - b * fak) / (fbk - fak);
+        console.log(xk);
+
+        if (isNaN(xk))
+        {
+            alert(3);
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
+
+        xk = roundNumber(xk, round);
+
+
+
+
+        let fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+
+        if (isNaN(fxk))
+        {
+            alert(4);
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
 
 
-         xk = a - (b - a) / (fbk - fak) * fak;
+        fxk = roundNumber(fxk, round);
 
-        const fxk = math.evaluate(parsedEquation.toString(), { x: xk });
+
+
+        let diff = Math.abs(xk - prev);
+
+        if (isNaN(diff)) {
+            return;
+        }
+
+        diff = roundNumber(diff,round);
+
 
         data[k] = [5];
         data[k][0] = k - 1;
-        data[k][1] = a.toFixed(round);
-        data[k][2] = b.toFixed(round);
-        data[k][3] = xk.toFixed(round);
-        data[k][4] = (Math.abs(xk - prev)).toFixed(round);
+        data[k][1] = a;
+        data[k][2] = b;
+        data[k][3] = xk;
+        data[k][4] = diff;
+
+
+        if (fak === 0)
+        {
+            xk = fak;
+            data[k][4] = 0;
+            break;
+        }
+
+        if (fbk === 0)
+        {
+            xk = fbk;
+            data[k][4] = 0;
+            break;
+        }
+
+        if (diff <= tolerance)
+        {
+            break;
+        }
 
         if (fxk === 0)
         {
@@ -1059,22 +1216,15 @@ function regulaFalsiMethod()
         if (fak * fxk < 0)
         {
             b = xk;
-        }
-
-        if (fbk * fxk < 0)
-        {
+        } else {
             a = xk;
         }
 
-        if (Math.abs(xk - prev) <= tolerance)
-        {
-            break;
-        }
 
         prev = xk;
     }
 
-    resultValueInputElement.value = "Hodnota koreňa rovnice: " + xk.toFixed(round);
+    resultValueInputElement.value = "Hodnota koreňa rovnice: " + xk;
 
     $("#table tr").remove();
     initializeTable(data);
@@ -1106,7 +1256,7 @@ function regulaFalsiMethod()
 
     inputs[4] = [2];
     inputs[4][0] = "Hodnota koreňa rovnice"
-    inputs[4][1] = xk.toFixed(round);
+    inputs[4][1] = xk;
 
 
     inputs[5] = [1];

@@ -11,7 +11,7 @@ insert into employee (id, person_id) values (223, 1);
 
 
 insert into personal_info (id,"name",surname,username, personal_number, email, password, gender, authority, enabled)
-values (2,'Miloš','Lukáčik','lukacik5', '559415', 'numerika2024@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE','STUDENT', false);
+values (2,'Miloš','Lukáčik','lukacik5', '559415', 'numerika2024@gmail.com','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'MALE','STUDENT', true);
 insert into student (id, points, absents, person_id) values (0,0,0, 2);
 insert into chat(participant_a,participant_b) values('lydia.gabrisova','lukacik5');
 
