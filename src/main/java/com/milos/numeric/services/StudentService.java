@@ -49,6 +49,10 @@ public class StudentService
         return this.studentRepository.findById(id);
     }
 
+    public void deleteAll() {
+        this.studentRepository.deleteAll();
+    }
+
 
 
 

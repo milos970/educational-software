@@ -44,7 +44,7 @@ public class EmailServiceImpl
         String fromAddress = FROM;
         String senderName = SENDER_NAME;
         String subject = "Obnovenie hesla";
-        String content = "Vaše nové vygenerované heslo: " + password + ". Po prihlásení si ho zmente!";
+        String content = "Vaše nové vygenerované heslo: " + password + ". Po prihlásení si ho prosím zmeňte!";
 
         MimeMessage message = this.emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

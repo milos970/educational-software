@@ -1,5 +1,6 @@
 package com.milos.numeric.dtos;
 
+import com.milos.numeric.validators.SchoolEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -25,6 +26,7 @@ public class PersonalInfoDto
     private String personalNumber;
 
     @Email
+    @SchoolEmail
     private String email;
 
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$",

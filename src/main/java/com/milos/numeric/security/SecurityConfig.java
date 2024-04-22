@@ -62,7 +62,7 @@ public class SecurityConfig
                         .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up-page")).permitAll()
+                        .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up/page")).permitAll()
                         .requestMatchers(mvcMatcherBuilderI.pattern("/forget-password-page")).permitAll()
                         .requestMatchers(mvcMatcherAdmin.pattern("/employee/**")).access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == true and hasAnyAuthority('TEACHER', 'EMPLOYEE')"))
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == true and hasAuthority('STUDENT')"))

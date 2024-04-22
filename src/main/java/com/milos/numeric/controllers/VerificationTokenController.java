@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -27,36 +28,41 @@ public class VerificationTokenController {
 
 
     @GetMapping("/create-token/activate-account")
-    public String createTokenForActivateAccount(@RequestParam("email") String email, Model model)
+    public String createTokenForActivateAccount(@RequestParam("email") String email, RedirectAttributes redirectAttributes, Model model)
     {
+
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
-        if (personalInfoOptional.isPresent() && personalInfoOptional.get().isEnabled()) {
-            model.addAttribute("error", "Účet s daným emailom už je aktívne!");
-            return "redirect:/sign-up";
+        if (personalInfoOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Nenašiel sa účet so zadaným emailom!");
+            return "redirect:/sign-up/page";
         }
 
+        if (personalInfoOptional.get().isEnabled()) {
+            redirectAttributes.addFlashAttribute("error", "Účet s týmto emailom je už aktivovaný!");
+            return "redirect:/sign-up/page";
+        }
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 
-        if (personalInfo.isEnabled())
-        {
-            model.addAttribute("error", "Účet s týmto emailom je už aktívny!");
-            return "redirect:/sign-up";
-        }
 
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByEmail(email);
 
-        if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.ACTIVATE_ACCOUNT) {
-            model.addAttribute("error", "Na zadaný email už bol zaslaný aktivačný link!");
-            return "redirect:/sign-up";
+        if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.ACTIVATE_ACCOUNT &&
+        this.verificationTokenService.isTokenValid(verificationTokenOptional.get().getCode())) {
+            redirectAttributes.addFlashAttribute("error", "Na zadaný email už bol zaslaný aktivačný link! Skúste to neskôr.");
+            return "redirect:/sign-up/page";
+        }
+
+        if (verificationTokenOptional.isPresent() && !this.verificationTokenService.isTokenValid(verificationTokenOptional.get().getCode()))
+        {
+            this.verificationTokenService.delete(verificationTokenOptional.get());
         }
 
         VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.ACTIVATE_ACCOUNT);
         this.verificationTokenService.sendToken(verificationToken);
-
-
-        return "redirect:/sign-in";
+        redirectAttributes.addFlashAttribute("success", "Na zadaný email bol zaslaný verifikačný link!");
+        return "redirect:/sign-up/page";
     }
 
     @GetMapping("/create-token/reset-password")
@@ -65,36 +71,36 @@ public class VerificationTokenController {
 
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(email);
 
-        if (personalInfoOptional.isEmpty())
-        {
-            model.addAttribute("error", "Zadaný email neexistuje!");
-            return "/pages/samples/forgot-password";
+        if (personalInfoOptional.isEmpty()) {
+            model.addAttribute("error", "Nenašiel sa účet so zadaným emailom!");
+            return "/pages/alt/forgot-password";
         }
 
-
+        if (personalInfoOptional.get().isEnabled()) {
+            model.addAttribute("error", "Účet s týmto emailom je už aktivovaný!");
+            return "/pages/alt/forgot-password";
+        }
 
         PersonalInfo personalInfo = personalInfoOptional.get();
 
-        if (!personalInfo.isEnabled())
-        {
-            model.addAttribute("error", "Účet s týmto emailom je nieje aktívny!");
-            return "/pages/samples/sign-up";
-        }
 
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByEmail(email);
 
-        if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.RESET_PASSWORD)
-        {
-            model.addAttribute("error", "Token pre zadaný email už bol zaslaný!");
-            return "/pages/samples/forgot-password";
+        if (verificationTokenOptional.isPresent() && verificationTokenOptional.get().getTokenType() == TokenType.RESET_PASSWORD &&
+                this.verificationTokenService.isTokenValid(verificationTokenOptional.get().getCode())) {
+            model.addAttribute("error", "Na zadaný email už bol zaslaný aktivačný link! Skúste to neskôr.");
+            return "/pages/alt/forgot-password";
+        }
 
+        if (verificationTokenOptional.isPresent() && !this.verificationTokenService.isTokenValid(verificationTokenOptional.get().getCode()))
+        {
+            this.verificationTokenService.delete(verificationTokenOptional.get());
         }
 
         VerificationToken verificationToken = this.verificationTokenService.createToken(personalInfo, TokenType.RESET_PASSWORD);
         this.verificationTokenService.sendToken(verificationToken);
-
-        model.addAttribute("success", "Verifikačný link bol odoslaný.");
-        return "/pages/samples/forgot-password";
+        model.addAttribute("success", "Na zadaný email bol zaslaný verifikačný link!");
+        return "/pages/alt/forgot-password";
     }
 
 }

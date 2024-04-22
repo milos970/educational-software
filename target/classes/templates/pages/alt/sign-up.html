@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Registrácia</title>
+
+      <link rel="stylesheet" href="/static/vendors/mdi/css/materialdesignicons.min.css">
+      <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
+      <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
+      <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+      <link rel="stylesheet" th:href="@{/css/style.css}">
+      <link rel="stylesheet" href="/static/css/style.css">
+      <link rel="stylesheet" href="/static/css/my.css">
+      <link rel="stylesheet" th:href="@{/css/my.css}">
+      <link rel="shortcut icon" th:href="@{/images/mini-logo.png}">
+
+  </head>
+  <body onload="initializeSignUpPage()">
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="row w-100 m-0">
+          <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+            <div class="card col-lg-4 mx-auto">
+              <div   class="card-body px-5 py-5">
+                <h3 class="card-title text-left mb-3">Registrácia</h3>
+                  <h5>Registrácia možná len zamestnancom fakulty riadenia a informatiky alebo študentom predmetu numerické metódy!</h5>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input onclick="studentOrEmployee(1)" type="radio" class="form-check-input" name="optionsRadios" id="option1-radio" checked> Študent </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input onclick="studentOrEmployee(2)" type="radio" class="form-check-input" name="optionsRadios" id="option2-radio" > Zamestnanec </label>
+                        </div>
+                    </div>
+
+                  <div id="employee-form-div">
+                      <form id="employee-form" action="/create-token/activate-account" th:object="${personalInfoDto}" method="POST">
+
+                          <div class="form-group" id="name-div" >
+                              <label>Meno*</label>
+                              <input th:field="${personalInfoDto.name}" type="text" id="name-input" class="form-control p_input" style="color: white">
+                              <p class="error" id="name-input-error-hint"></p>
+                          </div>
+
+                          <div class="form-group" id="surname-div" >
+                              <label>Priezvisko*</label>
+                              <input th:field="${personalInfoDto.surname}" type="text" id="surname-input" class="form-control p_input" style="color: white">
+                              <p class="error" id="surname-input-error-hint"></p>
+                          </div>
+
+                          <div class="form-group" id="email-div">
+                              <label>Školský email*</label>
+                              <input th:field="${personalInfoDto.email}" type="email" id="employee-email-input" class="form-control p_input" style="color: white">
+                              <p class="error" id="employee-email-input-error-hint"></p>
+                          </div>
+
+                          <div class="form-group" id="pin-div" >
+                              <label>Osobné číslo*</label>
+                              <input th:field="${personalInfoDto.personalNumber}" type="text" id="pin-input" class="form-control p_input" style="color: white">
+                              <p class="error" id="pin-input-error-hint"></p>
+                          </div>
+
+                          <div class="form-group" id="password-div">
+                              <label>Heslo*</label>
+                              <input th:field="${personalInfoDto.password}" type="password"  id="password-input" class="form-control p_input" style="color: white" oninput="validatePassword()">
+                              <p class="error" id="password-input-error-hint"></p>
+                          </div>
+
+                          <div class="form-group" id="rep-password-div">
+                              <label>Kontrola hesla*</label>
+                              <input type="password"  id="rep-password-input" class="form-control p_input" style="color: white">
+                              <p class="error" id="rep-password-input-error-hint"></p>
+                          </div>
+
+                          <div id="preconditions-div" class="form-group">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <div class="form-check form-check-danger" id="number-checkbox-div">
+                                              <label class="form-check-label" style="color: white">
+                                                  <input type="checkbox"  class="form-check-input form-check-success" style="pointer-events: none" >Aspoň 1 číslo</label>
+                                          </div>
+                                          <div class="form-check form-check-danger" id="upper-case-checkbox-div">
+                                              <label class="form-check-label form-check-danger" style="color: white">
+                                                  <input type="checkbox"  class="form-check-input" style="pointer-events: none">Aspoň 1 veľký znak</label>
+                                          </div>
+                                          <div class="form-check form-check-danger" id="lower-case-checkbox-div">
+                                              <label class="form-check-label" style="color: white">
+                                                  <input type="checkbox"  class="form-check-input" style="pointer-events: none" >Aspoň 1 malý znak</label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <div class="form-check form-check-danger" id="special-char-checkbox-div">
+                                              <label class="form-check-label" style="color: white">
+                                                  <input type="checkbox"  class="form-check-input" style="pointer-events: none">Aspoň 1 špeciálny znak</label>
+                                          </div>
+                                          <div class="form-check form-check-danger" id="min-chars-checkbox-div">
+                                              <label class="form-check-label" style="color: white">
+                                                  <input type="checkbox"  class="form-check-input" style="pointer-events: none" >Min. 8 znakov</label>
+                                          </div>
+
+                                          <div class="form-check form-check-danger" id="max-chars-checkbox-div">
+                                              <label class="form-check-label" style="color: white">
+                                                  <input type="checkbox"  class="form-check-input" style="pointer-events: none" >Max. 64 znakov</label>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+
+
+                      </form>
+                  </div>
+
+                  <div class="form-group d-flex align-items-center justify-content-between">
+                      <a th:href="@{/login}" class="forgot-pass">Späť na prihlasovaciu obrazovku</a>
+                  </div>
+
+
+                  <div id="student-form-div">
+                      <form id="student-form" action="/create-token/activate-account"  method="GET">
+                          <div class="form-group" id="student-email-div">
+                              <label>Školský email*</label>
+                              <input  type="email" name="email"  id="student-email-input" class="form-control p_input" style="color: white">
+                              <p class="success" th:text="${success}"></p>
+                              <p class="error" th:text="${error}"  id="student-email-input-error-hint"></p>
+                          </div>
+                      </form>
+                  </div>
+
+
+                  <div class="text-center">
+                      <button id="submit-button" onclick="submit()" type="button" class="btn btn-primary btn-block enter-btn">Registrovať</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="/static/vendors/js/vendor.bundle.base.js"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script src="/static/vendors/chart.js/Chart.min.js"></script>
+    <script th:src="@{/vendors/chart.js/Chart.min.js}"></script>
+    <script src="/static/vendors/progressbar.js/progressbar.min.js"></script>
+    <script th:src="@{/vendors/progressbar.js/progressbar.min.js}"></script>
+    <script src="/static/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+    <script th:src="@{/vendors/jvectormap/jquery-jvectormap.min.js}"></script>
+    <script src="/static/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <script th:src="@{/vendors/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+    <script src="/static/vendors/owl-carousel-2/owl.carousel.min.js"></script>
+    <script th:src="@{/vendors/owl-carousel-2/owl.carousel.min.js}"></script>
+    <script src="/static/js/off-canvas.js"></script>
+    <script th:src="@{/js/off-canvas.js}"></script>
+    <script src="/static/js/hoverable-collapse.js"></script>
+    <script th:src="@{/js/hoverable-collapse.js}"></script>
+    <script src="/static/js/misc.js"></script>
+    <script th:src="@{/js/misc.js}"></script>
+    <script src="/static/js/settings.js"></script>
+    <script th:src="@{/js/settings.js}"></script>
+    <script src="/static/js/todolist.js"></script>
+    <script th:src="@{/js/todolist.js}"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
+    <script src="/js/my/main.js"></script>
+    <script th:src="@{/js/my/main.js}"></script>
+    <script src="/static/js/my/register.js"></script>
+    <script th:src="@{/js/my/register.js}"></script>
+
+
+
+  </body>
+</html>

@@ -41,6 +41,10 @@ public class SystemSettings
     private int numberOfDays;
 
 
+    @Column(name = "uploaded_file")
+    private boolean successfull;
+
+
 
 
 }

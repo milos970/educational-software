@@ -2,8 +2,8 @@ insert into personal_info (id,"name",surname,username, personal_number, email, p
 values (0,'Lýdia','Gábrišová','lydia.gabrisova', '56478', 'lydia.gabrisova@fri.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','TEACHER', true);
 insert into employee (id, person_id) values (222, 0);
 
-insert into system_settings(id,allowed_absents, employee_id, class_date, number_of_days)
-    values (0,2,222,'12.05.2024 14:15',0);
+insert into system_settings(id,allowed_absents, employee_id, class_date, number_of_days, uploaded_file)
+    values (0,2,222,'12.05.2024 14:15',0,false);
 
 insert into personal_info (id,"name",surname,username, personal_number, email, password, gender, authority, enabled)
 values (1,'Zuzana','Borčinová','zuzana.borcinova', '12345', 'zuzana.borcinova@fri.uniza.sk','$2a$12$svckNYyf7i6HsSPDraBGW.qCM3s2jml8Sb.ts0AfVzi2UCpaLeTOq', 'FEMALE','EMPLOYEE', true);

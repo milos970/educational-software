@@ -22,7 +22,7 @@ public class VerificationTokenService
 
     private final EmailServiceImpl emailService;
 
-    private static final long MINUTES = 10; //čas do expirácie tokenu
+    private static final long MINUTES = 4; //čas do expirácie tokenu
 
     private final DateParser dateParser;
 

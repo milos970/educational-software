@@ -57,7 +57,7 @@
                             <span style="color: whitesmoke"
                                   th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}">Študent</span>
                             <span style="color: whitesmoke"
-                                  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Učiteľ</span>
+                                  th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Vyučujúci</span>
                             <span style="color: whitesmoke"
                                   th:if="${personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
                         </div>
@@ -525,8 +525,8 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-<script src="/static/js/my/my.js"></script>
-<script th:src="@{/js/my/my.js}"></script>
+<script src="/js/my/main.js"></script>
+<script th:src="@{/js/my/main.js}"></script>
 
 
 <script src="/static/js/jquery.csv.js"></script>

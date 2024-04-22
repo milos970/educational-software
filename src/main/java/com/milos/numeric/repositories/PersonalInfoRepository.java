@@ -1,8 +1,10 @@
 package com.milos.numeric.repositories;
 
 import com.milos.numeric.entities.PersonalInfo;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -30,7 +32,14 @@ public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long
     @Query(value = "SELECT * FROM personal_info p WHERE p.email =:email and p.enabled = false", nativeQuery = true)
     public Optional<PersonalInfo> findNotEnabled(String email);
 
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE  FROM personal_info p WHERE p.authority =:authority", nativeQuery = true)
+    public void deleteByAuthority(@Param("authority")String authority);
     @Override
     List<PersonalInfo> findAll(Sort sort);
+
+
+
 
 }

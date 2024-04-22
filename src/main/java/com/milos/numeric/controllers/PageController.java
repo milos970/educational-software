@@ -8,11 +8,11 @@ import com.milos.numeric.entities.*;
 import com.milos.numeric.security.MyUserDetails;
 import com.milos.numeric.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -75,7 +75,7 @@ public class PageController {
         model.addAttribute("systemSettings", systemSettings);
 
 
-        return "/pages/tables/schedule";
+        return "/pages/main/schedule";
     }
 
     @GetMapping("/student/profile/page")
@@ -94,7 +94,7 @@ public class PageController {
         }
 
 
-        return "/pages/tables/profile";
+        return "/pages/main/profile";
     }
 
 
@@ -118,7 +118,7 @@ public class PageController {
         model.addAttribute("systemSettings", systemSettings);
         model.addAttribute("students", this.studentService.findAll());
 
-        return "/pages/tables/system";
+        return "/pages/main/system";
     }
 
     @GetMapping("/reset-password")
@@ -130,7 +130,7 @@ public class PageController {
     @GetMapping("/person/password/update/page")
     public String updatePasswordPage(Model model) {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
-        return "/pages/samples/change-password";
+        return "/pages/alt/change-password";
     }
 
 
@@ -139,7 +139,7 @@ public class PageController {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.setViewName("/pages/samples/confirmation");
+        modelAndView.setViewName("/pages/alt/confirmation");
 
         return modelAndView;
     }
@@ -170,7 +170,7 @@ public class PageController {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
-        return "/pages/tables/students";
+        return "/pages/main/students";
     }
 
     @GetMapping("/employee/employees/page")
@@ -196,7 +196,7 @@ public class PageController {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
-        return "/pages/tables/employees";
+        return "/pages/main/employees";
     }
 
 
@@ -228,7 +228,7 @@ public class PageController {
         }
 
 
-        return "/pages/tables/materials";
+        return "/pages/main/materials";
     }
 
 
@@ -236,13 +236,13 @@ public class PageController {
     @GetMapping("/login")
     public String login()
     {
-        return "/pages/samples/sign-in";
+        return "/pages/alt/sign-in";
     }
 
     @GetMapping("/forget-password-page")
     public String forgetPassword()
     {
-        return "/pages/samples/forgot-password";
+        return "/pages/alt/forgot-password";
     }
 
     @GetMapping("/person/chat/page")
@@ -295,15 +295,20 @@ public class PageController {
         }
 
 
-        return "/pages/tables/chat";
+        return "/pages/main/chat";
     }
 
 
-    @GetMapping("/sign-up-page")
-    public String signUpPage(Model model, @RequestParam(value = "error", required = false) String error) {
+    @GetMapping("/sign-up/page")
+    public String signUpPage(@ModelAttribute("error") String error, Model model)
+    {
+        if (error != null)
+        {
+            model.addAttribute("error", error);
+        }
         model.addAttribute("personalInfoDto", new PersonalInfoDto());
-        model.addAttribute("error", error);
-        return "/pages/samples/sign-up";
+
+        return "/pages/alt/sign-up";
     }
 
 

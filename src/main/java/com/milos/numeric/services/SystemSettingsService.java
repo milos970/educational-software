@@ -27,10 +27,7 @@ public class SystemSettingsService
     private final SystemSettingsRepository systemSettingsRepository;
     private final EmployeeService employeeService;
     private final DateParser dateParser;
-
     private final VerificationTokenService verificationTokenService;
-
-
 
 
 
@@ -50,6 +47,24 @@ public class SystemSettingsService
 
     public Optional<SystemSettings> findFirst() {
         return this.systemSettingsRepository.findFirst();
+    }
+
+    public boolean successfullUploaded(boolean value)
+    {
+        Optional<SystemSettings> optional = this.systemSettingsRepository.findFirst();
+
+        if (optional.isEmpty())
+        {
+            return false;
+        }
+
+        SystemSettings systemSettings = optional.get();
+
+        systemSettings.setSuccessfull(value);
+
+        this.systemSettingsRepository.save(systemSettings);
+
+        return true;
     }
 
 
@@ -169,6 +184,8 @@ public class SystemSettingsService
         systemSettings.setClassDate(newDateDto.getDate());
 
         this.systemSettingsRepository.save(systemSettings);
+
+        this.incrementDays();
         return true;
     }
 
@@ -176,12 +193,15 @@ public class SystemSettingsService
 
     public boolean updateTeacher(NewTeacherDto newTeacherDto)
     {
+
         Optional<SystemSettings> optionalSystemSettings = this.systemSettingsRepository.findFirst();
 
         if (optionalSystemSettings.isEmpty())
         {
             return false;
         }
+
+
 
         SystemSettings systemSettings = optionalSystemSettings.get();
 

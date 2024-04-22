@@ -15,6 +15,8 @@ import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.mappers.PersonalInfoNewPasswordDTOMapper;
 import com.milos.numeric.mappers.PersonalInfoNewPersonDTOMapper;
 import com.milos.numeric.repositories.PersonalInfoRepository;
+import com.milos.numeric.validators.EmployeeEmailValidator;
+import com.milos.numeric.validators.StudentEmailValidator;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import jakarta.mail.MessagingException;
@@ -40,8 +42,6 @@ public class PersonalInfoService
 
     private final SystemSettingsService systemSettingsService;
 
-
-
     private final Validator validator;
 
     private final EmailServiceImpl emailService;
@@ -49,6 +49,10 @@ public class PersonalInfoService
     private final  PasswordEncoder passwordEncoder;
 
     private final VerificationTokenService verificationTokenService;
+
+
+
+
 
 
 
@@ -60,6 +64,7 @@ public class PersonalInfoService
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
         this.verificationTokenService = verificationTokenService;
+
     }
 
     public Optional<String> findUsernameByAuthorityTeacher()//OK
@@ -72,6 +77,8 @@ public class PersonalInfoService
         Optional<String> optional = this.personalInfoRepository.findAuthorityByUsername(username);
         return Optional.of(Authority.valueOf(optional.get()));
     }
+
+
 
 
 
@@ -230,6 +237,11 @@ public class PersonalInfoService
     }
 
 
+    public void deleteByAuthority(String authority) {
+        this.personalInfoRepository.deleteByAuthority(authority);
+    }
+
+
 
 
 
@@ -248,6 +260,7 @@ public class PersonalInfoService
             throw new RuntimeException(e);
         }
         CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
+
 
         String[] values = null;
         while (true)

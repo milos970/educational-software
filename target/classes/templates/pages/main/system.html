@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Systém</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/static/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- End layout styles -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="shortcut icon" th:href="@{/images/mini-logo.png}">
+    <link rel="stylesheet" th:href="@{/css/my.css}">
+
+    <style>
+        .flex-container {
+            display: flex;
+            flex-direction: column; /* or row, depending on your layout */
+            max-height: 200px; /* set the maximum height for the container */
+            overflow-y: auto; /* enable vertical scrollbar */
+            border: 1px solid #ccc; /* optional: border for visualization */
+        }
+        .flex-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee; /* optional: border for visualization */
+        }
+        .left-item {
+            border-radius: 5px 0 0 5px; /* Rounded border on the left */
+            padding: 5px 10px;
+            background-color: #3682ea;
+        }
+        .right-item {
+            border-radius: 0 5px 5px 0; /* Rounded border on the right */
+            padding: 5px 10px;
+            background-color: #4bb63b; /* Optional: Background color */
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body onload="disableButton()">
+<div class="container-scroller">
+    <!-- partial:../../partials/_sidebar.html -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+            <a class="sidebar-brand brand-logo" th:href="@{/person/home/page}"><img th:src="@{/images/logo.png}" alt="logo"/></a>
+            <a class="sidebar-brand brand-logo-mini" th:href="@{/person/home/page}"><img th:src="@{/images/mini-logo.png}"
+                                                                            alt="logo"/></a>
+        </div>
+        <ul class="nav">
+            <li class="nav-item profile">
+                <div class="profile-desc">
+                    <div class="profile-pic">
+                        <div class="count-indicator">
+                            <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                            <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                            <span class="count bg-success"></span>
+                        </div>
+                        <div class="profile-name">
+                            <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
+                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Učiteľ</span>
+                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+            <li class="nav-item nav-category">
+                <span class="nav-link" style="color: whitesmoke">Navigácia</span>
+            </li>
+            <li class="nav-item menu-items">
+                <a class="nav-link"  th:href="@{/person/home/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-function"></i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">Numerické kategórie</span>
+                </a>
+            </li>
+
+
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-multiple"></i>
+              </span>
+                    <span class="menu-title">Používatelia</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="ui-basic">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/students/page}">Študenti</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/employees/page}">Zamestnanci</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li  class="nav-item menu-items">
+                <a class="nav-link" href="" th:href="@{/person/material/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-library-books"></i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">Materiály</span>
+                </a>
+            </li>
+
+
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/person/chat/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-message-text">
+
+                </i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">
+                        Správy
+                    </span>
+                </a>
+            </li>
+
+
+            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
+                <a class="nav-link" th:href="@{/employee/system/page}">
+              <span class="menu-icon">
+                <i class="mdi mdi-wrench">
+
+                </i>
+              </span>
+                    <span class="menu-title" style="color: whitesmoke">
+                        Systém
+                    </span>
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar p-0 fixed-top d-flex flex-row">
+            <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo-mini" href="index.html"><img th:src="@{assets/images/logo-mini.svg}"
+                                                                               alt="logo"/></a>
+            </div>
+            <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+                <ul class="navbar-nav w-100">
+                    <li class="nav-item w-100">
+
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
+                            <div class="navbar-profile">
+                                <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                <p class="mb-0 d-none d-sm-block navbar-profile-name"
+                                   th:text="${personalInfo.name + ' ' + personalInfo.surname}"></p>
+                                <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                            <h6 class="p-3 mb-0">Profil</h6>
+                            <div class="dropdown-divider"></div>
+
+                            <div class="dropdown-divider"></div>
+                            <a th:href="@{/person/password/update/page}" class="dropdown-item preview-item">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-dark rounded-circle">
+                                        <i class="mdi mdi-settings text-success"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content">
+                                    <p class="preview-subject mb-1">Zmena hesla</p>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a th:href="@{/logout}" class="dropdown-item preview-item">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-dark rounded-circle">
+                                        <i class="mdi mdi-logout text-danger"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content">
+                                    <p class="preview-subject mb-1">Odhlásenie</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="mdi mdi-format-line-spacing"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+
+                <div class="row">
+                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="col-md-5 grid-margin stretch-card">
+                        <div  class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Nastavenie systému</h4>
+                                <p class="card-description"></p>
+                                <form class="forms-sample">
+                                    <div class="form-group">
+                                        <label>Počet povolených absencii</label>
+                                        <div class="input-group col-xs-12">
+                                            <input id="absents-input" type="number" class="form-control file-upload-info"  placeholder="<1;13>">
+                                            <span class="input-group-append"><button id="absents-button" onclick="updateSystemAbsents()" class="file-upload-browse btn btn-primary" type="button">Zmeniť</button></span>
+                                        </div>
+                                        <p class="error" id="absents-hint-error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nahratí študenti</label>
+                                        <input id="file-input" onchange="parseCsvToArrays()" type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input id="text-input" type="text" class="form-control file-upload-info" disabled placeholder="Typ súboru: CSV">
+                                            <span class="input-group-append"><button onclick="clic()" class="file-upload-browse btn btn-primary" type="button">Vložiť</button></span>
+                                            <span class="input-group-append"><button onclick="uploadStudentsCsv()" class="file-upload-browse btn btn-success" type="button">Odoslať</button></span>
+                                        </div>
+                                        <p class="error" id="students-csv-hint-error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Vyučujúci</label>
+                                        <div class="input-group col-xs-12">
+                                            <input id="username-input" oninput="checkUsername(this.value)" type="text" class="form-control file-upload-info"  placeholder="Vyhľadať zamestnanca">
+                                            <span class="input-group-append"><button id="submit-button" class="file-upload-browse btn btn-primary" onclick="updateTeacher()" type="button">Zmeniť</button></span>
+                                        </div>
+                                        <p class="error" id="username-hint-error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Termín najbližšieho cvičenia</label>
+                                        <div class="input-group col-xs-12">
+                                            <input id="date-input" type="text" class="form-control file-upload-info" placeholder="dd.MM.yyyy hh:mm">
+                                            <span class="input-group-append"><button onclick="updateSystemDate()" class="file-upload-browse btn btn-primary" type="button">Zmeniť</button></span>
+                                        </div>
+                                        <p class="error" id="date-hint-error"></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Údaje systému</h4>
+                                <p class="card-description"></p>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td style="color: whitesmoke">Počet povolených absencii</td>
+                                            <td><label id="absents-count" th:text="${systemSettings.allowedAbsents}" class="badge badge-danger">10</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: whitesmoke">Nahratý súbor</td>
+                                            <td><label   th:text="${systemSettings.successfull} ? 'Ano' : 'Nie'" class="badge badge-warning"></label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: whitesmoke">Vyučujúci</td>
+                                            <td><label th:text="${systemSettings.getEmployee().personalInfo.name + ' ' + systemSettings.getEmployee().personalInfo.surname}" class="badge badge-info"></label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: whitesmoke">Termín najbližšieho cvičenia</td>
+                                            <td><label id="date-value" th:text="${systemSettings.classDate}" class="badge badge-success">14.5.2024 14:15</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: whitesmoke">Počet dní do cvičenia</td>
+                                            <td><label  th:text="${systemSettings.numberOfDays}" class="badge badge-warning">14</label></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+
+<script src="/static/vendors/js/vendor.bundle.base.js"></script>
+<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+
+<script src="/static/vendors/chart.js/Chart.min.js"></script>
+<script th:src="@{/vendors/chart.js/Chart.min.js}"></script>
+<script src="/static/vendors/progressbar.js/progressbar.min.js"></script>
+<script th:src="@{/vendors/progressbar.js/progressbar.min.js}"></script>
+<script src="/static/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+<script th:src="@{/vendors/jvectormap/jquery-jvectormap.min.js}"></script>
+<script src="/static/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<script th:src="@{/vendors/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<script src="/static/vendors/owl-carousel-2/owl.carousel.min.js"></script>
+<script th:src="@{/vendors/owl-carousel-2/owl.carousel.min.js}"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="/static/js/off-canvas.js"></script>
+<script th:src="@{/js/off-canvas.js}"></script>
+<script src="/static/js/hoverable-collapse.js"></script>
+<script th:src="@{/js/hoverable-collapse.js}"></script>
+<script src="/static/js/misc.js"></script>
+<script th:src="@{/js/misc.js}"></script>
+<script src="/static/js/settings.js"></script>
+<script th:src="@{/js/settings.js}"></script>
+<script src="/static/js/todolist.js"></script>
+<script th:src="@{/js/todolist.js}"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<script src="/static/js/dashboard.js"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<!-- End custom js for this page -->
+
+<script src="/static/js/chart.js"></script>
+<script th:src="@{/js/chart.js}"></script>
+
+<script src="/static/js/jquery.csv.js"></script>
+<script th:src="@{/js/jquery.csv.js}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
+<script src="/js/my/main.js"></script>
+<script th:src="@{/js/my/main.js}"></script>
+</body>
+</html>
