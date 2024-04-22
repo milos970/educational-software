@@ -49,6 +49,7 @@ function saveToFile()
     {
         if (resultValueInputElement.value.length === 0)
         {
+            getById("result-value-hint-error").innerHTML = "Nevykonaný výpočet!";
             return;
         }
 
@@ -75,7 +76,9 @@ function saveToFile()
     {
         if (resultValueInputElement.value.length === 0)
         {
+            getById("result-value-hint-error").innerHTML = "Nevykonaný výpočet!";
             return;
+
         }
         allRows = inputs;
         switch(selectedMethod)
@@ -93,9 +96,11 @@ function saveToFile()
     if (selectedCategory === 3)
     {
 
-        if (!isSelected())
+        if (resultValueInputElement.value.length === 0)
         {
+            getById("result-value-hint-error").innerHTML = "Nevykonaný výpočet!";
             return;
+
         }
         allRows = inputs.concat(results);
         switch(selectedMethod)
@@ -158,6 +163,7 @@ function selectNumericCategory(category)
     document.getElementById("methods-calculation-div").style.display = "block";
     document.getElementById("graph-calculation-div").style.display = "block";
     selectedCategory = category;
+    $("#table tr").remove();
     setUpElements(category, 1);
     resetRightCard();
 }
@@ -168,15 +174,21 @@ function setUpElements(category, method)
     switch(category)
     {
         case 1:
+            hideAllIntegrationElements();
+            hideAllApproximationElements();
             selectNonLinearMethod(method);
+
             break;
 
         case 2:
+            hideAllApproximationElements();
+            hideAllNonLinearElements();
             selectIntegrationMethod(method);
             break;
 
         case 3:
-
+            hideAllIntegrationElements();
+            hideAllNonLinearElements();
             selectApproximationAndInterpolationMethod(method);
             break;
 
@@ -187,16 +199,19 @@ function hideAllNonLinearElements()
 {
     document.getElementById("lower-bound-div").style.display="none";
     document.getElementById("upper-bound-div").style.display="none";
-    document.getElementById("lower-bound-div").value ="";
-    document.getElementById("upper-bound-div").value ="";
+    document.getElementById("lower-bound-input").value="";
+    document.getElementById("upper-bound-input").value="";
 
     document.getElementById("initial-value-div").style.display="none";
     document.getElementById("equation-div").style.display="none";
     document.getElementById("tolerance-div").style.display="none";
     document.getElementById("initial-value-div").value ="";
-    document.getElementById("equation-div").value ="";
-    document.getElementById("tolerance-div").value ="";
+    document.getElementById("equation-input").value ="";
+    tolerance = 0;
     document.getElementById("non-linear-dropdown-div").style.display="none";
+
+    document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 
 }
 
@@ -204,10 +219,17 @@ function hideAllIntegrationElements()
 {
     document.getElementById("lower-bound-div").style.display="none";
     document.getElementById("upper-bound-div").style.display="none";
-    document.getElementById("subintervals-div").style.display="none";
-    document.getElementById("function-div").style.display="none";
+    document.getElementById("lower-bound-input").value="";
+    document.getElementById("upper-bound-input").value="";
 
+    document.getElementById("subintervals-div").style.display="none";
+    document.getElementById("subintervals-input").value="";
+    document.getElementById("function-div").style.display="none";
+    document.getElementById("function-input").value="";
     document.getElementById("integration-dropdown-div").style.display="none";
+
+    document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 
 }
 
@@ -217,8 +239,12 @@ function hideAllApproximationElements()
     document.getElementById("nodes-csv-div").style.display="none";
     document.getElementById("functions-dropdown-div").style.display="none";
 
+    document.getElementById("nodes-string-input").value="";
+
     document.getElementById("approximation-dropdown-div").style.display="none";
 
+    document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 }
 
 
@@ -227,14 +253,14 @@ function hideAllApproximationElements()
 
 function selectNonLinearMethod(value)
 {
-    hideAllIntegrationElements();
-    hideAllApproximationElements();
+
 
     const dropDownButton = document.getElementById("dropdownMenuButton1");
 
 
 
     document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 
     const nonLinearDropdownDiv = document.getElementById("non-linear-dropdown-div");
     nonLinearDropdownDiv.style.display="block";
@@ -250,6 +276,11 @@ function selectNonLinearMethod(value)
 
     $("#table tr").remove();
 
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+
+    document.getElementById("graph-calculation-div").style.display = "none";
 
     switch (value)
     {
@@ -295,8 +326,7 @@ function selectNonLinearMethod(value)
 
 function selectApproximationAndInterpolationMethod(value)
 {
-    hideAllNonLinearElements();
-    hideAllIntegrationElements();
+
 
     const approximationDropdownDiv = document.getElementById("approximation-dropdown-div");
     approximationDropdownDiv.style.display="block";
@@ -308,6 +338,11 @@ function selectApproximationAndInterpolationMethod(value)
     const functionsDropdownDiv = document.getElementById("functions-dropdown-div");
 
     $("#table tr").remove();
+
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+    document.getElementById("graph-calculation-div").style.display = "none";
     switch (value)
     {
         case 1:
@@ -348,8 +383,7 @@ function selectApproximationAndInterpolationMethod(value)
 
 function selectIntegrationMethod(value)
 {
-    hideAllNonLinearElements();
-    hideAllApproximationElements();
+
 
     const integrationDropdownDiv = document.getElementById("integration-dropdown-div");
     integrationDropdownDiv.style.display="block";
@@ -363,6 +397,12 @@ function selectIntegrationMethod(value)
     lowerBoundDivElement.style.display = "block";
     upperBoundDivElement.style.display = "block";
     $("#table tr").remove();
+
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+
+    document.getElementById("graph-calculation-div").style.display = "none";
     const subintervalsDiv = document.getElementById("subintervals-div");
 
     document.getElementById("initial-value-input").value = "";
@@ -464,16 +504,6 @@ function selectTolerance(value)
             dropDownButton.innerHTML = "0.000001";
             tolerance = 0.000001;
             round = 6;
-            break;
-        case 5:
-            dropDownButton.innerHTML = "0.0000001";
-            tolerance = 0.0000001;
-            round = 7;
-            break;
-        case 6:
-            dropDownButton.innerHTML = "0.00000001";
-            tolerance = 0.00000001;
-            round = 8;
             break;
         default:
     }
@@ -1718,17 +1748,20 @@ function lagrangeInterpolating()
     if (selectedApproximationInput === 1 && validateStringCoordinates())
     {
         arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+        alert(arr);
     }
 
     if (selectedApproximationInput === 2 && validateCsvCoordinates())
     {
         let j = 0;
-        for (let i = 0; i < array.length; i+=2)
+        for (let i = 0; i < array.length; ++i)
         {
-            arr[i] = array[j][0];
-            arr[i + 1] = array[j][1];
-            ++j;
+            arr[j] = array[i][0];
+            arr[j + 1] = array[i][1];
+            j += 2;
         }
+
+        alert(arr);
 
     }
 
@@ -1846,6 +1879,7 @@ function newtonInterpolating()
     {
         parseCsvToArrays();
         data = array;
+        alert(data);
        
     }
 
@@ -2035,7 +2069,8 @@ function validateStringCoordinates()
 function validateCsvCoordinates()
 {
     parseCsvToArrays();
-    return validateNodes(array);
+    console.log(this.array);
+    return validateNodes(this.array);
 }
 
 
@@ -2043,12 +2078,9 @@ function checkIfValueIsInteger(value)//OK
 {
     const regex = /^\d+(\.\d{1,2})?$/;
 
-    if (!regex.test(value.toString()))
-    {
-        return false;
-    }
+    return regex.test(value.toString());
 
-    return true;
+
 }
 
 
@@ -2219,7 +2251,24 @@ points = data;
     document.getElementById("result-input").value = "f(x) = " + fun.replace("log","ln");;
 
 graph();
-    totalError(data);
+
+
+    fun = equation;
+
+    resultValueInputElement.value = "f(x) = " + fun;
+
+    inputs = [];
+
+    inputs[0] = [2];
+    inputs[0][0] =  "f(x)";
+    inputs[0][1] =  resultValueInputElement.value;
+
+    inputs[1] = [1];
+    inputs[1][0] = "Uzly"
+
+
+    results = points;
+
 
 }
 
@@ -2312,7 +2361,24 @@ function linear()
     document.getElementById("result-input").value = "f(x) = " + fun;
 
     graph();
-    totalError(data);
+
+
+    fun = equation;
+
+    resultValueInputElement.value = "f(x) = " + fun;
+
+    inputs = [];
+
+    inputs[0] = [2];
+    inputs[0][0] =  "f(x)";
+    inputs[0][1] =  resultValueInputElement.value;
+
+    inputs[1] = [1];
+    inputs[1][0] = "Uzly"
+
+
+    results = points;
+
 
 }
 
@@ -2425,7 +2491,7 @@ function validateNodes(array)
 
         if (!checkIfValueIsInteger(array[i][0])) //je každá x hodnota celé číslo?
         {
-            document.getElementById("nodes-string-error-hint").innerHTML = "Hodnota x musí mať max 2 desatinné miesta!"
+            document.getElementById("nodes-string-error-hint").innerHTML = "Hodnota x musí mať maximálne 2 desatinné miesta!"
             return false;
         }
     }
@@ -2445,7 +2511,7 @@ function validateNodes(array)
     if (array.length !== set.size) //nenáchadzajú sa x duplicity?
     {
         set.clear();
-        document.getElementById("nodes-string-error-hint").innerHTML = "Duplikát hodnoty x!"
+        document.getElementById("nodes-string-error-hint").innerHTML = "Duplikát vstupnej hodnoty x!"
         return false;
     }
 
