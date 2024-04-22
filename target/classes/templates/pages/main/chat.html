@@ -94,7 +94,7 @@
                         <div class="profile-name">
                             <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
                             <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}">Študent</span>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Učiteľ</span>
+                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Vyučujúci</span>
                         </div>
                     </div>
                 </div>
