@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
-public class FileDtoMapperImpl implements FileDtoMapper {
+public class MaterialDtoMapperImpl implements MaterialDtoMapper {
 
     @Override
     public Material sourceToDestination(MaterialDto source) {

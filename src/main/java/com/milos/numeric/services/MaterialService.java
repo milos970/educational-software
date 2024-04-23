@@ -2,7 +2,7 @@ package com.milos.numeric.services;
 
 import com.milos.numeric.dtos.MaterialDto;
 import com.milos.numeric.entities.Material;
-import com.milos.numeric.mappers.FileDtoMapper;
+import com.milos.numeric.mappers.MaterialDtoMapper;
 import com.milos.numeric.repositories.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,14 @@ import java.util.Optional;
 @Service
 public class MaterialService
 {
-    private final FileDtoMapper fileDtoMapper;
+    private final MaterialDtoMapper materialDtoMapper;
     private final MaterialRepository materialRepository;
 
 
     @Autowired
-    public MaterialService(FileDtoMapper fileDtoMapper, MaterialRepository materialRepository)
+    public MaterialService(MaterialDtoMapper materialDtoMapper, MaterialRepository materialRepository)
     {
-        this.fileDtoMapper = fileDtoMapper;
+        this.materialDtoMapper = materialDtoMapper;
         this.materialRepository = materialRepository;
     }
 
@@ -53,7 +53,7 @@ public class MaterialService
         }
 
 
-        Material material = this.fileDtoMapper.sourceToDestination(materialDto);
+        Material material = this.materialDtoMapper.sourceToDestination(materialDto);
 
         material.setPath(uri);
 
