@@ -36,6 +36,7 @@ public class Material {
     @Size(max = 100, message = "{material.description}")
     private String description;
 
+    @NotBlank
     @Column(name = "uploaded_by")
     private String uploadedBy;
 

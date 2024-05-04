@@ -28,7 +28,7 @@ public class SystemSettings
 
 
     @OneToOne(targetEntity = Employee.class, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "employee_id")
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @DateValid

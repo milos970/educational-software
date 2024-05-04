@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = MaterialSizeValidator.class)
 public @interface MaterialSizeValid
 {
-    String message() default "Súbor presiahol limit 5MB!";
+    String message() default "The file size exceeds allowed limit of 5MB!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

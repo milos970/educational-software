@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class MaterialDto
 {
-
     @NotBlank
     @Size(min = 1, max = 15, message = "Názov materiálu musí byť v rozmedzí 1 až 15 znakov!")
     private String name;
@@ -24,4 +23,8 @@ public class MaterialDto
     @MaterialSizeValid
     private MultipartFile data;
 
+    @NotBlank
+    private String uploadedBy;
+
 }
+

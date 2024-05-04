@@ -3,6 +3,7 @@ package com.milos.numeric.controllers;
 import com.milos.numeric.Authority;
 import com.milos.numeric.TokenType;
 import com.milos.numeric.dtos.NewPasswordDto;
+import com.milos.numeric.dtos.NewTeacherDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.entities.PersonalInfo;
 import com.milos.numeric.entities.VerificationToken;
@@ -18,12 +19,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Controller
@@ -58,45 +60,18 @@ public class PersonalInfoController {
     }
 
 
-    @GetMapping("/active-account")//OK
-    public String activeAccount(@RequestParam("token") String code)
-    {
-        Optional<VerificationToken> optionalVerificationToken = this.verificationTokenService.findByCode(code);
-
-        VerificationToken verificationToken = optionalVerificationToken.get();
-
-        PersonalInfo personalInfo = verificationToken.getPersonalInfo();
-
-        if (personalInfo.getAuthority() == Authority.EMPLOYEE) {
-            personalInfo.setEnabled(true);
-            this.employeeService.createEmployee(personalInfo);
-
-            return "redirect:/sign-in";
-        } else
-        {
-            personalInfo.setEnabled(true);
-            this.studentService.createStudent(personalInfo);
-
-            return "redirect:/sign-in";
-        }
-
-    }
-
-
-
-
-
-
-    @GetMapping("/confirm-email")//OK
+    @GetMapping("confirm-email")//OK
     public String confirmEmail(@RequestParam("token") String code, RedirectAttributes redirectAttributes)
     {
+
 
         Optional<VerificationToken> verificationTokenOptional = this.verificationTokenService.findByCode(code);
 
         if (verificationTokenOptional.isEmpty())
         {
+
             redirectAttributes.addFlashAttribute("error", "Platnosť tokenu vypršala! Zopakujte proces.");
-            return "redirect:/sign-up/page";
+            return "redirect:sign-up/page";
         }
 
         VerificationToken verificationToken = verificationTokenOptional.get();
@@ -104,13 +79,13 @@ public class PersonalInfoController {
 
         if (!this.verificationTokenService.isTokenValid(verificationToken.getCode()))
         {
+
             redirectAttributes.addFlashAttribute("error", "Platnosť tokenu vypršala! Zopakujte proces.");
             this.verificationTokenService.delete(verificationToken);
-            return "redirect:/sign-up/page";
+            return "redirect:sign-up/page";
         }
 
         PersonalInfo personalInfo = verificationToken.getPersonalInfo();
-
 
 
         if (verificationToken.getTokenType() == TokenType.ACTIVATE_ACCOUNT)
@@ -119,6 +94,18 @@ public class PersonalInfoController {
             {
                 this.employeeService.createEmployee(personalInfo);
                 this.personalInfoService.activate(personalInfo);
+                this.verificationTokenService.delete(verificationToken);
+            }
+
+            if (personalInfo.getAuthority() == Authority.TEACHER)
+            {
+
+                this.employeeService.createEmployee(personalInfo);
+                this.personalInfoService.activate(personalInfo);
+                NewTeacherDto dto = new NewTeacherDto();
+                dto.setUsername(personalInfo.getUsername());
+                this.systemSettingsService.updateTeacher(dto);
+                this.verificationTokenService.delete(verificationToken);
             }
 
             if (personalInfo.getAuthority() == Authority.STUDENT)
@@ -128,25 +115,27 @@ public class PersonalInfoController {
                 Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByAuthority(Authority.TEACHER);
                 this.chatService.create(personalInfo.getUsername(), personalInfoOptional.get().getUsername());
                 this.personalInfoService.generatePassword(personalInfo.getUsername());
+                this.verificationTokenService.delete(verificationToken);
             }
-            return "redirect:/sign-in";
+            return "redirect:sign-in";
         }
 
         if (verificationToken.getTokenType() == TokenType.RESET_PASSWORD)
         {
             this.personalInfoService.generatePassword(personalInfo.getUsername());
-            return "redirect:/sign-in";
+            this.verificationTokenService.delete(verificationToken);
+            return "redirect:sign-in";
         }
 
-        return "redirect:/sign-in";
+        return "redirect:sign-in";
     }
 
 
-    @PostMapping("/person/password/update") //OK
+    @PostMapping("person/password/update") //OK
     public String updatePassword(@AuthenticationPrincipal MyUserDetails myUserDetails, @Valid @ModelAttribute("newPasswordDto") NewPasswordDto newPasswordDto, BindingResult result) {
         if (result.hasErrors()) {
 
-            return "/pages/samples/change-password";
+            return "pages/alt/change-password";
         }
 
         String username = myUserDetails.getUsername();
@@ -156,7 +145,7 @@ public class PersonalInfoController {
     }
 
 
-    @PostMapping(value = "/person/create") //OK
+    @PostMapping(value = "person/create") //OK
     public String createUser(@Valid @ModelAttribute PersonalInfoDto personalInfoDTO, RedirectAttributes redirectAttributes, Model model)
     {
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByEmail(personalInfoDTO.getEmail());
@@ -164,13 +153,13 @@ public class PersonalInfoController {
         if (personalInfoOptional.isPresent())
         {
             redirectAttributes.addFlashAttribute("error", "Účet s daným emailom už existuje!");
-            return "redirect:/sign-up/page";
+            return "redirect:sign-up/page";
         }
 
         if (!this.employeeEmailValidator.isValid(personalInfoDTO.getEmail()))
         {
             redirectAttributes.addFlashAttribute("error", "Nevalidný školský email zamestnanca!");
-            return "redirect:/sign-up/page";
+            return "redirect:sign-up/page";
         }
 
         Optional<PersonalInfo> personalInfo = this.personalInfoService.createPerson(personalInfoDTO);
@@ -179,16 +168,19 @@ public class PersonalInfoController {
         this.verificationTokenService.sendToken(token);
 
         model.addAttribute("success", "Na zadaný mail bol odoslaný verifikačný email!");
-        return "redirect:/sign-up/page";
+        return "redirect:sign-up/page";
     }
 
 
-    @PostMapping("/admin/upload/file/csv")//OK
+    @PostMapping("admin/upload/file/csv")//OK
     public ResponseEntity createUsers(@RequestParam("file") MultipartFile file)
     {
+     
         if (!this.csvValidator.isValid(file.getContentType())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+
         this.chatService.deleteAll();
         this.studentService.deleteAll();
         this.personalInfoService.deleteByAuthority("STUDENT");

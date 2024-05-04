@@ -22,7 +22,6 @@ public class PersonalInfo
     private Long id;
 
     @NotBlank
-    @Column(name = "\"name\"")
     @Size(min = 1, message = "PersonalInfo name is less than 1 character long!")
     @Size(max = 50, message = "PersonalInfo name is more than 50 characters long!")
     private String name;
@@ -46,8 +45,8 @@ public class PersonalInfo
     @Column(unique = true)
     private String email;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$",
-            message = "Password must contain at least 1 uppercase, 1 lowercase, 1 special character and 1 digit!")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\\@%.#&\\-()\\[\\]\\-_{}\\]:;'\",?/*~$^+=<>]).{8,64}$",
+            message = "password must contain at least 1 uppercase, 1 lowercase, 1 special character and 1 digit")
     private String password;
 
     @Enumerated(EnumType.STRING)

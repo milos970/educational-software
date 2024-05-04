@@ -19,7 +19,7 @@ public class StudentController {
     }
 
 
-    @PatchMapping("/admin/student/{id}/points/{points}")
+    @PatchMapping("admin/student/{id}/points/{points}")
     public ResponseEntity updatePoints(@PathVariable Long id, @PathVariable int points) {
         if (this.studentService.updatePoints(id, points)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -28,7 +28,7 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PatchMapping("/admin/student/{id}/absents/{absents}")
+    @PatchMapping("admin/student/{id}/absents/{absents}")
     public ResponseEntity updateAbsents(@PathVariable Long id, @PathVariable int absents) {
         if (this.studentService.updateAbsents(id, absents)) {
             return new ResponseEntity<>(HttpStatus.OK);

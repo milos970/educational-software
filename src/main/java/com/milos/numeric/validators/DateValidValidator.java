@@ -1,18 +1,12 @@
 package com.milos.numeric.validators;
 
-import com.milos.numeric.Authority;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import java.util.Arrays;
-import java.util.Date;
 
 public class DateValidValidator implements ConstraintValidator<DateValid, String>
 {
@@ -44,13 +38,6 @@ public class DateValidValidator implements ConstraintValidator<DateValid, String
 
         LocalDateTime now = LocalDateTime.parse(formattedString, dateTimeFormatter);
 
-        if (receivedDate.isAfter(now))
-        {
-
-            return true;
-        }
-
-
-        return false;
+        return receivedDate.isAfter(now);
     }
 }

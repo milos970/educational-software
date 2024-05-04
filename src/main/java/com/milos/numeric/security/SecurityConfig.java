@@ -40,11 +40,9 @@ public class SecurityConfig
         MvcRequestMatcher.Builder mvcMatcherBuilderG = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderH = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderI = new MvcRequestMatcher.Builder(introspector);
-        MvcRequestMatcher.Builder mvcMatcherBuilderJ = new MvcRequestMatcher.Builder(introspector);
-        MvcRequestMatcher.Builder mvcMatcherBuilderK = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderL = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherBuilderM = new MvcRequestMatcher.Builder(introspector);
-        MvcRequestMatcher.Builder mvcMatcherBuilderN = new MvcRequestMatcher.Builder(introspector);
+        MvcRequestMatcher.Builder mvcMatcherBuilderO = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherAdmin = new MvcRequestMatcher.Builder(introspector);
         MvcRequestMatcher.Builder mvcMatcherStudent = new MvcRequestMatcher.Builder(introspector);
         http.csrf(Customizer.withDefaults())
@@ -53,19 +51,17 @@ public class SecurityConfig
                         .requestMatchers(mvcMatcherBuilderF.pattern("/scss/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderG.pattern("/vendor/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderH.pattern("/vendors/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderK.pattern("/reg/student")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderJ.pattern("/confirm/sign-up/page"))
-                        .access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == false"))
                         .requestMatchers(mvcMatcherBuilderL.pattern("/create-token/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderM.pattern("/confirm-email")).permitAll()
-                        .requestMatchers(mvcMatcherBuilderN.pattern("/reset-password/**")).permitAll()
                         .requestMatchers(toH2Console()).permitAll()
+                        .requestMatchers(mvcMatcherBuilderO.pattern("/person/create")).permitAll()
                         .requestMatchers(mvcMatcherBuilderC.pattern("/file/**")).permitAll()
                         .requestMatchers(mvcMatcherBuilderD.pattern("/sign-up/page")).permitAll()
                         .requestMatchers(mvcMatcherBuilderI.pattern("/forget-password-page")).permitAll()
                         .requestMatchers(mvcMatcherAdmin.pattern("/employee/**")).access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == true and hasAnyAuthority('TEACHER', 'EMPLOYEE')"))
                         .requestMatchers(mvcMatcherStudent.pattern("/student/**")).access(new WebExpressionAuthorizationManager("isAuthenticated() and principal.enabled == true and hasAuthority('STUDENT')"))
+
                         .anyRequest().authenticated()
                 ).headers(headers -> headers.frameOptions().disable())
                 .csrf(csrf -> csrf

@@ -26,7 +26,7 @@ public class ChatController {
     }
 
 
-    @PostMapping("/person/message")
+    @PostMapping("person/message")
     public ResponseEntity saveMessage(@RequestBody @Valid MessageDto messageDto)
     {
         if (this.chatService.saveMessage(messageDto))
@@ -39,7 +39,7 @@ public class ChatController {
     }
 
 
-    @GetMapping("/person/conversation")
+    @GetMapping("person/conversation")
     @ResponseBody
     public ResponseEntity<List<MessageDto>> findById(@RequestParam("receiver") String receiver)
     {
@@ -48,7 +48,7 @@ public class ChatController {
     }
 
 
-    @DeleteMapping("/admin/conversation")
+    @DeleteMapping("admin/conversation")
     public ResponseEntity deleteAll()
     {
         if (this.chatService.deleteAll())

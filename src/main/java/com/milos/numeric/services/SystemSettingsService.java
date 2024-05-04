@@ -30,8 +30,6 @@ public class SystemSettingsService
     private final VerificationTokenService verificationTokenService;
 
 
-
-
     @Autowired
     public SystemSettingsService(SystemSettingsRepository systemSettingsRepository, EmployeeService employeeService, DateParser dateParser, VerificationTokenService verificationTokenService)
     {
@@ -40,7 +38,6 @@ public class SystemSettingsService
         this.dateParser = dateParser;
         this.verificationTokenService = verificationTokenService;
     }
-
 
 
 
@@ -59,9 +56,7 @@ public class SystemSettingsService
         }
 
         SystemSettings systemSettings = optional.get();
-
         systemSettings.setSuccessfull(value);
-
         this.systemSettingsRepository.save(systemSettings);
 
         return true;
@@ -95,16 +90,13 @@ public class SystemSettingsService
         }
 
         SystemSettings systemSettings = optional.get();
-
         LocalDateTime deadline = this.dateParser.parseStringToLocalDate(systemSettings.getClassDate());
         LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
 
         int daysDifference = Math.abs((int) ChronoUnit.DAYS.between(deadline, now));
 
-
         daysDifference = Math.abs(daysDifference);
         systemSettings.setNumberOfDays(daysDifference);
-
         this.systemSettingsRepository.save(systemSettings);
 
         return true;
@@ -123,16 +115,12 @@ public class SystemSettingsService
         }
 
         SystemSettings systemSettings = optional.get();
-
         LocalDateTime deadline = this.dateParser.parseStringToLocalDate(systemSettings.getClassDate());
         LocalDateTime now = this.dateParser.formatLocalDateInFormat(LocalDateTime.now());
-
         int daysDifference = Math.abs((int) ChronoUnit.DAYS.between(deadline, now));
-
 
         daysDifference = Math.abs(daysDifference);
         systemSettings.setNumberOfDays(daysDifference);
-
         this.systemSettingsRepository.save(systemSettings);
 
         return true;
@@ -152,10 +140,8 @@ public class SystemSettingsService
         }
 
         SystemSettings systemSettings = optional.get();
-
         int value = newAbsentsDto.getAbsents();
         systemSettings.setAllowedAbsents(value);
-
         this.systemSettingsRepository.save(systemSettings);
 
         return true;
@@ -191,6 +177,7 @@ public class SystemSettingsService
 
 
 
+
     public boolean updateTeacher(NewTeacherDto newTeacherDto)
     {
 
@@ -198,36 +185,44 @@ public class SystemSettingsService
 
         if (optionalSystemSettings.isEmpty())
         {
+
             return false;
         }
-
-
 
         SystemSettings systemSettings = optionalSystemSettings.get();
 
         String username = newTeacherDto.getUsername();
 
-        if (!this.employeeService.existsByUsername(username))
-        {
-            return false;
+        Optional<Employee> s = this.employeeService.findByUsername(username);
+
+        if (s.isEmpty()) {
+
         }
+
+
 
 
         Optional<Employee> optionalEmployee = this.employeeService.findByUsername(username);
         Employee newTeacher = optionalEmployee.get();
 
 
+        if (this.employeeService.count() == 1)
+        {
 
-        Employee oldTeacher = systemSettings.getEmployee();
+            systemSettings.setEmployee(newTeacher);
+        } else
+        {
+            Employee oldTeacher = systemSettings.getEmployee();
+            oldTeacher.getPersonalInfo().setAuthority(Authority.EMPLOYEE);
+            newTeacher.getPersonalInfo().setAuthority(Authority.TEACHER);
+            systemSettings.setEmployee(newTeacher);
 
-        oldTeacher.getPersonalInfo().setAuthority(Authority.EMPLOYEE);
+            this.employeeService.save(oldTeacher);
 
-        newTeacher.getPersonalInfo().setAuthority(Authority.TEACHER);
+        }
 
-        systemSettings.setEmployee(newTeacher);
 
-        this.employeeService.save(oldTeacher);
-        this.employeeService.save(newTeacher);
+
         this.systemSettingsRepository.save(systemSettings);
         return true;
     }

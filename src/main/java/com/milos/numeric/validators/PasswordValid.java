@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PasswordValid
 {
 
-    String message() default "Nesprávne pôvodné heslo!";
+    String message() default "Incorrect original password!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

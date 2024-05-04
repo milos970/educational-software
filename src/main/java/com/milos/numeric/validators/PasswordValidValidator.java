@@ -1,9 +1,6 @@
 package com.milos.numeric.validators;
 
-import com.milos.numeric.Authority;
-import com.milos.numeric.entities.Employee;
 import com.milos.numeric.entities.PersonalInfo;
-import com.milos.numeric.services.EmployeeService;
 import com.milos.numeric.services.PersonalInfoService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

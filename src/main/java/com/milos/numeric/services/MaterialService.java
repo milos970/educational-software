@@ -34,6 +34,8 @@ public class MaterialService
     {
 
         Path filePath = Paths.get("src", "main", "resources", "static", "materials", materialDto.getName());
+
+
         String uri = filePath.toString();
 
         byte[] fileBytes= new byte[0];

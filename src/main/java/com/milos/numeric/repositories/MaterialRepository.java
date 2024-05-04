@@ -10,10 +10,5 @@ import java.util.Optional;
 public interface MaterialRepository extends JpaRepository<Material, Long>
 {
 
-    @Query(value = "SELECT COUNT(m.id) FROM material m WHERE  m.name = :name ", nativeQuery = true)
-    public int countByName(@Param("name") String name);
-
-    public Optional<Material> findByName(String name);
-
     public Optional<Material> findById(Long id);
 }

@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = MaterialTypeValidator.class)
 public @interface MaterialTypeValid
 {
-    String message() default "Mime musí byť jeden z tipov: 'application/pdf',        // PDF\n" +
+    String message() default "Filetype has to be one of following types: 'application/pdf',        // PDF\n" +
             "        'application/msword',     // DOC\n" +
             "        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX\n" +
             "        'image/png',              // PNG\n" +

@@ -16,7 +16,7 @@ function sendPoints(id)
             points.value ="";
 
         } else {
-            alert("Unsuccessfull");
+
             points.value ="";
         }
 
@@ -51,7 +51,7 @@ function sendAbsents(id)
             absents.value ="";
 
         } else {
-            alert("Unsuccessfull");
+
             absents.value ="";
         }
 

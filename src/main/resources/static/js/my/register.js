@@ -22,7 +22,7 @@ function studentOrEmployee(who)
         case 2:
             showFormForEmployee();
             getById("employee-form").action = "/person/create";
-            alert(2);
+
             which = 2;
             break;
         default:
@@ -34,19 +34,6 @@ function studentOrEmployee(who)
 
 function showFormForStudent()
 {
-    /*const elementsToHide = ["name-div", "pin-div", "surname-div", "password-div", "rep-password-div", "preconditions-div"];
-
-    elementsToHide.forEach((item) => {
-        document.getElementById(item).style.display="none";
-    });
-
-    const elementsToShow = ["email-div"];
-
-    elementsToShow.forEach((item) => {
-        document.getElementById(item).style.display="block";
-    });*/
-
-
     document.getElementById("student-form-div").style.display="block";
     document.getElementById("employee-form-div").style.display="none";
 }
@@ -54,13 +41,6 @@ function showFormForStudent()
 
 function showFormForEmployee()
 {
-    /*const elementsToShow = ["name-div", "pin-div", "surname-div", "email-div", "password-div", "rep-password-div", "preconditions-div"];
-
-    elementsToShow.forEach((item) => {
-        document.getElementById(item).style.display="block";
-    });
-*/
-
     document.getElementById("employee-form-div").style.display="block";
     document.getElementById("student-form-div").style.display="none";
 
@@ -165,7 +145,7 @@ function canRegisterEmployee()
     }
 
     const regexEmail = /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/;
-    if (regexEmail.test(emailInput.value))
+    if (!regexEmail.test(emailInput.value))
     {
         emailInputErrorHint.innerHTML = "Nevalidný školský email!";
         return false;
@@ -244,7 +224,7 @@ function validatePassword()
     const regexUpperCase = /[A-Z]/g;
     const regexLowerCase = /[a-z]/g;
     const regexNumber = /[0-9]/g;
-    const regexSpecialCharacter = /[?.:!@#$%^&*()_-]/g;
+    const regexSpecialCharacter = /[?.:!@#$%^|<>&*~()+_\-{}[\],=;/\\'"]/g;
 
     const passwordInput = document.getElementById("password-input");
 
@@ -354,7 +334,7 @@ function submit()
     if (which === 2)
     {
         if (canRegisterEmployee() && isValid)
-        {alert(5);
+        {
             getById("employee-form").submit();
         }
     }
@@ -367,6 +347,7 @@ function submitChangedPassword()
     const oldPasswordInput = document.getElementById("old-password-input");
     const repPasswordInput = document.getElementById("rep-password-input");
 
+    const passwordInputErrorHint = document.getElementById("password-input-error-hint");
     const oldPasswordInputErrorHint = document.getElementById("old-password-input-error-hint");
     const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
 
@@ -377,6 +358,22 @@ function submitChangedPassword()
         return false;
     } else {
         oldPasswordInputErrorHint.innerHTML = "";
+    }
+
+    if (passwordInput.value.length === 0)
+    {
+        passwordInputErrorHint.innerHTML = "Zadajte nové heslo!";
+        return false;
+    } else {
+        passwordInputErrorHint.innerHTML = "";
+    }
+
+    if (repPasswordInput.value.length === 0)
+    {
+        repPasswordInputErrorHint.innerHTML = "Zadajte znova nové heslo!";
+        return false;
+    } else {
+        repPasswordInputErrorHint.innerHTML = "";
     }
 
     if (repPasswordInput.value !== passwordInput.value)
@@ -390,15 +387,9 @@ function submitChangedPassword()
 
     if (isValid)
     {
-        alert(2);
+
         document.getElementById("form").submit();
     }
-
-
-
-
-
-
 
 
 

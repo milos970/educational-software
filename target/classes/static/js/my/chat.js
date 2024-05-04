@@ -8,6 +8,9 @@ let receiver = "";
 function sendMessage(senderUsername,receiverUsername)
 {
 
+
+
+
     if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
     {
         getById("message-input-error-hint").innerHtml = "Nevalidný výraz!";
@@ -39,9 +42,9 @@ function sendMessage(senderUsername,receiverUsername)
     getById("message-input").value = "";
     xhttp.onload = function() {
         if (xhttp.status === 200) {
-            alert("Success");
+
         } else {
-            alert("Unsuccessfull");
+
             return;
         }
 
@@ -80,7 +83,7 @@ function sendMessage(senderUsername,receiverUsername)
 
 
 
-    alert(5);
+
     let data =
     {
         content: content,
@@ -95,6 +98,7 @@ var lastId = -1;
 function getConversation(receiverUsername, id)
 {
 
+    getById("send-button").disabled = false;
     while (document.getElementById("conversation").firstChild) {
         document.getElementById("conversation").removeChild(document.getElementById("conversation").firstChild);
     }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -33,8 +32,6 @@ public class PageController {
 
     private final SystemSettingsService systemSettingsService;
 
-
-
     private final ChatService chatService;
 
 
@@ -49,7 +46,7 @@ public class PageController {
         this.chatService = chatService;
     }
 
-    @GetMapping("/student/schedule/page")
+    @GetMapping("student/schedule/page")
     public String studentSchedulePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<Student> optionalStudent = this.studentService.findByUsername(username);
@@ -75,10 +72,10 @@ public class PageController {
         model.addAttribute("systemSettings", systemSettings);
 
 
-        return "/pages/main/schedule";
+        return "pages/main/schedule";
     }
 
-    @GetMapping("/student/profile/page")
+    @GetMapping("student/profile/page")
     public String studentProfilePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<Student> optionalStudent = this.studentService.findByUsername(username);
@@ -94,11 +91,11 @@ public class PageController {
         }
 
 
-        return "/pages/main/profile";
+        return "pages/main/profile";
     }
 
 
-    @GetMapping("/employee/system/page")
+    @GetMapping("employee/system/page")
     public String systemPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
 
@@ -118,28 +115,28 @@ public class PageController {
         model.addAttribute("systemSettings", systemSettings);
         model.addAttribute("students", this.studentService.findAll());
 
-        return "/pages/main/system";
+        return "pages/main/system";
     }
 
-    @GetMapping("/reset-password")
+    @GetMapping("reset-password")
     public String resetPasswordPage(Model model) {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
         return "update-password";
     }
 
-    @GetMapping("/person/password/update/page")
+    @GetMapping("person/password/update/page")
     public String updatePasswordPage(Model model) {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
-        return "/pages/alt/change-password";
+        return "pages/alt/change-password";
     }
 
 
-    @GetMapping("/confirm/sign-up/page")
+    @GetMapping("confirm/sign-up/page")
     public ModelAndView confirmSignUpPage() {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.setViewName("/pages/alt/confirmation");
+        modelAndView.setViewName("pages/alt/confirmation");
 
         return modelAndView;
     }
@@ -147,13 +144,13 @@ public class PageController {
 
 
 
-    @GetMapping("/employee/students/page")
+    @GetMapping("employee/students/page")
     public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-            return "redirect:/admin/material/page/error";
+            return "redirect:admin/material/page/error";
         }
 
 
@@ -170,16 +167,16 @@ public class PageController {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
-        return "/pages/main/students";
+        return "pages/main/students";
     }
 
-    @GetMapping("/employee/employees/page")
+    @GetMapping("employee/employees/page")
     public String employeesPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-            return "redirect:/admin/material/page/error";
+            return "redirect:admin/material/page/error";
         }
 
 
@@ -196,11 +193,11 @@ public class PageController {
             model.addAttribute("imagePath", "/images/faces-clipart/male.png");
         }
 
-        return "/pages/main/employees";
+        return "pages/main/employees";
     }
 
 
-    @GetMapping("/person/material/page")
+    @GetMapping("person/material/page")
     public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         List<Material> materials = this.materialService.findAll();
 
@@ -214,7 +211,7 @@ public class PageController {
         Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
 
         if (optionalPersonalInfo.isEmpty()) {
-            return "redirect:/admin/material/page/error";
+            return "redirect:admin/material/page/error";
         }
 
         PersonalInfo personalInfo = optionalPersonalInfo.get();
@@ -228,24 +225,24 @@ public class PageController {
         }
 
 
-        return "/pages/main/materials";
+        return "pages/main/materials";
     }
 
 
 
-    @GetMapping("/login")
+    @GetMapping("login")
     public String login()
     {
-        return "/pages/alt/sign-in";
+        return "pages/alt/sign-in";
     }
 
-    @GetMapping("/forget-password-page")
+    @GetMapping("forget-password-page")
     public String forgetPassword()
     {
-        return "/pages/alt/forgot-password";
+        return "pages/alt/forgot-password";
     }
 
-    @GetMapping("/person/chat/page")
+    @GetMapping("person/chat/page")
     public String chatPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
 
         String username = myUserDetails.getUsername();
@@ -269,7 +266,7 @@ public class PageController {
 
             }
             model.addAttribute("students", students);
-            model.addAttribute("lastStudentName", students.getLast().getPersonalInfo().getUsername());
+
 
         } else {
 
@@ -295,11 +292,11 @@ public class PageController {
         }
 
 
-        return "/pages/main/chat";
+        return "pages/main/chat";
     }
 
 
-    @GetMapping("/sign-up/page")
+    @GetMapping("sign-up/page")
     public String signUpPage(@ModelAttribute("error") String error, Model model)
     {
         if (error != null)
@@ -308,13 +305,13 @@ public class PageController {
         }
         model.addAttribute("personalInfoDto", new PersonalInfoDto());
 
-        return "/pages/alt/sign-up";
+        return "pages/alt/sign-up";
     }
 
 
 
 
-    @GetMapping("/person/home/page")
+    @GetMapping("person/home/page")
     public String homePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
         String username = myUserDetails.getUsername();
         Optional<PersonalInfo> personalInfoOptional = this.personalInfoService.findByUsername(username);

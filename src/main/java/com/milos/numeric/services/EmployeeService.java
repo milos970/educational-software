@@ -21,6 +21,10 @@ public class EmployeeService
     }
 
 
+
+    public long count() {
+        return this.employeeRepository.count();
+    }
     public void createEmployee(PersonalInfo personalInfo)
     {
         Employee employee = new Employee();

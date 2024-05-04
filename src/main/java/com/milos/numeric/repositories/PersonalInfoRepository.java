@@ -29,9 +29,6 @@ public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long
 
     public Optional<PersonalInfo> findByEmail(String email);
 
-    @Query(value = "SELECT * FROM personal_info p WHERE p.email =:email and p.enabled = false", nativeQuery = true)
-    public Optional<PersonalInfo> findNotEnabled(String email);
-
     @Transactional
     @Modifying
     @Query(value = "DELETE  FROM personal_info p WHERE p.authority =:authority", nativeQuery = true)

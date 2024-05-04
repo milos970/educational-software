@@ -49,6 +49,7 @@ function saveToFile()
     {
         if (resultValueInputElement.value.length === 0)
         {
+            getById("result-value-hint-error").innerHTML = "Nevykonaný výpočet!";
             return;
         }
 
@@ -75,7 +76,9 @@ function saveToFile()
     {
         if (resultValueInputElement.value.length === 0)
         {
+            getById("result-value-hint-error").innerHTML = "Nevykonaný výpočet!";
             return;
+
         }
         allRows = inputs;
         switch(selectedMethod)
@@ -93,9 +96,11 @@ function saveToFile()
     if (selectedCategory === 3)
     {
 
-        if (!isSelected())
+        if (resultValueInputElement.value.length === 0)
         {
+            getById("result-value-hint-error").innerHTML = "Nevykonaný výpočet!";
             return;
+
         }
         allRows = inputs.concat(results);
         switch(selectedMethod)
@@ -158,6 +163,7 @@ function selectNumericCategory(category)
     document.getElementById("methods-calculation-div").style.display = "block";
     document.getElementById("graph-calculation-div").style.display = "block";
     selectedCategory = category;
+    $("#table tr").remove();
     setUpElements(category, 1);
     resetRightCard();
 }
@@ -168,15 +174,21 @@ function setUpElements(category, method)
     switch(category)
     {
         case 1:
+            hideAllIntegrationElements();
+            hideAllApproximationElements();
             selectNonLinearMethod(method);
+
             break;
 
         case 2:
+            hideAllApproximationElements();
+            hideAllNonLinearElements();
             selectIntegrationMethod(method);
             break;
 
         case 3:
-
+            hideAllIntegrationElements();
+            hideAllNonLinearElements();
             selectApproximationAndInterpolationMethod(method);
             break;
 
@@ -187,16 +199,22 @@ function hideAllNonLinearElements()
 {
     document.getElementById("lower-bound-div").style.display="none";
     document.getElementById("upper-bound-div").style.display="none";
-    document.getElementById("lower-bound-div").value ="";
-    document.getElementById("upper-bound-div").value ="";
+    document.getElementById("lower-bound-input").value="";
+    document.getElementById("upper-bound-input").value="";
+
+    document.getElementById("lower-bound-value-hint-error").innerHTML="";
+    document.getElementById("upper-bound-value-hint-error").innerHTML="";
 
     document.getElementById("initial-value-div").style.display="none";
     document.getElementById("equation-div").style.display="none";
     document.getElementById("tolerance-div").style.display="none";
     document.getElementById("initial-value-div").value ="";
-    document.getElementById("equation-div").value ="";
-    document.getElementById("tolerance-div").value ="";
+    document.getElementById("equation-input").value ="";
+    tolerance = 0;
     document.getElementById("non-linear-dropdown-div").style.display="none";
+
+    document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 
 }
 
@@ -204,10 +222,21 @@ function hideAllIntegrationElements()
 {
     document.getElementById("lower-bound-div").style.display="none";
     document.getElementById("upper-bound-div").style.display="none";
-    document.getElementById("subintervals-div").style.display="none";
-    document.getElementById("function-div").style.display="none";
+    document.getElementById("lower-bound-input").value="";
+    document.getElementById("upper-bound-input").value="";
 
+    document.getElementById("lower-bound-value-hint-error").innerHTML="";
+    document.getElementById("upper-bound-value-hint-error").innerHTML="";
+
+    document.getElementById("subintervals-div").style.display="none";
+    document.getElementById("subintervals-input").value="";
+    document.getElementById("function-div").style.display="none";
+    document.getElementById("function-hint-error").innerHTML="";
+    document.getElementById("function-input").value="";
     document.getElementById("integration-dropdown-div").style.display="none";
+
+    document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 
 }
 
@@ -217,8 +246,14 @@ function hideAllApproximationElements()
     document.getElementById("nodes-csv-div").style.display="none";
     document.getElementById("functions-dropdown-div").style.display="none";
 
+    document.getElementById("nodes-string-input").value="";
+    document.getElementById("text-input").value="";
     document.getElementById("approximation-dropdown-div").style.display="none";
 
+    document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
+    document.getElementById("nodes-string-error-hint").innerHTML = "";
+    document.getElementById("nodes-csv-error-hint").innerHTML = "";
 }
 
 
@@ -227,14 +262,14 @@ function hideAllApproximationElements()
 
 function selectNonLinearMethod(value)
 {
-    hideAllIntegrationElements();
-    hideAllApproximationElements();
+
 
     const dropDownButton = document.getElementById("dropdownMenuButton1");
 
 
 
     document.getElementById("result-input").value = "";
+    document.getElementById("result-value-hint-error").innerHTML = "";
 
     const nonLinearDropdownDiv = document.getElementById("non-linear-dropdown-div");
     nonLinearDropdownDiv.style.display="block";
@@ -250,6 +285,11 @@ function selectNonLinearMethod(value)
 
     $("#table tr").remove();
 
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+
+    document.getElementById("graph-calculation-div").style.display = "none";
 
     switch (value)
     {
@@ -295,8 +335,7 @@ function selectNonLinearMethod(value)
 
 function selectApproximationAndInterpolationMethod(value)
 {
-    hideAllNonLinearElements();
-    hideAllIntegrationElements();
+
 
     const approximationDropdownDiv = document.getElementById("approximation-dropdown-div");
     approximationDropdownDiv.style.display="block";
@@ -308,6 +347,11 @@ function selectApproximationAndInterpolationMethod(value)
     const functionsDropdownDiv = document.getElementById("functions-dropdown-div");
 
     $("#table tr").remove();
+
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+    document.getElementById("graph-calculation-div").style.display = "none";
     switch (value)
     {
         case 1:
@@ -348,8 +392,7 @@ function selectApproximationAndInterpolationMethod(value)
 
 function selectIntegrationMethod(value)
 {
-    hideAllNonLinearElements();
-    hideAllApproximationElements();
+
 
     const integrationDropdownDiv = document.getElementById("integration-dropdown-div");
     integrationDropdownDiv.style.display="block";
@@ -363,6 +406,12 @@ function selectIntegrationMethod(value)
     lowerBoundDivElement.style.display = "block";
     upperBoundDivElement.style.display = "block";
     $("#table tr").remove();
+
+    if (lineChart) {
+        lineChart.destroy(); // Destroy the previous chart if it exists
+    }
+
+    document.getElementById("graph-calculation-div").style.display = "none";
     const subintervalsDiv = document.getElementById("subintervals-div");
 
     document.getElementById("initial-value-input").value = "";
@@ -464,16 +513,6 @@ function selectTolerance(value)
             dropDownButton.innerHTML = "0.000001";
             tolerance = 0.000001;
             round = 6;
-            break;
-        case 5:
-            dropDownButton.innerHTML = "0.0000001";
-            tolerance = 0.0000001;
-            round = 7;
-            break;
-        case 6:
-            dropDownButton.innerHTML = "0.00000001";
-            tolerance = 0.00000001;
-            round = 8;
             break;
         default:
     }
@@ -764,6 +803,11 @@ function validateInitialValue()
 
 function newtonMethod()
 {
+    getById("result-input").value = "";
+    getById("result-value-hint-error").innerHTML = "";
+
+
+
     if (!validateEquation() || !validateToleranceValue() || !validateInitialValue())
     {
         return false;
@@ -787,10 +831,10 @@ function newtonMethod()
     const parsedEquation = math.parse(fun);
 
     const derivative = math.derivative(parsedEquation, 'x');
+    resultValueErrorHintElement.innerHTML = "";
 
     for (let i = 0; i < ITERATIONS; ++i)
     {
-
 
         data[i + 1] = [3];
         data[i + 1][0] = i;
@@ -803,7 +847,7 @@ function newtonMethod()
         }
         catch (error) {
 
-            equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
+            resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
         }
 
         let derFx = 0;
@@ -814,12 +858,12 @@ function newtonMethod()
         }
         catch (error) {
 
-            equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
+            resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
         }
 
         if (derFx === 0)
         {
-            equationErrorHintElement.innerHTML = "Koreň sa nenašiel!";
+            resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
             return;
         }
 
@@ -831,8 +875,11 @@ function newtonMethod()
             break;
         }
 
-
-
+        if (isNaN(fx))
+        {
+            resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
+            return;
+        }
 
 
         let next = current - (fx / derFx);
@@ -898,7 +945,8 @@ function newtonMethod()
 
 function bisectionMethod()
 {
-
+    getById("result-input").value = "";
+    getById("result-value-hint-error").innerHTML = "";
     if (!validateEquation() || !validateToleranceValue() || !validateBounds())
     {
         return false;
@@ -947,9 +995,17 @@ function bisectionMethod()
 
          let fbk = math.evaluate(parsedEquation.toString(), { x: b });
 
+
+        if (fak.type === 'Complex' || fbk.type === 'Complex' || fxk.type === 'Complex')
+        {
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
+
+
         if (isNaN(fxk) || isNaN(fak) || isNaN(fbk))
         {
-            alert(2);
+
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
@@ -965,7 +1021,7 @@ function bisectionMethod()
 
         if (fak * fbk > 0)
         {
-            alert(3);
+
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
@@ -977,7 +1033,7 @@ function bisectionMethod()
 
         if (isNaN(diff))
         {
-            alert(4);
+
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
@@ -995,14 +1051,14 @@ function bisectionMethod()
 
         if (fak === 0)
         {
-            xk = fak;
+            xk = a;
             data[k][4] = 0;
             break;
         }
 
         if (fbk === 0)
         {
-            xk = fbk;
+            xk = b;
             data[k][4] = 0;
             break;
         }
@@ -1094,6 +1150,8 @@ function roundNumber(number, round)
 
 function regulaFalsiMethod()
 {
+    getById("result-input").value = "";
+    getById("result-value-hint-error").innerHTML = "";
     if (!validateEquation() || !validateToleranceValue() || !validateBounds())
     {
         return false;
@@ -1117,16 +1175,19 @@ function regulaFalsiMethod()
     data[0][4] = "chyba";
 
     let xk = 0;
-    for (let k = 1; k < ITERATIONS; ++k) {
-
-
+    for (let k = 1; k < ITERATIONS; ++k)
+    {
         let fak = math.evaluate(parsedEquation.toString(), { x: a });
         let fbk = math.evaluate(parsedEquation.toString(), { x: b });
 
+        if (fak.type === 'Complex' || fbk.type === 'Complex')
+        {
+            equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
+            return;
+        }
 
         if (isNaN(fak) || isNaN(fbk))
         {
-            alert(1);
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
@@ -1138,17 +1199,17 @@ function regulaFalsiMethod()
 
         if (fak * fbk > 0)
         {
-            alert(2);
+            alert(6);
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
 
         xk = (a * fbk - b * fak) / (fbk - fak);
-        console.log(xk);
+
 
         if (isNaN(xk))
         {
-            alert(3);
+            alert(7);
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
@@ -1162,7 +1223,7 @@ function regulaFalsiMethod()
 
         if (isNaN(fxk))
         {
-            alert(4);
+            alert(8);
             equationErrorHintElement.innerHTML = "V zadanom intervale neexistuje koreň!";
             return;
         }
@@ -1191,14 +1252,14 @@ function regulaFalsiMethod()
 
         if (fak === 0)
         {
-            xk = fak;
+            xk = a;
             data[k][4] = 0;
             break;
         }
 
         if (fbk === 0)
         {
-            xk = fbk;
+            xk = b;
             data[k][4] = 0;
             break;
         }
@@ -1359,7 +1420,7 @@ function graph()
         for (let i = lower; i <= upper; i+=0.01)
         {
             let value = parseFloat(i.toFixed(2));
-            console.log(value);
+
             xValues.push(value);
             yValues.push(math.evaluate(expression.toString(), { x: value }));
 
@@ -1564,7 +1625,7 @@ function graph()
 
                 },
                 gridLines: {
-
+                    zeroLineWidth: 3,
                     zeroLineColor: "#2C292E",
                 }
             }]
@@ -1666,8 +1727,10 @@ function isSelected()
     if ( (getById("nodes-string-input").value.length !== 0) )
     {
         selectedApproximationInput = 1;
+
     } else {
         selectedApproximationInput = 2;
+
     }
 
     return true;
@@ -1707,6 +1770,9 @@ let points = [];
 function lagrangeInterpolating()
 {
 
+    getById("result-input").value = "";
+    getById("result-value-hint-error").innerHTML = "";
+
     if (!isSelected())
     {
         return;
@@ -1715,19 +1781,32 @@ function lagrangeInterpolating()
 
     let arr = [];
 
-    if (selectedApproximationInput === 1 && validateStringCoordinates())
+    if (selectedApproximationInput === 1)
     {
-        arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+        if (validateStringCoordinates())
+        {
+            arr = document.getElementById("nodes-string-input").value.match(/-?\d+(\.\d+)?/g);
+        } else {
+            return;
+        }
+
+
     }
 
-    if (selectedApproximationInput === 2 && validateCsvCoordinates())
+
+    if (selectedApproximationInput === 2)
     {
-        let j = 0;
-        for (let i = 0; i < array.length; i+=2)
+        if (validateCsvCoordinates())
         {
-            arr[i] = array[j][0];
-            arr[i + 1] = array[j][1];
-            ++j;
+            let j = 0;
+            for (let i = 0; i < array.length; ++i)
+            {
+                arr[j] = array[i][0];
+                arr[j + 1] = array[i][1];
+                j += 2;
+            }
+        }else {
+            return;
         }
 
     }
@@ -1830,6 +1909,9 @@ function lagrangeInterpolating()
 
 function newtonInterpolating()
 {
+    getById("result-input").value = "";
+    getById("result-value-hint-error").innerHTML = "";
+
     if (!isSelected())
     {
         return;
@@ -1837,16 +1919,27 @@ function newtonInterpolating()
 
 
 
-    if (selectedApproximationInput === 1 && validateStringCoordinates())
+    if (selectedApproximationInput === 1)
     {
-        data = parseStringCoordintatesToArrays();
+        if (validateStringCoordinates())
+        {
+            data = parseStringCoordintatesToArrays();
+        } else {
+            return;
+        }
+
     }
 
-    if (selectedApproximationInput === 2 && validateCsvCoordinates())
+    if (selectedApproximationInput === 2)
     {
-        parseCsvToArrays();
-        data = array;
-       
+        if (validateCsvCoordinates())
+        {
+            parseCsvToArrays();
+            data = array;
+        } else {
+            return;
+        }
+
     }
 
 
@@ -1908,7 +2001,17 @@ function newtonInterpolating()
 }
 
 
+function removeFileFromInput()
+{
+    getById("file-input").value = '';
+    getById("text-input").value = "";
+}
+
+
 function leastSquares() {
+
+    getById("result-input").value = "";
+    getById("result-value-hint-error").innerHTML = "";
 
     if (!isSelected())
     {
@@ -1917,14 +2020,26 @@ function leastSquares() {
 
 
 
-    if (selectedApproximationInput === 1 && validateStringCoordinates())
+    if (selectedApproximationInput === 1)
     {
-        points = parseStringCoordintatesToArrays();
+        if (validateStringCoordinates())
+        {
+            points = parseStringCoordintatesToArrays();
+        }else {
+            return;
+        }
+
     }
 
-    if (selectedApproximationInput === 2 && validateCsvCoordinates())
+    if (selectedApproximationInput === 2)
     {
-        points = parseCsvToArrays();
+        if (validateCsvCoordinates())
+        {
+            points = parseCsvToArrays();
+        }else {
+            return;
+        }
+
     }
 
     if (selectedFunction === 1) {
@@ -1951,14 +2066,14 @@ function parseCsvToArrays()
     function csvToString(file, callback) {
         let reader = new FileReader();
 
-        // Closure to capture the file information.
+
         reader.onload = function(event) {
              csvString = event.target.result;
 
             callback(csvString);
         };
 
-        // Read in the file as a text
+
         reader.readAsText(file);
     }
 
@@ -2035,102 +2150,21 @@ function validateStringCoordinates()
 function validateCsvCoordinates()
 {
     parseCsvToArrays();
-    return validateNodes(array);
+    return validateNodes(this.array);
 }
 
 
 function checkIfValueIsInteger(value)//OK
 {
-    const regex = /^\d+(\.\d{1,2})?$/;
+    const regex = /^-?\d+(\.\d{1,2})?$/;
 
-    if (!regex.test(value.toString()))
-    {
-        return false;
-    }
+    return regex.test(value.toString());
 
-    return true;
+
 }
 
 
 
-
-function validateCoordinates(coordinatesArrays, type)
-{
-
-
-
-
-
-    let uniques = new Set();
-
-
-
-    for (let i = 0; i < coordinatesArrays.length; ++i)
-    {
-        let valueX = coordinatesArrays[i][0];
-        let valueY = coordinatesArrays[i][1];
-
-        if (valueX.length !== 0)
-        {
-            if (valueX.includes(','))
-            {
-                valueX =  valueX.replace(',', '.');
-            }
-
-            if (isNaN(valueX) === true)
-            {
-                uniques.clear();
-                uniques = null;
-
-                if (type === 1)
-                {
-                    coordinatesStringErrorHint.innerHTML = "Nevalidná hodnota vo výraze!";
-                    return false;
-                }
-
-                const char = String.fromCharCode(65);
-                coordinatesCsvErrorHint.innerHTML = "Nevalidná hodnota na súradnici: " + char + (i+1);
-
-                return false;
-            }
-        }
-
-        if (valueY.length !== 0)
-        {
-            if (valueY.includes(','))
-            {
-                valueY =  valueY.replace(',', '.');
-            }
-
-            if (isNaN(valueY) === true)
-            {
-                uniques.clear();
-                uniques = null;
-
-                if (type === 1)
-                {
-                    coordinatesStringErrorHint.innerHTML = "Nevalidná hodnota vo výraze!";
-                    return false;
-                }
-
-                const char = String.fromCharCode(66);
-                coordinatesCsvErrorHint.innerHTML = "Nevalidná hodnota na súradnici: " + char + (i+1);
-
-                return false;
-            }
-        }
-
-
-
-        uniques.add(valueX);
-
-    }
-
-
-
-    return true;
-
-}
 
 
 
@@ -2216,10 +2250,33 @@ points = data;
 
     fun = equation;
 
-    document.getElementById("result-input").value = "f(x) = " + fun.replace("log","ln");;
+    if (fun.includes('NaN'))
+    {
+        document.getElementById("result-value-hint-error").innerHTML = "Nieje možné vypočítať!";
+        return;
+    }
+
+    document.getElementById("result-input").value = "f(x) = " + fun.replace("log","ln");
 
 graph();
-    totalError(data);
+
+
+    fun = equation;
+
+    resultValueInputElement.value = "f(x) = " + fun.replace("log","ln");
+
+    inputs = [];
+
+    inputs[0] = [2];
+    inputs[0][0] =  "f(x)";
+    inputs[0][1] =  resultValueInputElement.value;
+
+    inputs[1] = [1];
+    inputs[1][0] = "Uzly"
+
+
+    results = points;
+
 
 }
 
@@ -2270,7 +2327,7 @@ function linear()
         sum_x += (1 *data[i][0]);
     }
 
-    console.log(sum_x);
+
 
     coeficients.push(sum_x);
 
@@ -2281,7 +2338,7 @@ function linear()
         sum_y += (1 *data[i][1]);
     }
 
-    console.log(sum_y);
+
 
     coeficients.push(sum_y);
 
@@ -2312,7 +2369,24 @@ function linear()
     document.getElementById("result-input").value = "f(x) = " + fun;
 
     graph();
-    totalError(data);
+
+
+    fun = equation;
+
+    resultValueInputElement.value = "f(x) = " + fun;
+
+    inputs = [];
+
+    inputs[0] = [2];
+    inputs[0][0] =  "f(x)";
+    inputs[0][1] =  resultValueInputElement.value;
+
+    inputs[1] = [1];
+    inputs[1][0] = "Uzly"
+
+
+    results = points;
+
 
 }
 
@@ -2338,10 +2412,7 @@ function cramer(option, coeficients) {
 
     }
 
-
-
 }
-
 
 
 
@@ -2384,7 +2455,7 @@ function spline()
 
     for(var i = 0; i < Sx.length; i++)
     {
-        console.log(Sx[i]);
+
     }
 
 
@@ -2393,6 +2464,16 @@ function spline()
 
 function validateNodes(array)
 {
+    let errorHintElement = undefined;
+
+    if (selectedApproximationInput === 1)
+    {
+
+        errorHintElement = document.getElementById("nodes-string-error-hint");
+    } else {
+        errorHintElement = document.getElementById("nodes-csv-error-hint");
+    }
+
     if (array.length === 0)
     {
         return false;
@@ -2400,22 +2481,30 @@ function validateNodes(array)
 
     if (array.length < 4)
     {
-        document.getElementById("nodes-string-error-hint").innerHTML = "Zadajte aspoň 4 body!"
+        errorHintElement.innerHTML = "Zadajte aspoň 4 body!"
         return false;
     }
 
 
 
+
+
     for (let i = 0; i < array.length; ++i)
     {
-        if (isNaN(array[i][1]))
+        if ((array[i][1] === "" || array[i][0] === "") ||(isNaN(array[i][1]) || isNaN(array[i][0])))
         {
+            errorHintElement.innerHTML = "Nevalidný výraz!"
             return false;
         }
 
         if (array[i][1].includes(','))
         {
             array[i][1] =  array[i][1].replace(',', '.');
+        }
+
+        if (array[i][0].includes(','))
+        {
+            array[i][0] =  array[i][0].replace(',', '.');
         }
     }
 
@@ -2425,7 +2514,7 @@ function validateNodes(array)
 
         if (!checkIfValueIsInteger(array[i][0])) //je každá x hodnota celé číslo?
         {
-            document.getElementById("nodes-string-error-hint").innerHTML = "Hodnota x musí mať max 2 desatinné miesta!"
+            errorHintElement.innerHTML = "Hodnota x musí mať maximálne 2 desatinné miesta!"
             return false;
         }
     }
@@ -2445,7 +2534,7 @@ function validateNodes(array)
     if (array.length !== set.size) //nenáchadzajú sa x duplicity?
     {
         set.clear();
-        document.getElementById("nodes-string-error-hint").innerHTML = "Duplikát hodnoty x!"
+        errorHintElement.innerHTML = "Duplikát vstupnej hodnoty x!";
         return false;
     }
 
@@ -2459,21 +2548,21 @@ function validateNodes(array)
 
     if (minValue > X_MIN_VALUE)
     {
-        document.getElementById("nodes-string-error-hint").innerHTML = "Min hodnota x musí byť aspoň " + X_MIN_VALUE + "!";
+        errorHintElement.innerHTML = "Min hodnota x musí byť aspoň " + X_MIN_VALUE + "!";
         return false;
     }
 
 
     if (maxValue > X_MAX_VALUE)
     {
-        document.getElementById("nodes-string-error-hint").innerHTML = "Max hodnota x musí byť najviac " + X_MAX_VALUE + "!";
+        errorHintElement.innerHTML = "Max hodnota x musí byť najviac " + X_MAX_VALUE + "!";
         return false;
     }
 
 
     if (maxValue - minValue > NODES_NUMBER)
     {
-        document.getElementById("nodes-string-error-hint").innerHTML = "Počet bodov musí byť najviac " + NODES_NUMBER + "!";
+        errorHintElement.innerHTML = "Počet bodov musí byť najviac " + NODES_NUMBER + "!";
         return false;
     }
 
@@ -2548,9 +2637,8 @@ function trapezoid()
 
     resultValueErrorHintElement.innerHTML = "";
 
-    let a = parseFloat(lowerValueInputElement.value);
-    let b = parseFloat(upperValueInputElement.value);
-
+    const a = parseFloat(lowerValueInputElement.value);
+    const b = parseFloat(upperValueInputElement.value);
 
     const n = parseFloat(subintervalsValueInputElement.value);
 
@@ -2598,21 +2686,21 @@ function trapezoid()
     inputs[0] = [2];
 
 
-    inputs[0][0] = "Funkcia:";
+    inputs[0][0] = "Funkcia";
     inputs[0][1] = fun;
 
     inputs[1] = [2];
-    inputs[1][0] = "Dolná hranica:";
+    inputs[1][0] = "Dolná hranica";
     inputs[1][1] = lowerValueInputElement.value;
 
 
     inputs[2] = [2];
-    inputs[2][0] = "Horná hranica:";
+    inputs[2][0] = "Horná hranica";
     inputs[2][1] = upperValueInputElement.value;
 
 
     inputs[3] = [2];
-    inputs[3][0] = "Počet dielikov:";
+    inputs[3][0] = "Počet dielikov";
     inputs[3][1] = n;
 
 
@@ -2635,9 +2723,8 @@ function simpson()
 
 
 
-    let a = parseFloat(lowerValueInputElement.value);
-    let b = parseFloat(upperValueInputElement.value);
-
+    const a = parseFloat(lowerValueInputElement.value);
+    const b = parseFloat(upperValueInputElement.value);
 
     const n = parseFloat(subintervalsValueInputElement.value);
 
@@ -2690,29 +2777,26 @@ function simpson()
     inputs[0] = [2];
 
 
-    inputs[0][0] = "Funkcia:";
+    inputs[0][0] = "Funkcia";
     inputs[0][1] = fun;
 
     inputs[1] = [2];
-    inputs[1][0] = "Dolná hranica:";
+    inputs[1][0] = "Dolná hranica";
     inputs[1][1] = lowerValueInputElement.value;
 
 
     inputs[2] = [2];
-    inputs[2][0] = "Horná hranica:";
+    inputs[2][0] = "Horná hranica";
     inputs[2][1] = upperValueInputElement.value;
 
 
     inputs[3] = [2];
-    inputs[3][0] = "Počet dielikov:";
+    inputs[3][0] = "Počet dielikov";
     inputs[3][1] = n;
 
 
     inputs[4] = [2];
     inputs[4][0] = resultValueInputElement.value;
-
-
-
 
 }
 
@@ -3182,16 +3266,16 @@ function checkFileType(element, hintElement)
     const MAX_FILE_SIZE = parseInt(element.getAttribute('size'), 10);
 
     const ALLOWED_TYPES = [
-        'application/pdf',        // PDF
-        'application/msword',     // DOC
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
-        'image/png',              // PNG
-        'image/jpeg',             // JPEG
-        'image/jpg',              // JPG
-        'text/csv',               // CSV
-        'application/vnd.ms-excel', // CSV alternative (Excel)
-        'application/vnd.ms-powerpoint', // PPTX
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation' // PPTX
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'text/csv',
+        'application/vnd.ms-excel',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     ];
 
     const file = element.files[0];
@@ -3210,7 +3294,7 @@ function checkFileType(element, hintElement)
         hintElement.innerHTML = "";
     } else {
         hintElement.innerHTML = "Nepodporovaný typ súboru!";
-        //return false;
+        return false;
     }
 
 
@@ -3259,10 +3343,10 @@ function uploadStudentsCsv()
     {
         if (xhttp.status === 200)
         {
-           alert("OK");
+
 
         } else {
-            alert("KO");
+
         }
 
 
@@ -3364,6 +3448,7 @@ function openFile(id)
 
 function deleteFile(id)
 {
+
     const xhttp = new XMLHttpRequest();
 
     xhttp.onload = function()
@@ -3381,7 +3466,7 @@ function deleteFile(id)
 }
 
 
-function uploadFile()
+function uploadFile(username)
 {
     const xhttp = new XMLHttpRequest();
 
@@ -3396,7 +3481,7 @@ function uploadFile()
 
 
 
-            row.setAttribute("id", getById("name-input").value);
+            row.setAttribute("id", xhttp.responseText);
 
 
             var nameCell = document.createElement("td");
@@ -3446,6 +3531,7 @@ function uploadFile()
     formData.append("name", document.getElementById("name-input").value);
     formData.append("description", document.getElementById("file-description").value);
     formData.append("data", document.getElementById("file-input").files[0]);
+    formData.append("uploadedBy", username);
 
 
     xhttp.open("POST", url, true);
@@ -3454,7 +3540,7 @@ function uploadFile()
 }
 
 
-function canSubmit()
+function canSubmit(username)
 {
     const nameInputElement = getById("name-input");
     const nameInputErrorHint = getById("name-input-error-hint");
@@ -3470,7 +3556,7 @@ function canSubmit()
 
     if (checkFileType(fileInputElement, fileInputElementErrorHint))
     {
-        uploadFile();
+        uploadFile(username);
     }
 }
 
@@ -3481,23 +3567,25 @@ function clickOnInput() {
     element.click();
 }
 
+
+
 function deleteEmployee(id)
 {
     const xhttp = new XMLHttpRequest();
 
-    alert(id);
+
 
     xhttp.onload = function()
     {
         if (xhttp.status === 200)
         {
-            alert(id);
+
             let row = document.getElementById(id);
 
             row.remove();
 
         } else {
-            alert("Unsuccessfull");
+
             points.value ="";
         }
 

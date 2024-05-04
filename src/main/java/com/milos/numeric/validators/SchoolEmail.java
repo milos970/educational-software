@@ -21,7 +21,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface SchoolEmail
 {
 
-    String message() default "Email nieje validný školský typ!";
+    String message() default "Email is not valid school email!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

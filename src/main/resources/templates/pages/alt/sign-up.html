@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="sk" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,8 +14,8 @@
       <link rel="stylesheet" href="/static/css/my.css">
       <link rel="stylesheet" th:href="@{/css/my.css}">
       <link rel="shortcut icon" th:href="@{/images/mini-logo.png}">
-
   </head>
+
   <body onload="initializeSignUpPage()">
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
@@ -38,40 +38,46 @@
                     </div>
 
                   <div id="employee-form-div">
-                      <form id="employee-form" action="/create-token/activate-account" th:object="${personalInfoDto}" method="POST">
+                      <form id="employee-form" action="/person/create" th:object="${personalInfoDto}" method="POST">
 
+                          <input type="hidden" value="ACTIVATE_ACCOUNT" name="TOKEN_TYPE">
                           <div class="form-group" id="name-div" >
-                              <label>Meno*</label>
-                              <input th:field="${personalInfoDto.name}" type="text" id="name-input" class="form-control p_input" style="color: white">
+                              <label for="name-input">Meno*</label>
+                              <input th:field="${personalInfoDto.name}"  type="text" id="name-input" class="form-control p_input" style="color: white">
                               <p class="error" id="name-input-error-hint"></p>
+                              <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                           </div>
 
                           <div class="form-group" id="surname-div" >
-                              <label>Priezvisko*</label>
+                              <label for="surname-input">Priezvisko*</label>
                               <input th:field="${personalInfoDto.surname}" type="text" id="surname-input" class="form-control p_input" style="color: white">
                               <p class="error" id="surname-input-error-hint"></p>
+                              <span class="error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
                           </div>
 
                           <div class="form-group" id="email-div">
-                              <label>Školský email*</label>
+                              <label for="employee-email-input">Školský email*</label>
                               <input th:field="${personalInfoDto.email}" type="email" id="employee-email-input" class="form-control p_input" style="color: white">
                               <p class="error" id="employee-email-input-error-hint"></p>
+                              <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                           </div>
 
                           <div class="form-group" id="pin-div" >
-                              <label>Osobné číslo*</label>
+                              <label for="pin-input">Osobné číslo*</label>
                               <input th:field="${personalInfoDto.personalNumber}" type="text" id="pin-input" class="form-control p_input" style="color: white">
                               <p class="error" id="pin-input-error-hint"></p>
+                              <span class="error" th:if="${#fields.hasErrors('personalNumber')}" th:errors="*{personalNumber}"></span>
                           </div>
 
                           <div class="form-group" id="password-div">
-                              <label>Heslo*</label>
+                              <label for="password-input">Heslo*</label>
                               <input th:field="${personalInfoDto.password}" type="password"  id="password-input" class="form-control p_input" style="color: white" oninput="validatePassword()">
                               <p class="error" id="password-input-error-hint"></p>
+                              <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                           </div>
 
                           <div class="form-group" id="rep-password-div">
-                              <label>Kontrola hesla*</label>
+                              <label for="rep-password-input">Kontrola hesla*</label>
                               <input type="password"  id="rep-password-input" class="form-control p_input" style="color: white">
                               <p class="error" id="rep-password-input-error-hint"></p>
                           </div>
@@ -125,12 +131,14 @@
 
 
                   <div id="student-form-div">
-                      <form id="student-form" action="/create-token/activate-account"  method="GET">
+                      <form id="student-form" action="/create-token"  method="GET">
                           <div class="form-group" id="student-email-div">
                               <label>Školský email*</label>
                               <input  type="email" name="email"  id="student-email-input" class="form-control p_input" style="color: white">
                               <p class="success" th:text="${success}"></p>
                               <p class="error" th:text="${error}"  id="student-email-input-error-hint"></p>
+                              <input type="hidden" value="ACTIVATE_ACCOUNT" name="TOKEN_TYPE">
+
                           </div>
                       </form>
                   </div>
@@ -142,6 +150,8 @@
               </div>
             </div>
           </div>
+
+
 
         </div>
 

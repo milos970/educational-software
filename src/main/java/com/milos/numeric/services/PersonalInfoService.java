@@ -7,6 +7,7 @@ import com.milos.numeric.Authority;
 import com.milos.numeric.Domain;
 import com.milos.numeric.Gender;
 import com.milos.numeric.dtos.NewPasswordDto;
+import com.milos.numeric.dtos.NewTeacherDto;
 import com.milos.numeric.dtos.PersonalInfoDto;
 import com.milos.numeric.email.EmailServiceImpl;
 
@@ -222,7 +223,15 @@ public class PersonalInfoService
 
         if (emailDomain.equals("gmail.com"))
         {
-            personalInfo.setAuthority(Authority.EMPLOYEE);
+
+            if (this.personalInfoRepository.count() == 0)
+            {
+
+                personalInfo.setAuthority(Authority.TEACHER);
+
+            } else {
+                personalInfo.setAuthority(Authority.EMPLOYEE);
+            }
         }
 
         if (emailDomain.equals(Domain.STUDENT_DOMAIN.getDomain()))

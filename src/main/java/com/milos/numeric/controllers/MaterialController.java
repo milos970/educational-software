@@ -3,7 +3,6 @@ package com.milos.numeric.controllers;
 import com.milos.numeric.dtos.MaterialDto;
 import com.milos.numeric.entities.Material;
 import com.milos.numeric.services.MaterialService;
-import com.milos.numeric.validators.MaterialSizeValid;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,9 +32,10 @@ public class MaterialController {
     }
 
 
-    @PostMapping("/admin/material/upload")
+    @PostMapping("admin/material/upload")
     public ResponseEntity saveFile(@Valid MaterialDto materialDto)
     {
+
         Material material = this.materialService.save(materialDto);
 
         if (material!= null)
@@ -51,7 +51,7 @@ public class MaterialController {
 
 
 
-    @GetMapping("/person/material/{id}")
+    @GetMapping("person/material/{id}")
     public ResponseEntity<String> findById(@PathVariable Long id) {
 
         Optional<Material> optional = this.materialService.findById(id);
@@ -83,10 +83,10 @@ public class MaterialController {
         return new ResponseEntity<>(base64EncodedFile, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/material/delete/{id}")
+    @DeleteMapping("admin/material/delete/{id}")
     public ResponseEntity removeSpecificFile(@PathVariable Long id) {
         this.materialService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(id,HttpStatus.OK);
     }
 
 
