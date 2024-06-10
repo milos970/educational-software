@@ -24,11 +24,7 @@ public class NumericApplication
 
 
 
-	@EventListener(ApplicationReadyEvent.class)
-	public void executeAfterStartup()
-	{
-		this.systemSettingsService.incrementDays();
-	}
+
 
 
 

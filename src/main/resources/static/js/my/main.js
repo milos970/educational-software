@@ -27,8 +27,8 @@ const resultValueErrorHintElement = getById("result-value-hint-error");
 
 const ITERATIONS = 1000; //tu nastaviť počet iterácii
 let tolerance = 0; //tolerancia sa udáva programovo
-const X_MIN_VALUE = 1000;
-const X_MAX_VALUE = 100_000;
+const X_MIN_VALUE = 10;
+const X_MAX_VALUE = 10;
 
 const NODES_NUMBER = 100;
 
@@ -844,6 +844,7 @@ function newtonMethod()
         try
         {
             fx = math.evaluate(parsedEquation.toString(), { x: current });
+            //alert(current);
         }
         catch (error) {
 
@@ -858,11 +859,13 @@ function newtonMethod()
         }
         catch (error) {
 
+            //alert(1);
             resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
         }
 
         if (derFx === 0)
         {
+            //alert(2);
             resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
             return;
         }
@@ -877,6 +880,7 @@ function newtonMethod()
 
         if (isNaN(fx))
         {
+            //alert(3);
             resultValueErrorHintElement.innerHTML = "Koreň sa nenašiel!";
             return;
         }
