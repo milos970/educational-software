@@ -3,7 +3,7 @@
 <p>
  <p>Teaching aid for students of the Numerical Methods subject.</p>
   <ul>
-    <li></li>
+  
     
   </ul>
 </p>
