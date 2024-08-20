@@ -11,6 +11,7 @@
     <ul>
       <li>JDK 21</li>
     </ul>
+    
 
 <h2>Languages & Frameworks & Tools</h2>
 <ul>
@@ -30,4 +31,20 @@
   <li>Git</li>
   <li>IntelliJ</li>
  <li>Template from: https://www.bootstrapdash.com/product/corona-free</li>
+</ul>
+<h2>Credentials</h2>
+<ul>
+ <li>Usernames</li>
+ <ul>
+  <li>student5</li>
+ <li>ema.mrkvickova</li>
+ <li>zuzana.mala</li>
+ </ul>
+ 
+ <li>Password</li>
+ <ul>
+  <li>Heslisko@256</li>
+ </ul>
+ 
+ 
 </ul>
