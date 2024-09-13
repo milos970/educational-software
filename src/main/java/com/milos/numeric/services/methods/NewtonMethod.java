@@ -4,8 +4,6 @@ package com.milos.numeric.services.methods;
 import org.hibernate.AssertionFailure;
 import org.mariuszgromada.math.mxparser.*;
 
-import java.util.Optional;
-
 public final class NewtonMethod
 {
     private static final int ITERATIONS = 1000;
