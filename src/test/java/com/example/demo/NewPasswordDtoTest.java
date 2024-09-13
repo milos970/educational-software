@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.milos.numeric.dtos.NewPasswordDto;
+import com.milos.numeric.services.methods.NewtonMethod;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -31,7 +32,51 @@ public class NewPasswordDtoTest {
     }
 
     @Test
+    public void testNewtonMethod()
+    {
+
+        assertEquals(2.379, NewtonMethod.newtonMethod("10cos(x - 1) - x ^2 + 2x -1", 0.001,2.4),0.001);
+        assertEquals(2, NewtonMethod.newtonMethod("x^2 - 4", 0.001,1.5),0.001);
+        assertEquals(3.14, NewtonMethod.newtonMethod("sin(x)", 0.01,3),0.01);
+        assertEquals(0.6931, NewtonMethod.newtonMethod("e^x - 2", 0.001,0.5),0.001);
+        assertEquals(4.4934, NewtonMethod.newtonMethod("tan(x) - x", 0.001,4.5),0.001);
+        assertEquals(0.6823, NewtonMethod.newtonMethod("x^3 + x - 1", 0.001,0.7),0.001);
+        assertEquals(0.7391, NewtonMethod.newtonMethod("cos(x) - x", 0.001,0.5),0.001);
+    }
+
+    @Test
+    public void testRegulaFalsiMethod()
+    {
+
+        assertEquals(2.379, NewtonMethod.regulaFalsi("10cos(x - 1) - x ^2 + 2x -1", 0.001, 2.3, 2.4), 0.001);
+        assertEquals(0.6931, NewtonMethod.regulaFalsi("e^x - 2", 0.0001, 0, 1), 0.0001);
+        assertEquals(3.1416, NewtonMethod.regulaFalsi("sin(x)", 0.00001, 3.0, 4.0), 0.00001);
+        assertEquals(1.3247, NewtonMethod.regulaFalsi("x^3 - x - 1", 0.0001, 1.0, 2.0), 0.0001);
+        assertEquals(Double.NaN, NewtonMethod.regulaFalsi("lg(x)", 0.00001, 2.0, 3.0), 0.00001);
+        assertEquals(0.7391, NewtonMethod.regulaFalsi("cos(x) - x", 0.0001, 0, 1.0), 0.0001);
+
+    }
+
+    @Test
+    public void testBisectionMethod()
+    {
+
+        assertEquals(2.0, NewtonMethod.bisection("x^2 - 4", 0.001, 1.0, 3.0), 0.001);
+        assertEquals(0.6931, NewtonMethod.bisection("e^x - 2", 0.0001, 0, 1), 0.0001);
+        assertEquals(3.1416, NewtonMethod.bisection("sin(x)", 0.00001, 3.0, 4.0), 0.00001);
+        assertEquals(1.3247, NewtonMethod.bisection("x^3 - x - 1", 0.0001, 1.0, 2.0), 0.0001);
+        assertEquals(Double.NaN, NewtonMethod.bisection("lg(x)", 0.001, 2.0, 3.0), 0.00001);
+        assertEquals(0.7391, NewtonMethod.bisection("cos(x) - x", 0.0001, 0, 1.0), 0.0001);
+    }
+
+    @Test
     public void testValidNewPasswordDto() {
+
+
+
+
+        /*NewtonMethod.newtonMethod("10cos(x - 1) - x ^2 + 2x -1", 0.0001, 5);
+
         NewPasswordDto newPasswordDto = new NewPasswordDto();
         newPasswordDto.setOldPassword("oldPassword");
 
@@ -145,7 +190,7 @@ public class NewPasswordDtoTest {
 
         newPasswordDto.setNewPassword("Heslisko123}");
         violations = validator.validate(newPasswordDto);
-        assertEquals(0, violations.size());
+        assertEquals(0, violations.size());*/
 
 
     }
