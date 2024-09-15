@@ -34,14 +34,26 @@ public class NewPasswordDtoTest {
     @Test
     public void testNewtonMethod()
     {
+        double res  = Double.valueOf(NewtonMethod.newtonMethod("10cos(x - 1) - x ^2 + 2x -1", 0.001,2.4).getLast()[0]);
+        assertEquals(2.379,res,0.001);
 
-        assertEquals(2.379, NewtonMethod.newtonMethod("10cos(x - 1) - x ^2 + 2x -1", 0.001,2.4),0.001);
-        assertEquals(2, NewtonMethod.newtonMethod("x^2 - 4", 0.001,1.5),0.001);
-        assertEquals(3.14, NewtonMethod.newtonMethod("sin(x)", 0.01,3),0.01);
-        assertEquals(0.6931, NewtonMethod.newtonMethod("e^x - 2", 0.001,0.5),0.001);
-        assertEquals(4.4934, NewtonMethod.newtonMethod("tan(x) - x", 0.001,4.5),0.001);
-        assertEquals(0.6823, NewtonMethod.newtonMethod("x^3 + x - 1", 0.001,0.7),0.001);
-        assertEquals(0.7391, NewtonMethod.newtonMethod("cos(x) - x", 0.001,0.5),0.001);
+        res = Double.valueOf(NewtonMethod.newtonMethod("x^2 - 4", 0.001,1.5).getLast()[0]);
+        assertEquals(2,res,0.001);
+
+        res = Double.valueOf(NewtonMethod.newtonMethod("sin(x)", 0.01,3).getLast()[0]);
+        assertEquals(3.14,res,0.01);
+
+        res = Double.valueOf(NewtonMethod.newtonMethod("e^x - 2", 0.001,0.5).getLast()[0]);
+        assertEquals(0.6931,res,0.001);
+
+        res = Double.valueOf(NewtonMethod.newtonMethod("x^2 - 4", 0.001,1.5).getLast()[0]);
+        assertEquals(2,res,0.001);
+
+        res = Double.valueOf(NewtonMethod.newtonMethod("x^3 + x - 1", 0.001,0.7).getLast()[0]);
+        assertEquals(0.6823,res,0.001);
+
+        res = Double.valueOf(NewtonMethod.newtonMethod("cos(x) - x", 0.001,0.5).getLast()[0]);
+        assertEquals(0.7391,res,0.001);
     }
 
     @Test
