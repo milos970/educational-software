@@ -1,50 +1,62 @@
-<h1>Software tool for teaching the subject of Numerical methods</h1>
-<h2>Description</h2>
-<p>
- <p>Teaching aid for students of the Numerical Methods subject.</p>
-  <ul>
-  
-    
-  </ul>
-</p>
-<h2>Requirements</h2>
-    <ul>
-      <li>JDK 21</li>
-    </ul>
-    
 
-<h2>Languages & Frameworks & Tools</h2>
-<ul>
-  <li>Spring Boot</li>
-    <ul>
-      <li>Thymeleaf</li>
-      <li>Hibernate</li>
-      <li>Spring Security</li>
-      <li>MVC architecture</li>
-    </ul>
-  <li>HTML</li>
-  <li>CSS</li>
-  <li>JavaScript</li>
-  <li>Bootstrap</li>
-  <li>Maven</li>
-  <li>H2</li>
-  <li>Git</li>
-  <li>IntelliJ</li>
- <li>Template from: https://www.bootstrapdash.com/product/corona-free</li>
-</ul>
-<h2>Credentials</h2>
-<ul>
- <li>Usernames</li>
- <ul>
-  <li>student5</li>
- <li>ema.mrkvickova</li>
- <li>zuzana.mala</li>
- </ul>
- 
- <li>Password</li>
- <ul>
-  <li>Heslisko@256</li>
- </ul>
- 
- 
-</ul>
+## 📝 Description
+Modification of the bachelor's thesis project for deployment on the university server in the summer semester of 2026 as a teaching aid for the Numerical Methods course.
+
+
+## 🧰 Technologies
+
+
+<table><tr><td valign="top" width="33%">
+
+
+
+### Frontend  
+<div align="left">
+  <ul style="list-style-type: disc; display: inline-block;">
+    <li><a href="https://www.bootstrapdash.com/product/corona-free" target="_blank" rel="noopener noreferrer">Template</a></li>
+    <li>JavaScript</li>
+    <li>CSS</li>
+  </ul>
+</div>
+
+
+</td><td valign="top" width="33%">
+
+### Backend  
+<div align="left">
+  <ul style="list-style-type: disc; display: inline-block;">
+    <li>Java 21</li>
+    <li>Spring Boot 3.1
+      <ul>
+        <li>Spring Web (MVC)</li>
+        <li>Spring Security</li>
+        <li>Spring Data JPA + Hibernate</li>
+        <li>Spring Validation</li>
+        <li>Spring Mail</li>
+      </ul>
+    </li>
+    <li>H2</li>
+    <li>Thymeleaf</li>
+
+
+
+</td><td valign="top" width="33%">
+
+
+
+### Development & Testing  
+<div align="left">
+  <ul style="list-style-type: disc; display: inline-block;">
+    <li>Spring Boot Test, JUnit</li>
+    <li>Postman</li>
+    <li>H2</li>
+    <li>Git, GitHub</li>
+   <li>IntelliJ</li>
+   <li>Visual Studio Code</li>
+   <li>Maven</li>
+  </ul>
+</div>
+
+
+</td></tr></table>
+
