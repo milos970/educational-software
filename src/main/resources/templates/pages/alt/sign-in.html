@@ -6,18 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Prihlásenie</title>
 
-    <link rel="stylesheet" href="/static/vendors/mdi/css/materialdesignicons.min.css">
-      <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
-    <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
-      <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" href="/vendors/mdi/css/materialdesignicons.min.css">
+      <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
 
-      <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="/static/css/style.css">
-
-      <link rel="stylesheet" href="/static/css/my.css">
-      <link rel="stylesheet" th:href="@{/css/my.css}">
-
-      <link rel="shortcut icon" th:href="@{/images/mini-logo.png}">
+      <link rel="stylesheet" href="/css/style.css">
+      <link rel="stylesheet" href="/css/my.css">
+      <link rel="shortcut icon" href="images/mini-logo.png">
   </head>
   <body>
     <div class="container-scroller">
@@ -28,7 +22,7 @@
               <div class="card-body px-5 py-5">
                 <h3 class="card-title text-left mb-3">Prihlásenie</h3>
                   <div class="error" th:if="${param.error}">Nesprávne údaje!</div>
-                  <form th:action="@{/login}" method="POST">
+                  <form action="/login" method="POST">
 
                   <div class="form-group">
                     <label>Meno*</label>
@@ -67,16 +61,14 @@
 
     </div>
 
-    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script src="/vendors/js/vendor.bundle.base.js"></script>
 
-    <script th:src="@{/js/off-canvas.js}"></script>
-    <script th:src="@{/js/hoverable-collapse.js}"></script>
-    <script th:src="@{/js/misc.js}"></script>
-    <script th:src="@{/js/settings.js}"></script>
-    <script th:src="@{/js/todolist.js}"></script>
+    <script src="/js/off-canvas.js"></script>
+    <script src="/js/hoverable-collapse.js"></script>
+    <script src="/js/misc.js"></script>
+    <script src="/js/settings.js"></script>
+    <script src="/js/todolist.js"></script>
 
-
-    <script th:src="@{/js/my/main.js}"></script>
     <script src="/js/my/main.js"></script>
   </body>
 </html>

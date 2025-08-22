@@ -1,6 +1,6 @@
 package com.milos.numeric.security;
 
-import com.milos.numeric.entities.PersonalInfo;
+import com.milos.numeric.entity.PersonalInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

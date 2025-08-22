@@ -74,7 +74,9 @@
                 <div class="profile-desc">
                     <div class="profile-pic">
                         <div class="count-indicator">
-                            <img class="img-xs rounded-circle" th:src="@{${imagePath}}" alt="avatar">
+                            <img class="img-xs rounded-circle" th:src="${personalInfo.gender.name() == 'FEMALE'
+              ? '/images/faces-clipart/female.png'
+              : '/images/faces-clipart/male.png'}" alt="avatar"/>
                             <span class="count bg-success"></span>
                         </div>
                         <div class="profile-name">

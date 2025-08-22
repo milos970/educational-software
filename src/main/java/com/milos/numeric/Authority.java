@@ -1,8 +1,8 @@
 package com.milos.numeric;
 
-public enum Authority
-{
-    STUDENT,
-    EMPLOYEE,
-    TEACHER;
+public enum Authority {
+    ROLE_STUDENT,
+    ROLE_EMPLOYEE,
+    ROLE_TEACHER;
 }
+
