@@ -5,18 +5,27 @@ Teaching aid for students of the Numerical Methods subject.
 
 ## 🧰 Technologies
 
-### 🔹 Frontend  
-<ul>
+<table><tr><td valign="top" width="33%">
+
+### Frontend  
+<div align="left">
+  <ul style="list-style-type: disc; display: inline-block;">
     <li><a href="https://www.bootstrapdash.com/product/corona-free" target="_blank" rel="noopener noreferrer">Template</a></li>
     <li>HTML</li>
     <li>JavaScript</li>
     <li>CSS</li>
-</ul>
+  </ul>
+</div>
 
 
-### 🔹 Backend  
-<ul>
-    <li>Java 21</li>
+</td><td valign="top" width="33%">
+
+
+
+### Backend  
+<div align="left">
+  <ul style="list-style-type: disc; display: inline-block;">
+     <li>Java 21</li>
     <li>Spring Boot
       <ul>
         <li>Spring Web (MVC)</li>
@@ -28,12 +37,14 @@ Teaching aid for students of the Numerical Methods subject.
     </li>
     <li>H2</li>
     <li>Thymeleaf</li>
-</ul>
+</td><td valign="top" width="33%">
 
 
-### 🔹 Development & Testing  
-  <ul>
-    <li>Spring Boot Test, JUnit</li>
+
+### Development & Testing  
+<div align="left">
+  <ul style="list-style-type: disc; display: inline-block;">
+     <li>Spring Boot Test, JUnit</li>
     <li>Postman</li>
     <li>H2</li>
     <li>Git, GitHub</li>
@@ -41,7 +52,10 @@ Teaching aid for students of the Numerical Methods subject.
    <li>Visual Studio Code</li>
    <li>Maven</li>
   </ul>
+</div>
 
 
 </td></tr></table>
+
+
 
