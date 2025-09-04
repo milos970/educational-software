@@ -8,6 +8,7 @@ Teaching aid for students of the Numerical Methods subject.
 ### 🔹 Frontend  
 <ul>
     <li><a href="https://www.bootstrapdash.com/product/corona-free" target="_blank" rel="noopener noreferrer">Template</a></li>
+    <li>HTML</li>
     <li>JavaScript</li>
     <li>CSS</li>
 </ul>
@@ -16,11 +17,11 @@ Teaching aid for students of the Numerical Methods subject.
 ### 🔹 Backend  
 <ul>
     <li>Java 21</li>
-    <li>Spring Boot 3.1
+    <li>Spring Boot
       <ul>
         <li>Spring Web (MVC)</li>
         <li>Spring Security</li>
-        <li>Spring Data JPA + Hibernate</li>
+        <li>Spring Data JPA</li>
         <li>Spring Validation</li>
         <li>Spring Mail</li>
       </ul>
