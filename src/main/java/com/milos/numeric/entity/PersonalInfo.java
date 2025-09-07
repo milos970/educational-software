@@ -1,7 +1,7 @@
 package com.milos.numeric.entity;
 
 
-import com.milos.numeric.Authority;
+import com.milos.numeric.Role;
 import com.milos.numeric.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -52,7 +52,7 @@ public class PersonalInfo
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-    private Authority authority;
+    private Role role;
 
     private boolean enabled;
 

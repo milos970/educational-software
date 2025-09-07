@@ -1,6 +1,5 @@
 package com.milos.numeric.controller;
 
-import com.milos.numeric.dto.NewPasswordDto;
 import com.milos.numeric.service.PersonalInfoService;
 import com.milos.numeric.service.UserVerificationService;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,7 @@ public class VerificationController {
 
 
     @GetMapping("auth/change-password")
-    public String changePassword(@RequestParam("token") String token, @RequestParam("password") NewPasswordDto password) {
+    public String changePassword(@RequestParam("token") String token, @RequestParam String password) {
 
         String redirectUrl = "";
 
@@ -29,7 +28,7 @@ public class VerificationController {
             redirectUrl = UriComponentsBuilder.fromPath("/pages/alt/sign-in").queryParam("token-error", true).build().toUriString();
         } else {
             String email = this.verificationService.getEmail(token);
-            this.personalInfoService.updatePasswordByEmail(email,password);
+            this.personalInfoService.resetPassword(email,password);
 
             redirectUrl = UriComponentsBuilder.fromPath("/pages/alt/sign-in").build().toUriString();
         }

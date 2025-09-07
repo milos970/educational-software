@@ -1,309 +1,77 @@
+
 <!DOCTYPE html>
-<html lang="sk" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/pages/main/index}">
+<body>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Zamestnanci</title>
+<div layout:fragment="content" class="main-panel">
+    <div class="content-wrapper">
 
-    <link rel="stylesheet" href="/static/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
-    <link rel="stylesheet" th:href="@{/vendors/mdi/css/materialdesignicons.min.css}">
-    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+        <div class="row">
+            <div class="col-md-8 grid-margin stretch-card">
+                <div style="background-color: #6c757d" class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Zoznam zamestnancov</h4>
+                        <p class="card-description"></p>
+                        <div class="table-responsive">
+                            <table style="color: whitesmoke" class="table table-dark">
+                                <thead>
+                                <tr>
+                                    <th style="color: whitesmoke">Zamestnanec</th>
+                                    <th style="color: whitesmoke">Meno</th>
+                                    <th style="color: whitesmoke">Priezvisko</th>
+                                    <th style="color: whitesmoke">Používateľské meno</th>
+                                    <th style="color: whitesmoke">Osobné číslo</th>
+                                    <th style="color: whitesmoke">Email</th>
+                                    <th style="color: whitesmoke"></th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${#lists.isEmpty(employees)}">
+                                    <td colspan="2">Žiadny zamestnanec</td>
+                                </tr>
+                                <tr th:id='${employee.id}'  th:each="employee : ${employees}">
+
+                                    <td class="py-1">
+                                        <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
+                                        <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                    </td>
+                                    <td><span th:text="${employee.personalInfo.name}"></span></td>
+                                    <td><span th:text="${employee.personalInfo.surname}"></span></td>
+                                    <td><span th:text="${employee.personalInfo.username}"></span></td>
+                                    <td><span th:text="${employee.personalInfo.personalNumber}"></span></td>
+                                    <td><span th:text="${employee.personalInfo.email}"></span></td>
+                                    <td th:if="${employee.personalInfo.role != T(com.milos.numeric.Role).ROLE_TEACHER }">
+                                        <button th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_TEACHER }"  type="button" th:attr="onclick=|deleteEmployee('${employee.id}')|" class="btn btn-danger btn-rounded btn-fw">Odstrániť</button>
+                                    </td>
 
 
-    <link rel="stylesheet" href="/static/vendors/jvectormap/jquery-jvectormap.css">
-    <link rel="stylesheet" href="/static/vendors/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="/static/vendors/owl-carousel-2/owl.carousel.min.css">
-    <link rel="stylesheet" href="/static/vendors/owl-carousel-2/owl.theme.default.min.css">
 
-    <link rel="stylesheet" th:href="@{/vendors/jvectormap/jquery-jvectormap.css}">
-    <link rel="stylesheet" th:href="@{/vendors/flag-icon-css/css/flag-icon.min.css}">
-    <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.carousel.min.css}">
-    <link rel="stylesheet" th:href="@{/vendors/owl-carousel-2/owl.theme.default.min.css}">
+                                </tr>
 
-    <link rel="stylesheet" href="/static/css/style.css">
-
-    <link rel="shortcut icon" href="/static/images/favicon.png"/>
-
-    <link rel="stylesheet" href="/static/css/my.css">
-
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="shortcut icon" th:href="@{/images/mini-logo.png}">
-    <link rel="stylesheet" th:href="@{/css/my.css}">
-
-
-
-</head>
-<body onload="selectNumericCategory(1)">
-
-<div class="container-scroller">
-    <!-- partial:partials/_sidebar.html -->
-    <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-            <a class="sidebar-brand brand-logo" th:href="@{/person/home/page}"><img th:src="@{/images/logo.png}" alt="logo"/></a>
-            <a class="sidebar-brand brand-logo-mini" th:href="@{/person/home/page}"><img th:src="@{/images/mini-logo.png}"
-                                                                            alt="logo"/></a>
-        </div>
-        <ul class="nav">
-            <li class="nav-item profile">
-                <div class="profile-desc">
-                    <div class="profile-pic">
-                        <div class="count-indicator">
-                            <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                            <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
-                            <span class="count bg-success"></span>
-                        </div>
-                        <div class="profile-name">
-                            <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Vyučujúci</span>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
                 </div>
-            </li>
-            <li class="nav-item nav-category">
-                <span class="nav-link" style="color: whitesmoke">Navigácia</span>
-            </li>
-            <li class="nav-item menu-items">
-                <a class="nav-link"  th:href="@{/person/home/page}">
-              <span class="menu-icon">
-                <i class="mdi mdi-function"></i>
-              </span>
-                    <span class="menu-title" style="color: whitesmoke">Numerické kategórie</span>
-                </a>
-            </li>
-
-
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
-                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-                    <span class="menu-title">Používatelia</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="ui-basic">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/students/page}">Študenti</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="" th:href="@{/employee/employees/page}">Zamestnanci</a></li>
-                    </ul>
-                </div>
-            </li>
-
-            <li  class="nav-item menu-items">
-                <a class="nav-link" href="" th:href="@{/person/material/page}">
-              <span class="menu-icon">
-                <i class="mdi mdi-library-books"></i>
-              </span>
-                    <span class="menu-title" style="color: whitesmoke">Materiály</span>
-                </a>
-            </li>
-
-
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/person/chat/page}">
-              <span class="menu-icon">
-                <i class="mdi mdi-message-text">
-
-                </i>
-              </span>
-                    <span class="menu-title" style="color: whitesmoke">
-                        Správy
-                    </span>
-                </a>
-            </li>
-
-
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
-                <a class="nav-link" th:href="@{/employee/system/page}">
-              <span class="menu-icon">
-                <i class="mdi mdi-wrench">
-
-                </i>
-              </span>
-                    <span class="menu-title" style="color: whitesmoke">
-                        Systém
-                    </span>
-                </a>
-            </li>
-
-
-</ul>
-    </nav>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_navbar.html -->
-        <nav class="navbar p-0 fixed-top d-flex flex-row">
-            <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo-mini" th:href="@{/person/home/page}"><img th:src="@{/images/mini-logo.png}"
-                                                                                            alt="logo"/></a>
             </div>
-            <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-                    <span class="mdi mdi-menu"></span>
-                </button>
-                <ul class="navbar-nav navbar-nav-right">
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
-                            <div class="navbar-profile">
-                                <img th:if="${personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                <img th:if="${personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
-                                <p class="mb-0 d-none d-sm-block navbar-profile-name"
-                                   th:text="${personalInfo.name + ' ' + personalInfo.surname}"></p>
-                                <i class="mdi mdi-menu-down d-none d-sm-block"></i>
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
-                            <h6 class="p-3 mb-0">Profil</h6>
-                            <div class="dropdown-divider"></div>
-
-                            <div class="dropdown-divider"></div>
-                            <a th:href="@{/person/password/update/page}" class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <div class="preview-icon bg-dark rounded-circle">
-                                        <i class="mdi mdi-settings text-success"></i>
-                                    </div>
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Zmena hesla</p>
-                                </div>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a th:href="@{/logout}" class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <div class="preview-icon bg-dark rounded-circle">
-                                        <i class="mdi mdi-logout text-danger"></i>
-                                    </div>
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Odhlásenie</p>
-                                </div>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-                        data-toggle="offcanvas">
-                    <span class="mdi mdi-format-line-spacing"></span>
-                </button>
-            </div>
-        </nav>
-        <!-- partial -->
-        <div class="main-panel">
-            <div class="content-wrapper">
-
-                <div class="row">
-                    <div class="col-md-8 grid-margin stretch-card">
-                        <div style="background-color: #6c757d" class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Zoznam zamestnancov</h4>
-                                <p class="card-description"></p>
-                                <div class="table-responsive">
-                                    <table style="color: whitesmoke" class="table table-dark">
-                                        <thead>
-                                        <tr>
-                                            <th style="color: whitesmoke">Zamestnanec</th>
-                                            <th style="color: whitesmoke">Meno</th>
-                                            <th style="color: whitesmoke">Priezvisko</th>
-                                            <th style="color: whitesmoke">Používateľské meno</th>
-                                            <th style="color: whitesmoke">Osobné číslo</th>
-                                            <th style="color: whitesmoke">Email</th>
-                                            <th style="color: whitesmoke"></th>
-
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr th:if="${#lists.isEmpty(employees)}">
-                                            <td colspan="2">Žiadny zamestnanec</td>
-                                        </tr>
-                                        <tr th:id='${employee.id}'  th:each="employee : ${employees}">
-
-                                                <td class="py-1">
-                                                    <img th:if="${employee.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                                    <img th:if="${employee.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
-                                                </td>
-                                                <td><span th:text="${employee.personalInfo.name}"></span></td>
-                                                <td><span th:text="${employee.personalInfo.surname}"></span></td>
-                                                <td><span th:text="${employee.personalInfo.username}"></span></td>
-                                                <td><span th:text="${employee.personalInfo.personalNumber}"></span></td>
-                                                <td><span th:text="${employee.personalInfo.email}"></span></td>
-                                                <td th:if="${employee.personalInfo.authority != T(com.milos.numeric.Authority).TEACHER }">
-                                                    <button th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER }"  type="button" th:attr="onclick=|deleteEmployee('${employee.id}')|" class="btn btn-danger btn-rounded btn-fw">Odstrániť</button>
-                                                </td>
-
-
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-
-
-            </div>
-            <footer class="footer">
-                <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                    <span class="text-muted d-block text-center text-sm-left d-sm-inline-block"></span>
-                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a
-                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
-                </div>
-            </footer>
 
         </div>
+
 
     </div>
+    <footer class="footer">
+        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block"></span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a
+                    href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+        </div>
+    </footer>
 
 </div>
 
-<script src="/static/vendors/js/vendor.bundle.base.js"></script>
-<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
-
-<script src="/static/vendors/chart.js/Chart.min.js"></script>
-<script th:src="@{/vendors/chart.js/Chart.min.js}"></script>
-<script src="/static/vendors/progressbar.js/progressbar.min.js"></script>
-<script th:src="@{/vendors/progressbar.js/progressbar.min.js}"></script>
-<script src="/static/vendors/jvectormap/jquery-jvectormap.min.js"></script>
-<script th:src="@{/vendors/jvectormap/jquery-jvectormap.min.js}"></script>
-<script src="/static/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<script th:src="@{/vendors/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
-<script src="/static/vendors/owl-carousel-2/owl.carousel.min.js"></script>
-<script th:src="@{/vendors/owl-carousel-2/owl.carousel.min.js}"></script>
-
-<script src="/static/js/off-canvas.js"></script>
-<script th:src="@{/js/off-canvas.js}"></script>
-<script src="/static/js/hoverable-collapse.js"></script>
-<script th:src="@{/js/hoverable-collapse.js}"></script>
-<script src="/static/js/misc.js"></script>
-<script th:src="@{/js/misc.js}"></script>
-<script src="/static/js/settings.js"></script>
-<script th:src="@{/js/settings.js}"></script>
-<script src="/static/js/todolist.js"></script>
-<script th:src="@{/js/todolist.js}"></script>
-
-<script src="/static/js/dashboard.js"></script>
-<script th:src="@{/js/dashboard.js}"></script>
-
-
-<script src="/static/js/chart.js"></script>
-<script th:src="@{/js/chart.js}"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.min.js"></script>
-<script src="/js/my/main.js"></script>
-<script th:src="@{/js/my/main.js}"></script>
-
-<script src="/static/js/my/students.js"></script>
-<script th:src="@{/js/my/students.js}"></script>
-
-<script src="/static/js/my/non-linear"></script>
-<script th:src="@{/js/my/non-linear.js}"></script>
 </body>
 </html>

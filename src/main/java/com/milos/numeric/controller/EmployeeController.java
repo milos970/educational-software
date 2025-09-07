@@ -1,6 +1,6 @@
 package com.milos.numeric.controller;
 
-import com.milos.numeric.Authority;
+import com.milos.numeric.Role;
 import com.milos.numeric.service.EmployeeService;
 import com.milos.numeric.service.PersonalInfoService;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +25,9 @@ public class EmployeeController {
     }
 
     @PatchMapping("admin/employee")
-    public ResponseEntity<Void> updateRole(@RequestParam String username, @RequestParam Authority authority) {
+    public ResponseEntity<Void> updateRole(@RequestParam String username, @RequestParam Role role) {
         try {
-            employeeService.updateRole(username, authority);
+            employeeService.updateRole(username, role);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

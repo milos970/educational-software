@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-22T10:10:04+0200",
+    date = "2025-09-07T17:53:33+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -19,14 +19,19 @@ public class MaterialDtoMapperImpl implements MaterialDtoMapper {
             return null;
         }
 
-        Material material = new Material();
+        String name = null;
+        String description = null;
 
-        material.setName( source.getName() );
-        material.setDescription( source.getDescription() );
+        name = source.getName();
+        description = source.getDescription();
 
-        material.setUploadedBy( source.getUploadedBy() );
-        material.setSize( source.getData().getSize() );
-        material.setMimeType( source.getData().getContentType() );
+        long id = 0L;
+        String path = null;
+        String uploadedBy = source.getUploadedBy();
+        long size = source.getData().getSize();
+        String mimeType = source.getData().getContentType();
+
+        Material material = new Material( id, path, name, mimeType, description, uploadedBy, size );
 
         return material;
     }

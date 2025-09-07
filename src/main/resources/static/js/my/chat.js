@@ -1,208 +1,105 @@
-
-let idA = 0;
-let idB = 0;
-let userName = "";
-
-
 let receiver = "";
-function sendMessage(senderUsername,receiverUsername)
-{
+let lastId = -1;
 
 
+function createMessageElement(content, isSender) {
+    const lineDiv = document.createElement('div');
+    lineDiv.classList.add("flex-container");
 
+    const leftDiv = document.createElement('div');
+    leftDiv.classList.add("left-item");
 
-    if (getById("message-input").value.length < 1 || getById("message-input").value.length > 100)
-    {
-        getById("message-input-error-hint").innerHtml = "Nevalidný výraz!";
-        return;
-    }
+    const rightDiv = document.createElement('div');
+    rightDiv.classList.add("right-item");
 
-    if (receiverUsername === 'null') {
-        receiverUsername = receiver;
-    } else {
-        receiver = receiverUsername;
-    }
+    const button = document.createElement("button");
+    button.textContent = content;
 
-
-
-
-
-
-
-    const xhttp = new XMLHttpRequest();
-    const element = document.getElementById("conversation");
-    const inputElement = document.getElementById("message-input");
-
-    const content = getById("message-input").value;
-
-    let scrollDiv = getById("conversation");
-    scrollDiv.scrollTop = scrollDiv.scrollHeight;
-
-
-    getById("message-input").value = "";
-    xhttp.onload = function() {
-        if (xhttp.status === 200) {
-
-        } else {
-
-            return;
-        }
-
-        const lineDiv = document.createElement('div');
-        lineDiv.classList.add("flex-container");
-
-        const innerDivLeft = document.createElement('div');
-        innerDivLeft.classList.add("left-item");
-
-        const button = document.createElement("button");
+    if (isSender) {
         button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
-
-
-
-        const innerDivRight = document.createElement('div');
-        innerDivRight.classList.add("right-item");
-
-        innerDivRight.appendChild(button);
-        lineDiv.appendChild(innerDivLeft);
-        lineDiv.appendChild(innerDivRight);
-
-
-        element.appendChild(lineDiv);
-
-
-        innerDivLeft.style.display = "hidden";
-        button.textContent = content;
-
-
+        rightDiv.appendChild(button);
+        leftDiv.style.display = "none";
+    } else {
+        button.classList.add("btn", "btn-light", "btn-rounded", "btn-fw");
+        leftDiv.appendChild(button);
+        rightDiv.style.display = "none";
     }
 
-    let url = "/person/message";
+    lineDiv.appendChild(leftDiv);
+    lineDiv.appendChild(rightDiv);
 
-    xhttp.open("POST", url, true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-
-
-
-
-    let data =
-    {
-        content: content,
-        senderUsername: senderUsername,
-        receiverUsername: receiverUsername
-    };
-    xhttp.send(JSON.stringify(data));
+    return lineDiv;
 }
 
 
-var lastId = -1;
-function getConversation(receiverUsername, id)
-{
+async function sendMessage(senderUsername, receiverUsername) {
+    const inputElement = document.getElementById("message-input");
+    const errorHint = document.getElementById("message-input-error-hint");
+    const content = inputElement.value.trim();
 
-    getById("send-button").disabled = false;
-    while (document.getElementById("conversation").firstChild) {
-        document.getElementById("conversation").removeChild(document.getElementById("conversation").firstChild);
+    if (content.length < 1 || content.length > 100) {
+        errorHint.innerHTML = "Nevalidný výraz!";
+        return;
+    } else {
+        errorHint.innerHTML = "";
     }
+
+    receiver = receiverUsername !== 'null' ? receiverUsername : receiver;
+
+    inputElement.value = "";
+
+    try {
+        const response = await fetch('/person/message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content, senderUsername, receiverUsername: receiver })
+        });
+
+        if (!response.ok) throw new Error('Nepodarilo sa odoslať správu');
+
+        const conversationDiv = document.getElementById("conversation");
+        const messageElement = createMessageElement(content, true);
+        conversationDiv.appendChild(messageElement);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+async function getConversation(receiverUsername, id) {
+    const conversationDiv = document.getElementById("conversation");
 
     receiver = receiverUsername;
 
-
-    getById("conversation-div").style.display = "block";
-
-
-    getById("send-message-div").style.display="block";
+    document.getElementById("send-button").disabled = false;
+    document.getElementById("conversation-div").style.display = "block";
+    document.getElementById("send-message-div").style.display = "block";
 
 
+    if (lastId !== -1) document.getElementById(lastId).style.backgroundColor = "";
+    document.getElementById(id).style.backgroundColor = "green";
+    lastId = id;
 
 
+    conversationDiv.innerHTML = "";
 
+    try {
+        const response = await fetch(`/person/conversation?receiver=${encodeURIComponent(receiver)}`);
+        if (!response.ok) throw new Error('Nepodarilo sa načítať konverzáciu');
 
+        const messages = await response.json();
 
-    if (lastId === -1)
-    {
-        lastId = id;
-        document.getElementById(id).style.backgroundColor="green";
-    } else {
-        document.getElementById(lastId).style.backgroundColor="";
-        lastId = id;
-        document.getElementById(id).style.backgroundColor="green";
+        messages.forEach(msg => {
+            const isSender = msg.senderUsername !== receiver;
+            const messageElement = createMessageElement(msg.content, isSender);
+            conversationDiv.appendChild(messageElement);
+        });
+
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+
+    } catch (error) {
+        console.error(error);
     }
-
-
-
-    $.ajax({
-        url: '/person/conversation',
-        method: 'GET',
-        data: { receiver: receiver },
-        dataType: 'json',
-        async: false,
-        success: function(response) {
-            const messages = response;
-
-
-            const conversationDivElement = document.getElementById("conversation");
-
-            messages.forEach(function(message) {
-
-                const lineDiv = document.createElement('div');
-                lineDiv.classList.add("flex-container");
-
-                const innerDivLeft = document.createElement('div');
-                innerDivLeft.classList.add("left-item");
-
-                const innerDivRight = document.createElement('div');
-                innerDivRight.classList.add("right-item");
-
-
-                lineDiv.appendChild(innerDivLeft);
-                lineDiv.appendChild(innerDivRight);
-
-                if (conversationDivElement.querySelector("div"))
-                {
-
-                    conversationDivElement.insertBefore(lineDiv, conversationDivElement.firstChild);
-
-                } else {
-                    conversationDivElement.appendChild(lineDiv);
-
-                }
-
-
-                const button = document.createElement("button");
-                button.textContent = message.content;
-
-
-                if (message.senderUsername !== receiver) {
-
-                    button.classList.add("btn", "btn-success", "btn-rounded", "btn-fw");
-                    innerDivLeft.style.display = "hidden";
-                    innerDivRight.appendChild(button);
-
-                } else {
-
-                    innerDivRight.style.display = "hidden";
-                    button.classList.add("btn", "btn-light", "btn-rounded", "btn-fw");
-                    innerDivLeft.appendChild(button);
-
-                }
-            })
-            let scrollDiv = getById("conversation");
-            scrollDiv.scrollTop = scrollDiv.scrollHeight;
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error(xhr.responseText);
-        }
-    });
-
-
-
-
-
-
-
-
-
-
-
-
 }

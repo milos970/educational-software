@@ -1,9 +1,7 @@
 package com.milos.numeric.service;
 
-import com.milos.numeric.dto.MessageDto;
-import com.milos.numeric.entity.Chat;
+import com.milos.numeric.dto.command.MessageCommand;
 import com.milos.numeric.entity.Message;
-import com.milos.numeric.mapper.MessageDtoMapper;
 import com.milos.numeric.repository.MessageRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,28 +9,24 @@ import org.springframework.stereotype.Service;
 public class MessageService
 {
     private final MessageRepository messageRepository;
-    private final MessageDtoMapper messageDtoMapper;
 
-
-    public MessageService(MessageRepository messageRepository, MessageDtoMapper messageDtoMapper) {
+    public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
-        this.messageDtoMapper = messageDtoMapper;
     }
 
 
-    public void createMessage(MessageDto messageDto, Chat chat)
+    public void createMessage(MessageCommand command)
     {
-        Message message = this.messageDtoMapper.sourceToDestination(messageDto);
-        message.setSenderUsername(messageDto.getSenderUsername());
-        message.setChat(chat);
-        this.messageRepository.save(message);
+        Message entity = new Message();
+        entity.setContent(command.getContent());
+        entity.setSenderUsername(command.getSenderUsername());
+        entity.setReceiverUsername(command.getReceiverUsername());
+        entity.setChat(command.getChat());
+        this.messageRepository.save(entity);
     }
 
     public void deleteAllMessages()
     {
         this.messageRepository.deleteAll();
     }
-
-
-
 }

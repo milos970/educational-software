@@ -13,10 +13,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "chats")
 public class Chat
 {
     @EmbeddedId
-    private ChatId chatId;
+    private ChatId id;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE)
     private List<Message> messages;

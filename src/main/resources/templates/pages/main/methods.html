@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/pages/main/index}">
+<body>
+
+    <div layout:fragment="content" class="main-panel">
+        <div class="content-wrapper">
+
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                        <button onclick="selectNumericCategory(1)" type="button" class="btn btn-success btn-lg"
+                                style="height: 100%;"><h3 class="mb-0">Nelineárne rovnice</h3></button>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                        <button onclick="selectNumericCategory(2)" type="button" class="btn btn-danger btn-lg"
+                                style="height: 100%;"><h3 class="mb-0">Určitý integrál</h3></button>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                    <div class="card">
+                        <button onclick="selectNumericCategory(3)" type="button" class="btn btn-behance btn-lg"
+                                style="height: 100%;"><h3 class="mb-0">Aproximácia a interpolácia</h3></button>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 grid-margin stretch-card" style="display: none">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="d-flex align-items-center align-self-start">
+                                        <h3 class="mb-0">$31.53</h3>
+                                        <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="icon icon-box-success ">
+                                        <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 class="text-muted font-weight-normal">Expense current</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 grid-margin stretch-card" style="display: none" id="methods-calculation-div">
+                    <div  class="card">
+                        <div class="card-body">
+                            <div class="dropdown" id="non-linear-dropdown-div">
+                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">Newtonová metóda
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                    <a class="dropdown-item" onclick="selectNonLinearMethod(1)" href="#">Newtonová
+                                        metóda</a>
+                                    <a class="dropdown-item" onclick="selectNonLinearMethod(2)" href="#">Regula
+                                        falsi</a>
+                                    <a class="dropdown-item" onclick="selectNonLinearMethod(3)"
+                                       href="#">Bisekcia</a>
+
+                                </div>
+                            </div>
+
+                            <div class="dropdown" id="integration-dropdown-div">
+                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">Lichobežníková metóda
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                    <a class="dropdown-item" onclick="selectIntegrationMethod(1)" href="#">Lichobežníková
+                                        metóda</a>
+                                    <a class="dropdown-item" onclick="selectIntegrationMethod(2)" href="#">Simpsonová
+                                        metóda</a>
+
+                                </div>
+                            </div>
+
+                            <div class="dropdown" id="approximation-dropdown-div">
+                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">Lagrangeov polynóm
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                    <a class="dropdown-item" onclick="selectApproximationAndInterpolationMethod(1)"
+                                       href="#">Lagrangeov polynóm</a>
+                                    <a class="dropdown-item" onclick="selectApproximationAndInterpolationMethod(2)"
+                                       href="#">Newtonov polynóm</a>
+                                    <a class="dropdown-item" onclick="selectApproximationAndInterpolationMethod(3)"
+                                       href="#">Metóda najmenších štvorcov</a>
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" id="equation-div">
+                                <p></p>
+                                <label for="equation-input"><h5>Rovnica*</h5></label>
+                                <input type="text" class="form-control" id="equation-input" placeholder="f(x) = 0"
+                                       oninput="validateEquation()">
+                                <p class="error" id="equation-hint-error"></p>
+                            </div>
+
+                            <div class="form-group" id="function-div">
+                                <p></p>
+                                <label for="function-input" ><h5>Funkcia*</h5></label>
+                                <input type="text" class="form-control" id="function-input" placeholder="f(x)"
+                                       oninput="validateFunction()">
+                                <p class="error" id="function-hint-error"></p>
+                            </div>
+
+
+                            <div class="form-group" id="nodes-string-div">
+                                <p></p>
+                                <label for="nodes-string-input"><h5>Uzly</h5></label>
+                                <input type="text" class="form-control" id="nodes-string-input"
+                                       placeholder="(x1,y1),(x2,y2),...,(x100,y100)"
+                                >
+                                <p class="error" id="nodes-string-error-hint"></p>
+                            </div>
+
+                            <div class="form-group" id="nodes-csv-div">
+                                <label for="nodes-string-input"><h5>Súbor</h5></label>
+                                <input type="file" name="img[]" class="file-upload-default">
+                                <div class="input-group col-xs-12">
+                                    <input type="text" id="text-input" class="form-control file-upload-info"
+                                           disabled placeholder="Súbor s príponou .csv">
+                                    <input accept="text/csv" type="file" onchange="setFileName()"
+                                           id="file-input" class="form-control file-upload-info"
+                                           style="display: none">
+                                    <span class="input-group-append">
+                            <button style="display: none" onclick="removeFileFromInput()" class="file-upload-browse btn btn-danger" type="button"
+                                    id="remove-file-button">Zrušiť</button>
+                          </span>
+                                    <span class="input-group-append">
+                            <button  onclick="clickOnInput()" class="file-upload-browse btn btn-primary" type="button"
+                                     id="insert-file-button">Vložiť</button>
+                          </span>
+                                </div>
+                                <p class="error" id="nodes-csv-error-hint"></p>
+                            </div>
+
+                            <div class="form-group" id="functions-dropdown-div">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                            id="dropdownMenuOutlineButton3" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">Funkcie*
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
+                                        <a class="dropdown-item" onclick="selectFunction(1)" href="#">Lineárna
+                                            funkcia</a>
+                                        <a class="dropdown-item" onclick="selectFunction(2)" href="#">Logaritmická
+                                            funkcia</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" id="tolerance-div">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                            id="dropdownMenuOutlineButton1" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">Tolerancia*
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
+                                        <a class="dropdown-item" onclick="selectTolerance(1)" href="#">0.001</a>
+                                        <a class="dropdown-item" onclick="selectTolerance(2)" href="#">0.0001</a>
+                                        <a class="dropdown-item" onclick="selectTolerance(3)" href="#">0.00001</a>
+                                        <a class="dropdown-item" onclick="selectTolerance(4)" href="#">0.000001</a>
+
+                                    </div>
+                                </div>
+                                <p class="error" id="tolerance-value-hint-error"></p>
+                            </div>
+
+                            <div class="form-group" id="initial-value-div">
+                                <label for="initial-value-input"><h5>Počiatočná aproximácia*</h5></label>
+                                <input type="number" class="form-control" id="initial-value-input"
+                                       placeholder="<-10;10>" min="-10" max="10">
+                                <p class="error" id="initial-value-hint-error"></p>
+                            </div>
+
+
+                            <div class="form-group" id="lower-bound-div">
+                                <label for="lower-bound-input"><h5>Dolná hranica intervalu*</h5></label>
+                                <input type="number" class="form-control" id="lower-bound-input" min="-10" max="9"
+                                       placeholder="<-10;9>">
+                                <p class="error" id="lower-bound-value-hint-error"></p>
+                            </div>
+
+                            <div class="form-group" id="upper-bound-div">
+                                <label for="upper-bound-input"><h5>Horná hranica intervalu*</h5></label>
+                                <input type="number" class="form-control" id="upper-bound-input" min="-9" max="10"
+                                       placeholder="<-9;10>">
+                                <p class="error" id="upper-bound-value-hint-error"></p>
+                            </div>
+
+                            <div class="form-group" id="subintervals-div">
+                                <label for="subintervals-input"><h5>Počet dielikov*</h5></label>
+                                <input type="number" class="form-control" id="subintervals-input" min="1" max="100"
+                                       placeholder="<1;100>">
+                                <p class="error" id="subintervals-value-hint-error"></p>
+                            </div>
+
+
+                            <button onclick="calculate()" type="button" class="btn btn-primary btn-fw">Vypočítať</button>
+                            <button onclick="graph()" type="button" class="btn btn-danger btn-fw">Graf</button>
+
+                            <input oninput="appendResultToCsv()" type="file" hidden="" accept="text/csv"
+                                   class="form-control" id="csv-file-input">
+                            <button onclick="saveToFile()" type="button" class="btn btn-success btn-fw">Uložiť do
+                                súboru
+                            </button>
+
+
+                            <div class="form-group" id="result-div">
+                                <p></p>
+                                <label for="upper-bound-input"><h5>Výsledok</h5></label>
+                                <input style="color: black" type="text" class="form-control" id="result-input"
+                                       readonly>
+                                <p class="error" id="result-value-hint-error"></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 grid-margin stretch-card" style="display: none" id="graph-calculation-div">
+                    <div style="background-color: #6c757d" class="card">
+                        <div class="card-body" id="table-div">
+                            <h4 class="card-title"></h4>
+
+                            <div id="graph-div" style="display: none">
+                                <canvas id="lineChart" style="height:500px"></canvas>
+                            </div>
+
+                            <div class="table-responsive table-bordered">
+                                <table class="table table-dark" style="color: white" id="table">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block"></span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a
+                        href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>
+

@@ -13,6 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "materials")
 public class Material {
 
     @Id
@@ -24,7 +26,7 @@ public class Material {
     private String path;
 
     @NotBlank
-    @Column(unique = true)
+    @Column(name = "file_name", unique = true)
     @Size(max = 15, message = "{material.name}")
     private String name;
 

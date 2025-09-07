@@ -1,34 +1,193 @@
 
 
-function initializeSignUpPage()
+document.addEventListener("DOMContentLoaded", function() {
+    whichFormulatorToShow(1);
+    disableSubmitButton();
+});
+
+function disableSubmitButton()
 {
-    studentOrEmployee(1);
+    const submitButton = document.getElementById('submit-button');
+    submitButton.disabled = true;
+}
+
+function enableSubmitButton()
+{
+    const submitButton = document.getElementById('submit-button');
+    submitButton.disabled = false;
 }
 
 
 let which = 0;
-function studentOrEmployee(who)
-{
+function whichFormulatorToShow(value) {
+    const employeeForm = document.getElementById("employee-form");
 
-    switch (who)
-    {
-        case 1:
+    if (value === 1) {
+        showFormForStudent();
+        studentRadio.checked = true;
+    } else if (value === 2) {
+        showFormForEmployee();
+        employeeRadio.checked = true;
+        if (employeeForm) {
+        employeeForm.action = "/person/create";
+        }
+    }
 
-            showFormForStudent();
+    which = value;
+}
 
 
-            which = 1;
-            break;
-        case 2:
-            showFormForEmployee();
-            getById("employee-form").action = "/person/create";
+const studentRadio = document.getElementById("option1-radio");
 
-            which = 2;
-            break;
-        default:
+studentRadio.addEventListener("change", function() {
+    if (this.checked) {
+        showFormForStudent();
+    }
+});
 
+const employeeRadio = document.getElementById("option2-radio");
+
+employeeRadio.addEventListener("change", function() {
+    if (this.checked) {
+        showFormForEmployee();
+    }
+});
+
+
+
+
+const nameInput = document.getElementById("name-input");
+const nameInputError = document.getElementById("name-input-error-hint");
+nameInput.addEventListener("change", function () {
+    if (!nameInput.value.trim()) {
+        nameInputError.textContent = "Zadajte meno";
+        nameInput.classList.add("form-input-invalid");
+        nameInput.classList.remove("form-input-valid");
+    } else {
+        nameInputError.textContent = "";
+        nameInput.classList.add("form-input-valid");
+        nameInput.classList.remove("form-input-invalid");
+    }
+});
+
+
+const surnameInput = document.getElementById("surname-input");
+const surnameInputError = document.getElementById("surname-input-error-hint");
+surnameInput.addEventListener("change", function () {
+    if (!surnameInput.value.trim()) {
+        surnameInputError.textContent = "Zadajte priezvisko";
+        surnameInput.classList.add("form-input-invalid");
+        surnameInput.classList.remove("form-input-valid");
+    } else {
+        surnameInputError.textContent = "";
+        surnameInput.classList.add("form-input-valid");
+        surnameInput.classList.remove("form-input-invalid");
+    }
+});
+
+const emailInput = document.getElementById("employee-email-input");
+const emailInputError = document.getElementById("employee-email-input-error-hint");
+emailInput.addEventListener("change", function () {
+    const regex = /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/;
+
+    if (!emailInput.value.trim()) {
+        emailInputError.textContent = "Zadajte email";
+        emailInput.classList.add("form-input-invalid");
+        emailInput.classList.remove("form-input-valid");
+
+    } else if (!regex.test(emailInput.value)) {
+        emailInputError.textContent = "Nevalidný email";
+        emailInput.classList.add("form-input-invalid");
+        emailInput.classList.remove("form-input-valid");
+
+    } else {
+        emailInputError.textContent = "";
+        emailInput.classList.add("form-input-valid");
+        emailInput.classList.remove("form-input-invalid");
+    }
+});
+
+
+const pinInput = document.getElementById("pin-input");
+const pinInputError = document.getElementById("pin-input-error-hint");
+pinInput.addEventListener("change", function () {
+
+
+    if (!pinInput.value.trim()) {
+        pinInputError.textContent = "Zadajte osobné číslo";
+        pinInput.classList.add("form-input-invalid");
+        pinInput.classList.remove("form-input-valid");
+
+    } else if (!regex.test(pinInput.value)) {
+        pinInputError.textContent = "Nevalidné osobné číslo";
+        pinInput.classList.add("form-input-invalid");
+        pinInput.classList.remove("form-input-valid");
+
+    } else {
+        pinInputError.textContent = "";
+        pinInput.classList.add("form-input-valid");
+        pinInput.classList.remove("form-input-invalid");
+    }
+});
+
+const passwordInput = document.getElementById("password-input");
+const passwordInputError = document.getElementById("password-input-error-hint");
+passwordInput.addEventListener("input", checkPassword());
+
+
+function checkPassword() {
+    const rules = [
+            { test: v => /[A-Z]/.test(v), elementId: "upper-case-checkbox-div" },
+            { test: v => /[a-z]/.test(v), elementId: "lower-case-checkbox-div" },
+            { test: v => /[0-9]/.test(v), elementId: "number-checkbox-div" },
+            { test: v => /[?.:!@#$%^|<>&*~()+_\-{}\[\],=;/\\'"]/.test(v), elementId: "special-char-checkbox-div" },
+            { test: v => v.length >= 8, elementId: "min-chars-checkbox-div" },
+            { test: v => v.length > 0 && v.length <= 64, elementId: "max-chars-checkbox-div" }
+        ];
+
+        let isValid = true;
+
+        rules.forEach(rule => {
+            const element = document.getElementById(rule.elementId);
+            const check = element.querySelector("input[type=checkbox]");
+            const passed = rule.test(passwordInput.value);
+
+            element.classList.toggle("form-check-success", passed);
+            element.classList.toggle("form-check-danger", !passed);
+
+            check.checked = passed;
+
+            if (!passed) isValid = false;
+        });
+
+
+        if (!isValid) {
+            passwordInput.classList.add("form-input-invalid");
+            passwordInput.classList.remove("form-input-valid");
+        } else {
+            passwordInput.classList.add("form-input-valid");
+            passwordInput.classList.remove("form-input-invalid");
+            checkPasswordMatch();
+        }
+}
+
+function checkPasswordMatch() {
+    if (passwordInput.value !== repPasswordInput.value) {
+        repPasswordInputError.textContent = "Heslá sa nezhodujú";
+        repPasswordInput.classList.add("form-input-invalid");
+        repPasswordInput.classList.remove("form-input-valid");
+    } else {
+        repPasswordInputError.textContent = "";
+        repPasswordInput.classList.add("form-input-valid");
+        repPasswordInput.classList.remove("form-input-invalid");
     }
 }
+
+
+const repPasswordInput = document.getElementById("rep-password-input");
+const repPasswordInputError = document.getElementById("rep-password-input-error-hint");
+repPasswordInput.addEventListener("change", checkPasswordMatch());
+
 
 
 
@@ -43,162 +202,76 @@ function showFormForEmployee()
 {
     document.getElementById("employee-form-div").style.display="block";
     document.getElementById("student-form-div").style.display="none";
-
 }
 
 
-
-
-
-
-
-
-function canRegisterStudent()
-{
+function canRegisterStudent() {
     const emailInput = document.getElementById("student-email-input");
-    const emailpasswordInputErrorHint = document.getElementById("student-email-input-error-hint");
+    const emailErrorHint = document.getElementById("student-email-input-error-hint");
 
-
-
-    if (emailInput.value === "")
-    {
-        emailpasswordInputErrorHint.innerHTML = "Zadajte školský email!";
+    if (!emailInput.value.trim()) {
+        emailErrorHint.textContent = "Zadajte školský email!";
         return false;
-    } else {
-        emailpasswordInputErrorHint.innerHTML = "";
     }
 
     const regexEmail = /^[a-zA-Z0-9._%+-]+@stud\.uniza\.sk$/;
-    if (!regexEmail.test(emailInput.value))
-    {
-        emailpasswordInputErrorHint.innerHTML = "";
-    } else {
-        emailpasswordInputErrorHint.innerHTML = "Nevalidný školský email!";
+    if (!regexEmail.test(emailInput.value)) {
+        emailErrorHint.textContent = "Nevalidný školský email!";
         return false;
-
     }
 
-
+    emailErrorHint.textContent = "";
     return true;
 }
 
 
-function canRegisterEmployee()
-{
-    const nameInput = document.getElementById("name-input");
-    const surnameInput = document.getElementById("surname-input");
-    const passwordInput = document.getElementById("password-input");
-    const repPasswordInput = document.getElementById("rep-password-input");
-    const emailInput = document.getElementById("employee-email-input");
-    const personalNumberInput = document.getElementById("pin-input");
+function canRegisterEmployee() {
+    const fields = [
+        { id: "name-input", errorId: "name-input-error-hint", required: true, maxLength: 50, name: "meno" },
+        { id: "surname-input", errorId: "surname-input-error-hint", required: true, maxLength: 50, name: "priezvisko" },
+        { id: "employee-email-input", errorId: "employee-email-input-error-hint", required: true, regex: /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/, regexMsg: "Nevalidný školský email!", name: "email" },
+        { id: "pin-input", errorId: "pin-input-error-hint", required: true, regex: /^\d{5}$/, regexMsg: "Nevalidné osobné číslo!", name: "osobné číslo" },
+        { id: "password-input", errorId: "password-input-error-hint", required: true, name: "heslo" },
+        { id: "rep-password-input", errorId: "rep-password-input-error-hint", required: true, name: "heslo znova" }
+    ];
 
-    const nameInputErrorHint = document.getElementById("name-input-error-hint");
-    const surnameInputErrorHint = document.getElementById("surname-input-error-hint");
-    const emailInputErrorHint = document.getElementById("employee-email-input-error-hint");
-    const personalNumberInputErrorHint = document.getElementById("pin-input-error-hint");
-    const passwordInputErrorHint = document.getElementById("password-input-error-hint");
-    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
+    for (const field of fields) {
+        const input = document.getElementById(field.id);
+        const error = document.getElementById(field.errorId);
 
-    if (nameInput.value.length === 0)
-    {
-        nameInputErrorHint.innerHTML = "Zadajte meno!";
-        return false;
-    } else
-    {
-        nameInputErrorHint.innerHTML = "";
+        if (field.required && !input.value.trim()) {
+            error.textContent = `Zadajte ${field.name}!`;
+            return false;
+        }
+
+        if (field.maxLength && input.value.length > field.maxLength) {
+            error.textContent = `Viac než ${field.maxLength} znakov!`;
+            return false;
+        }
+
+        if (field.regex && !field.regex.test(input.value)) {
+            error.textContent = field.regexMsg;
+            return false;
+        }
+
+        error.textContent = "";
     }
 
 
-    if (nameInput.value.length > 50)
-    {
-        nameInputErrorHint.innerHTML = "Viac než 50 znakov!";
-        return false;
-    } else
-    {
-        nameInputErrorHint.innerHTML = "";
-    }
+    const password = document.getElementById("password-input").value;
+    const repPassword = document.getElementById("rep-password-input").value;
+    const repPasswordError = document.getElementById("rep-password-input-error-hint");
 
-    if (surnameInput.value.length === 0)
-    {
-        surnameInputErrorHint.innerHTML = "Zadajte priezvisko!";
+    if (password !== repPassword) {
+        repPasswordError.textContent = "Heslá sa nezhodujú!";
         return false;
     } else {
-        surnameInputErrorHint.innerHTML = "";
-    }
-
-    if (surnameInput.value.length > 50)
-    {
-        surnameInputErrorHint.innerHTML = "Viac než 50 znakov!";
-        return false;
-    } else {
-        surnameInputErrorHint.innerHTML = "";
-    }
-
-
-
-    if (emailInput.value.length === 0)
-    {
-        emailInputErrorHint.innerHTML = "Zadajte školský email!";
-        return false;
-    } else {
-        emailInputErrorHint.innerHTML = "";
-    }
-
-    const regexEmail = /^[a-zA-Z0-9._%+-]+@fri\.uniza\.sk$/;
-    if (!regexEmail.test(emailInput.value))
-    {
-        emailInputErrorHint.innerHTML = "Nevalidný školský email!";
-        return false;
-    } else {
-        emailInputErrorHint.innerHTML = "";
-    }
-
-    if (personalNumberInput.value.length === 0)
-    {
-        personalNumberInputErrorHint.innerHTML = "Zadajte osobné číslo!";
-        return false;
-    } else {
-        personalNumberInputErrorHint.innerHTML = "";
-    }
-
-    const regexPin = /^\d{5}$/;
-
-    if (!regexPin.test(personalNumberInput.value))
-    {
-        personalNumberInputErrorHint.innerHTML = "Nevalidné osobné číslo!";
-        return false;
-    } else {
-        personalNumberInputErrorHint.innerHTML = "";
-    }
-
-    if (passwordInput.value.length === 0)
-    {
-        passwordInputErrorHint.innerHTML = "Zadajte heslo!";
-        return false;
-    }else {
-        passwordInputErrorHint.innerHTML = "";
-    }
-
-
-    if (repPasswordInput.value.length === 0)
-    {
-        repPasswordInputErrorHint.innerHTML = "Znova zadajte heslo!";
-        return false;
-    }else {
-        repPasswordInputErrorHint.innerHTML = "";
-    }
-
-
-    if (repPasswordInput.value !== passwordInput.value)
-    {
-        repPasswordInputErrorHint.innerHTML = "Heslá sa nezhodujú!";
-        return false;
-    }else {
-        repPasswordInputErrorHint.innerHTML = "";
+        repPasswordError.textContent = "";
     }
 
     return true;
 }
+
 
 
 //https://stackoverflow.com/questions/10610249/prevent-checkbox-from-ticking-checking-completely
@@ -217,182 +290,54 @@ $('input[type="checkbox"]').click(function(event) {
 
 ////////////////////
 
-let isValid = false;
 
-function validatePassword()
-{
-    const regexUpperCase = /[A-Z]/g;
-    const regexLowerCase = /[a-z]/g;
-    const regexNumber = /[0-9]/g;
-    const regexSpecialCharacter = /[?.:!@#$%^|<>&*~()+_\-{}[\],=;/\\'"]/g;
+function submit() {
+    const forms = {
+        1: { validator: canRegisterStudent, formId: "student-form" },
+        2: { validator: () => canRegisterEmployee() && isValid, formId: "employee-form" }
+    };
 
-    const passwordInput = document.getElementById("password-input");
-
-    const upperCaseHint = document.getElementById("upper-case-checkbox-div");
-    const lowerCaseHint = document.getElementById("lower-case-checkbox-div");
-    const specialCharacterHint = document.getElementById("special-char-checkbox-div");
-    const oneNumberHint = document.getElementById("number-checkbox-div");
-    const minCharacters = document.getElementById("min-chars-checkbox-div");
-    const maxCharacters = document.getElementById("max-chars-checkbox-div");
-
-
-
-
-    isValid = true;
-
-    if (passwordInput.value.match(regexUpperCase)) {
-        upperCaseHint.classList.remove("form-check-danger");
-        upperCaseHint.classList.add("form-check-success");
-        upperCaseHint.getElementsByTagName("input")[0].checked = true;
-
-    } else {
-        upperCaseHint.classList.remove("form-check-success");
-        upperCaseHint.classList.add("form-check-danger");
-        upperCaseHint.getElementsByTagName("input")[0].checked = false;
-        isValid = false;
-
-    }
-
-
-    if (passwordInput.value.match(regexLowerCase)) {
-        lowerCaseHint.classList.remove("form-check-danger");
-        lowerCaseHint.classList.add("form-check-success");
-        lowerCaseHint.getElementsByTagName("input")[0].checked = true;
-    } else {
-        lowerCaseHint.classList.remove("form-check-success");
-        lowerCaseHint.classList.add("form-check-danger");
-        lowerCaseHint.getElementsByTagName("input")[0].checked = false;
-        isValid = false;
-
-    }
-
-    if (passwordInput.value.match(regexNumber)) {
-        oneNumberHint.classList.remove("form-check-danger");
-        oneNumberHint.classList.add("form-check-success");
-        oneNumberHint.getElementsByTagName("input")[0].checked = true;
-    } else {
-        oneNumberHint.classList.remove("form-check-success");
-        oneNumberHint.classList.add("form-check-danger");
-        oneNumberHint.getElementsByTagName("input")[0].checked = false;
-        isValid = false;
-    }
-
-    if (passwordInput.value.match(regexSpecialCharacter)) {
-        specialCharacterHint.classList.remove("form-check-danger");
-        specialCharacterHint.classList.add("form-check-success");
-        specialCharacterHint.getElementsByTagName("input")[0].checked = true;
-    } else {
-        specialCharacterHint.classList.remove("form-check-success");
-        specialCharacterHint.classList.add("form-check-danger");
-        specialCharacterHint.getElementsByTagName("input")[0].checked = false;
-        isValid = false;
-    }
-
-
-    if (passwordInput.value.length >= 8) {
-        minCharacters.classList.remove("form-check-danger");
-        minCharacters.classList.add("form-check-success");
-        minCharacters.getElementsByTagName("input")[0].checked = true;
-    } else {
-        minCharacters.classList.remove("form-check-success");
-        minCharacters.classList.add("form-check-danger");
-        minCharacters.getElementsByTagName("input")[0].checked = false;
-        isValid = false;
-    }
-
-    if (passwordInput.value.length <= 64) {
-        maxCharacters.classList.remove("form-check-danger");
-        maxCharacters.classList.add("form-check-success");
-        maxCharacters.getElementsByTagName("input")[0].checked = true;
-
-    } else {
-        maxCharacters.classList.remove("form-check-success");
-        maxCharacters.classList.add("form-check-danger");
-        maxCharacters.getElementsByTagName("input")[0].checked = false;
-        isValid = false;
-    }
-
-    return isValid;
-
-}
-
-
-function submit()
-{
-
-
-    if (which === 1)
-    {
-
-        if (canRegisterStudent())
-        {
-
-            getById("student-form").submit();
-        }
-    }
-
-    if (which === 2)
-    {
-        if (canRegisterEmployee() && isValid)
-        {
-            getById("employee-form").submit();
-        }
+    const current = forms[which];
+    if (current && current.validator()) {
+        document.getElementById(current.formId).submit();
     }
 }
 
 
-function submitChangedPassword()
-{
-    const passwordInput = document.getElementById("password-input");
-    const oldPasswordInput = document.getElementById("old-password-input");
-    const repPasswordInput = document.getElementById("rep-password-input");
+function submitChangedPassword() {
+    const fields = [
+        { id: "old-password-input", errorId: "old-password-input-error-hint", message: "Zadajte staré heslo!" },
+        { id: "password-input", errorId: "password-input-error-hint", message: "Zadajte nové heslo!" },
+        { id: "rep-password-input", errorId: "rep-password-input-error-hint", message: "Zadajte znova nové heslo!" }
+    ];
 
-    const passwordInputErrorHint = document.getElementById("password-input-error-hint");
-    const oldPasswordInputErrorHint = document.getElementById("old-password-input-error-hint");
-    const repPasswordInputErrorHint = document.getElementById("rep-password-input-error-hint");
+    let valid = true;
 
+    fields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const error = document.getElementById(field.errorId);
 
-    if (oldPasswordInput.value.length === 0)
-    {
-        oldPasswordInputErrorHint.innerHTML = "Zadajte staré heslo!";
-        return false;
-    } else {
-        oldPasswordInputErrorHint.innerHTML = "";
+        if (!input.value.trim()) {
+            error.textContent = field.message;
+            valid = false;
+        } else {
+            error.textContent = "";
+        }
+    });
+
+    const password = document.getElementById("password-input").value;
+    const repPassword = document.getElementById("rep-password-input").value;
+    const repPasswordError = document.getElementById("rep-password-input-error-hint");
+
+    if (password && repPassword && (password !== repPassword) ) {
+        repPasswordError.textContent = "Heslá sa nezhodujú!";
+        valid = false;
     }
 
-    if (passwordInput.value.length === 0)
-    {
-        passwordInputErrorHint.innerHTML = "Zadajte nové heslo!";
-        return false;
-    } else {
-        passwordInputErrorHint.innerHTML = "";
-    }
-
-    if (repPasswordInput.value.length === 0)
-    {
-        repPasswordInputErrorHint.innerHTML = "Zadajte znova nové heslo!";
-        return false;
-    } else {
-        repPasswordInputErrorHint.innerHTML = "";
-    }
-
-    if (repPasswordInput.value !== passwordInput.value)
-    {
-        repPasswordInputErrorHint.innerHTML = "Heslá sa nezhodujú!";
-        return false;
-    } else {
-        repPasswordInputErrorHint.innerHTML = "";
-    }
-
-
-    if (isValid)
-    {
-
+    if (valid && isValid) {
         document.getElementById("form").submit();
     }
-
-
-
 }
+
 
 

@@ -69,8 +69,8 @@
                         </div>
                         <div class="profile-name">
                             <h5 class="mb-0 font-weight-normal" th:text="${personalInfo.name + ' ' + personalInfo.surname}"></h5>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}">Vyučujúci</span>
-                            <span style="color: whitesmoke" th:if="${personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
+                            <span style="color: whitesmoke" th:if="${personalInfo.role == T(com.milos.numeric.Authority).TEACHER}">Vyučujúci</span>
+                            <span style="color: whitesmoke" th:if="${personalInfo.role == T(com.milos.numeric.Authority).EMPLOYEE}">Zamestnanec</span>
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
             </li>
 
 
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
+            <li th:if="${personalInfo.role == T(com.milos.numeric.Authority).TEACHER || personalInfo.role == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
                 <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
               <span class="menu-icon">
                 <i class="mdi mdi-account-multiple"></i>
@@ -115,7 +115,7 @@
             </li>
 
 
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
+            <li th:if="${personalInfo.role == T(com.milos.numeric.Authority).TEACHER || personalInfo.role == T(com.milos.numeric.Authority).STUDENT}" class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/person/chat/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-message-text">
@@ -129,7 +129,7 @@
             </li>
 
 
-            <li th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER || personalInfo.authority == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
+            <li th:if="${personalInfo.role == T(com.milos.numeric.Authority).TEACHER || personalInfo.role == T(com.milos.numeric.Authority).EMPLOYEE}" class="nav-item menu-items">
                 <a class="nav-link" th:href="@{/employee/system/page}">
               <span class="menu-icon">
                 <i class="mdi mdi-wrench">
@@ -212,7 +212,7 @@
             <div class="content-wrapper">
 
                 <div class="row">
-                    <div th:if="${personalInfo.authority == T(com.milos.numeric.Authority).TEACHER}" class="col-md-5 grid-margin stretch-card">
+                    <div th:if="${personalInfo.role == T(com.milos.numeric.Authority).TEACHER}" class="col-md-5 grid-margin stretch-card">
                         <div  class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Nastavenie systému</h4>

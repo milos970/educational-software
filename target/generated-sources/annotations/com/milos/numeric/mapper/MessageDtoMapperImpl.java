@@ -1,45 +1,43 @@
 package com.milos.numeric.mapper;
 
-import com.milos.numeric.dto.MessageDto;
+import com.milos.numeric.dto.command.MessageCommand;
+import com.milos.numeric.dto.request.MessageRequest;
+import com.milos.numeric.dto.response.MessageResponse;
 import com.milos.numeric.entity.Message;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-05-22T10:10:04+0200",
+    date = "2025-09-07T17:53:33+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class MessageDtoMapperImpl implements MessageDtoMapper {
 
     @Override
-    public Message sourceToDestination(MessageDto source) {
+    public MessageCommand toCommand(MessageRequest source) {
         if ( source == null ) {
             return null;
         }
 
-        Message message = new Message();
+        MessageCommand messageCommand = new MessageCommand();
 
-        message.setContent( source.getContent() );
-        message.setSenderUsername( source.getSenderUsername() );
-        message.setReceiverUsername( source.getReceiverUsername() );
+        messageCommand.setContent( source.content() );
+        messageCommand.setSenderUsername( source.senderUsername() );
+        messageCommand.setReceiverUsername( source.receiverUsername() );
 
-        return message;
+        return messageCommand;
     }
 
     @Override
-    public MessageDto destinationToSource(Message destination) {
-        if ( destination == null ) {
+    public MessageResponse toResponse(Message source) {
+        if ( source == null ) {
             return null;
         }
 
-        MessageDto messageDto = new MessageDto();
+        MessageResponse messageResponse = new MessageResponse();
 
-        messageDto.setContent( destination.getContent() );
-        messageDto.setReceiverUsername( destination.getReceiverUsername() );
-        messageDto.setSenderUsername( destination.getSenderUsername() );
-
-        return messageDto;
+        return messageResponse;
     }
 }

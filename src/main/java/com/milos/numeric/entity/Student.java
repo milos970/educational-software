@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "students")
 public class Student
 {
     @Id
@@ -25,7 +26,7 @@ public class Student
 
     @Min(value = 0, message = "Value is less than 0!")
     @Max(value = 13, message = "Value is more than 13!")
-    private int absents;
+    private int absences;
 
     @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(nullable = false, name = "personal_info_id")

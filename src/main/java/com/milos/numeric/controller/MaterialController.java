@@ -30,7 +30,7 @@ public class MaterialController {
 
     @PostMapping("/materials")
     public ResponseEntity<Long> saveFile(@Valid @RequestBody MaterialDto materialDto) {
-        Material material = materialService.save(materialDto);
+        Material material = materialService.createMaterial(materialDto);
 
         if (material != null) {
             return ResponseEntity.ok(material.getId());
@@ -44,13 +44,8 @@ public class MaterialController {
 
     @GetMapping("materials/{id}")
     public ResponseEntity<byte[]> findById(@PathVariable Long id) {
-        Optional<Material> optional = materialService.findById(id);
 
-        if (optional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Material material = optional.get();
+        Material material = this.materialService.findById(id);
         Path filePath = Paths.get(material.getPath());
 
         try {

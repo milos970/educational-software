@@ -1,9 +1,7 @@
 package com.milos.numeric.service;
 
 import com.milos.numeric.email.EmailService;
-import com.milos.numeric.exception.InvalidEmailException;
 import org.springframework.stereotype.Service;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -22,9 +20,6 @@ public class UserVerificationService {
 
     public void sendVerificationEmail(String email)
     {
-        if (!isValidSchoolEmail(email)) {
-            throw new InvalidEmailException();
-        }
         String token = this.tokenService.createToken(email);
         String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
         String link = "auth/verificated-email";

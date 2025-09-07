@@ -2,6 +2,7 @@ package com.milos.numeric.service;
 
 import com.milos.numeric.dto.MaterialDto;
 import com.milos.numeric.entity.Material;
+import com.milos.numeric.exception.FileStorageException;
 import com.milos.numeric.mapper.MaterialDtoMapper;
 import com.milos.numeric.repository.MaterialRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -66,7 +67,7 @@ public class MaterialService
     }
 
 
-    private Material findById(long id) {
+    public Material findById(long id) {
         return this.materialRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Material not found"));
     }

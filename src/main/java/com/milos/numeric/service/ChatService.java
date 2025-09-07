@@ -1,17 +1,18 @@
 package com.milos.numeric.service;
 
-import com.milos.numeric.Authority;
-import com.milos.numeric.dto.MessageDto;
+import com.milos.numeric.Role;
+import com.milos.numeric.dto.command.ChatIdCommand;
+import com.milos.numeric.dto.command.MessageCommand;
+import com.milos.numeric.dto.request.ChatIdRequest;
 import com.milos.numeric.entity.Chat;
 import com.milos.numeric.entity.ChatId;
 import com.milos.numeric.entity.Message;
 import com.milos.numeric.repository.ChatRepository;
-import jakarta.validation.ConstraintViolation;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -38,94 +39,59 @@ public class ChatService
     }
 
 
-    public boolean createChat(String participantA, String participantB)
+
+    public void createChat(String participantA, String participantB)
     {
         ChatId chatId = new ChatId(participantA, participantB);
         Chat chat = new Chat();
-        chat.setChatId(chatId);
+        chat.setId(chatId);
         this.chatRepository.save(chat);
-        return true;
     }
 
 
-    public Optional<Chat> findByChatId(String usernameA, String usernameB)
-    {
-        return this.chatRepository.findById(new ChatId(usernameA, usernameB));
+    public Chat findByChatId(ChatId chatId) {
+        return this.chatRepository.findById(chatId)
+                .orElseThrow(() -> new EntityNotFoundException("Chat not found"));
     }
 
-
-    public boolean saveMessage(MessageDto messageDto)
+    public void saveMessage(MessageCommand command)
     {
-        Set<ConstraintViolation<MessageDto>> violations = validator.validate(messageDto);
-        if (!violations.isEmpty())
-        {
-            return false;
-        }
-
-
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        boolean isTeacher = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Role.ROLE_TEACHER.name()));
 
-        String username = userDetails.getUsername();
+        String username = authentication.getName();
         ChatId chatId = new ChatId();
 
-
-
-        if (this.personalInfoService.findAuthorityByUsername(username).get() == Authority.ROLE_TEACHER)
+        if (isTeacher)
         {
             chatId.setParticipantA(username);
-            chatId.setParticipantB(messageDto.getReceiverUsername());
-        }
-
-        if (this.personalInfoService.findAuthorityByUsername(username).get() == Authority.ROLE_STUDENT)
-        {
-            Optional<String> optionalUsername = this.personalInfoService.findUsernameByAuthorityTeacher();
-            chatId.setParticipantA(optionalUsername.get());
+            chatId.setParticipantB(command.getReceiverUsername());
+        } else {
+            String teacherUsername = personalInfoService.findUsernameByAuthority(Role.ROLE_TEACHER);
+            chatId.setParticipantA(teacherUsername);
             chatId.setParticipantB(username);
-
         }
 
-
-        Optional<Chat> optionalChat = this.chatRepository.findById(chatId);
-
-        if (optionalChat.isEmpty())
-        {
-            return false;
-        }
-
-        messageDto.setSenderUsername(username);
-
-        Chat chat = optionalChat.get();
-
-        this.messageService.saveMessage(messageDto, chat);
-        return true;
+        Chat chat = this.findByChatId(chatId);
+        command.setChat(chat);
+        this.messageService.createMessage(command);
     }
 
 
-    public List<MessageDto> getAllMessages(Chat chat)
-    {
-        List<MessageDto> messageDtos = new LinkedList<>();
-
+    public Iterable<Message> allMessages(ChatIdCommand command) {
+        ChatId chatId = new ChatId();
+        chatId.setParticipantA(command.getSenderUsername());
+        chatId.setParticipantB(command.getReceiverUsername());
+        Chat chat = this.findByChatId(chatId);
         List<Message> messages = chat.getMessages();
-
-        for (int i = messages.size() - 1; i >= 0; --i) {
-            MessageDto messageDto = new MessageDto();
-            messageDto.setContent(messages.get(i).getContent());
-
-            messageDto.setReceiverUsername(messages.get(i).getReceiverUsername());
-            messageDto.setSenderUsername(messages.get(i).getSenderUsername());
-            messageDtos.add(messageDto);
-
-        }
-
-        return messageDtos;
+        Collections.reverse(messages);
+        return messages;
     }
 
 
-    public boolean deleteAll()
+    public void deleteAll()
     {
         this.chatRepository.deleteAll();
-        return true;
     }
 }

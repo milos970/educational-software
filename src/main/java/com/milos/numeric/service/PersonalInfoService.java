@@ -3,7 +3,7 @@ package com.milos.numeric.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.milos.numeric.Authority;
+import com.milos.numeric.Role;
 import com.milos.numeric.dto.PersonalInfoDto;
 import com.milos.numeric.email.EmailService;
 import com.milos.numeric.entity.PersonalInfo;
@@ -12,6 +12,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,6 @@ import java.util.regex.Pattern;
 public class PersonalInfoService
 {
     private final PersonalInfoRepository personalInfoRepository;
-    private final SystemSettingsService systemSettingsService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
@@ -39,9 +39,8 @@ public class PersonalInfoService
 
 
 
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, SystemSettingsService systemSettingsService, EmailService emailService, PasswordEncoder passwordEncoder) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.personalInfoRepository = personalInfoRepository;
-        this.systemSettingsService = systemSettingsService;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -66,6 +65,12 @@ public class PersonalInfoService
         }
 
         return newNode.get("gender").asText();
+    }
+
+
+    public String findUsernameByAuthority(Role role) {
+        return this.personalInfoRepository.findUsernameByAuthority(role.name())
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 
 
@@ -124,8 +129,13 @@ public class PersonalInfoService
                 .orElseThrow(() -> new EntityNotFoundException("PersonalInfo not found"));
     }
 
-    private PersonalInfo findByUsername(String username) {
+    public PersonalInfo findByUsername(String username) {
         return this.personalInfoRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("PersonalInfo not found"));
+    }
+
+    public PersonalInfo findByRole(Role role) {
+        return this.personalInfoRepository.findByAuthority(role.name())
                 .orElseThrow(() -> new EntityNotFoundException("PersonalInfo not found"));
     }
 
@@ -146,9 +156,9 @@ public class PersonalInfoService
     }
 
     @Transactional
-    public void updateRole(String username, Authority authority) {
+    public void updateRole(String username, Role role) {
         PersonalInfo entity = this.findByUsername(username);
-        entity.setAuthority(authority);
+        entity.setRole(role);
         this.personalInfoRepository.save(entity);
     }
 

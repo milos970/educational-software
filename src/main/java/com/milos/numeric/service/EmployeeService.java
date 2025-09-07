@@ -1,6 +1,6 @@
 package com.milos.numeric.service;
 
-import com.milos.numeric.Authority;
+import com.milos.numeric.Role;
 import com.milos.numeric.entity.Employee;
 import com.milos.numeric.entity.PersonalInfo;
 import com.milos.numeric.repository.EmployeeRepository;
@@ -32,9 +32,14 @@ public class EmployeeService
     }
 
 
+    public Iterable<Employee> findAll() {
+        return this.employeeRepository.findAll();
+    }
+
+
     @Transactional
-    public void updateRole(String username, Authority authority) {
-        this.personalInfoService.updateRole(username, authority);
+    public void updateRole(String username, Role role) {
+        this.personalInfoService.updateRole(username, role);
     }
 
 

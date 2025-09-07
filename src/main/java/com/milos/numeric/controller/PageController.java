@@ -1,10 +1,11 @@
 package com.milos.numeric.controller;
 
-import com.milos.numeric.Authority;
+import com.milos.numeric.Role;
 import com.milos.numeric.dto.NewPasswordDto;
+import com.milos.numeric.dto.PersonalInfoDto;
 import com.milos.numeric.email.EmailService;
 import com.milos.numeric.entity.*;
-import com.milos.numeric.security.MyUserDetails;
+import com.milos.numeric.security.CustomUserDetails;
 import com.milos.numeric.service.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -12,10 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,38 +24,30 @@ public class PageController {
     private final EmployeeService employeeService;
     private final EmailService emailService;
     private final MaterialService materialService;
-    private final SystemSettingsService systemSettingsService;
     private final ChatService chatService;
 
 
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailService emailService, MaterialService materialService, SystemSettingsService systemSettingsService, ChatService chatService) {
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailService emailService, MaterialService materialService, ChatService chatService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
         this.emailService = emailService;
         this.materialService = materialService;
-        this.systemSettingsService = systemSettingsService;
         this.chatService = chatService;
     }
 
-    @GetMapping("/schedule")
-    public String studentSchedulePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        String username = myUserDetails.getUsername();
-
+    @GetMapping("schedule")
+    public String studentSchedulePage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        String username = customUserDetails.getUsername();
         Student student = studentService.findByUsername(username).orElseThrow(() -> new RuntimeException("Student not found"));
-
         model.addAttribute("student", student);
-
-        SystemSettings systemSettings = systemSettingsService.findFirst().orElseThrow(() -> new RuntimeException("System settings not found"));
-
-        model.addAttribute("systemSettings", systemSettings);
-
+        model.addAttribute("systemSettings", null);
         return "pages/main/schedule";
     }
 
-    @GetMapping("/profile")
-    public String studentProfilePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        String username = myUserDetails.getUsername();
+    @GetMapping("profile")
+    public String studentProfilePage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        String username = customUserDetails.getUsername();
         Optional<Student> optionalStudent = this.studentService.findByUsername(username);
         Student student = optionalStudent.get();
         model.addAttribute("student", student);
@@ -65,108 +55,69 @@ public class PageController {
     }
 
 
-    @GetMapping("/system")
-    public String systemPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        String username = myUserDetails.getUsername();
+    @GetMapping("system")
+    public String systemPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
 
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
-        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        String username = customUserDetails.getUsername();
+        PersonalInfo personalInfo = this.personalInfoService.findByUsername(username);
         model.addAttribute("personalInfo", personalInfo);
 
-        Optional<SystemSettings> optional = this.systemSettingsService.findFirst();
 
-        if (optional.isEmpty()) {
 
-        }
 
-        SystemSettings systemSettings = optional.get();
-        
-        model.addAttribute("systemSettings", systemSettings);
+        model.addAttribute("systemSettings", null);
         model.addAttribute("students", this.studentService.findAll());
 
         return "pages/main/system";
     }
 
-    @GetMapping("reset-password")
-    public String resetPasswordPage(Model model) {
-        model.addAttribute("newPasswordDto", new NewPasswordDto());
-        return "update-password";
-    }
 
-    @GetMapping("person/password/update/page")
+    @GetMapping("update-password")
     public String updatePasswordPage(Model model) {
         model.addAttribute("newPasswordDto", new NewPasswordDto());
         return "pages/alt/change-password";
     }
 
 
-       @GetMapping("/sign-up")
-    public String signUpPage(RedirectAttributes redirectAttributes) {
+    @GetMapping("sign-up")
+    public String signUpPage(Model model, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("success", "Email bol odoslaný");
         redirectAttributes.addFlashAttribute("email-error", "Email does not exist!");
-        return "redirect:/student-form";
+        model.addAttribute("personalInfoDto", new PersonalInfoDto());
+        return "pages/alt/sign-up";
     }
 
 
-    @GetMapping("/students")
-    public String studentsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        String username = myUserDetails.getUsername();
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
-
-        if (optionalPersonalInfo.isEmpty()) {
-            return "redirect:admin/material/page/error";
-        }
-
-
-        PersonalInfo personalInfo = optionalPersonalInfo.get();
+    @GetMapping("students")
+    public String studentsPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        String username = customUserDetails.getUsername();
+        PersonalInfo personalInfo = this.personalInfoService.findByUsername(username);
         model.addAttribute("personalInfo", personalInfo);
-
-        List<Student> students = this.studentService.findAllByPointsAsc();
-
+        Iterable<Student> students = this.studentService.findAll();
         model.addAttribute("students", students);
-
         return "pages/main/students";
     }
 
-    @GetMapping("/employees")
-    public String employeesPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        String username = myUserDetails.getUsername();
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
-
-        if (optionalPersonalInfo.isEmpty()) {
-            return "redirect:admin/material/page/error";
-        }
-
-
-        PersonalInfo personalInfo = optionalPersonalInfo.get();
+    @GetMapping("employees")
+    public String employeesPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        String username = customUserDetails.getUsername();
+        PersonalInfo personalInfo = this.personalInfoService.findByUsername(username);
         model.addAttribute("personalInfo", personalInfo);
-
-        List<Employee> employees = this.employeeService.findAll();
-
+        Iterable<Employee> employees = this.employeeService.findAll();
         model.addAttribute("employees", employees);
-
         return "pages/main/employees";
     }
 
 
-    @GetMapping("/materials")
-    public String materialsPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        List<Material> materials = this.materialService.findAll();
-
-        if (materials.isEmpty()) {
-
-        }
-
+    @GetMapping("materials")
+    public String materialsPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model)
+    {
+        Iterable<Material> materials = this.materialService.findAll();
         model.addAttribute("materials", materials);
 
-        String username = myUserDetails.getUsername();
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
+        String username = customUserDetails.getUsername();
 
-        if (optionalPersonalInfo.isEmpty()) {
-            return "redirect:admin/material/page/error";
-        }
-
-        PersonalInfo personalInfo = optionalPersonalInfo.get();
+        PersonalInfo personalInfo = this.personalInfoService.findByUsername(username);
 
         model.addAttribute("personalInfo", personalInfo);
 
@@ -176,40 +127,33 @@ public class PageController {
 
     @GetMapping("login")
     public String login() {
+
         return "pages/alt/sign-in";
     }
 
-    @GetMapping("forget-password-page")
+    @GetMapping("forget-password")
     public String forgetPassword() {
         return "pages/alt/forgot-password";
     }
 
-    @GetMapping("/communication")
-    public String chatPage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
+    @GetMapping("communication")
+    public String chatPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
 
-        String username = myUserDetails.getUsername();
-        Optional<PersonalInfo> optionalPersonalInfo = this.personalInfoService.findByUsername(username);
+        String username = customUserDetails.getUsername();
 
-        PersonalInfo personalInfo = optionalPersonalInfo.get();
-
+        PersonalInfo personalInfo = this.personalInfoService.findByUsername(username);
         model.addAttribute("personalInfo", personalInfo);
 
-        if (personalInfo.getAuthority() == Authority.ROLE_TEACHER) {
-            List<Student> students = studentService.findAll();
+        if (personalInfo.getRole() == Role.ROLE_TEACHER) {
+            Iterable<Student> students = studentService.findAll();
             model.addAttribute("students", students);
-        } else {
+        } else
+        {
+            PersonalInfo teacher = this.personalInfoService.findByRole(Role.ROLE_TEACHER);
+            Optional<Chat> optionalChat = null;
+            model.addAttribute("teacher", teacher);
 
-            Optional<Chat> optionalChat = this.chatService.findByChatId(this.personalInfoService.findUsernameByAuthorityTeacher().get(), personalInfo.getUsername());
-            model.addAttribute("teacher", this.personalInfoService.findUsernameByAuthorityTeacher().get());
-            if (optionalChat.isEmpty()) {
-
-            }
-
-            if (optionalChat.get().getMessages().isEmpty()) {
-
-            }
             Chat chat = optionalChat.get();
-
             model.addAttribute("chat", chat);
         }
 
@@ -217,18 +161,16 @@ public class PageController {
     }
 
 
-    @GetMapping("/home")
-    public String homePage(@AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
-        String username = myUserDetails.getUsername();
-
-        return personalInfoService.findByUsername(username).map(personalInfo -> {
-            model.addAttribute("personalInfo", personalInfo);
-            return "index";
-        }).orElse("redirect:/error");
+    @GetMapping("methods")
+    public String homePage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        String username = customUserDetails.getUsername();
+        PersonalInfo entity = this.personalInfoService.findByUsername(username);
+        model.addAttribute("personalInfo", entity);
+        return "pages/main/methods";
     }
 
 
-    @GetMapping("/auth/reset-password")
+    @GetMapping("reset-password")
     public String showResetPasswordForm(@RequestParam String token, Model model) {
         model.addAttribute("token", token);
         return "pages/alt/reset-password";

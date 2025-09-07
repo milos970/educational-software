@@ -17,11 +17,7 @@ public class EmailService
     @Value("${spring.mail.username}")
     private String sourceEmail;
 
-    @Value("${server.ip}")
-    private String serverIp;
 
-    @Value("${server.port}")
-    private String serverPort;
 
 
     public EmailService(JavaMailSender emailSender) {

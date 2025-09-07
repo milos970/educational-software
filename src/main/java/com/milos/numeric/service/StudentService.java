@@ -45,13 +45,13 @@ public class StudentService
     public void updateAbsences(long id, int absences)
     {
         Student entity = this.findById(id);
-        int sum = entity.getAbsents() + absences;
+        int sum = entity.getAbsences() + absences;
 
         if (sum > max_absences) {
             throw new IllegalArgumentException();
         }
 
-        entity.setAbsents(sum);
+        entity.setAbsences(sum);
         this.studentRepository.save(entity);
 
     }
