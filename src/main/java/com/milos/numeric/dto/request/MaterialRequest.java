@@ -1,4 +1,4 @@
-package com.milos.numeric.dto;
+package com.milos.numeric.dto.request;
 
 import com.milos.numeric.validator.MaterialSizeValid;
 import com.milos.numeric.validator.MaterialTypeValid;
@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class MaterialDto
+public class MaterialRequest
 {
     @NotBlank
     @Size(min = 1, max = 15, message = "Názov materiálu musí byť v rozmedzí 1 až 15 znakov!")

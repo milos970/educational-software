@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Employee
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(targetEntity = PersonalInfo.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

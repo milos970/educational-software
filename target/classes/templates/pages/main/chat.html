@@ -1,10 +1,9 @@
 
-
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/pages/main/index}">
+<meta name="current-user" th:content="${personalInfo.username}">
 <body>
 
 <div layout:fragment="content" class="main-panel">
@@ -17,31 +16,25 @@
                 <div class="card">
 
                     <div class="card-body" id="conversation">
-
-
                         <div th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_STUDENT}  and ${not #lists.isEmpty(chat.messages)}">
                             <div th:each="message : ${chat.messages}">
                                 <div class="flex-container">
                                     <div class="left-item">
                                         <div th:if="${personalInfo.username == message.receiverUsername}"
-                                             th:class="left-item">
-                                            <button th:text="${message.content}"
-                                                    class="btn btn-light btn-rounded btn-fw"></button>
+                                             class="left-item">
+                                            <button th:text="${message.content}" class="btn btn-light btn-rounded btn-fw"></button>
                                         </div>
                                     </div>
 
                                     <div class="right-item">
                                         <div th:if="${personalInfo.username == message.senderUsername}"
-                                             th:class="right-item">
-                                            <button th:text="${message.content}"
-                                                    class="btn btn-success btn-rounded btn-fw"></button>
+                                             class="right-item">
+                                            <button th:text="${message.content}" class="btn btn-success btn-rounded btn-fw"></button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
 
                     <div id="send-message-div" class="form-group">
@@ -100,8 +93,7 @@
                                     <td><span th:text="${student.personalInfo.username}"></span></td>
                                     <td>
                                         <button th:attr="onclick=|getConversation('${student.personalInfo.username}', '${student.id}')|"
-                                                type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť
-                                            konverzáciu
+                                                type="button" class="btn btn-info btn-rounded btn-fw">Zobraziť konverzáciu
                                         </button>
                                     </td>
                                 </tr>
@@ -125,5 +117,3 @@
 
 </body>
 </html>
-
-

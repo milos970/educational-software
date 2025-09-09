@@ -1,10 +1,7 @@
 package com.milos.numeric.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.milos.numeric.Gender;
 import com.milos.numeric.Role;
-import com.milos.numeric.dto.PersonalInfoDto;
 import com.milos.numeric.email.EmailService;
 import com.milos.numeric.entity.PersonalInfo;
 import com.milos.numeric.repository.PersonalInfoRepository;
@@ -15,8 +12,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,42 +25,67 @@ public class PersonalInfoService
     private final PersonalInfoRepository personalInfoRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final GenderService genderService;
 
     private final static String regexStudentEmail = "\\b[A-Za-z0-9._%+-]+@stud\\.uniza\\.sk\\b";
     private final static String regexEmployeeEmail = "\\b[A-Za-z0-9._%+-]+@fri\\.uniza\\.sk\\b";
     private final static Pattern patternStudent = Pattern.compile(regexStudentEmail);
     private final static Pattern patternEmployee = Pattern.compile(regexEmployeeEmail);
 
+    private final static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\\@%.#&\\-()\\[\\]\\-_{}\\]:;'\",?/*~$^+=<>]).{8,64}$";
+    private final static Pattern patternPassword = Pattern.compile(regexPassword);
 
 
-
-    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository, EmailService emailService, PasswordEncoder passwordEncoder, GenderService genderService) {
         this.personalInfoRepository = personalInfoRepository;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+        this.genderService = genderService;
     }
 
-
-
-
-
-    /*
-    Zisti na zaklade pravdepodobnosti podla mena pohlavie.
-     */
-    private String determineGender(@PathVariable String name) {
-        String uri = "https://api.genderize.io?name=" + name;
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode newNode = null;
-        try {
-            newNode = mapper.readTree(result);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    private void validatePassword(String password) {
+        if (!patternPassword.matcher(password).matches()) {
+            throw new IllegalArgumentException("Password does not meet security requirements.");
         }
-
-        return newNode.get("gender").asText();
     }
+
+    private void validateStudentEmail(String email) {
+        if (!patternStudent.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid student email format.");
+        }
+    }
+
+    private void validateEmployeeEmail(String email) {
+        if (!patternEmployee.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid employee email format.");
+        }
+    }
+
+    private void validateUsername(String username) {
+        if (username == null || (username.length() < 1) || (username.length() > 50) ) {
+            throw new IllegalArgumentException("Invalid username format.");
+        }
+    }
+
+    private void validateName(String name) {
+        if (name == null || (name.length() < 1) || (name.length() > 50) ) {
+            throw new IllegalArgumentException("Invalid name format.");
+        }
+    }
+
+    private void validateSurname(String surname) {
+        if (surname == null || (surname.length() < 1) || (surname.length() > 50) ) {
+            throw new IllegalArgumentException("Invalid surname format.");
+        }
+    }
+
+    private void validatePersonalNumber(String pin) {
+        if (pin == null || (pin.length() != 5) || (pin.length() != 6) ) {
+            throw new IllegalArgumentException("Invalid pin format.");
+        }
+    }
+
+
 
 
     public String findUsernameByAuthority(Role role) {
@@ -76,48 +96,68 @@ public class PersonalInfoService
 
 
 
+    @Transactional
+    public void createMultiplePersonsFromFile(MultipartFile file) {
+        try (Reader reader = new InputStreamReader(file.getInputStream());
+             CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build()) {
+
+            List<PersonalInfo> entities = new ArrayList<>();
+            String[] values;
+
+            while ((values = csvReader.readNext()) != null) {
+
+                String[] rec = values[0].split(";");
+                if (rec.length < 4) {
+                    continue;
+                }
+
+                String surname = rec[0].trim();
+                String name = rec[1].trim();
+                String personalNumber = rec[2].trim();
+                String email = rec[3].trim();
 
 
+                if (personalInfoRepository.existsByEmail(email) || personalInfoRepository.existsByPersonalNumber(personalNumber)) {
+                    continue;
+                }
 
-    public boolean createMultiplePersonsFromFile(MultipartFile file)
-    {
-        List<PersonalInfoDto> list = new LinkedList<>();
+                PersonalInfo entity = new PersonalInfo();
+                this.validateSurname(surname);
+                entity.setSurname(surname);
 
-        Reader reader = null;
-        try {
-            reader = new InputStreamReader(file.getInputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
+                this.validateName(name);
+                entity.setName(name);
 
+                entity.setPersonalNumber(personalNumber);
+                entity.setEmail(email);
+                entity.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
 
-        String[] values = null;
-        while (true)
-        {
-            try {
-                if ((values = csvReader.readNext()) == null) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                try {
+                    String genderStr = genderService.determineGender(name);
+                    entity.setGender(Gender.valueOf(genderStr.toUpperCase()));
+                } catch (Exception e) {
+                    // fallback, ak gender API neodpovie
+                    entity.setGender(Gender.MALE); // alebo null
+                }
+
+                entities.add(entity);
             }
-            PersonalInfoDto person = new PersonalInfoDto();
 
-            String[] rec = values[0].split(";");
-            String personalNumber = rec[2];
-            String name = rec[1];
-            String surname = rec[0];
-            String email = rec[3];
+            if (!entities.isEmpty()) {
+                personalInfoRepository.saveAll(entities);
+            }
 
-
-            person.setPersonalNumber(personalNumber);
-            person.setName(name);
-            person.setSurname(surname);
-            person.setEmail(email);
-            person.setPassword(UUID.randomUUID() + "M#1");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read CSV file", e);
         }
+    }
 
+    public boolean existsByEmail(String email) {
+        return this.personalInfoRepository.existsByEmail(email);
+    }
 
-        return true;
+    public boolean existsByPersonalNumber(String personalNumber) {
+        return this.personalInfoRepository.existsByPersonalNumber(personalNumber);
     }
 
     public boolean existsByUsername(String username) {
@@ -134,14 +174,19 @@ public class PersonalInfoService
                 .orElseThrow(() -> new EntityNotFoundException("PersonalInfo not found"));
     }
 
-    public PersonalInfo findByRole(Role role) {
-        return this.personalInfoRepository.findByAuthority(role.name())
+    public List<PersonalInfo> findByRole(Role role) {
+        return this.personalInfoRepository.findByRole(role.name());
+    }
+
+    public PersonalInfo findById(long id) {
+        return this.personalInfoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("PersonalInfo not found"));
     }
 
     //add validation
     @Transactional
     public void updatePassword(String username, String password) {
+        this.validatePassword(password);
         PersonalInfo entity = this.findByUsername(username);
         entity.setPassword(this.passwordEncoder.encode(password));
         this.personalInfoRepository.save(entity);
@@ -149,15 +194,22 @@ public class PersonalInfoService
 
     //add validation
     @Transactional
-    public void resetPassword(String email, String password) {
+    public void resetPassword(String email, String password)
+    {
+        this.validatePassword(password);
+
         PersonalInfo entity = this.findByEmail(email);
         entity.setPassword(this.passwordEncoder.encode(password));
         this.personalInfoRepository.save(entity);
     }
 
     @Transactional
-    public void updateRole(String username, Role role) {
-        PersonalInfo entity = this.findByUsername(username);
+    public void updateRole(long id, Role role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Role cannot be null");
+        }
+
+        PersonalInfo entity = this.findById(id);
         entity.setRole(role);
         this.personalInfoRepository.save(entity);
     }

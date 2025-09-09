@@ -5,6 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Numerika</title>
 
     <link rel="stylesheet" type="text/css" href="/static/vendors/mdi/css/materialdesignicons.min.css">
@@ -279,6 +281,11 @@
 <script type="text/javascript" src="/static/js/my/main.js"></script>
 <script type="text/javascript" th:src="@{/js/my/main.js}"></script>
 
+<script type="text/javascript" src="/static/js/my/chat.js"></script>
+<script type="text/javascript" th:src="@{/js/my/chat.js}"></script>
+
+<script type="text/javascript" src="/static/js/my/students.js"></script>
+<script type="text/javascript" th:src="@{/js/my/students.js}"></script>
 
 <script type="text/javascript" src="/static/js/jquery.csv.js"></script>
 <script  type="text/javascript"th:src="@{/js/jquery.csv.js}"></script>

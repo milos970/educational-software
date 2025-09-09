@@ -36,4 +36,42 @@ table {
 }
 
 
+        #conversation
+        {
+            width: 100%; /* Set a fixed width */
+            height: 200px;
+            overflow: auto;
+            scrollbar-color: #1763c7 white;
+            scrollbar-width: thin;
+
+        }
+
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between; /* Items spaced between */
+            align-items: flex-start; /* Align items to the start (top) of the container */
+            width: 100%; /* Set the container width */
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+
+        }
+
+        .left-item {
+            order: 1;
+            /*border-radius: 20px;
+            background-color: #ab7a7a;*/
+        }
+
+        .right-item {
+            order: 2; /* Order the right item second */
+            max-width: 50%; /* Set max width to prevent overflow */
+            word-wrap: break-word; /* Allow long words to break and wrap */
+            overflow-wrap: break-word; /* Ensure long words wrap */
+           /* border-radius: 20px;
+            background-color: #4bb63b;*/
+        }
+
+
+
 

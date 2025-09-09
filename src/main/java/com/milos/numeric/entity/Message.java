@@ -16,7 +16,7 @@ import lombok.Setter;
 @Table(name = "messages")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "{message.content.notblank}")
@@ -34,8 +34,8 @@ public class Message {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "chat_participant_a", referencedColumnName = "participant_a"),
-            @JoinColumn(name = "chat_participant_b", referencedColumnName = "participant_b")
+            @JoinColumn(name = "participant_a", referencedColumnName = "participant_a"),
+            @JoinColumn(name = "participant_b", referencedColumnName = "participant_b")
     })
     private Chat chat;
 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -17,7 +16,7 @@
                         <div class="table-responsive">
                             <table style="color: whitesmoke" class="table table-dark">
                                 <thead>
-                                <tr >
+                                <tr>
                                     <th style="color: whitesmoke">Študent</th>
                                     <th style="color: whitesmoke">Meno</th>
                                     <th style="color: whitesmoke">Priezvisko</th>
@@ -25,7 +24,8 @@
                                     <th style="color: whitesmoke">Osobné číslo</th>
                                     <th style="color: whitesmoke">Email</th>
                                     <th style="color: whitesmoke">Body</th>
-                                    <th style="color: whitesmoke" th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_TEACHER}"></th>
+                                    <th style="color: whitesmoke"
+                                        th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_TEACHER}"></th>
                                     <th style="color: whitesmoke">Absencie</th>
                                     <th style="color: whitesmoke"></th>
                                     <th style="color: whitesmoke"></th>
@@ -35,31 +35,37 @@
                                 <tr th:if="${#lists.isEmpty(students)}">
                                     <td colspan="2">Žiadny študent</td>
                                 </tr>
-                                <tr  th:each="student : ${students}">
+                                <tr th:each="student : ${students}">
                                     <td class="py-1">
-                                        <img th:if="${student.personalInfo.getGender().name() eq 'MALE'}" th:src="@{/images/faces-clipart/male.png}" alt="Avatar" />
-                                        <img th:if="${student.personalInfo.getGender().name() eq 'FEMALE'}" th:src="@{/images/faces-clipart/female.png}" alt="Avatar" />
+                                        <img th:if="${student.personalInfo.getGender().name() eq 'MALE'}"
+                                             th:src="@{/images/faces-clipart/male.png}" alt="Avatar"/>
+                                        <img th:if="${student.personalInfo.getGender().name() eq 'FEMALE'}"
+                                             th:src="@{/images/faces-clipart/female.png}" alt="Avatar"/>
                                     </td>
                                     <td><span th:text="${student.personalInfo.name}"></span></td>
                                     <td><span th:text="${student.personalInfo.surname}"></span></td>
                                     <td><span th:text="${student.personalInfo.username}"></span></td>
                                     <td><span th:text="${student.personalInfo.personalNumber}"></span></td>
                                     <td><span th:text="${student.personalInfo.email}"></span></td>
-                                    <td ><span th:id="'points-' + ${student.id}" th:text="${student.getPoints()}"></span></td>
+                                    <td><span th:id="'points-' + ${student.id}" th:attr="data-points=${student.getPoints()}" th:text="${student.getPoints()}"></span></td>
+                                    </td>
                                     <td th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_TEACHER}"><span>
                                                 <div class="input-group">
-                        <input type="number" min="0" max="100"   class="form-control" aria-label="Recipient's username" th:id="'points-input-' + ${student.id}"
+                        <input type="number" min="0" max="100" class="form-control" aria-label="Recipient's username"
+                               th:id="'points-input-' + ${student.id}"
                                aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                          <button class="btn btn-sm btn-primary" th:attr="onclick=|sendPoints('${student.id}')|"  type="button">Pridať</button>
+                          <button class="btn btn-sm btn-primary" th:onclick="'sendPoints(' + ${student.id} + ')'" type="button">Pridať</button>
                         </div>
                       </div></span></td>
-                                    <td ><span th:id="'absents-' + ${student.id}" th:text="${student.getAbsences()}"></span></td>
-                                    <td th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_TEACHER}"><span> <div class="input-group">
-                        <input type="number" min="0" max="13"  class="form-control" aria-label="Recipient's username" th:id="'absents-input-' + ${student.id}"
+                                    <td><span th:id="'absences-' + ${student.id}" th:attr="data-points=${student.getAbsences()}" th:text="${student.getAbsences()}"></span></td>
+                                    <td th:if="${personalInfo.role == T(com.milos.numeric.Role).ROLE_TEACHER}"><span> <div
+                                            class="input-group">
+                        <input type="number" min="0" max="13" class="form-control" aria-label="Recipient's username"
+                               th:id="'absences-input-' + ${student.id}"
                                aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                            <button class="btn btn-sm btn-primary" th:attr="onclick=|sendAbsents('${student.id}')|"  type="button">Pridať</button>
+                            <button class="btn btn-sm btn-primary" th:onclick="'sendAbsences(' + ${student.id} + ')'" type="button">Pridať</button>
                         </div>
                       </div></span></td>
                                     <td></td>

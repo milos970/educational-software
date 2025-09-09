@@ -18,18 +18,19 @@ public class EmailService
     private String sourceEmail;
 
 
-
-
     public EmailService(JavaMailSender emailSender) {
+
         this.emailSender = emailSender;
+
     }
 
     public void sendEmail(String destinationEmail, String subject, String content) {
+
         try {
             MimeMessage message = this.emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(sourceEmail, subject);
+            helper.setFrom(this.sourceEmail, SENDER_NAME);
             helper.setTo(destinationEmail);
             helper.setSubject(subject);
             helper.setText(content, true);
@@ -39,8 +40,6 @@ public class EmailService
             throw new RuntimeException("Failed to send email", e);
         }
     }
-
-
 
 
 }

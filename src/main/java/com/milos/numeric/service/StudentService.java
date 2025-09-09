@@ -5,9 +5,7 @@ import com.milos.numeric.entity.Student;
 import com.milos.numeric.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -17,7 +15,7 @@ public class StudentService
     private final int max_points = 100;
     private final int max_absences = 13;
 
-    @Autowired
+
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }

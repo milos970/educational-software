@@ -5,7 +5,6 @@ import com.milos.numeric.dto.command.MessageCommand;
 import com.milos.numeric.dto.request.ChatIdRequest;
 import com.milos.numeric.dto.request.MessageRequest;
 import com.milos.numeric.dto.response.MessageResponse;
-import com.milos.numeric.entity.Chat;
 import com.milos.numeric.entity.Message;
 import com.milos.numeric.mapper.ChatIdMapper;
 import com.milos.numeric.mapper.MessageDtoMapper;
@@ -23,6 +22,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/chat")
 public class ChatController {
+
     private final ChatService chatService;
     private final PersonalInfoService personalInfoService;
     private final MessageDtoMapper messageDtoMapper;
@@ -61,9 +61,8 @@ public class ChatController {
     }
 
 
-
-
     @DeleteMapping("conversations")
+    @PreAuthorize("hasRole('TEACHER')")
     public void deleteAll() {
          chatService.deleteAll();
     }

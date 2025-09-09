@@ -1,8 +1,6 @@
 package com.milos.numeric.controller;
 
 import com.milos.numeric.Role;
-import com.milos.numeric.dto.NewPasswordDto;
-import com.milos.numeric.dto.PersonalInfoDto;
 import com.milos.numeric.email.EmailService;
 import com.milos.numeric.entity.*;
 import com.milos.numeric.security.CustomUserDetails;
@@ -25,15 +23,18 @@ public class PageController {
     private final EmailService emailService;
     private final MaterialService materialService;
     private final ChatService chatService;
+    private final UserVerificationService verificationService;
 
 
-    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailService emailService, MaterialService materialService, ChatService chatService) {
+
+    public PageController(PersonalInfoService personalInfoService, StudentService studentService, EmployeeService employeeService, EmailService emailService, MaterialService materialService, ChatService chatService, UserVerificationService verificationService) {
         this.personalInfoService = personalInfoService;
         this.studentService = studentService;
         this.employeeService = employeeService;
         this.emailService = emailService;
         this.materialService = materialService;
         this.chatService = chatService;
+        this.verificationService = verificationService;
     }
 
     @GetMapping("schedule")
@@ -143,17 +144,14 @@ public class PageController {
 
         PersonalInfo personalInfo = this.personalInfoService.findByUsername(username);
         model.addAttribute("personalInfo", personalInfo);
-
         if (personalInfo.getRole() == Role.ROLE_TEACHER) {
             Iterable<Student> students = studentService.findAll();
             model.addAttribute("students", students);
         } else
         {
-            PersonalInfo teacher = this.personalInfoService.findByRole(Role.ROLE_TEACHER);
-            Optional<Chat> optionalChat = null;
+            PersonalInfo teacher = this.personalInfoService.findByRole(Role.ROLE_TEACHER).getFirst();
+            Chat chat = this.chatService.findByChatId(new ChatId(teacher.getUsername(), username));
             model.addAttribute("teacher", teacher);
-
-            Chat chat = optionalChat.get();
             model.addAttribute("chat", chat);
         }
 
@@ -171,8 +169,11 @@ public class PageController {
 
 
     @GetMapping("reset-password")
-    public String showResetPasswordForm(@RequestParam String token, Model model) {
-        model.addAttribute("token", token);
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        if (!verificationService.verifyToken(token)) {
+            return "redirect:/login?error=invalid_token";
+        }
+        model.addAttribute("token", token); // token sa použije pri POST formulári
         return "pages/alt/reset-password";
     }
 

@@ -440,20 +440,6 @@ function selectIntegrationMethod(value)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function calculate()
 {
     switch(selectedCategory) {
@@ -3079,41 +3065,34 @@ function updateSystemAbsents()
     xhttp.send(JSON.stringify(data));
 }
 
-function updateTeacher()
-{
-
+async function updateTeacher() {
     const usernameInputElement = getById("username-input");
+    const errorHint = getById("error-hint"); // predpokladám, že to tam máš v HTML
 
-    const xhttp = new XMLHttpRequest();
-
-
-    xhttp.onload = function()
-    {
-        if (xhttp.status === 404 || xhttp.status === 400)
-        {
-            errorHint.innerHTML ="Nezmenený!";
-        }
-
-
-
-        if (xhttp.status === 200)
-        {
-            usernameInputElement.value = "";
-        }
-    }
-
-
-    let data = {
+    const data = {
         username: usernameInputElement.value
     };
 
-    let url = "/admin/system/update/teacher";
+    try {
+        const response = await fetch("/admin/system/update/teacher", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+            },
+            body: JSON.stringify(data)
+        });
 
-    xhttp.open("PATCH", url, true);
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-    xhttp.send(JSON.stringify(data));
+        if (response.status === 404 || response.status === 400) {
+            errorHint.innerHTML = "Nezmenený!";
+        } else if (response.ok) {
+            usernameInputElement.value = "";
+        }
+    } catch (error) {
+        console.error("Chyba pri update:", error);
+        errorHint.innerHTML = "Nastala chyba!";
+    }
 }
+
 
 function updateSystemDate()
 {
@@ -3412,136 +3391,113 @@ $(function() {
 
 
 
-function openFile(id)
-{
-    const xhttp = new XMLHttpRequest();
+async function openFile(id) {
+    try {
+        const response = await fetch(`/materials/${id}`, {
+            method: "GET"
+        });
 
-
-    xhttp.onload = function()
-    {
-
-        if (xhttp.status === 200) {
-
-            let decodedData = atob(xhttp.response);
-            let uint8Array = new Uint8Array(decodedData.length);
-
-            for (var i = 0; i < decodedData.length; i++) {
-                uint8Array[i] = decodedData.charCodeAt(i);
-            }
-
-            let blob = new Blob([uint8Array], { type: xhttp.getResponseHeader("Content-Type") });
-            let link = document.createElement('a');
-
-            link.href = window.URL.createObjectURL(blob);
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        if (!response.ok) {
+            throw new Error("Nepodarilo sa načítať súbor");
         }
 
+        const blob = await response.blob();
 
+        const disposition = response.headers.get("Content-Disposition");
+        let fileName = "downloaded_file";
+        if (disposition && disposition.includes("filename=")) {
+            fileName = disposition.split("filename=")[1].replace(/"/g, "");
+        }
+
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (error) {
+        console.error(error);
     }
-
-    const url = "/person/material/" + id;
-
-    xhttp.open("GET", url, true);
-    xhttp.send();
 }
 
 
 
-function deleteFile(id)
-{
 
-    const xhttp = new XMLHttpRequest();
 
-    xhttp.onload = function()
-    {
+async function deleteFile(id) {
+    try {
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+        const response = await fetch(`/materials/${id}`, {
+            method: "DELETE",
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Chyba pri mazaní súboru, status: " + response.status);
+        }
 
         const element = document.getElementById(id);
-        element.remove();
-
-    }
-
-    const url = "/admin/material/delete/" + id;
-
-    xhttp.open("DELETE", url, true);
-    xhttp.send();
-}
-
-
-function uploadFile(username)
-{
-    const xhttp = new XMLHttpRequest();
-
-    xhttp.onload = function()
-    {
-
-        if (xhttp.status === 200)
-        {
-
-            let row = document.createElement("tr");
-            let body = document.getElementsByTagName("tbody")[0];
-
-
-
-            row.setAttribute("id", xhttp.responseText);
-
-
-            var nameCell = document.createElement("td");
-            var nameSpan = document.createElement("span");
-            nameSpan.textContent = document.getElementById("name-input").value;
-            nameCell.appendChild(nameSpan);
-
-            var descriptionCell = document.createElement("td");
-            var descriptionSpan = document.createElement("span");
-            descriptionSpan.textContent = document.getElementById("file-description").value;
-            descriptionCell.appendChild(descriptionSpan);
-
-            var showButtonCell = document.createElement("td");
-            var showButton = document.createElement("button");
-            showButton.setAttribute("type", "button");
-            showButton.setAttribute("class", "btn btn-success btn-fw");
-            showButton.setAttribute("onclick", "openFile('" + xhttp.responseText + "')");
-            showButton.innerHTML = 'Zobraziť';
-            showButtonCell.appendChild(showButton);
-
-            row.appendChild(nameCell);
-            row.appendChild(descriptionCell);
-            row.appendChild(showButtonCell);
-            body.appendChild(row);
-
-            let deleteButtonCell = document.createElement("td");
-            var deleteButton = document.createElement("button");
-            deleteButton.setAttribute("type", "button");
-            deleteButton.setAttribute("class", "btn btn-danger btn-fw");
-            deleteButton.setAttribute("onclick", "deleteFile('" + xhttp.responseText + "')");
-            deleteButton.innerHTML = 'Odstrániť';
-            deleteButtonCell.appendChild(deleteButton);
-
-            row.appendChild(deleteButtonCell);
-            row.appendChild(document.createElement("td"))
-
-
-        } else {
-            getById("name-input-error-hint").innerHTML = "Materiál s týmto názvom existuje!";
+        if (element) {
+            element.remove();
         }
 
+    } catch (error) {
+        console.error(error);
     }
-
-    const url = "/admin/material/upload";
-
-    let formData = new FormData();
-    formData.append("name", document.getElementById("name-input").value);
-    formData.append("description", document.getElementById("file-description").value);
-    formData.append("data", document.getElementById("file-input").files[0]);
-    formData.append("uploadedBy", username);
-
-
-    xhttp.open("POST", url, true);
-
-    xhttp.send(formData);
 }
+
+
+async function uploadFile(username) {
+    try {
+        const url = "/materials";
+
+        let formData = new FormData();
+        formData.append("name", document.getElementById("name-input").value);
+        formData.append("description", document.getElementById("file-description").value);
+        formData.append("data", document.getElementById("file-input").files[0]);
+        formData.append("uploadedBy", username);
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                [csrfHeader]: csrfToken
+            },
+            body: formData
+        });
+
+        if (!response.ok) throw new Error("Chyba pri nahrávaní súboru");
+
+        const newId = await response.text();
+
+        const tbody = document.querySelector("tbody");
+        let row = document.createElement("tr");
+        row.id = newId;
+
+        row.innerHTML = `
+            <td><span>${document.getElementById("name-input").value}</span></td>
+            <td><span>${document.getElementById("file-description").value}</span></td>
+            <td><button type="button" class="btn btn-success btn-fw" onclick="openFile('${newId}')">Zobraziť</button></td>
+            <td><button type="button" class="btn btn-danger btn-fw" onclick="deleteFile('${newId}')">Odstrániť</button></td>
+            <td></td>
+        `;
+        tbody.appendChild(row);
+
+    } catch (error) {
+        document.getElementById("name-input-error-hint").innerText =
+            "Nepodarilo sa nahrať materiál: " + error.message;
+        console.error(error);
+    }
+}
+
 
 
 function canSubmit(username)
@@ -3573,34 +3529,35 @@ function clickOnInput() {
 
 
 
-function deleteEmployee(id)
-{
-    const xhttp = new XMLHttpRequest();
+async function deleteEmployee(id) {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
+    try {
+        const response = await fetch(`/admin/employees/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                [csrfHeader]: csrfToken
+            }
+        });
 
-
-    xhttp.onload = function()
-    {
-        if (xhttp.status === 200)
-        {
-
-            let row = document.getElementById(id);
-
-            row.remove();
-
+        if (response.ok) {
+            const row = document.getElementById(id);
+            if (row) {
+                row.remove();
+            }
         } else {
-
-            points.value ="";
+            // ak niečo zlyhá, sprav fallback
+            const points = document.getElementById("points");
+            if (points) {
+                points.value = "";
+            }
+            console.error("Chyba pri mazaní:", response.status);
         }
-
-
+    } catch (error) {
+        console.error("Výnimka pri mazaní:", error);
     }
-
-    let url = "/admin/employee/" + id + "/delete";
-
-    xhttp.open("DELETE", url, false);
-    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    xhttp.send();
 }
+
 

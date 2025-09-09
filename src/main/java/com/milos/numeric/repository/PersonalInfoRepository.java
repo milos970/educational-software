@@ -15,32 +15,28 @@ import java.util.Optional;
 @Repository
 public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long>
 {
-     Optional<PersonalInfo> findByUsername(String username);
+
+    Optional<PersonalInfo> findByUsername(String username);
 
     @Query(value = "SELECT p.* FROM personal_info p  WHERE p.role = :role", nativeQuery = true)
-     Optional<PersonalInfo> findByAuthority(@Param("role")String role);
-
+     List<PersonalInfo> findByRole(@Param("role")String role);
 
     @Query(value = "SELECT p.username FROM personal_info p  WHERE p.role = :role", nativeQuery = true)
     Optional<String> findUsernameByAuthority(@Param("role")String role);
-
-    @Query(value = "SELECT p.role FROM personal_info p  WHERE p.username = :username", nativeQuery = true)
-     Optional<String> findAuthorityByUsername(@Param("username")String username);
 
      Optional<PersonalInfo> findByEmail(String email);
 
     @Transactional
     @Modifying
     @Query(value = "DELETE  FROM personal_info p WHERE p.role =:role", nativeQuery = true)
-     void deleteByAuthority(@Param("role")String role);
+    void deleteByRole(String role);
 
     @Override
     List<PersonalInfo> findAll(Sort sort);
 
 
-    boolean existsByUsername (String username);
-
-
-
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
+    boolean existsByPersonalNumber(String personalNumber);
 
 }

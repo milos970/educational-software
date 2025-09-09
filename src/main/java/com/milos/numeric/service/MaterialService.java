@@ -1,6 +1,6 @@
 package com.milos.numeric.service;
 
-import com.milos.numeric.dto.MaterialDto;
+import com.milos.numeric.dto.request.MaterialRequest;
 import com.milos.numeric.entity.Material;
 import com.milos.numeric.exception.FileStorageException;
 import com.milos.numeric.mapper.MaterialDtoMapper;
@@ -30,20 +30,20 @@ public class MaterialService
     }
 
     @Transactional
-    public Material createMaterial(MaterialDto materialDto) {
+    public Material createMaterial(MaterialRequest materialRequest) {
         try {
 
             Path uploadPath = Paths.get(uploadDir);
             Files.createDirectories(uploadPath);
-            Path filePath = uploadPath.resolve(materialDto.getName());
-            Files.write(filePath, materialDto.getData().getBytes());
-            Material material = materialDtoMapper.sourceToDestination(materialDto);
+            Path filePath = uploadPath.resolve(materialRequest.getName());
+            Files.write(filePath, materialRequest.getData().getBytes());
+            Material material = materialDtoMapper.sourceToDestination(materialRequest);
             material.setPath(filePath.toString());
 
             return materialRepository.save(material);
 
         } catch (IOException e) {
-            throw new FileStorageException("Nepodarilo sa uložiť súbor: " + materialDto.getName(), e);
+            throw new FileStorageException("Nepodarilo sa uložiť súbor: " + materialRequest.getName(), e);
         }
     }
 

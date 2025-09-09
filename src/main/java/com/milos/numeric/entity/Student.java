@@ -17,7 +17,7 @@ import lombok.Setter;
 public class Student
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Min(value = 0, message = "Value is less than 0!")

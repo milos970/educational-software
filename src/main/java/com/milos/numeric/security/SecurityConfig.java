@@ -3,12 +3,14 @@ package com.milos.numeric.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig
 {
     private final String[] whiteList = {
@@ -18,7 +20,11 @@ public class SecurityConfig
             "/images/**",
             "/favicon.ico",
             "/pages/sign-up",
-            "/pages/forget-password"
+            "/pages/forget-password",
+            "/auth/verify-email",
+            "/auth/verification-email",
+            "/pages/reset-password",
+            "/auth/change-password"
     };
 
     @Bean
@@ -29,7 +35,7 @@ public class SecurityConfig
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/pages/login")
-                        .loginProcessingUrl("/login") // no need to have an endpoint for this
+                        .loginProcessingUrl("/login")
                         .failureUrl("/pages/login?error=true")
                         .defaultSuccessUrl("/pages/methods", true)
                         .permitAll())
@@ -37,7 +43,6 @@ public class SecurityConfig
                         .logoutSuccessUrl("/pages/login")
                         .logoutUrl("/logout")
                         .permitAll());
-
 
         return http.build();
     }

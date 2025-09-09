@@ -3,6 +3,7 @@ package com.milos.numeric.service;
 import com.milos.numeric.dto.command.MessageCommand;
 import com.milos.numeric.entity.Message;
 import com.milos.numeric.repository.MessageRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +16,7 @@ public class MessageService
     }
 
 
+    @Transactional
     public void createMessage(MessageCommand command)
     {
         Message entity = new Message();

@@ -1,4 +1,4 @@
 package com.milos.numeric.dto.response;
 
-public record MessageResponse() {
+public record MessageResponse(String senderUsername, String receiverUsername) {
 }

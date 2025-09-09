@@ -8,10 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/admin/employees")
 public class EmployeeController {
+
     private final EmployeeService employeeService;
     private final PersonalInfoService personalInfoService;
-
 
     public EmployeeController(EmployeeService employeeService, PersonalInfoService personalInfoService) {
         this.employeeService = employeeService;
@@ -19,25 +20,24 @@ public class EmployeeController {
     }
 
 
-    @GetMapping("admin/employee")
+    @GetMapping("exists")
     public ResponseEntity<Void> checkUsername(@RequestParam String username) {
-        return this.personalInfoService.existsByUsername(username) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        return personalInfoService.existsByUsername(username)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("admin/employee")
-    public ResponseEntity<Void> updateRole(@RequestParam String username, @RequestParam Role role) {
-        try {
-            employeeService.updateRole(username, role);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @PatchMapping("{id}/role")
+    public ResponseEntity<Void> updateRole(@PathVariable long id,
+                                           @RequestBody Role role) {
+        employeeService.updateRole(id, role);
+        return ResponseEntity.noContent().build();
     }
 
-
-    @DeleteMapping("/admin/employee/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable long id) {
         employeeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
+

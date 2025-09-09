@@ -1,53 +1,48 @@
 package com.milos.numeric.mapper;
 
-import com.milos.numeric.dto.MaterialDto;
+import com.milos.numeric.dto.request.MaterialRequest;
 import com.milos.numeric.entity.Material;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-07T17:53:33+0200",
+    date = "2025-09-09T17:53:03+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class MaterialDtoMapperImpl implements MaterialDtoMapper {
 
     @Override
-    public Material sourceToDestination(MaterialDto source) {
+    public Material sourceToDestination(MaterialRequest source) {
         if ( source == null ) {
             return null;
         }
 
-        String name = null;
-        String description = null;
+        Material material = new Material();
 
-        name = source.getName();
-        description = source.getDescription();
+        material.setName( source.getName() );
+        material.setDescription( source.getDescription() );
 
-        long id = 0L;
-        String path = null;
-        String uploadedBy = source.getUploadedBy();
-        long size = source.getData().getSize();
-        String mimeType = source.getData().getContentType();
-
-        Material material = new Material( id, path, name, mimeType, description, uploadedBy, size );
+        material.setUploadedBy( source.getUploadedBy() );
+        material.setSize( source.getData().getSize() );
+        material.setMimeType( source.getData().getContentType() );
 
         return material;
     }
 
     @Override
-    public MaterialDto destinationToSource(Material destination) {
+    public MaterialRequest destinationToSource(Material destination) {
         if ( destination == null ) {
             return null;
         }
 
-        MaterialDto materialDto = new MaterialDto();
+        MaterialRequest materialRequest = new MaterialRequest();
 
-        materialDto.setName( destination.getName() );
-        materialDto.setDescription( destination.getDescription() );
-        materialDto.setUploadedBy( destination.getUploadedBy() );
+        materialRequest.setName( destination.getName() );
+        materialRequest.setDescription( destination.getDescription() );
+        materialRequest.setUploadedBy( destination.getUploadedBy() );
 
-        return materialDto;
+        return materialRequest;
     }
 }

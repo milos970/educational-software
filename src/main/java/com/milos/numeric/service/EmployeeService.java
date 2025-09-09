@@ -38,8 +38,8 @@ public class EmployeeService
 
 
     @Transactional
-    public void updateRole(String username, Role role) {
-        this.personalInfoService.updateRole(username, role);
+    public void updateRole(long id, Role role) {
+        this.personalInfoService.updateRole(id, role);
     }
 
 

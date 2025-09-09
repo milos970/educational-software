@@ -5,6 +5,7 @@ import com.milos.numeric.dto.request.MessageRequest;
 import com.milos.numeric.dto.response.MessageResponse;
 import com.milos.numeric.entity.Message;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 
 @Mapper(componentModel = "spring")
@@ -12,6 +13,8 @@ public interface MessageDtoMapper
 {
 
     MessageCommand toCommand(MessageRequest source);
+
+
 
     MessageResponse toResponse(Message source);
 }

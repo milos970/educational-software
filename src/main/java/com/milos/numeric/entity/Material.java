@@ -18,7 +18,7 @@ import lombok.Setter;
 public class Material {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Size(min = 5, max = 100, message = "{material.path}")
