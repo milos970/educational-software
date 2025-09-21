@@ -85,7 +85,7 @@ nb-configuration.xml
 .DS_Store
 
 
-application.properties
+
 application.yml
 application-dev.properties
 application-test.properties
