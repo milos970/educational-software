@@ -9,4 +9,5 @@ public interface MaterialRepository extends CrudRepository<Material, Long>
 {
 
      Optional<Material> findById(Long id);
+     Optional<Material> findByName(String name);
 }

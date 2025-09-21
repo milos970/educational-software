@@ -19,9 +19,7 @@ public class EmailService
 
 
     public EmailService(JavaMailSender emailSender) {
-
         this.emailSender = emailSender;
-
     }
 
     public void sendEmail(String destinationEmail, String subject, String content) {

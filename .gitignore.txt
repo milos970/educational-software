@@ -83,3 +83,12 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
+
+# Ignore local properties
+application.properties
+application.yml
+application-dev.properties
+application-test.properties
+
+# Ignore env files
+*.env

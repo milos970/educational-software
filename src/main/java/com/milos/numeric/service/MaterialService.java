@@ -8,7 +8,11 @@ import com.milos.numeric.repository.MaterialRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,9 +70,23 @@ public class MaterialService
 
     }
 
+    public Resource getMaterialResource(String name) {
+        Resource resource = new ClassPathResource("static/materials/" + name);
+        if (!resource.exists()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found");
+        }
+        return resource;
+    }
+
 
     public Material findById(long id) {
         return this.materialRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Material not found"));
+    }
+
+
+    public Material findByName(String name) {
+        return this.materialRepository.findByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Material not found"));
     }
 

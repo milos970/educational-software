@@ -3,6 +3,8 @@ package com.milos.numeric.controller;
 import com.milos.numeric.dto.request.MaterialRequest;
 import com.milos.numeric.entity.Material;
 import com.milos.numeric.service.MaterialService;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,8 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +51,6 @@ public class MaterialController {
     }
 
 
-
     @GetMapping("{id}")
     public ResponseEntity<byte[]> findById(@PathVariable Long id) {
         Material material = this.materialService.findById(id);
@@ -65,11 +68,25 @@ public class MaterialController {
         }
     }
 
+    @GetMapping("{name}")
+    public ResponseEntity<Resource> findByName(@PathVariable String name) {
+        Material material = materialService.findByName(name);
+        Resource pdfResource = materialService.getMaterialResource(material.getName());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(material.getMimeType()));
+        headers.setContentDispositionFormData("inline", material.getName());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(pdfResource, headers, HttpStatus.OK);
+    }
+
+
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity removeSpecificFile(@PathVariable Long id) {
         this.materialService.delete(id);
-        return new ResponseEntity<>(id,HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
 
