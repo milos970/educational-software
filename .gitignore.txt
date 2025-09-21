@@ -84,21 +84,13 @@ nb-configuration.xml
 ##############################
 .DS_Store
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 1bf1ba9e5f142f608e102bb3ab59d47789d52213
-# Ignore local properties
 application.properties
 application.yml
 application-dev.properties
 application-test.properties
 
-<<<<<<< HEAD
-# Ignore env files
 
 *.env
 
-=======
-*.env
->>>>>>> 1e4c87321e110775f9c043f5d5ff3101e6c9479a
+
