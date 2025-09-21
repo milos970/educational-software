@@ -94,7 +94,11 @@ application.yml
 application-dev.properties
 application-test.properties
 
+<<<<<<< HEAD
 # Ignore env files
 
 *.env
 
+=======
+*.env
+>>>>>>> 1e4c87321e110775f9c043f5d5ff3101e6c9479a
