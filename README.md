@@ -81,7 +81,7 @@ The application is built using a **Spring MVC** architecture:
 └──────────────┬──────────────┘
                │
                ▼
-┌─────────────────────────────┐
+┌─────────────────────────────https://github.com/milos970/educational-software/blob/main/README.md┐
 │        H2 Database          │
 └─────────────────────────────┘
 ```
@@ -90,7 +90,33 @@ The application is built using a **Spring MVC** architecture:
 
 ## 📸 Screenshots
 
+<p align="center">
+  <img src="docs/screenshots/1.png" width="30%">
+  <img src="docs/screenshots/2.png" width="30%">
+  <img src="docs/screenshots/3.png" width="30%">
+  <img src="docs/screenshots/4.png" width="30%">
+  <img src="docs/screenshots/4.1.png" width="30%">
+  <img src="docs/screenshots/5.png" width="30%">
+  <img src="docs/screenshots/6.png" width="30%">
+  <img src="docs/screenshots/7.png" width="30%">
+  <img src="docs/screenshots/8.png" width="30%">
+  <img src="docs/screenshots/9.png" width="30%">
+  <img src="docs/screenshots/10.png" width="30%">
+  <img src="docs/screenshots/11.png" width="30%">
+  <img src="docs/screenshots/12.png" width="30%">
+  <img src="docs/screenshots/13.png" width="30%">
+  <img src="docs/screenshots/14.png" width="30%">
+</p>
 
+---
+
+## 📸 Demo
+
+
+![Main Menu](docs/screenshots/method-new.gif)
+![Main Menu](docs/screenshots/chat.gif)
+![Main Menu](docs/screenshots/sign-up.gif)
+![Main Menu](docs/screenshots/method.gif)
 
 ---
 
@@ -112,4 +138,8 @@ API endpoints were tested using **Postman**.
 
 ## ⭐ Project Status
 
-🚧 **In Development**
+✅ **Completed**
+
+🚧 **New version is currently in development**
+
+
